@@ -6,14 +6,14 @@ import java.util.List;
 public class Entity {
 
 	private String name;
-	private List<Object> relationships;
+	private List<Relationship> relationships;
 	private List<Object> fields;
 
 	public Entity(String name) 
 	{
 		this.setName(name);
 		this.fields = new ArrayList<Object>();
-		this.relationships = new ArrayList<Object>();
+		this.relationships = new ArrayList<Relationship>();
 	}
 
 	public String getName() 
@@ -25,7 +25,7 @@ public class Entity {
 		this.name = name;
 	}
 
-	public List<Object> getRelationships() 
+	public List<Relationship> getRelationships() 
 	{
 		return this.relationships;
 	}
