@@ -2,20 +2,20 @@ package models.tests;
 
 import models.Entity;
 import junit.framework.Assert;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class EntityTestCase extends TestCase {
-
-	public EntityTestCase(String arg0) {
-		super(arg0);
-	}
-	
+public class EntityTestCase 
+{
+	@Test
 	public void testCreatingEntityProvidesName()
 	{
 		Entity entity = new Entity("EntityName");
 		Assert.assertEquals("EntityName", entity.getName());
 	}
 	
+	@Test
 	public void testNewEntitiesHaveNoRelationshipsNorFields()
 	{
 		Entity entity = new Entity("EntityName");
@@ -24,12 +24,13 @@ public class EntityTestCase extends TestCase {
 		Assert.assertEquals(0, entity.getRelationships().size());
 	}
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception 
+	{
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@After
+	public void tearDown() throws Exception 
+	{
 	}
-
 }
