@@ -2,45 +2,49 @@ package models;
 
 public class Relationship {
 
-	private double maximumCardinality;
-	private double minimumCardinality;
-	private Entity relatedEntity;
+	private Entity firstEntity;
+	private Entity secondEntity;
+	private Cardinality firstCardinality;
+	private Cardinality secondCardinality;
 
-	public Relationship(Entity relatedEntity, 
-			double minimumCardinality, 
-			double maximumCardinality) throws Exception 
+	public Relationship(Entity firstEntity, Entity secondEntity) throws Exception 
 	{
-		if (maximumCardinality < minimumCardinality)
-		{
-			throw new Exception();
-		}
-		
-		this.setRelatedEntity(relatedEntity);
-		this.setMinimumCardinality(minimumCardinality);
-		this.setMaximumCardinality(maximumCardinality);
+		this.setFirstEntity(firstEntity);
+		this.setSecondEntity(secondEntity);
+		this.setFirstCardinality(new Cardinality(1, 1));
+		this.setSecondCardinality(new Cardinality(1, 1));
+	}
+	
+	public void setFirstEntity(Entity firstEntity) {
+		this.firstEntity = firstEntity;
 	}
 
-	public void setMaximumCardinality(double maximumCardinality) {
-		this.maximumCardinality = maximumCardinality;
+	public Entity getFirstEntity() {
+		return firstEntity;
 	}
 
-	public double getMaximumCardinality() {
-		return maximumCardinality;
+	public void setSecondEntity(Entity secondEntity) {
+		this.secondEntity = secondEntity;
 	}
 
-	public void setMinimumCardinality(double minimumCardinality) {
-		this.minimumCardinality = minimumCardinality;
+	public Entity getSecondEntity() {
+		return secondEntity;
 	}
 
-	public double getMinimumCardinality() {
-		return minimumCardinality;
+	public void setSecondCardinality(Cardinality secondCardinality) {
+		this.secondCardinality = secondCardinality;
 	}
 
-	public void setRelatedEntity(Entity relatedEntity) {
-		this.relatedEntity = relatedEntity;
+	public void setFirstCardinality(Cardinality firstCardinality) {
+		this.firstCardinality = firstCardinality;
+	}
+	
+
+	public Cardinality getFirstCardinality() {
+		return this.firstCardinality;
 	}
 
-	public Entity getRelatedEntity() {
-		return relatedEntity;
+	public Cardinality getSecondCardinality() {
+		return this.secondCardinality;
 	}
 }

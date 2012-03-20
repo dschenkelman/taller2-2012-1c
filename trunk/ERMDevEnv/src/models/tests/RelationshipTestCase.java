@@ -9,28 +9,28 @@ import org.junit.Test;
 
 public class RelationshipTestCase 
 {
-	private Entity entity;
+	private Entity firstEntity;
+	private Entity secondEntity;
 
 	@Test
-	public void testCreatingRelationshipSetsRelatedEntityAndCardinality() throws Exception
+	public void testCreatingRelationshipSetsRelatedEntitiesAndDefaultCardinalities() throws Exception
 	{		
-		Relationship relationship = new Relationship(this.entity, 1, Double.POSITIVE_INFINITY);
+		Relationship relationship = new Relationship(this.firstEntity, this.secondEntity);
 		
-		Assert.assertEquals("RelatedEntity", relationship.getRelatedEntity().getName());
-		Assert.assertEquals(1.0, relationship.getMinimumCardinality());
-		Assert.assertEquals(Double.POSITIVE_INFINITY, relationship.getMaximumCardinality());
-	}
-	
-	@Test(expected=Exception.class)
-	public void testMaximumShouldNotBeLowerThanMinimum() throws Exception
-	{
-		new Relationship(this.entity, 2, 1);
+		Assert.assertEquals(1.0, relationship.getFirstCardinality().getMinimum());
+		Assert.assertEquals(1.0, relationship.getFirstCardinality().getMaximum());
+		Assert.assertEquals(1.0, relationship.getSecondCardinality().getMinimum());
+		Assert.assertEquals(1.0, relationship.getSecondCardinality().getMaximum());
+		
+		Assert.assertEquals("RelatedEntity1", relationship.getFirstEntity().getName());
+		Assert.assertEquals("RelatedEntity2", relationship.getSecondEntity().getName());
 	}
 	
 	@Before
 	public void setUp() throws Exception 
 	{
-		this.entity = new Entity("RelatedEntity");
+		this.firstEntity = new Entity("RelatedEntity1");
+		this.secondEntity = new Entity("RelatedEntity2");
 	}
 
 	@After
