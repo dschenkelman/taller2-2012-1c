@@ -21,7 +21,6 @@ public class EntityTestCase
 		Entity entity = new Entity("EntityName");
 		
 		Assert.assertEquals(0, entity.getFields().size());
-		Assert.assertEquals(0, entity.getRelationships().size());
 	}
 
 	@Before
