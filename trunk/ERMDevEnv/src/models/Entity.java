@@ -6,12 +6,12 @@ import java.util.List;
 public class Entity {
 
 	private String name;
-	private List<Object> fields;
+	private List<Field> fields;
 
 	public Entity(String name) 
 	{
 		this.setName(name);
-		this.fields = new ArrayList<Object>();
+		this.fields = new ArrayList<Field>();
 	}
 
 	public String getName() 
@@ -23,7 +23,7 @@ public class Entity {
 		this.name = name;
 	}
 
-	public List<Object> getFields()
+	public List<Field> getFields()
 	{
 		return this.fields;
 	}
