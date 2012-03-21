@@ -1,17 +1,14 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Field {
-
+public class Field extends FieldContainer
+{
 	private String name;
 	private boolean isKeyField;
-	private List<Field> children;
 
-	public Field(String name) {
+	public Field(String name)
+	{
+		super();
 		this.setName(name);
-		this.children = new ArrayList<Field>();
 	}
 
 	public void setName(String name) {
@@ -30,10 +27,5 @@ public class Field {
 	public boolean isKey() 
 	{
 		return this.isKeyField;
-	}
-
-	public List<Field> getChildren() 
-	{
-		return this.children;
 	}
 }
