@@ -1,6 +1,7 @@
 package models.tests;
 
 
+import infrastructure.IterableExtensions;
 import junit.framework.Assert;
 import models.Field;
 
@@ -24,7 +25,7 @@ public class FieldTestCase
 	{
 		Field field = new Field("FieldName");
 		
-		Assert.assertEquals(0, field.getChildren().size());
+		Assert.assertEquals(0, IterableExtensions.count(field.getFields()));
 	}
 	
 	@Test
