@@ -1,7 +1,9 @@
 package models;
 
+import infrastructure.Func;
+import infrastructure.IterableExtensions;
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class Entity {
@@ -25,7 +27,7 @@ public class Entity {
 		this.name = name;
 	}
 
-	public Collection<Field> getFields()
+	public Iterable<Field> getFields()
 	{
 		return this.fields;
 	}
@@ -42,14 +44,15 @@ public class Entity {
 
 	public Field getField(String name)
 	{
-		for (Field field : this.fields) 
+		class FieldCmpFunc extends Func<Field, String, Boolean>
 		{
-			if (field.getName().equalsIgnoreCase(name))
+			@Override
+			public Boolean execute(Field field, String n) 
 			{
-				return field;
+				return field.getName().equals(n);
 			}
 		}
 		
-		return null;
+		return IterableExtensions.firstOrDefault(this.fields, new FieldCmpFunc(), name);
 	}
 }
