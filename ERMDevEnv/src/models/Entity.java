@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Entity {
@@ -19,12 +20,36 @@ public class Entity {
 		return this.name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name) 
+	{
 		this.name = name;
 	}
 
-	public List<Field> getFields()
+	public Collection<Field> getFields()
 	{
 		return this.fields;
+	}
+
+	public boolean addField(String name) 
+	{
+		if (this.getField(name) == null)
+		{
+			return this.fields.add(new Field(name));
+		}
+		
+		return false;
+	}
+
+	public Field getField(String name)
+	{
+		for (Field field : this.fields) 
+		{
+			if (field.getName().equalsIgnoreCase(name))
+			{
+				return field;
+			}
+		}
+		
+		return null;
 	}
 }
