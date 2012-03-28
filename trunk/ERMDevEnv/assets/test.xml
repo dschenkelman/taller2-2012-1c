@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<diagram xmlns="http://entityrelationship.org/Domain.xsd">
+  <entities>
+    <entity name="entityName">
+      <attributes>
+        <attribute name="attributeName" type="copy" expression="expr"/>
+      </attributes>
+    </entity>
+  </entities>
+  <relationships>
+    <relationship>
+      <entities>
+        <entity name="entityName"></entity>
+      </entities>
+    </relationship>
+  </relationships>
+</diagram>
