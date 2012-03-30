@@ -1,9 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema targetNamespace="http://entityrelationship.org/Domain.xsd"
-    elementFormDefault="qualified"
-    xmlns="http://entityrelationship.org/Domain.xsd"
-    xmlns:mstns="http://entityrelationship.org/Domain.xsd"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="diagram" type="diagramType"/>
     <xs:complexType name="diagramType">
       <xs:sequence>
@@ -91,17 +87,12 @@
 	<xs:sequence>
 		<xs:element name="hierarchy" maxOccurs="unbounded">
 			<xs:complexType>
-				<xs:sequence>
-					<xs:element name="SpecificEntities" maxOccurrs="1" minOccurs="1">
-						<xs:complexType>
-							<xs:list itemType="entityCollection"/>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>	
+			  <xs:all>
+					<xs:element name="SpecificEntities" type="entityCollection"/>
+        </xs:all>
 				<xs:attribute name="generalEntity" type="xs:string" use="required"/>
-				<xs:attribute name="total" type="xs:booblean"/>
-				<xs:attribute name="exclusive" type="xs:booblean"/>
-				
+				<xs:attribute name="total" type="xs:boolean"/>
+				<xs:attribute name="exclusive" type="xs:boolean"/>	
 			</xs:complexType>
 		</xs:element>
 	</xs:sequence>

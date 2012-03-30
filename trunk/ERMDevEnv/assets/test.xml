@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<diagram xmlns="http://entityrelationship.org/Domain.xsd">
+<diagram xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Domain.xsd">
   <entities>
     <entity name="entityName">
       <attributes>
@@ -14,4 +14,18 @@
       </entities>
     </relationship>
   </relationships>
+  <hierarchies>
+    <hierarchy generalEntity="EntityGen" total="true" exclusive="false">
+      <SpecificEntities>
+        <entity name="EntityEsp1"/> 
+        <entity name="EntityEsp2"/>
+        <entity name="EntityEsp3"/>
+      </SpecificEntities>
+    </hierarchy>
+    <hierarchy generalEntity="EntityGen2">
+      <SpecificEntities>
+        <entity name="EntityEsp1"/>
+      </SpecificEntities>
+    </hierarchy>
+  </hierarchies>
 </diagram>
