@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema targetNamespace="http://entityrelationship.org/Domain.xsd"
     elementFormDefault="qualified"
     xmlns="http://entityrelationship.org/Domain.xsd"
@@ -9,6 +9,7 @@
       <xs:sequence>
         <xs:element maxOccurs="1" minOccurs="0" name="entities" type="entityCollection"/>
         <xs:element maxOccurs="1" minOccurs="0" name="relationships" type="relationshipCollection"/>
+        <xs:element maxOccurs="1" minOccurs="0" name="hierarchies" type="hierarchiesCollection"/>
       </xs:sequence>  
     </xs:complexType>
   
@@ -84,6 +85,26 @@
         </xs:complexType>
       </xs:element>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="hierarchiesCollection">
+	<xs:sequence>
+		<xs:element name="hierarchy" maxOccurs="unbounded">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element name="SpecificEntities" maxOccurrs="1" minOccurs="1">
+						<xs:complexType>
+							<xs:list itemType="entityCollection"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>	
+				<xs:attribute name="generalEntity" type="xs:string" use="required"/>
+				<xs:attribute name="total" type="xs:booblean"/>
+				<xs:attribute name="exclusive" type="xs:booblean"/>
+				
+			</xs:complexType>
+		</xs:element>
+	</xs:sequence>
   </xs:complexType>
 
   <xs:simpleType name="cardinality">
