@@ -21,7 +21,7 @@ public class EntityTestCase
 	{
 		Entity entity = new Entity("EntityName");
 		
-		Assert.assertEquals(0, IterableExtensions.count(entity.getFields()));
+		Assert.assertEquals(0, IterableExtensions.count(entity.getAttributes()));
 	}
 	
 	@Before
