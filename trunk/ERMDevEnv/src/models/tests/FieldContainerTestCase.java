@@ -3,9 +3,9 @@ package models.tests;
 
 import infrastructure.IterableExtensions;
 import junit.framework.Assert;
+import models.Attribute;
+import models.AttributeContainer;
 import models.Entity;
-import models.Field;
-import models.FieldContainer;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,19 +17,19 @@ public class FieldContainerTestCase {
 	public void testCanAddNewFieldsWithDifferentNames()
 	{
 		Entity entity = new Entity("EntityName");
-		Assert.assertEquals(0, IterableExtensions.count(entity.getFields()));
+		Assert.assertEquals(0, IterableExtensions.count(entity.getAttributes()));
 		
 		Assert.assertTrue(entity.addField("Field1"));
-		Assert.assertEquals(1, IterableExtensions.count(entity.getFields()));
-		Field field1 = entity.getField("Field1");
-		Assert.assertEquals("Field1", field1.getName());
-		Assert.assertFalse(field1.isKey());
+		Assert.assertEquals(1, IterableExtensions.count(entity.getAttributes()));
+		Attribute attribute1 = entity.getField("Field1");
+		Assert.assertEquals("Field1", attribute1.getName());
+		Assert.assertFalse(attribute1.isKey());
 		
 		Assert.assertTrue(entity.addField("Field2"));
-		Assert.assertEquals(2, IterableExtensions.count(entity.getFields()));
-		Field field2 = entity.getField("Field2");
-		Assert.assertEquals("Field2", field2.getName());
-		Assert.assertFalse(field2.isKey());
+		Assert.assertEquals(2, IterableExtensions.count(entity.getAttributes()));
+		Attribute attribute2 = entity.getField("Field2");
+		Assert.assertEquals("Field2", attribute2.getName());
+		Assert.assertFalse(attribute2.isKey());
 	}
 	
 	@Test
@@ -42,31 +42,31 @@ public class FieldContainerTestCase {
 	@Test
 	public void testCannotAddTwoFieldsWithSameNameAtSameLevel()
 	{
-		FieldContainer fieldContainer = new Entity("EntityName");
-		Assert.assertTrue(fieldContainer.addField("Field1"));
-		Assert.assertFalse(fieldContainer.addField("Field1"));
+		AttributeContainer attributeContainer = new Entity("EntityName");
+		Assert.assertTrue(attributeContainer.addField("Field1"));
+		Assert.assertFalse(attributeContainer.addField("Field1"));
 	}
 	
 	@Test
 	public void testCanRemoveFieldUsingName()
 	{
-		FieldContainer fieldContainer = new Entity("EntityName");
-		Assert.assertTrue(fieldContainer.addField("Field1"));
-		Assert.assertTrue(fieldContainer.addField("Field2"));
-		Assert.assertEquals(2, IterableExtensions.count(fieldContainer.getFields()));
-		Assert.assertTrue(fieldContainer.removeField("Field1"));
-		Assert.assertEquals(1, IterableExtensions.count(fieldContainer.getFields()));
+		AttributeContainer attributeContainer = new Entity("EntityName");
+		Assert.assertTrue(attributeContainer.addField("Field1"));
+		Assert.assertTrue(attributeContainer.addField("Field2"));
+		Assert.assertEquals(2, IterableExtensions.count(attributeContainer.getAttributes()));
+		Assert.assertTrue(attributeContainer.removeField("Field1"));
+		Assert.assertEquals(1, IterableExtensions.count(attributeContainer.getAttributes()));
 	}
 	
 	@Test
 	public void testCannotRemoveIfFieldDoesNotExists()
 	{
-		FieldContainer fieldContainer = new Entity("EntityName");
-		Assert.assertTrue(fieldContainer.addField("Field1"));
-		Assert.assertTrue(fieldContainer.addField("Field2"));
-		Assert.assertEquals(2, IterableExtensions.count(fieldContainer.getFields()));
-		Assert.assertFalse(fieldContainer.removeField("Field3"));
-		Assert.assertEquals(2, IterableExtensions.count(fieldContainer.getFields()));
+		AttributeContainer attributeContainer = new Entity("EntityName");
+		Assert.assertTrue(attributeContainer.addField("Field1"));
+		Assert.assertTrue(attributeContainer.addField("Field2"));
+		Assert.assertEquals(2, IterableExtensions.count(attributeContainer.getAttributes()));
+		Assert.assertFalse(attributeContainer.removeField("Field3"));
+		Assert.assertEquals(2, IterableExtensions.count(attributeContainer.getAttributes()));
 	}
 	
 	@Before

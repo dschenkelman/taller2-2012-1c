@@ -1,11 +1,11 @@
 package models;
 
-public class Field extends FieldContainer
+public class Attribute extends AttributeContainer
 {
 	private String name;
 	private boolean isKeyField;
 
-	public Field(String name)
+	public Attribute(String name)
 	{
 		super();
 		this.setName(name);

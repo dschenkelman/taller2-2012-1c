@@ -3,7 +3,7 @@ package models.tests;
 
 import infrastructure.IterableExtensions;
 import junit.framework.Assert;
-import models.Field;
+import models.Attribute;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,28 +14,28 @@ public class FieldTestCase
 	@Test
 	public void testShouldSetNameWhenCreating()
 	{
-		Field field = new Field("FieldName");
+		Attribute attribute = new Attribute("FieldName");
 		
-		Assert.assertEquals("FieldName", field.getName());
-		Assert.assertFalse(field.isKey());
+		Assert.assertEquals("FieldName", attribute.getName());
+		Assert.assertFalse(attribute.isKey());
 	}
 	
 	@Test
 	public void testShouldHaveNoCompositeFieldsByDefault()
 	{
-		Field field = new Field("FieldName");
+		Attribute attribute = new Attribute("FieldName");
 		
-		Assert.assertEquals(0, IterableExtensions.count(field.getFields()));
+		Assert.assertEquals(0, IterableExtensions.count(attribute.getAttributes()));
 	}
 	
 	@Test
 	public void testCanMarkFieldAsKey()
 	{
-		Field field = new Field("FieldName");
+		Attribute attribute = new Attribute("FieldName");
 		
-		Assert.assertFalse(field.isKey());
-		field.isKey(true);
-		Assert.assertTrue(field.isKey());
+		Assert.assertFalse(attribute.isKey());
+		attribute.isKey(true);
+		Assert.assertTrue(attribute.isKey());
 	}
 	
 	

@@ -1,6 +1,6 @@
 package models;
 
-public class Entity extends FieldContainer {
+public class Entity extends AttributeContainer {
 
 	private String name;
 	
