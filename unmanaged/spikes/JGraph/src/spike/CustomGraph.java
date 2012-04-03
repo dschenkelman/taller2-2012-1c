@@ -6,7 +6,7 @@ public class CustomGraph extends mxGraph
 {
 	public CustomGraph()
 	{
-		this.cellsEditable = true;
+		this.cellsEditable = false;
 		this.cellsResizable = false;
 		this.cellsBendable = false;
 		this.cellsCloneable = false;
@@ -17,6 +17,6 @@ public class CustomGraph extends mxGraph
 	@Override
 	public boolean isCellLocked(Object cell) 
 	{
-		return this.getModel().isEdge(cell);
+		return false;
 	}
 }
