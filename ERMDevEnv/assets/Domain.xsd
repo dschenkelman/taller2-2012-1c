@@ -144,6 +144,6 @@
         <xs:attribute name="entityId" type="guid" use="required"/>
         <xs:attribute name="minimumCardinality" type="cardinality" use="optional"/>
         <xs:attribute name="maximumCardinality" type="cardinality" use="optional"/>
-        <xs:attribute name="rol" type="xs:string" use="optional"/>
+        <xs:attribute name="role" type="xs:string" use="optional"/>
     </xs:complexType>
 </xs:schema>
