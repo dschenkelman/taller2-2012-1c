@@ -1,7 +1,7 @@
 package models.tests;
 
-import infrastructure.IterableExtensions;
 import models.Entity;
+import models.EntityType;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
@@ -10,18 +10,19 @@ import org.junit.Test;
 public class EntityTestCase 
 {
 	@Test
-	public void testCreatingEntityProvidesName()
+	public void testCreatingEntityProvidesNameAndTypeIsNone()
 	{
 		Entity entity = new Entity("EntityName");
 		Assert.assertEquals("EntityName", entity.getName());
+		Assert.assertEquals(EntityType.None, entity.getType());
 	}
 	
 	@Test
-	public void testNewEntitiesHaveNoRelationshipsNorFields()
+	public void testTwoDifferentEntitiesHaveTwoDifferentIds()
 	{
 		Entity entity = new Entity("EntityName");
-		
-		Assert.assertEquals(0, IterableExtensions.count(entity.getAttributes()));
+		Entity entity2 = new Entity("EntityName");
+		Assert.assertTrue(entity.getId().toString() != entity2.getId().toString());
 	}
 	
 	@Before

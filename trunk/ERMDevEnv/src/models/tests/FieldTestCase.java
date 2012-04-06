@@ -1,7 +1,6 @@
 package models.tests;
 
 
-import infrastructure.IterableExtensions;
 import junit.framework.Assert;
 import models.Attribute;
 
@@ -19,15 +18,7 @@ public class FieldTestCase
 		Assert.assertEquals("FieldName", attribute.getName());
 		Assert.assertFalse(attribute.isKey());
 	}
-	
-	@Test
-	public void testShouldHaveNoCompositeFieldsByDefault()
-	{
-		Attribute attribute = new Attribute("FieldName");
 		
-		Assert.assertEquals(0, IterableExtensions.count(attribute.getAttributes()));
-	}
-	
 	@Test
 	public void testCanMarkFieldAsKey()
 	{

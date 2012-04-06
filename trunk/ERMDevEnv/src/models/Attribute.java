@@ -1,6 +1,6 @@
 package models;
 
-public class Attribute extends AttributeContainer
+public class Attribute
 {
 	private String name;
 	private boolean isKeyField;

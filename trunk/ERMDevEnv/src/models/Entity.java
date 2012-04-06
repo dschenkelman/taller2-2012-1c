@@ -1,13 +1,19 @@
 package models;
 
-public class Entity extends AttributeContainer {
+import java.util.UUID;
+
+public class Entity {
 
 	private String name;
+	private UUID id;
+	private EntityType type;
 	
 	public Entity(String name) 
 	{
 		super();
 		this.setName(name);
+		this.setType(EntityType.None);
+		this.id = UUID.randomUUID();
 	}
 
 	public String getName() 
@@ -19,4 +25,18 @@ public class Entity extends AttributeContainer {
 	{
 		this.name = name;
 	}
+
+	public UUID getId() {
+		return this.id;
+	}
+
+	public void setType(EntityType type) {
+		this.type = type;
+	}
+
+	public EntityType getType() {
+		return type;
+	}
+	
+	
 }
