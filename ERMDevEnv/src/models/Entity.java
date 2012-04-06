@@ -2,7 +2,7 @@ package models;
 
 import java.util.UUID;
 
-public class Entity {
+public class Entity implements INameable{
 
 	private String name;
 	private UUID id;
