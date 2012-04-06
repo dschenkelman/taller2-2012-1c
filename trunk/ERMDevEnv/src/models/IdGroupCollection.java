@@ -14,7 +14,7 @@ public class IdGroupCollection {
     }
 
     public Integer addIdGroup(Integer number) throws Exception {
-        if (this.exists(number)) {
+        if (!this.exists(number)) {
             this.idGroups.add(number);
             return number;
         } else {
@@ -44,7 +44,7 @@ public class IdGroupCollection {
             }
         }
 
-        return IterableExtensions.firstOrDefault(this.idGroups, new FieldCmpFunc(), idGroup) == null;
+        return IterableExtensions.firstOrDefault(this.idGroups, new FieldCmpFunc(), idGroup) != null;
     }
 
 
