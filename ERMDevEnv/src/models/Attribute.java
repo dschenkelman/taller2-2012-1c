@@ -8,6 +8,7 @@ public class Attribute implements INameable{
 	private String expression;
 	private IdGroupCollection idGroup;
 	private AttributeType type;
+	
 
 	public Attribute(String name) {
 		super();
@@ -72,5 +73,4 @@ public class Attribute implements INameable{
 	public void setIdGroup(IdGroupCollection idGroup) {
 		this.idGroup = idGroup;
 	}
-
 }
