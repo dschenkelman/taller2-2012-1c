@@ -1,11 +1,5 @@
 package models;
 
-import infrastructure.Func;
-import infrastructure.IterableExtensions;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class EntityCollection extends ModelCollection<Entity>{
 	
 	public EntityCollection () {
