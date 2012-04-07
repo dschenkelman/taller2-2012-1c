@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class IdGroupCollection {
 
-    private ArrayList<Integer> idGroups;
 
     public IdGroupCollection() {
         this.idGroups = new ArrayList<Integer>();
@@ -22,10 +21,6 @@ public class IdGroupCollection {
         }
     }
 
-    public ArrayList<Integer> getIdGroups() {
-        return this.idGroups;
-    }
-
     public void removeIdGroup(Integer number) throws Exception {
 
         if (this.exists(number)) {
@@ -37,14 +32,22 @@ public class IdGroupCollection {
     }
 
     public boolean exists(Integer idGroup) {
-        class FieldCmpFunc extends Func<Integer, Integer, Boolean> {
-            @Override
-            public Boolean execute(Integer field, Integer n) {
-                return field.equals(n);
-            }
-        }
+        return IterableExtensions.firstOrDefault(this.idGroups, new IntegerCmpFunc(), idGroup) != null;
+    }
+    
+    public int count(){
+        return this.idGroups.size();
+    }
 
-        return IterableExtensions.firstOrDefault(this.idGroups, new FieldCmpFunc(), idGroup) != null;
+
+
+    private ArrayList<Integer> idGroups;
+
+    private class IntegerCmpFunc extends Func<Integer, Integer, Boolean> {
+        @Override
+        public Boolean execute(Integer number, Integer n) {
+            return number.equals(n);
+        }
     }
 
 
