@@ -14,6 +14,7 @@ public class Entity implements INameable{
 		this.setName(name);
 		this.setType(EntityType.None);
 		this.id = UUID.randomUUID();
+		
 	}
 
 	public String getName() 

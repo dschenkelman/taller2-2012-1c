@@ -1,7 +1,5 @@
 package models;
 
-import java.util.List;
-
 public class AttributeCollection extends ModelCollection<Attribute> {
 
 	public AttributeCollection() {
