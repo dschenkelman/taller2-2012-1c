@@ -41,7 +41,9 @@ public class IdGroupCollectionManagerXmlTest {
         Element attribute = document.createElement("attribute");
         root.appendChild(attribute);
 
-        IdGroupCollectionXmlManager.addIdGroupCollectionToAttribute(idGroupCollection, document, attribute);
+        Element idGroups = IdGroupCollectionXmlManager.getIdGroupCollectionToAttribute(idGroupCollection, document);
+        attribute.appendChild(idGroups);
+
         XmlManager.writeToFile(document, PATH);
     }
 
@@ -71,12 +73,14 @@ public class IdGroupCollectionManagerXmlTest {
         Element attribute = document.createElement("attribute");
         root.appendChild(attribute);
 
-        IdGroupCollectionXmlManager.addIdGroupCollectionToAttribute(idGroupCollection, document, attribute);
+        Element idGroups = IdGroupCollectionXmlManager.getIdGroupCollectionToAttribute(idGroupCollection, document);
+        attribute.appendChild(idGroups);
+
         XmlManager.writeToFile(document, PATH);
 
 
 
-        IdGroupCollection idGroupCollectionFromXml = IdGroupCollectionXmlManager.getIdGroupCollectionFromXml((Element) XmlManager.readXml(PATH).getDocumentElement().getElementsByTagName("attribute").item(0));
+        IdGroupCollection idGroupCollectionFromXml = IdGroupCollectionXmlManager.getIdGroupCollectionFromElement((Element) XmlManager.readXml(PATH).getDocumentElement().getElementsByTagName("attribute").item(0));
 
         for (int i = 0; i < 10; i++) {
             try {

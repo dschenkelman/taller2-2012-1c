@@ -11,9 +11,9 @@ public class IdGroupCollectionXmlManager {
     private static String IDGROUPTAG = "idGroup";
     private static String NUMBERATTRIBUTE = "number";
 
-    public static IdGroupCollection getIdGroupCollectionFromXml(Element attribute) {
+    public static IdGroupCollection getIdGroupCollectionFromElement(Element element) {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
-        NodeList idGroupsList = attribute.getElementsByTagName(IDGROUPSTAG);
+        NodeList idGroupsList = element.getElementsByTagName(IDGROUPSTAG);
         if (idGroupsList.getLength() != 0) {
             Element idGroups = (Element) idGroupsList.item(0);
             NodeList idGroupList = idGroups.getElementsByTagName(IDGROUPTAG);
@@ -30,15 +30,17 @@ public class IdGroupCollectionXmlManager {
         return idGroupCollection;
     }
 
-    public static void addIdGroupCollectionToAttribute(IdGroupCollection idGroupCollection,Document document,Element attribute){
+    public static Element getIdGroupCollectionToAttribute(IdGroupCollection idGroupCollection, Document document){
 
         Element idGroupsElement = document.createElement(IDGROUPSTAG);
-        attribute.appendChild(idGroupsElement);
+
         Iterable<Integer> idGroupList = idGroupCollection.getIdGroups();
         for(Integer number : idGroupList){
             Element idGroupElement = document.createElement(IDGROUPTAG);
             idGroupElement.setAttribute(NUMBERATTRIBUTE,number.toString());
             idGroupsElement.appendChild(idGroupElement);
         }
+
+        return idGroupsElement;
     }
 }
