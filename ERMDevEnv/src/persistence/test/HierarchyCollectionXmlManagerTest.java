@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import persistence.HierarchyCollectionXmlManager;
+import persistence.XmlManager;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -58,11 +59,11 @@ public class HierarchyCollectionXmlManagerTest {
 
         HierarchyCollectionXmlManager.addHierarchiesElementsFromHierarchyCollection(hierarchyCollection, document, root);
 
-        HierarchyCollectionXmlManager.writeToFile(document, PATH);
+        XmlManager.writeToFile(document, PATH);
     }
 
     @Test
-    public void testCreateHierarchyCollectionFromXml(){
+    public void testCreateHierarchyCollectionFromXml() {
         HierarchyCollection hierarchyCollection = new HierarchyCollection();
         UUID generalEntityUUID = UUID.randomUUID();
         UUID generalEntityUUID1 = UUID.randomUUID();
@@ -105,52 +106,32 @@ public class HierarchyCollectionXmlManagerTest {
 
         HierarchyCollectionXmlManager.addHierarchiesElementsFromHierarchyCollection(hierarchyCollection, document, root);
 
-        HierarchyCollectionXmlManager.writeToFile(document, PATH);
+        XmlManager.writeToFile(document, PATH);
 
-        dBF = DocumentBuilderFactory.newInstance();
-        dBF.setIgnoringComments(true); // Ignore the comments present in the
-// XML File when reading the xml
-        DocumentBuilder builder = null;
-        try {
-            builder = dBF.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
+        HierarchyCollection hierarchyCollectionFromXml = HierarchyCollectionXmlManager.getHierarchyCollectionFromDocument(XmlManager.readXml(PATH));
 
-        InputSource input = new InputSource(PATH);
-        Document doc = null;
-        try {
-            assert builder != null;
-            doc = builder.parse(input);
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-         HierarchyCollection hierarchyCollectionFromXml = HierarchyCollectionXmlManager.getHierarchyCollectionFromDocument(doc);
+        Assert.assertEquals(generalEntityUUID, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID).getGeneralEntityUUID());
+        Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID).isExclusive());
+        Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID).isTotal());
 
-        Assert.assertEquals(generalEntityUUID,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID).getGeneralEntityUUID());
-        Assert.assertEquals(false,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID).isExclusive());
-        Assert.assertEquals(true,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID).isTotal());
+        Assert.assertEquals(generalEntityUUID1, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID1).getGeneralEntityUUID());
+        Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID1).isExclusive());
+        Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID1).isTotal());
 
-        Assert.assertEquals(generalEntityUUID1,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID1).getGeneralEntityUUID());
-        Assert.assertEquals(true,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID1).isExclusive());
-        Assert.assertEquals(true,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID1).isTotal());
+        Assert.assertEquals(generalEntityUUID2, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID2).getGeneralEntityUUID());
+        Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID2).isExclusive());
+        Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID2).isTotal());
 
-        Assert.assertEquals(generalEntityUUID2,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID2).getGeneralEntityUUID());
-        Assert.assertEquals(false,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID2).isExclusive());
-        Assert.assertEquals(false,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID2).isTotal());
-
-        Assert.assertEquals(generalEntityUUID3,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID3).getGeneralEntityUUID());
-        Assert.assertEquals(true,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID3).isExclusive());
-        Assert.assertEquals(false,hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID3).isTotal());
+        Assert.assertEquals(generalEntityUUID3, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID3).getGeneralEntityUUID());
+        Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID3).isExclusive());
+        Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID3).isTotal());
 
         Hierarchy hierarchy = hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID);
-        Assert.assertEquals(true,hierarchy.hasChild(child1));
-        Assert.assertEquals(true,hierarchy.hasChild(child2));
-        Assert.assertEquals(true,hierarchy.hasChild(child3));
-        Assert.assertEquals(true,hierarchy.hasChild(child4));
-        Assert.assertEquals(false,hierarchy.hasChild(UUID.randomUUID()));
+        Assert.assertEquals(true, hierarchy.hasChild(child1));
+        Assert.assertEquals(true, hierarchy.hasChild(child2));
+        Assert.assertEquals(true, hierarchy.hasChild(child3));
+        Assert.assertEquals(true, hierarchy.hasChild(child4));
+        Assert.assertEquals(false, hierarchy.hasChild(UUID.randomUUID()));
     }
 
 }
