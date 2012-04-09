@@ -53,42 +53,6 @@ public class HierarchyCollectionXmlManager {
 
     }
 
-    public static void writeToFile(Document document, String path) {
-// write the XML document to disk
-        try {
-
-// create DOMSource for source XML document
-            Source xmlSource = new DOMSource(document);
-
-// create StreamResult for transformation result
-            Result result = new StreamResult(new FileOutputStream(
-                    path));
-
-// create TransformerFactory
-            TransformerFactory transformerFactory = TransformerFactory
-                    .newInstance();
-
-// create Transformer for transformation
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //Java XML Indent
-
-// transform and deliver content to client
-            transformer.transform(xmlSource, result);
-        }
-
-// handle exception creating TransformerFactory
-        catch (TransformerFactoryConfigurationError factoryError) {
-            System.err.println("Error creating" + "TransformerFactory");
-            factoryError.printStackTrace();
-        } catch (TransformerException transformerError) {
-            System.err.println("Error transforming document");
-            transformerError.printStackTrace();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-    }
-
     private static Node createHierarchyNode(Hierarchy hierarchy, Document document) {
         Element hierarchyElement = document.createElement(HIERARCHY);
 
@@ -128,15 +92,15 @@ public class HierarchyCollectionXmlManager {
     private static void addHierarchiesToHierarchyCollection(NodeList hierarchies, HierarchyCollection hierarchyCollection) {
 
         for (int i = 0; i < hierarchies.getLength(); i++) {
-            Element employeeElement = (Element) hierarchies.item(i);
+            Element hierarchyElement = (Element) hierarchies.item(i);
 
-            boolean exclusive = employeeElement.getAttribute(EXCLUSIVEATTRIBUTE).equals(TRUE);
-            boolean total = employeeElement.getAttribute(TOTALATTRIBUTE).equals(TRUE);
-            UUID generalEntityUUID = UUID.fromString(employeeElement.getAttribute(GENERALENTITYATTRIBUTE));
-            UUID hierarchyId = UUID.fromString(employeeElement.getAttribute(IDATTRIBUTE));
+            boolean exclusive = hierarchyElement.getAttribute(EXCLUSIVEATTRIBUTE).equals(TRUE);
+            boolean total = hierarchyElement.getAttribute(TOTALATTRIBUTE).equals(TRUE);
+            UUID generalEntityUUID = UUID.fromString(hierarchyElement.getAttribute(GENERALENTITYATTRIBUTE));
+            UUID hierarchyId = UUID.fromString(hierarchyElement.getAttribute(IDATTRIBUTE));
             ArrayList<UUID> entityIds = new ArrayList<UUID>();
 
-            NodeList specificsHierarchies = employeeElement.getElementsByTagName(SPECIFICENTITIES);
+            NodeList specificsHierarchies = hierarchyElement.getElementsByTagName(SPECIFICENTITIES);
             if (specificsHierarchies.getLength() != 0) {
                 NodeList entityIdsElement = ((Element) specificsHierarchies.item(0)).getElementsByTagName(ENTITYID);
                 for (int j = 0; j < entityIdsElement.getLength(); j++) {

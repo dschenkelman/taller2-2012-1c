@@ -12,6 +12,10 @@ public class IdGroupCollection {
         this.idGroups = new ArrayList<Integer>();
     }
 
+    public Iterable<Integer> getIdGroups(){
+        return this.idGroups;
+    }
+
     public Integer addIdGroup(Integer number) throws Exception {
         if (!this.exists(number)) {
             this.idGroups.add(number);
