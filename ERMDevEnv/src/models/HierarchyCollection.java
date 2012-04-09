@@ -54,6 +54,10 @@ public class HierarchyCollection {
         return IterableExtensions.firstOrDefault(this.hierarchies, new GeneralHierarchyCmpFunc(), generalEntityUUID);
     }
 
+    public Iterable<Hierarchy> getHierarchies(){
+        return this.hierarchies;
+    }
+
     public void addChild(UUID generalEntityUUID, UUID childUUID) throws Exception {
         Hierarchy hierarchy = getHierarchyWithGeneralEntityUUID(generalEntityUUID);
         if (hierarchy != null) {

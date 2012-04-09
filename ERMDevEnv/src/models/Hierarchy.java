@@ -79,7 +79,7 @@ public class Hierarchy {
         }
     }
 
-    public ArrayList<UUID> getChildren() {
+    public Iterable<UUID> getChildren() {
         return children;
     }
 
@@ -94,6 +94,11 @@ public class Hierarchy {
 
     public boolean hasChild(UUID childUUID) {
         return this.hierarchyHasChild(childUUID);
+    }
+
+
+    public int count() {
+       return this.children.size();
     }
 
     private boolean exclusive;
@@ -111,4 +116,5 @@ public class Hierarchy {
         }
         return IterableExtensions.firstOrDefault(this.children, new UUIDCmpFunc(), uuid) != null;
     }
+
 }
