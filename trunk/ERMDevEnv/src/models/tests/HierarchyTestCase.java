@@ -32,7 +32,7 @@ public class HierarchyTestCase {
         } catch (Exception e) {
             Assert.fail();
         }
-        Assert.assertEquals(1, hierarchy.getChildren().size());
+        Assert.assertEquals(1, hierarchy.count());
     }
 
     @Test(expected = Exception.class)
