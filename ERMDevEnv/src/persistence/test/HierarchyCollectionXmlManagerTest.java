@@ -6,15 +6,12 @@ import models.HierarchyCollection;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import persistence.HierarchyCollectionXmlManager;
 import persistence.XmlManager;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.util.UUID;
 
 public class HierarchyCollectionXmlManagerTest {
@@ -54,10 +51,11 @@ public class HierarchyCollectionXmlManagerTest {
         }
 
         assert document != null;
-        Element root = document.createElement("diagram");
-        document.appendChild(root);
+        Element diagram = document.createElement("diagram");
+        document.appendChild(diagram);
 
-        HierarchyCollectionXmlManager.addHierarchiesElementsFromHierarchyCollection(hierarchyCollection, document, root);
+        Element hierarchies = HierarchyCollectionXmlManager.getHierarchiesElementFromHierarchyCollection(hierarchyCollection, document);
+        diagram.appendChild(hierarchies);
 
         XmlManager.writeToFile(document, PATH);
     }
@@ -101,14 +99,15 @@ public class HierarchyCollectionXmlManagerTest {
         }
 
         assert document != null;
-        Element root = document.createElement("diagram");
-        document.appendChild(root);
+        Element diagram = document.createElement("diagram");
+        document.appendChild(diagram);
 
-        HierarchyCollectionXmlManager.addHierarchiesElementsFromHierarchyCollection(hierarchyCollection, document, root);
+        Element hierarchies = HierarchyCollectionXmlManager.getHierarchiesElementFromHierarchyCollection(hierarchyCollection, document);
+        diagram.appendChild(hierarchies);
 
         XmlManager.writeToFile(document, PATH);
 
-        HierarchyCollection hierarchyCollectionFromXml = HierarchyCollectionXmlManager.getHierarchyCollectionFromDocument(XmlManager.readXml(PATH));
+        HierarchyCollection hierarchyCollectionFromXml = HierarchyCollectionXmlManager.getHierarchyCollectionFromElement(XmlManager.readXml(PATH).getDocumentElement());
 
         Assert.assertEquals(generalEntityUUID, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID).getGeneralEntityUUID());
         Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchyWithGeneralEntityUUID(generalEntityUUID).isExclusive());

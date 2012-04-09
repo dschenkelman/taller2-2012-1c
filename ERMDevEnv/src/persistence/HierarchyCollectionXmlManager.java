@@ -3,19 +3,14 @@ package persistence;
 import models.Hierarchy;
 import models.HierarchyCollection;
 import org.w3c.dom.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
 
 public class HierarchyCollectionXmlManager {
 
-    public static String HIERARCHIES = "hierarchies";
-    public static String HIERARCHY = "hierarchy";
+    private static String HIERARCHIES = "hierarchies";
+    private static String HIERARCHY = "hierarchy";
     private static String SPECIFICENTITIES = "specificEntities";
     private static String ENTITYID = "entityId";
     private static String GENERALENTITYATTRIBUTE = "generalEntityId";
@@ -25,9 +20,8 @@ public class HierarchyCollectionXmlManager {
     private static String TRUE = "true";
     private static String FALSE = "false";
 
-    public static HierarchyCollection getHierarchyCollectionFromDocument(Document document) {
+    public static HierarchyCollection getHierarchyCollectionFromElement(Element diagram) {
         HierarchyCollection hierarchyCollection = new HierarchyCollection();
-        Element diagram = document.getDocumentElement();
 
         NodeList hierarchiesElements = diagram.getElementsByTagName(HIERARCHIES);
 
@@ -40,16 +34,17 @@ public class HierarchyCollectionXmlManager {
         return hierarchyCollection;
     }
 
-    public static void addHierarchiesElementsFromHierarchyCollection(HierarchyCollection hierarchyCollection, Document document, Element diagram) {
+    public static Element getHierarchiesElementFromHierarchyCollection(HierarchyCollection hierarchyCollection, Document document) {
 
         Element hierarchiesElement = document.createElement(HIERARCHIES);
-        diagram.appendChild(hierarchiesElement);
 
         Iterable<Hierarchy> hierarchies = hierarchyCollection.getHierarchies();
         for (Hierarchy hierarchy : hierarchies) {
             Node hierarchyNode = createHierarchyNode(hierarchy, document);
             hierarchiesElement.appendChild(hierarchyNode);
         }
+
+        return hierarchiesElement;
 
     }
 
