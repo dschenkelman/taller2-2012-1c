@@ -1,50 +1,69 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public class Relationship {
 
-	private Entity firstEntity;
-	private Entity secondEntity;
-	private Cardinality firstCardinality;
-	private Cardinality secondCardinality;
-
-	public Relationship(Entity firstEntity, Entity secondEntity) throws Exception 
+	private List<RelationshipEntity> relationshipEntites;
+	private UUID id;
+	private Boolean isComposition;
+	private String name;
+	
+	public Relationship(RelationshipEntity entity1, RelationshipEntity entity2) throws Exception 
 	{
-		this.setFirstEntity(firstEntity);
-		this.setSecondEntity(secondEntity);
-		this.setFirstCardinality(new Cardinality(1, 1));
-		this.setSecondCardinality(new Cardinality(1, 1));
+		this.id = UUID.randomUUID();
+		this.relationshipEntites = new ArrayList<RelationshipEntity>();
+		if (!this.AddRelationshipEntity(entity1) || !this.AddRelationshipEntity(entity2))
+		{
+			throw new Exception();
+		}
 	}
 	
-	public void setFirstEntity(Entity firstEntity) {
-		this.firstEntity = firstEntity;
+	public Boolean AddRelationshipEntity(RelationshipEntity relationshipEntity)
+	{
+		for (RelationshipEntity relEntity : this.relationshipEntites)
+		{
+			if (relEntity.getEntity().getName() == relationshipEntity.getEntity().getName())
+			{
+				String role1 = relationshipEntity.getRole();
+				String role2 = relEntity.getRole();
+				
+				if (role1 == null || role1 == "" || role2 == null || role2 == "" || role1 == role2)
+				{
+					return false;
+				}
+			}
+		}
+		
+		this.relationshipEntites.add(relationshipEntity);
+		return true;
 	}
 
-	public Entity getFirstEntity() {
-		return firstEntity;
+	public Iterable<RelationshipEntity> getRelationshipEntities() 
+	{
+		return this.relationshipEntites;
 	}
 
-	public void setSecondEntity(Entity secondEntity) {
-		this.secondEntity = secondEntity;
+	public UUID getId() {
+		return this.id;
 	}
 
-	public Entity getSecondEntity() {
-		return secondEntity;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public void setSecondCardinality(Cardinality secondCardinality) {
-		this.secondCardinality = secondCardinality;
+	public String getName() {
+		return name;
 	}
 
-	public void setFirstCardinality(Cardinality firstCardinality) {
-		this.firstCardinality = firstCardinality;
-	}
-	
-
-	public Cardinality getFirstCardinality() {
-		return this.firstCardinality;
+	public void setIsComposition(Boolean isComposition) {
+		this.isComposition = isComposition;
 	}
 
-	public Cardinality getSecondCardinality() {
-		return this.secondCardinality;
+	public Boolean getIsComposition() {
+		return isComposition;
 	}
+
 }
