@@ -31,6 +31,7 @@ public class RelationshipTestCase
 		Relationship relationship = new Relationship(relationshipEntity, relationshipEntity2);
 		
 		Assert.assertTrue(relationship.getId() instanceof UUID);
+		Assert.assertEquals(0, relationship.getAttributes().count());
 	}
 	
 	@Test

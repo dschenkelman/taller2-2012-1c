@@ -10,9 +10,11 @@ public class Relationship {
 	private UUID id;
 	private Boolean isComposition;
 	private String name;
+	private AttributeCollection attributes;
 	
 	public Relationship(RelationshipEntity entity1, RelationshipEntity entity2) throws Exception 
 	{
+		this.attributes = new AttributeCollection();
 		this.id = UUID.randomUUID();
 		this.relationshipEntites = new ArrayList<RelationshipEntity>();
 		if (!this.AddRelationshipEntity(entity1) || !this.AddRelationshipEntity(entity2))
@@ -64,6 +66,10 @@ public class Relationship {
 
 	public Boolean getIsComposition() {
 		return isComposition;
+	}
+
+	public AttributeCollection getAttributes() {
+		return this.attributes; 
 	}
 
 }

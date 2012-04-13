@@ -7,6 +7,7 @@ public class Entity implements INameable{
 	private String name;
 	private UUID id;
 	private EntityType type;
+	private AttributeCollection attributes;
 	
 	public Entity(String name) 
 	{
@@ -14,7 +15,7 @@ public class Entity implements INameable{
 		this.setName(name);
 		this.setType(EntityType.None);
 		this.id = UUID.randomUUID();
-		
+		this.attributes = new AttributeCollection();
 	}
 
 	public String getName() 
@@ -37,6 +38,10 @@ public class Entity implements INameable{
 
 	public EntityType getType() {
 		return type;
+	}
+
+	public AttributeCollection getAttributes() {
+		return this.attributes;
 	}
 	
 	
