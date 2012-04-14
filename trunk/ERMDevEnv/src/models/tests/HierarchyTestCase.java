@@ -69,4 +69,18 @@ public class HierarchyTestCase {
         Hierarchy hierarchy = new Hierarchy(uuid, true, true);
         hierarchy.removeChild(uuid);
     }
+
+    @Test
+    public void testHasChild() {
+        UUID uuid = UUID.randomUUID();
+        Hierarchy hierarchy = new Hierarchy(uuid, true, true);
+        Assert.assertEquals(false, hierarchy.hasChild(uuid));
+        UUID child = UUID.randomUUID();
+        try {
+            hierarchy.addChildEntity(child);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+        Assert.assertEquals(true, hierarchy.hasChild(child));
+    }
 }

@@ -105,7 +105,7 @@ public class HierarchyCollectionXmlManager {
             }
 
             try {
-                hierarchyCollection.addHierarchy(hierarchyId, generalEntityUUID, exclusive, total, entityIds);
+                hierarchyCollection.createHierarchy(hierarchyId, generalEntityUUID, exclusive, total, entityIds);
             } catch (Exception e) {
                 e.printStackTrace();
             }

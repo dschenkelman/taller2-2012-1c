@@ -1,5 +1,6 @@
 package models.tests;
 
+import infrastructure.IterableExtensions;
 import junit.framework.Assert;
 import models.Hierarchy;
 import models.HierarchyCollection;
@@ -24,27 +25,21 @@ public class HierarchyCollectionTest {
         boolean exclusive = true;
         boolean total = true;
 
-        try {
-            Hierarchy hierarchy = hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
-            Assert.assertEquals(generalEntityUUID, hierarchy.getGeneralEntityUUID());
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        Hierarchy hierarchy = hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        Assert.assertEquals(generalEntityUUID, hierarchy.getGeneralEntityUUID());
 
+        UUID hierarchyUUID = null;
         try {
-            UUID hierarchyUUID = UUID.randomUUID();
-            Hierarchy hierarchy = hierarchyCollection.addHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
+            hierarchyUUID = UUID.randomUUID();
+            hierarchy = hierarchyCollection.createHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
             Assert.assertEquals(hierarchyUUID, hierarchy.getUUID());
+            Assert.assertEquals(exclusive, hierarchy.isExclusive());
+            Assert.assertEquals(total, hierarchy.isTotal());
         } catch (Exception e) {
             Assert.fail();
         }
 
         Assert.assertEquals(2, hierarchyCollection.count());
-
-        Hierarchy hierarchy = hierarchyCollection.getHierarchyWithGeneralEntityUUID(generalEntityUUID);
-        Assert.assertEquals(exclusive, hierarchy.isExclusive());
-        Assert.assertEquals(total, hierarchy.isTotal());
-
     }
 
     @Test(expected = Exception.class)
@@ -58,8 +53,8 @@ public class HierarchyCollectionTest {
 
         hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
         hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
-        hierarchyCollection.addHierarchy(hierarchyUUID, generalEntityUUID, exclusive, total, new ArrayList<UUID>());
-        hierarchyCollection.addHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(hierarchyUUID, generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
 
     }
 
@@ -71,16 +66,16 @@ public class HierarchyCollectionTest {
         boolean exclusive = true;
         boolean total = true;
 
-        try {
-            hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
-            Assert.assertEquals(generalEntityUUID, hierarchyCollection.getHierarchyWithGeneralEntityUUID(generalEntityUUID).getGeneralEntityUUID());
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        Assert.assertEquals(generalEntityUUID, hierarchyCollection.getHierarchiesWithGeneralEntityUUID(generalEntityUUID).iterator().next().getGeneralEntityUUID());
+        Assert.assertEquals(3, IterableExtensions.count(hierarchyCollection.getHierarchiesWithGeneralEntityUUID(generalEntityUUID)));
+
 
         try {
             UUID hierarchyUUID = UUID.randomUUID();
-            hierarchyCollection.addHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
+            hierarchyCollection.createHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
             Assert.assertEquals(hierarchyUUID, hierarchyCollection.getHierarchy(hierarchyUUID).getUUID());
         } catch (Exception e) {
             Assert.fail();
@@ -97,9 +92,8 @@ public class HierarchyCollectionTest {
         boolean total = true;
 
         try {
-            hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total);
-            hierarchyCollection.addChild(generalEntityUUID, childUUID);
-            Hierarchy hierarchy = hierarchyCollection.getHierarchyWithGeneralEntityUUID(generalEntityUUID);
+            Hierarchy hierarchy = hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total);
+            hierarchyCollection.addChild(hierarchy.getUUID(), childUUID);
             hierarchy.hasChild(childUUID);
         } catch (Exception e) {
             Assert.fail();
@@ -116,10 +110,7 @@ public class HierarchyCollectionTest {
         boolean total = true;
 
         hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total);
-        hierarchyCollection.addChild(generalEntityUUID, childUUID);
-        Hierarchy hierarchy = hierarchyCollection.getHierarchyWithGeneralEntityUUID(generalEntityUUID);
-        hierarchy.hasChild(childUUID);
-        hierarchyCollection.addChild(generalEntityUUID, childUUID);
+        hierarchyCollection.addChild(UUID.randomUUID(), childUUID);
     }
 
     @Test
@@ -131,22 +122,12 @@ public class HierarchyCollectionTest {
         boolean exclusive = true;
         boolean total = true;
 
-        try {
-            Hierarchy hierarchy = hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
-            Assert.assertEquals(generalEntityUUID, hierarchy.getGeneralEntityUUID());
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        Hierarchy hierarchy = hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        Assert.assertEquals(generalEntityUUID, hierarchy.getGeneralEntityUUID());
 
         try {
-            Hierarchy hierarchy = hierarchyCollection.addHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
+            hierarchy = hierarchyCollection.createHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
             Assert.assertEquals(hierarchyUUID, hierarchy.getUUID());
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        try {
-            hierarchyCollection.removeHierarchyWithGeneralEntityUUID(generalEntityUUID);
         } catch (Exception e) {
             Assert.fail();
         }
@@ -168,25 +149,14 @@ public class HierarchyCollectionTest {
         boolean exclusive = true;
         boolean total = true;
 
-        hierarchyCollection.removeHierarchyWithGeneralEntityUUID(generalEntityUUID);
         hierarchyCollection.removeHierarchy(hierarchyUUID);
 
-        try {
-            Hierarchy hierarchy = hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
-            Assert.assertEquals(generalEntityUUID, hierarchy.getGeneralEntityUUID());
-        } catch (Exception e) {
-            Assert.fail();
-        }
+        Hierarchy hierarchy = hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        Assert.assertEquals(generalEntityUUID, hierarchy.getGeneralEntityUUID());
 
         try {
-            Hierarchy hierarchy = hierarchyCollection.addHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
+            hierarchy = hierarchyCollection.createHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
             Assert.assertEquals(generalEntityUUID, hierarchy.getGeneralEntityUUID());
-        } catch (Exception e) {
-            Assert.fail();
-        }
-
-        try {
-            hierarchyCollection.removeHierarchyWithGeneralEntityUUID(generalEntityUUID);
         } catch (Exception e) {
             Assert.fail();
         }
