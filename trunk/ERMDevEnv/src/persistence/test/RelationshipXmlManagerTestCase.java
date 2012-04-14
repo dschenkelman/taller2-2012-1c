@@ -1,8 +1,8 @@
 package persistence.test;
 
 
-import javax.xml.parsers.DocumentBuilder;
-
+import infrastructure.Func;
+import infrastructure.IterableExtensions;
 import junit.framework.Assert;
 
 import models.Cardinality;
@@ -22,7 +22,7 @@ import persistence.RelationshipXmlManager;
 public class RelationshipXmlManagerTestCase {
 
 	@Test
-	public void shouldGenerateXmlElementFromRelationship() throws Exception{
+	public void testShouldGenerateXmlElementFromRelationship() throws Exception{
 		
 		Entity entity1 = new Entity("Entity1");
 		Entity entity2 = new Entity("Entity2");
@@ -96,6 +96,76 @@ public class RelationshipXmlManagerTestCase {
 		Assert.assertEquals("2", entityElement4.getAttribute("minimumCardinality"));
 		Assert.assertEquals("7", entityElement4.getAttribute("maximumCardinality"));
 		Assert.assertEquals("Role4", entityElement4.getAttribute("role"));
+	}
+	
+	@Test
+	public void testShouldGenerateRelationshipFromXml() throws Exception{
+		String xml = "<relationships><relationship id='01854049-A762-4392-9357-A213C4110220' " +
+				"name='Relationship' composition='true'><entities>" +
+				"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B8' minimumCardinality='0'" +
+				" maximumCardinality='1' role='Role1' />" +
+				"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B7' minimumCardinality='0'" +
+				" maximumCardinality='*' role='Role2' />" +
+				"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B6' minimumCardinality='*'" +
+				" maximumCardinality='*' role='Role3' />" +
+				"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B5' minimumCardinality='2'" +
+				" maximumCardinality='7' role='Role4' />" +
+				"</entities></relationship></relationships>";
+		
+		Document document = TestUtilities.loadXMLFromString(xml);
+		Element relationshipElement = (Element) document.getElementsByTagName("relationship").item(0);
+		
+		RelationshipXmlManager xmlManager = new RelationshipXmlManager();
+		
+		Relationship relationship = xmlManager.getItemFromXmlElement(relationshipElement);
+		
+		Assert.assertEquals("01854049-a762-4392-9357-a213c4110220", relationship.getId().toString());
+		Assert.assertEquals("Relationship", relationship.getName());
+		Assert.assertTrue(relationship.isComposition());
+		
+		Iterable<RelationshipEntity> relationshipEntities = relationship.getRelationshipEntities();
+		Assert.assertEquals(4, IterableExtensions.count(relationshipEntities));
+		
+		Func<RelationshipEntity, String, Boolean> cmpFunc = new Func<RelationshipEntity, String, Boolean>(){
+
+			@Override
+			public Boolean execute(RelationshipEntity relationshipEntity,
+					String id) {
+				return relationshipEntity.getEntityId().toString().equalsIgnoreCase(id);
+			};
+		};
+		
+		RelationshipEntity relationshipEntity1 = IterableExtensions.firstOrDefault(relationshipEntities,
+				cmpFunc, "0E6A2A75-A645-4665-85C8-21179BF362B8");
+		
+		Assert.assertEquals("0e6a2a75-a645-4665-85c8-21179bf362b8", relationshipEntity1.getEntityId().toString());
+		Assert.assertEquals(1.0, relationshipEntity1.getCardinality().getMaximum());
+		Assert.assertEquals(0.0, relationshipEntity1.getCardinality().getMinimum());
+		Assert.assertEquals("Role1", relationshipEntity1.getRole());
+		
+		RelationshipEntity relationshipEntity2 = IterableExtensions.firstOrDefault(relationshipEntities,
+				cmpFunc, "0E6A2A75-A645-4665-85C8-21179BF362B7");
+		
+		Assert.assertEquals("0e6a2a75-a645-4665-85c8-21179bf362b7", relationshipEntity2.getEntityId().toString());
+		Assert.assertEquals(Double.POSITIVE_INFINITY, relationshipEntity2.getCardinality().getMaximum());
+		Assert.assertEquals(0.0, relationshipEntity2.getCardinality().getMinimum());
+		Assert.assertEquals("Role2", relationshipEntity2.getRole());
+		
+		RelationshipEntity relationshipEntity3 = IterableExtensions.firstOrDefault(relationshipEntities,
+				cmpFunc, "0E6A2A75-A645-4665-85C8-21179BF362B6");
+		
+		Assert.assertEquals("0e6a2a75-a645-4665-85c8-21179bf362b6", relationshipEntity3.getEntityId().toString());
+		Assert.assertEquals(Double.POSITIVE_INFINITY, relationshipEntity3.getCardinality().getMaximum());
+		Assert.assertEquals(Double.POSITIVE_INFINITY, relationshipEntity3.getCardinality().getMinimum());
+		Assert.assertEquals("Role3", relationshipEntity3.getRole());
+		
+		RelationshipEntity relationshipEntity4 = IterableExtensions.firstOrDefault(relationshipEntities,
+				cmpFunc, "0E6A2A75-A645-4665-85C8-21179BF362B5");
+		
+		Assert.assertEquals("0e6a2a75-a645-4665-85c8-21179bf362b5", relationshipEntity4.getEntityId().toString());
+		Assert.assertEquals(7.0, relationshipEntity4.getCardinality().getMaximum());
+		Assert.assertEquals(2.0, relationshipEntity4.getCardinality().getMinimum());
+		Assert.assertEquals("Role4", relationshipEntity4.getRole());
 	}
 	
 	@Before
