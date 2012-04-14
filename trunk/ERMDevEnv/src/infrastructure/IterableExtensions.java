@@ -20,7 +20,7 @@ public class IterableExtensions {
         return null;
     }
 
-    public static <T, U> Iterable<T> all(Iterable<T> iterable, Func<T, U, Boolean> func, U param) {
+    public static <T, U> Iterable<T> where(Iterable<T> iterable, Func<T, U, Boolean> func, U param) {
 
         ArrayList<T> allItems = new ArrayList<T>();
         for (T item : iterable) {

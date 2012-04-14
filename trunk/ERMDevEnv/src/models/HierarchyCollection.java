@@ -43,7 +43,7 @@ public class HierarchyCollection {
     }
 
     public Iterable<Hierarchy> getHierarchiesWithGeneralEntityUUID(UUID generalEntityUUID) {
-        return IterableExtensions.all(this.hierarchies, new GeneralHierarchyCmpFunc(), generalEntityUUID);
+        return IterableExtensions.where(this.hierarchies, new GeneralHierarchyCmpFunc(), generalEntityUUID);
     }
 
     public Iterable<Hierarchy> getHierarchies() {

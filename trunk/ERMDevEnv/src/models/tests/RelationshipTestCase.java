@@ -139,7 +139,7 @@ public class RelationshipTestCase
 			}
 		};
 		
-		relationship.AddRelationshipEntity(relationshipEntity3);
+		relationship.addRelationshipEntity(relationshipEntity3);
 		
 		Iterable<RelationshipEntity> relationshipEntities = relationship.getRelationshipEntities();
 		Assert.assertEquals(3, IterableExtensions.count(relationshipEntities));
@@ -166,7 +166,7 @@ public class RelationshipTestCase
 			new RelationshipEntity(this.firstEntity, new Cardinality(0, 1),"role");
 		
 		Relationship relationship = new Relationship(relationshipEntity, relationshipEntity2);
-		Assert.assertFalse(relationship.AddRelationshipEntity(relationshipEntity3));
+		Assert.assertFalse(relationship.addRelationshipEntity(relationshipEntity3));
 	}
 	
 	@Test
@@ -182,7 +182,7 @@ public class RelationshipTestCase
 			new RelationshipEntity(this.firstEntity, new Cardinality(0, 1),"");
 		
 		Relationship relationship = new Relationship(relationshipEntity, relationshipEntity2);
-		Assert.assertFalse(relationship.AddRelationshipEntity(relationshipEntity3));
+		Assert.assertFalse(relationship.addRelationshipEntity(relationshipEntity3));
 	}
 	
 	@Test
@@ -198,7 +198,7 @@ public class RelationshipTestCase
 			new RelationshipEntity(this.firstEntity, new Cardinality(0, 1),"role");
 		
 		Relationship relationship = new Relationship(relationshipEntity, relationshipEntity2);
-		Assert.assertFalse(relationship.AddRelationshipEntity(relationshipEntity3));
+		Assert.assertFalse(relationship.addRelationshipEntity(relationshipEntity3));
 	}
 	
 	@Test
@@ -214,7 +214,7 @@ public class RelationshipTestCase
 			new RelationshipEntity(this.firstEntity, new Cardinality(0, 1),"role2");
 		
 		Relationship relationship = new Relationship(relationshipEntity, relationshipEntity2);
-		Assert.assertTrue(relationship.AddRelationshipEntity(relationshipEntity3));
+		Assert.assertTrue(relationship.addRelationshipEntity(relationshipEntity3));
 		Assert.assertEquals(3, IterableExtensions.count(relationship.getRelationshipEntities()));
 	}
 	

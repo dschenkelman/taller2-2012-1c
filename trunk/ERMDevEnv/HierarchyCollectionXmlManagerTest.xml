@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram>
+  <hierarchies>
+    <hierarchy exclusive="true" generalEntityId="bf6c1547-c2e1-45c7-92b3-6be13e1c519e" id="16069314-e9a9-4288-8732-c41cd1bc2aa9" total="false">
+      <specificEntities>
+        <entityId>c391336d-511e-4daa-8878-e9c2f9d9483e</entityId>
+        <entityId>f6f4e4f7-c52d-416f-9fcf-25fe9fe86155</entityId>
+        <entityId>7b7a25b9-8988-4ec7-9ca5-01b601cf3f48</entityId>
+        <entityId>071573d6-23b1-4204-9296-318411f5cc27</entityId>
+      </specificEntities>
+    </hierarchy>
+    <hierarchy exclusive="true" generalEntityId="fbf0dfd1-156c-462f-9b8d-89f66a0ca03b" id="6b7d24ac-a24e-4802-b2ac-259723759fcb" total="true">
+      <specificEntities/>
+    </hierarchy>
+    <hierarchy exclusive="false" generalEntityId="59eae3cc-fdd9-4a89-a542-3a737de84d3d" id="925d5100-973f-468e-bf26-9347a9dbb026" total="false">
+      <specificEntities/>
+    </hierarchy>
+    <hierarchy exclusive="false" generalEntityId="25c7bbf3-c7ce-4764-86ca-d6ce377c53c5" id="2834cee2-95ce-485f-b96b-1311ca785ee2" total="true">
+      <specificEntities/>
+    </hierarchy>
+  </hierarchies>
+</diagram>
