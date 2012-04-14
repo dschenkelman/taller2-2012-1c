@@ -73,7 +73,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:attribute name="entityId" type="guid" use="optional"/>
     </xs:complexType>
 
     <xs:complexType name="attributeCollection">
