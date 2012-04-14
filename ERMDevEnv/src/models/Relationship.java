@@ -17,13 +17,13 @@ public class Relationship {
 		this.attributes = new AttributeCollection();
 		this.id = UUID.randomUUID();
 		this.relationshipEntites = new ArrayList<RelationshipEntity>();
-		if (!this.AddRelationshipEntity(entity1) || !this.AddRelationshipEntity(entity2))
+		if (!this.addRelationshipEntity(entity1) || !this.addRelationshipEntity(entity2))
 		{
 			throw new Exception();
 		}
 	}
 	
-	public Boolean AddRelationshipEntity(RelationshipEntity relationshipEntity)
+	public Boolean addRelationshipEntity(RelationshipEntity relationshipEntity)
 	{
 		for (RelationshipEntity relEntity : this.relationshipEntites)
 		{
@@ -60,11 +60,11 @@ public class Relationship {
 		return name;
 	}
 
-	public void setIsComposition(Boolean isComposition) {
+	public void isComposition(Boolean isComposition) {
 		this.isComposition = isComposition;
 	}
 
-	public Boolean getIsComposition() {
+	public Boolean isComposition() {
 		return isComposition;
 	}
 

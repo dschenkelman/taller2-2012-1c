@@ -49,7 +49,7 @@ public class IterableExtensionsTestCase {
     }
 
     @Test
-    public void testAll() {
+    public void testWhereReturnsItemsThatMatchCondition() {
         class CmpFunc extends Func<Integer, Integer, Boolean> {
             @Override
             public Boolean execute(Integer val, Integer param) {
@@ -57,21 +57,21 @@ public class IterableExtensionsTestCase {
             }
         }
 
-        Iterable<Integer> value = IterableExtensions.all(this.iterable3, new CmpFunc(), 5);
+        Iterable<Integer> value = IterableExtensions.where(this.iterable3, new CmpFunc(), 5);
         int count = 0;
         for (Integer val : value) {
             count = (val == 5) ? count + 1 : count;
         }
         Assert.assertEquals(2, count);
 
-        value = IterableExtensions.all(this.iterable1, new CmpFunc(), 5);
+        value = IterableExtensions.where(this.iterable1, new CmpFunc(), 5);
         count = 0;
         for (Integer val : value) {
             count = (val == 5) ? count + 1 : count;
         }
         Assert.assertEquals(1, count);
 
-        value = IterableExtensions.all(this.iterable1, new CmpFunc(), 500);
+        value = IterableExtensions.where(this.iterable1, new CmpFunc(), 500);
         count = 0;
         for (Integer val : value) {
             count = (val == 5) ? count + 1 : count;
