@@ -45,22 +45,22 @@ public class RelationshipTestCase
 		
 		Relationship relationship = new Relationship(relationshipEntity, relationshipEntity2);
 		
-		Func<RelationshipEntity, String, Boolean> cmpFunc = new Func<RelationshipEntity, String, Boolean>() 
+		Func<RelationshipEntity, UUID, Boolean> cmpFunc = new Func<RelationshipEntity, UUID, Boolean>() 
 		{
 			@Override
 			public Boolean execute(RelationshipEntity relEntity,
-					String name) {
-				return relEntity.getEntity().getName() == name;
+					UUID id) {
+				return relEntity.getEntityId() == id;
 			}
 		};
 		
 		Iterable<RelationshipEntity> relationshipEntities = relationship.getRelationshipEntities();
 		Assert.assertEquals(2, IterableExtensions.count(relationshipEntities));
 		Assert.assertSame(relationshipEntity, IterableExtensions.firstOrDefault(relationshipEntities,
-				cmpFunc, "RelatedEntity1"));
+				cmpFunc, this.firstEntity.getId()));
 		
 		Assert.assertSame(relationshipEntity2, IterableExtensions.firstOrDefault(relationshipEntities,
-				cmpFunc, "RelatedEntity2"));
+				cmpFunc, this.secondEntity.getId()));
 	}
 	
 	@Test
@@ -74,22 +74,22 @@ public class RelationshipTestCase
 		
 		Relationship relationship = new Relationship(relationshipEntity, relationshipEntity2);
 		
-		Func<RelationshipEntity, String, Boolean> cmpFunc = new Func<RelationshipEntity, String, Boolean>() 
+		Func<RelationshipEntity, UUID, Boolean> cmpFunc = new Func<RelationshipEntity, UUID, Boolean>() 
 		{
 			@Override
 			public Boolean execute(RelationshipEntity relEntity,
-					String name) {
-				return relEntity.getEntity().getName() == name;
+					UUID id) {
+				return relEntity.getEntityId() == id;
 			}
 		};
 		
 		Iterable<RelationshipEntity> relationshipEntities = relationship.getRelationshipEntities();
 		Assert.assertEquals(2, IterableExtensions.count(relationshipEntities));
 		Assert.assertSame(relationshipEntity, IterableExtensions.firstOrDefault(relationshipEntities,
-				cmpFunc, "RelatedEntity1"));
+				cmpFunc, this.firstEntity.getId()));
 		
 		Assert.assertSame(relationshipEntity2, IterableExtensions.firstOrDefault(relationshipEntities,
-				cmpFunc, "RelatedEntity2"));
+				cmpFunc, this.secondEntity.getId()));
 	}
 	
 	@Test(expected=Exception.class)
@@ -130,12 +130,12 @@ public class RelationshipTestCase
 		
 		Relationship relationship = new Relationship(relationshipEntity, relationshipEntity2);
 		
-		Func<RelationshipEntity, String, Boolean> cmpFunc = new Func<RelationshipEntity, String, Boolean>() 
+		Func<RelationshipEntity, UUID, Boolean> cmpFunc = new Func<RelationshipEntity, UUID, Boolean>() 
 		{
 			@Override
 			public Boolean execute(RelationshipEntity relEntity,
-					String name) {
-				return relEntity.getEntity().getName() == name;
+					UUID id) {
+				return relEntity.getEntityId() == id;
 			}
 		};
 		
@@ -144,13 +144,13 @@ public class RelationshipTestCase
 		Iterable<RelationshipEntity> relationshipEntities = relationship.getRelationshipEntities();
 		Assert.assertEquals(3, IterableExtensions.count(relationshipEntities));
 		Assert.assertSame(relationshipEntity, IterableExtensions.firstOrDefault(relationshipEntities,
-				cmpFunc, "RelatedEntity1"));
+				cmpFunc, this.firstEntity.getId()));
 		
 		Assert.assertSame(relationshipEntity2, IterableExtensions.firstOrDefault(relationshipEntities,
-				cmpFunc, "RelatedEntity2"));
+				cmpFunc, this.secondEntity.getId()));
 		
 		Assert.assertSame(relationshipEntity3, IterableExtensions.firstOrDefault(relationshipEntities,
-				cmpFunc, "RelatedEntity3"));
+				cmpFunc, this.thirdEntity.getId()));
 	}
 	
 	@Test

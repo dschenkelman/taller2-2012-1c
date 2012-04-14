@@ -1,25 +1,27 @@
 package models;
 
+import java.util.UUID;
+
 public class RelationshipEntity {
-	private Entity entity;
 	private Cardinality cardinality;
 	private String role;
+	private UUID entityId;
 	
 	
 	public RelationshipEntity(Entity entity) {
-		super();
-		this.entity = entity;
-		this.setCardinality(null);
-		this.setRole(null);
+		this(entity.getId(), null, null);
 	}
 
 	public RelationshipEntity(Entity entity, Cardinality cardinality,
-			String role) {
+			String role) {		
+		this(entity.getId(), cardinality, role);
+	}
+
+	public RelationshipEntity(UUID id, Cardinality cardinality, String role) {
 		super();
-		this.entity = entity;
+		this.entityId = id;
 		this.cardinality = cardinality;
 		this.role = role;
-		
 	}
 
 	public void setCardinality(Cardinality cardinality) {
@@ -38,8 +40,8 @@ public class RelationshipEntity {
 		return this.role;
 	}
 
-	public Entity getEntity() {
-		return this.entity;
+	public UUID getEntityId() {
+		return this.entityId;
 	}
 	
 }

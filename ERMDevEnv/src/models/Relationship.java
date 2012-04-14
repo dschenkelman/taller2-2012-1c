@@ -14,20 +14,26 @@ public class Relationship {
 	
 	public Relationship(RelationshipEntity entity1, RelationshipEntity entity2) throws Exception 
 	{
-		this.attributes = new AttributeCollection();
-		this.id = UUID.randomUUID();
-		this.relationshipEntites = new ArrayList<RelationshipEntity>();
+		this(UUID.randomUUID(), null, false);
 		if (!this.addRelationshipEntity(entity1) || !this.addRelationshipEntity(entity2))
 		{
 			throw new Exception();
 		}
 	}
 	
+	public Relationship(UUID id, String name, Boolean isComposition) {
+		this.attributes = new AttributeCollection();
+		this.relationshipEntites = new ArrayList<RelationshipEntity>();
+		this.id = id;
+		this.isComposition = isComposition;
+		this.name = name;
+	}
+
 	public Boolean addRelationshipEntity(RelationshipEntity relationshipEntity)
 	{
 		for (RelationshipEntity relEntity : this.relationshipEntites)
 		{
-			if (relEntity.getEntity().getName() == relationshipEntity.getEntity().getName())
+			if (relEntity.getEntityId() == relationshipEntity.getEntityId())
 			{
 				String role1 = relationshipEntity.getRole();
 				String role2 = relEntity.getRole();
