@@ -8,17 +8,6 @@ import java.util.UUID;
 
 public class Hierarchy {
 
-
-    /**
-     * Create a partial and not exclusive Hierarchy without a UUID
-     */
-    public Hierarchy() {
-        this.exclusive = false;
-        this.total = false;
-        this.children = new ArrayList<UUID>();
-        this.hierarchyUUID = null;
-    }
-
     public Hierarchy(UUID generalEntityUUID, boolean exclusive, boolean total) {
         this.exclusive = exclusive;
         this.total = total;

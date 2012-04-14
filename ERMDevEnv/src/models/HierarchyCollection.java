@@ -12,29 +12,21 @@ public class HierarchyCollection {
         this.hierarchies = new ArrayList<Hierarchy>();
     }
 
-    public Hierarchy createHierarchy(UUID generalEntityUUID, boolean exclusive, boolean total, ArrayList<UUID> childrenUUID) throws Exception {
-        if (!existsHierarchyWithGeneralEntityUUID(generalEntityUUID)) {
-            Hierarchy hierarchy = new Hierarchy(generalEntityUUID, total, exclusive, childrenUUID);
-            this.hierarchies.add(hierarchy);
-            return hierarchy;
-        } else {
-            throw new Exception("A hierarchy with general entity with uuid: " + generalEntityUUID + " already exists");
-        }
+    public Hierarchy createHierarchy(UUID generalEntityUUID, boolean exclusive, boolean total, ArrayList<UUID> childrenUUID) {
+        Hierarchy hierarchy = new Hierarchy(generalEntityUUID, total, exclusive, childrenUUID);
+        this.hierarchies.add(hierarchy);
+        return hierarchy;
     }
 
-    public Hierarchy createHierarchy(UUID generalEntityUUID, boolean exclusive, boolean total) throws Exception {
-        if (!existsHierarchyWithGeneralEntityUUID(generalEntityUUID)) {
-            Hierarchy hierarchy = new Hierarchy(generalEntityUUID, total, exclusive);
-            this.hierarchies.add(hierarchy);
-            return hierarchy;
-        } else {
-            throw new Exception("A hierarchy with general entity with uuid: " + generalEntityUUID + " already exists");
-        }
+    public Hierarchy createHierarchy(UUID generalEntityUUID, boolean exclusive, boolean total) {
+        Hierarchy hierarchy = new Hierarchy(generalEntityUUID, total, exclusive);
+        this.hierarchies.add(hierarchy);
+        return hierarchy;
     }
 
-    public Hierarchy addHierarchy(UUID hierarchyUUID, UUID generalEntityUUID, boolean exclusive, boolean total, ArrayList<UUID> childrenUUID) throws Exception {
+    public Hierarchy createHierarchy(UUID hierarchyUUID, UUID generalEntityUUID, boolean exclusive, boolean total, ArrayList<UUID> childrenUUID) throws Exception {
         if (!existsHierarchy(hierarchyUUID)) {
-            Hierarchy hierarchy = createHierarchy(generalEntityUUID, exclusive, total, childrenUUID);
+            Hierarchy hierarchy = this.createHierarchy(generalEntityUUID, exclusive, total, childrenUUID);
             hierarchy.setHierarchyUUID(hierarchyUUID);
             return hierarchy;
         } else {
@@ -43,27 +35,27 @@ public class HierarchyCollection {
     }
 
     public int count() {
-        return this.hierarchies.size();
+        return IterableExtensions.count(this.hierarchies);
     }
 
     public Hierarchy getHierarchy(UUID hierarchyUUID) {
         return IterableExtensions.firstOrDefault(this.hierarchies, new HierarchyCmpFunc(), hierarchyUUID);
     }
 
-    public Hierarchy getHierarchyWithGeneralEntityUUID(UUID generalEntityUUID) {
-        return IterableExtensions.firstOrDefault(this.hierarchies, new GeneralHierarchyCmpFunc(), generalEntityUUID);
+    public Iterable<Hierarchy> getHierarchiesWithGeneralEntityUUID(UUID generalEntityUUID) {
+        return IterableExtensions.all(this.hierarchies, new GeneralHierarchyCmpFunc(), generalEntityUUID);
     }
 
-    public Iterable<Hierarchy> getHierarchies(){
+    public Iterable<Hierarchy> getHierarchies() {
         return this.hierarchies;
     }
 
-    public void addChild(UUID generalEntityUUID, UUID childUUID) throws Exception {
-        Hierarchy hierarchy = getHierarchyWithGeneralEntityUUID(generalEntityUUID);
+    public void addChild(UUID hierarchyUUID, UUID childEntityUUID) throws Exception {
+        Hierarchy hierarchy = this.getHierarchy(hierarchyUUID);
         if (hierarchy != null) {
-            hierarchy.addChildEntity(childUUID);
+            hierarchy.addChildEntity(childEntityUUID);
         } else {
-            throw new Exception("Do not exists a general entity with uuid: " + generalEntityUUID);
+            throw new Exception("Do not exists a hierarchy with uuid: " + hierarchyUUID);
         }
     }
 
@@ -76,20 +68,7 @@ public class HierarchyCollection {
         }
     }
 
-    public void removeHierarchyWithGeneralEntityUUID(UUID generalEntityUUID) throws Exception {
-        if (existsHierarchyWithGeneralEntityUUID(generalEntityUUID)) {
-            this.hierarchies.remove(this.getHierarchyWithGeneralEntityUUID(generalEntityUUID));
-        } else {
-            throw new Exception("Do not exists a hierarchy with general entity's uuid: " + generalEntityUUID);
-        }
-    }
-
-
     private ArrayList<Hierarchy> hierarchies;
-
-    private boolean existsHierarchyWithGeneralEntityUUID(UUID generalEntityUUID) {
-        return IterableExtensions.firstOrDefault(this.hierarchies, new GeneralHierarchyCmpFunc(), generalEntityUUID) != null;
-    }
 
     private boolean existsHierarchy(UUID entityUUID) {
         return IterableExtensions.firstOrDefault(this.hierarchies, new HierarchyCmpFunc(), entityUUID) != null;
