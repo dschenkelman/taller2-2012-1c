@@ -6,6 +6,7 @@ import controllers.IEntityController;
 public class MockEntityController implements IEntityController{
 
 	private Entity entity;
+	private int createCalls;
 
 	public void setEntity(Entity entity)
 	{
@@ -14,7 +15,12 @@ public class MockEntityController implements IEntityController{
 	
 	@Override
 	public Entity create() {
+		this.createCalls++;
 		return entity;
+	}
+
+	public int getCreateCallsCount() {
+		return createCalls;
 	}
 	
 }

@@ -10,7 +10,6 @@ import org.junit.Test;
 import com.mxgraph.model.mxCell;
 
 import controllers.DiagramController;
-import controllers.StyleConstants;
 import controllers.tests.mocks.MockDiagramView;
 import controllers.tests.mocks.MockEntityController;
 import controllers.tests.mocks.MockEntityControllerFactory;
@@ -42,6 +41,45 @@ public class DiagramControllerTestCase {
 	}
 	
 	@Test
+	public void testShouldCreateEntityThroughEntityControllerWhenCreatingEntityWithoutPosition(){
+		Entity entity = new Entity("Product");
+		
+		this.entityController.setEntity(entity);
+		
+		DiagramController diagramController = this.createController();
+		
+		Assert.assertEquals(0, this.entityController.getCreateCallsCount());
+		Assert.assertFalse(diagramController.hasPendingEntity());
+		
+		diagramController.createEntity();
+		
+		Assert.assertEquals(1, this.entityController.getCreateCallsCount());
+		Assert.assertTrue(diagramController.hasPendingEntity());
+	}
+	
+	@Test
+	public void testShouldNotCreateEntityIfThereIsAPendingEntity(){
+		Entity entity = new Entity("Product");
+		
+		this.entityController.setEntity(entity);
+		
+		DiagramController diagramController = this.createController();
+		
+		Assert.assertEquals(0, this.entityController.getCreateCallsCount());
+		Assert.assertFalse(diagramController.hasPendingEntity());
+		
+		diagramController.createEntity();
+		
+		Assert.assertEquals(1, this.entityController.getCreateCallsCount());
+		Assert.assertTrue(diagramController.hasPendingEntity());
+		
+		diagramController.createEntity();
+		
+		Assert.assertEquals(1, this.entityController.getCreateCallsCount());
+		Assert.assertTrue(diagramController.hasPendingEntity());
+	}
+	
+	@Test
 	public void testShouldCreateCellsForEntityAttributesAndLinksWhenAddingEntity()
 	{
 		Entity entity = new Entity("Product");
@@ -53,11 +91,19 @@ public class DiagramControllerTestCase {
 		
 		DiagramController diagramController = this.createController();
 		
-		diagramController.addEntity();
+		diagramController.createEntity();
+		
+		Assert.assertTrue(diagramController.hasPendingEntity());
+		
+		diagramController.addEntity(20, 30);
+		
+		Assert.assertFalse(diagramController.hasPendingEntity());
 		
 		mxCell entityCell = diagramController.getEntityCell(entity.getId().toString());
 		Assert.assertEquals("Product", diagramController.getGraph().getLabel(entityCell));
 		Assert.assertTrue(diagramController.getGraph().getModel().isVertex(entityCell));
+		Assert.assertEquals(20.0, entityCell.getGeometry().getX(), 0);
+		Assert.assertEquals(30.0, entityCell.getGeometry().getY(), 0);
 		
 		mxCell stockCell = diagramController.getAttributeCell(entity.getId().toString()+"Stock");
 		Assert.assertEquals("Stock", diagramController.getGraph().getLabel(stockCell));
