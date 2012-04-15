@@ -1,6 +1,6 @@
 package models;
 
-public class Attribute implements INameable{
+public class Attribute implements INameable {
 	private String name;
 	private boolean isKeyField;
 	private Cardinality minimumCardinality;
@@ -8,13 +8,27 @@ public class Attribute implements INameable{
 	private String expression;
 	private IdGroupCollection idGroup;
 	private AttributeType type;
-	
 
 	public Attribute(String name) {
-		super();
+
 		this.setName(name);
 	}
 
+	public Attribute(String name, boolean isKeyField,
+			Cardinality minimumCardinality, Cardinality maximumCardinality,
+			IdGroupCollection idGroup, AttributeType type, String expression) {
+
+		this.name = name;
+		this.isKeyField = isKeyField;
+		this.minimumCardinality = minimumCardinality;
+		this.maximumCardinality = maximumCardinality;
+		this.idGroup = idGroup;
+		this.type = type;
+		if (expression != null) setExpression(expression); //Throws IllegalArgumentException
+		
+	}
+
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -55,18 +69,23 @@ public class Attribute implements INameable{
 		return type;
 	}
 
-	public String getExpression() {
-		return expression;
+	public String getExpression() throws IllegalArgumentException {
+		if (this.type == AttributeType.calculated
+				|| this.type == AttributeType.copy)
+			return expression;
+		else
+			throw new IllegalArgumentException();
 	}
 
-	public void setExpression(String expression) {
-		// TODO: validar q el tipo de atributo sea copy o calculated sino lanzar
-		// excepcion
-		this.expression = expression;
+	public void setExpression(String expression) throws IllegalArgumentException {
+		if (this.type == AttributeType.calculated
+				|| this.type == AttributeType.copy)
+			this.expression = expression;
+		else
+			throw new IllegalArgumentException();
 	}
 
 	public IdGroupCollection getIdGroup() {
-		// TODO:
 		return idGroup;
 	}
 
