@@ -4,9 +4,10 @@ import infrastructure.Func;
 import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public abstract class ModelCollection<T extends INameable> {
+public abstract class ModelCollection<T extends INameable> implements Iterable<T>{
 	protected List<T> items;
 
 	public ModelCollection() {
@@ -45,5 +46,7 @@ public abstract class ModelCollection<T extends INameable> {
 		return this.items.remove(item);
 	}
 
-
+	public Iterator<T> iterator(){
+		return this.items.iterator();
+	}
 }
