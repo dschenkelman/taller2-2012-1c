@@ -1,5 +1,7 @@
 package persistence.tests;
 
+import infrastructure.IterableExtensions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ import persistence.RelationshipCollectionXmlManager;
 public class RelationshipCollectionXmlManagerTestCase {
 
 	@Test
-	public void testShouldCreateAsManyRelationshipElementAsThereAreInRelationshipCollection() throws Exception{
+	public void testShouldCreateRelationshipElementFromRelationshipCollection() throws Exception{
 		RelationshipCollectionXmlManager xmlManager = new RelationshipCollectionXmlManager();
 		Document document = TestUtilities.createDocument();
 		
@@ -84,6 +86,70 @@ public class RelationshipCollectionXmlManagerTestCase {
 		
 		Assert.assertEquals(entity3.getId().toString(), entityElement3.getAttribute("entityId"));
 		Assert.assertEquals(entity4.getId().toString(), entityElement4.getAttribute("entityId"));
+	}
+	
+	@Test
+	public void testShouldCreateRelationshipCollectionFromXml() throws Exception{
+		String xml = "<diagram>" +
+		"<relationships>" +
+		"<relationship id='01854049-A762-4392-9357-A213C4110220' " +
+		"name='Relationship' composition='true'>" +
+		"<entities>" +
+		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B8' minimumCardinality='0'" +
+		" maximumCardinality='1' role='Role1' />" +
+		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B7' minimumCardinality='0'" +
+		" maximumCardinality='*' role='Role2' />" +
+		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B6' minimumCardinality='*'" +
+		" maximumCardinality='*' role='Role3' />" +
+		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B5' minimumCardinality='2'" +
+		" maximumCardinality='7' role='Role4' />" +
+		"</entities>" +
+		"</relationship>" +
+		"<relationship id='01854049-A762-4392-9357-A213C4110221' " +
+		"name='Relationship' composition='true'>" +
+		"<entities>" +
+		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B4' minimumCardinality='0'" +
+		" maximumCardinality='1' role='Role1' />" +
+		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B3' minimumCardinality='0'" +
+		" maximumCardinality='*' role='Role2' />" +
+		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B2' minimumCardinality='*'" +
+		" maximumCardinality='*' role='Role3' />" +
+		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B1' minimumCardinality='2'" +
+		" maximumCardinality='7' role='Role4' />" +
+		"</entities>" +
+		"</relationship>" +
+		"</relationships>" +
+		"</diagram>";
+		
+		Document document = TestUtilities.loadXMLFromString(xml);
+		
+		Element relationshipsElement = (Element) document.getElementsByTagName("relationships").item(0);
+		
+		RelationshipCollectionXmlManager xmlManager = new RelationshipCollectionXmlManager();
+		
+		List<Relationship> relationships = xmlManager.getItemFromElement(relationshipsElement);
+		
+		Assert.assertEquals(2, relationships.size());
+		
+		Relationship relationship1 = relationships.get(0);
+		Relationship relationship2 = relationships.get(1);
+		
+		Assert.assertEquals(4, IterableExtensions.count(relationship1.getRelationshipEntities()));
+		Assert.assertEquals(4, IterableExtensions.count(relationship2.getRelationshipEntities()));
+
+		Integer i = 8;
+		
+		for (RelationshipEntity relationshipEntity : relationship1.getRelationshipEntities()) {
+			Assert.assertEquals("0e6a2a75-a645-4665-85c8-21179bf362b" + i.toString(),
+					relationshipEntity.getEntityId().toString());
+			i--;
+		}
+		
+		for (RelationshipEntity relationshipEntity : relationship2.getRelationshipEntities()) {
+			Assert.assertEquals("0e6a2a75-a645-4665-85c8-21179bf362b" + i.toString(),
+					relationshipEntity.getEntityId().toString());
+			i--;
+		}
 	}
 	
 }
