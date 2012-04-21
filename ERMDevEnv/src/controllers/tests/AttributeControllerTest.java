@@ -4,6 +4,7 @@ import controllers.AttributeController;
 import controllers.IKeysController;
 import controllers.tests.mocks.*;
 import infrastructure.IControllerFactory;
+import infrastructure.IterableExtensions;
 import junit.framework.Assert;
 import models.Attribute;
 import models.IKey;
@@ -40,16 +41,15 @@ public class AttributeControllerTest {
     @Test
     public void TestCreate() {
         Assert.assertEquals(mockAttributeView.getController(), attributeController);
+        Assert.assertEquals(0, IterableExtensions.count(attributeController.getAttributesSelected()));
     }
 
     @Test
     public void TestSelectKeys() {
-        List<Attribute> list = new ArrayList<Attribute>();
-        mockAttributeView.setAttribute(list);
         mockKeyControllerFactory.setKeyController(mockKeyController);
         attributeController.selectKeys();
         Assert.assertTrue(mockKeyControllerFactory.createCalled());
-        Assert.assertEquals(list, mockKeyController.getKeys());
+        Assert.assertEquals(attributeController.getAttributesSelected(), mockKeyController.getKeys());
     }
 
     @Test
