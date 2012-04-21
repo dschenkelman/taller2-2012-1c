@@ -1,11 +1,13 @@
 package models.tests;
 
 
+import java.util.ArrayList;
+
 import junit.framework.Assert;
 import models.DiagramType;
 import models.EntityCollection;
 import models.HierarchyCollection;
-import models.RelationshipCollection;
+import models.Relationship;
 
 import org.junit.After;
 import org.junit.Before;
@@ -36,7 +38,7 @@ public class DiagramTestCase {
 	public void testCreateAnCompleteDiagram()
 	{
 		DiagramType diagram = new DiagramType(new EntityCollection(), 
-				new RelationshipCollection(), new HierarchyCollection(), 
+				new ArrayList<Relationship>(), new HierarchyCollection(), 
 				new DiagramType());
 		
 		Assert.assertEquals(0, diagram.getEntities().count());

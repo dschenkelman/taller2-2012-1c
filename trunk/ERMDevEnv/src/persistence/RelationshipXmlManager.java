@@ -1,5 +1,7 @@
 package persistence;
 
+import infrastructure.StringExtensions;
+
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -19,7 +21,8 @@ public class RelationshipXmlManager {
 		Element relationshipElement = document.createElement("relationship");
 		
 		relationshipElement.setAttribute("id", relationship.getId().toString());
-		relationshipElement.setAttribute("name", relationship.getName().toString());
+		relationshipElement.setAttribute("name", 
+				StringExtensions.isNullOrEmpty(relationship.getName()) ? relationship.getName() : "");
 		relationshipElement.setAttribute("composition", relationship.isComposition().toString());
 		
 		Element entitiesElement = document.createElement("entities");
