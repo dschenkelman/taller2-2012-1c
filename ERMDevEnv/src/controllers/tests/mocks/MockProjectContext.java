@@ -1,18 +1,19 @@
 package controllers.tests.mocks;
 
 import controllers.IProjectContext;
+import models.Entity;
 import models.EntityCollection;
 
 public class MockProjectContext implements IProjectContext {
 
-    private EntityCollection entityCollection;
+    private Iterable<Entity> entityCollection;
 
     @Override
-    public EntityCollection getEntityCollection() {
+    public Iterable<Entity> getEntityCollection() {
         return this.entityCollection;
     }
 
-    public void setEntityCollection(EntityCollection entityCollection){
+    public void setEntityCollection(Iterable<Entity> entityCollection){
         this.entityCollection = entityCollection;
     }
 }
