@@ -1,11 +1,13 @@
 package persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import models.Relationship;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class RelationshipCollectionXmlManager {
 
@@ -18,6 +20,19 @@ public class RelationshipCollectionXmlManager {
 		}
 		
 		return element;
+	}
+
+	public List<Relationship> getItemFromElement(Element relationshipsElement) throws Exception {
+		List<Relationship> relationships = new ArrayList<Relationship>();
+		
+		NodeList relationshipsList = relationshipsElement.getElementsByTagName("relationship");
+		
+		for (int i = 0; i < relationshipsList.getLength(); i++) {
+			Element relationshipElement = (Element) relationshipsList.item(i);
+			relationships.add(new RelationshipXmlManager().getItemFromXmlElement(relationshipElement));
+		}
+		
+		return relationships;
 	}
 
 }
