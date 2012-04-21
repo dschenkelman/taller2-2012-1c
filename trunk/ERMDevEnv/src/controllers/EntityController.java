@@ -11,7 +11,7 @@ import java.util.List;
 
 public class EntityController extends BaseController implements IEntityController {
 
-    private EntityCollection entityCollection;
+    private Iterable<Entity> entityCollection;
     private IEntityView entityView;
     private Entity pendingEntity;
     private List<IEventListener<Entity>> listeners;

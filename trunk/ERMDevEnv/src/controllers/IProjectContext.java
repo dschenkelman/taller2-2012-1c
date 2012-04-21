@@ -1,7 +1,7 @@
 package controllers;
 
-import models.EntityCollection;
+import models.Entity;
 
 public interface IProjectContext {
-    public EntityCollection getEntityCollection();
+    public Iterable<Entity> getEntityCollection();
 }
