@@ -4,10 +4,11 @@ import infrastructure.Func;
 import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-public class AttributeCollection {
+public class AttributeCollection implements Iterable<Attribute>{
 
 	private UUID ownerId;
 	private List<Attribute> items;
@@ -44,10 +45,6 @@ public class AttributeCollection {
 	public Attribute getAttribute(String attributeName) {
 		return IterableExtensions.firstOrDefault(this.items,
 				new AttributeCmpFunc(), attributeName);
-	}
-
-	public Iterable<Attribute> getAttributes() {
-		return this.items;
 	}
 
 	public void addAttribute(Attribute att) throws Exception {
@@ -97,5 +94,10 @@ public class AttributeCollection {
 			return attribute.getName().equals(name);
 		}
 
+	}
+
+	@Override
+	public Iterator<Attribute> iterator() {
+		return this.items.iterator();
 	}
 }
