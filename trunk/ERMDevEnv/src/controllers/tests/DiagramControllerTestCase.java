@@ -80,12 +80,12 @@ public class DiagramControllerTestCase {
 	}
 	
 	@Test
-	public void testShouldCreateCellsForEntityAttributesAndLinksWhenAddingEntity()
+	public void testShouldCreateCellsForEntityAttributesAndLinksWhenAddingEntity() throws Exception
 	{
 		Entity entity = new Entity("Product");
-		entity.getAttributes().add("Stock");
-		entity.getAttributes().add("Name");
-		entity.getAttributes().add("Price");
+		entity.getAttributes().addAttribute("Stock");
+		entity.getAttributes().addAttribute("Name");
+		entity.getAttributes().addAttribute("Price");
 		
 		this.entityController.setEntity(entity);
 		
