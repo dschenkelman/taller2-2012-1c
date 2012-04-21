@@ -20,11 +20,7 @@ public class DiagramType implements Iterable<Relationship>{
 	
 	public DiagramType()
 	{
-		this.id = UUID.randomUUID();
-		this.setEntities(null);
-		this.relationships = new ArrayList<Relationship>();
-		this.setHierarchies(null);
-		this.subDiagrams = new ArrayList<DiagramType>();
+		this(null, new ArrayList<Relationship>(), null, new ArrayList<DiagramType>());
 	}
 
 	public DiagramType(EntityCollection entities,
