@@ -76,7 +76,7 @@ public class AttributeCollection implements Iterable<Attribute>{
 		if (existsAttribute(attributeName)) {
 			this.items.remove(this.getAttribute(attributeName));
 		} else {
-			throw new Exception("Do not exists a attribute with name: "
+			throw new Exception("Do not exists an attribute with name: "
 					+ attributeName);
 		}
 	}
