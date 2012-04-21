@@ -1,6 +1,8 @@
 package models;
 
-public class Attribute implements INameable {
+import java.util.UUID;
+
+public class Attribute implements INameable,IKey{
 	private String name;
 	private boolean isKeyField;
 	private Cardinality minimumCardinality;
@@ -8,8 +10,9 @@ public class Attribute implements INameable {
 	private String expression;
 	private IdGroupCollection idGroup;
 	private AttributeType type;
+    private UUID id;
 
-	public Attribute(String name) {
+    public Attribute(String name) {
 
 		this.setName(name);
 	}
@@ -24,6 +27,7 @@ public class Attribute implements INameable {
 		this.maximumCardinality = maximumCardinality;
 		this.idGroup = idGroup;
 		this.type = type;
+        this.id = UUID.randomUUID();
 		if (expression != null) setExpression(expression); //Throws IllegalArgumentException
 		
 	}
@@ -37,7 +41,17 @@ public class Attribute implements INameable {
 		return this.name;
 	}
 
-	public Cardinality getMinimumCardinality() {
+    @Override
+    public UUID getOwnerId() {
+        return null;
+    }
+
+    @Override
+    public UUID getId() {
+        return this.id;
+    }
+
+    public Cardinality getMinimumCardinality() {
 		return minimumCardinality;
 	}
 
