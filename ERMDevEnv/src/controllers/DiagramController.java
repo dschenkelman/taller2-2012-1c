@@ -16,7 +16,7 @@ import com.mxgraph.view.mxGraph;
 import views.IDiagramView;
 
 public class DiagramController extends BaseController 
-	implements IDiagramController, IEntityCreatedListener {
+	implements IDiagramController, IEventListener<Entity> {
 
 	private CustomGraph graph;
 	private Map<String, mxCell> entityCells;
@@ -119,8 +119,8 @@ public class DiagramController extends BaseController
 		return this.pendingEntity != null;
 	}
 
-	@Override
-	public void entityCreated(Entity entity) {
-		this.pendingEntity = entity;
-	}
+    @Override
+    public void handleEvent(Entity... entities) {
+        this.pendingEntity = entities[0];
+    }
 }
