@@ -50,7 +50,7 @@ public class DiagramControllerTestCase {
 		Assert.assertFalse(diagramController.hasPendingEntity());
 		
 		diagramController.createEntity();
-		diagramController.entityCreated(entity);
+		diagramController.handleEvent(entity);
 		
 		Assert.assertEquals(1, this.entityController.getCreateCallsCount());
 		Assert.assertTrue(diagramController.hasPendingEntity());
@@ -66,7 +66,7 @@ public class DiagramControllerTestCase {
 		Assert.assertFalse(diagramController.hasPendingEntity());
 		
 		diagramController.createEntity();
-		diagramController.entityCreated(entity);
+		diagramController.handleEvent(entity);
 		
 		Assert.assertEquals(1, this.entityController.getCreateCallsCount());
 		Assert.assertTrue(diagramController.hasPendingEntity());
@@ -88,7 +88,7 @@ public class DiagramControllerTestCase {
 		DiagramController diagramController = this.createController();
 		
 		diagramController.createEntity();
-		diagramController.entityCreated(entity);
+		diagramController.handleEvent(entity);
 		
 		Assert.assertTrue(diagramController.hasPendingEntity());
 		

@@ -17,4 +17,9 @@ public class MockEntityControllerFactory implements IControllerFactory<IEntityCo
 		public IEntityController create() {
 			return this.controller;
 		}
+
+    @Override
+    public IEntityController create(Entity entity) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

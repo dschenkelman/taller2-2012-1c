@@ -1,5 +1,7 @@
 package controllers;
 
-public interface IProjectContext {
+import models.EntityCollection;
 
+public interface IProjectContext {
+    public EntityCollection getEntityCollection();
 }

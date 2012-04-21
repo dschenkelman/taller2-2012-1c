@@ -1,8 +1,8 @@
 package controllers.tests.mocks;
 
+import controllers.IEventListener;
 import views.IEntityView;
 import models.Entity;
-import controllers.IEntityCreatedListener;
 import controllers.IEntityController;
 
 public class MockEntityController implements IEntityController{
@@ -14,7 +14,11 @@ public class MockEntityController implements IEntityController{
 		this.createCalls++;
 	}
 
-	public int getCreateCallsCount() {
+    @Override
+    public void addSubscriber(IEventListener<Entity> listener) {
+    }
+
+    public int getCreateCallsCount() {
 		return createCalls;
 	}
 
@@ -23,10 +27,7 @@ public class MockEntityController implements IEntityController{
 		return false;
 	}
 
-	@Override
-	public void addSubscriber(IEntityCreatedListener listener) {
-		
-	}
+
 
 	@Override
 	public void setEntityView(IEntityView entityView) {
