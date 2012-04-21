@@ -15,7 +15,8 @@ import com.mxgraph.view.mxGraph;
 
 import views.IDiagramView;
 
-public class DiagramController extends BaseController implements IDiagramController {
+public class DiagramController extends BaseController 
+	implements IDiagramController, IEntityCreatedListener {
 
 	private CustomGraph graph;
 	private Map<String, mxCell> entityCells;
@@ -44,7 +45,7 @@ public class DiagramController extends BaseController implements IDiagramControl
 		if (!this.hasPendingEntity())
 		{
 			IEntityController entityController = this.entityControllerFactory.create();
-			this.pendingEntity = entityController.create();
+			entityController.create();
 		}
 	}
 	
@@ -118,5 +119,8 @@ public class DiagramController extends BaseController implements IDiagramControl
 		return this.pendingEntity != null;
 	}
 
-
+	@Override
+	public void entityCreated(Entity entity) {
+		this.pendingEntity = entity;
+	}
 }

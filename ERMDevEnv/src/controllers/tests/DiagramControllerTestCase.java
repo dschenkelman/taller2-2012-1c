@@ -43,15 +43,14 @@ public class DiagramControllerTestCase {
 	@Test
 	public void testShouldCreateEntityThroughEntityControllerWhenCreatingEntityWithoutPosition(){
 		Entity entity = new Entity("Product");
-		
-		this.entityController.setEntity(entity);
-		
+				
 		DiagramController diagramController = this.createController();
 		
 		Assert.assertEquals(0, this.entityController.getCreateCallsCount());
 		Assert.assertFalse(diagramController.hasPendingEntity());
 		
 		diagramController.createEntity();
+		diagramController.entityCreated(entity);
 		
 		Assert.assertEquals(1, this.entityController.getCreateCallsCount());
 		Assert.assertTrue(diagramController.hasPendingEntity());
@@ -61,14 +60,13 @@ public class DiagramControllerTestCase {
 	public void testShouldNotCreateEntityIfThereIsAPendingEntity(){
 		Entity entity = new Entity("Product");
 		
-		this.entityController.setEntity(entity);
-		
 		DiagramController diagramController = this.createController();
 		
 		Assert.assertEquals(0, this.entityController.getCreateCallsCount());
 		Assert.assertFalse(diagramController.hasPendingEntity());
 		
 		diagramController.createEntity();
+		diagramController.entityCreated(entity);
 		
 		Assert.assertEquals(1, this.entityController.getCreateCallsCount());
 		Assert.assertTrue(diagramController.hasPendingEntity());
@@ -86,12 +84,11 @@ public class DiagramControllerTestCase {
 		entity.getAttributes().addAttribute("Stock");
 		entity.getAttributes().addAttribute("Name");
 		entity.getAttributes().addAttribute("Price");
-		
-		this.entityController.setEntity(entity);
-		
+				
 		DiagramController diagramController = this.createController();
 		
 		diagramController.createEntity();
+		diagramController.entityCreated(entity);
 		
 		Assert.assertTrue(diagramController.hasPendingEntity());
 		

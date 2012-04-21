@@ -1,4 +1,4 @@
-package persistence.test;
+package persistence.tests;
 
 import java.io.StringReader;
 

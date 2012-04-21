@@ -77,5 +77,4 @@ public class Relationship {
 	public AttributeCollection getAttributes() {
 		return this.attributes; 
 	}
-
 }
