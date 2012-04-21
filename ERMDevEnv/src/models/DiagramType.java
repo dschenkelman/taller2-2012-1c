@@ -1,12 +1,13 @@
 package models;
 
+import java.util.List;
 import java.util.UUID;
 
 public class DiagramType {
 	
 	private UUID id;
 	private EntityCollection entities;
-	private RelationshipCollection relationships;
+	private List<Relationship> relationships;
 	private HierarchyCollection hierarchies;
 	private DiagramType subDiagram;
 	
@@ -20,7 +21,7 @@ public class DiagramType {
 	}
 
 	public DiagramType(EntityCollection entities,
-			RelationshipCollection relationshipCollection,
+			List<Relationship> relationshipCollection,
 			HierarchyCollection hierarchies, DiagramType subDiagram) 
 	{
 		this.id = UUID.randomUUID();
@@ -38,11 +39,11 @@ public class DiagramType {
 		return entities;
 	}
 
-	public void setRelationships(RelationshipCollection relationships) {
+	public void setRelationships(List<Relationship> relationships) {
 		this.relationships = relationships;
 	}
 
-	public RelationshipCollection getRelationships() {
+	public List<Relationship> getRelationships() {
 		return relationships;
 	}
 
