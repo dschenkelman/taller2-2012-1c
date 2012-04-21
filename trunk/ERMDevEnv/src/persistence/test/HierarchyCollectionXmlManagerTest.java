@@ -6,15 +6,29 @@ import models.HierarchyCollection;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import persistence.HierarchyCollectionXmlManager;
 import persistence.XmlManager;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class HierarchyCollectionXmlManagerTest {
+
+    private static String HIERARCHIES = "hierarchies";
+    private static String HIERARCHY = "hierarchy";
+    private static String SPECIFICENTITIES = "specificEntities";
+    private static String ENTITYID = "entityId";
+    private static String GENERALENTITYATTRIBUTE = "generalEntityId";
+    private static String TOTALATTRIBUTE = "total";
+    private static String EXCLUSIVEATTRIBUTE = "exclusive";
+    private static String IDATTRIBUTE = "id";
+    private static String TRUE = "true";
+    private static String FALSE = "false";
 
     private static String PATH = "HierarchyCollectionXmlManagerTest.xml";
 
@@ -22,54 +36,14 @@ public class HierarchyCollectionXmlManagerTest {
     public void testCreateElementOfHierarchyCollection() {
         HierarchyCollection hierarchyCollection = new HierarchyCollection();
         UUID generalEntityUUID = UUID.randomUUID();
-        Hierarchy hierarchy;
-        hierarchy = hierarchyCollection.createHierarchy(generalEntityUUID, false, true);
-        hierarchyCollection.createHierarchy(UUID.randomUUID(), true, true);
-        hierarchyCollection.createHierarchy(UUID.randomUUID(), false, false);
-        hierarchyCollection.createHierarchy(UUID.randomUUID(), true, false);
-
-        UUID uuid = hierarchy.getUUID();
-        try {
-            hierarchyCollection.addChild(uuid, UUID.randomUUID());
-            hierarchyCollection.addChild(uuid, UUID.randomUUID());
-            hierarchyCollection.addChild(uuid, UUID.randomUUID());
-            hierarchyCollection.addChild(uuid, UUID.randomUUID());
-            hierarchyCollection.addChild(uuid, UUID.randomUUID());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        DocumentBuilderFactory dBF = DocumentBuilderFactory.newInstance();
-        Document document = null;
-        try {
-            DocumentBuilder builder = dBF.newDocumentBuilder(); // java xml documentbuilder
-            document = builder.newDocument();
-        } catch (ParserConfigurationException parserException) {
-            parserException.printStackTrace();
-        }
-
-        assert document != null;
-        Element diagram = document.createElement("diagram");
-        document.appendChild(diagram);
-
-        Element hierarchies = HierarchyCollectionXmlManager.getHierarchiesElementFromHierarchyCollection(hierarchyCollection, document);
-        diagram.appendChild(hierarchies);
-
-        XmlManager.writeToFile(document, PATH);
-    }
-
-    @Test
-    public void testCreateHierarchyCollectionFromXml() {
-        HierarchyCollection hierarchyCollection = new HierarchyCollection();
-        UUID generalEntityUUID = UUID.randomUUID();
         UUID generalEntityUUID1 = UUID.randomUUID();
         UUID generalEntityUUID2 = UUID.randomUUID();
         UUID generalEntityUUID3 = UUID.randomUUID();
-        Hierarchy hierarchy = null;
+        Hierarchy hierarchy;
         hierarchy = hierarchyCollection.createHierarchy(generalEntityUUID, false, true);
-        hierarchyCollection.createHierarchy(generalEntityUUID1, true, true);
-        hierarchyCollection.createHierarchy(generalEntityUUID2, false, false);
-        hierarchyCollection.createHierarchy(generalEntityUUID3, true, false);
+        UUID uuid2 = hierarchyCollection.createHierarchy(generalEntityUUID1, true, true).getUUID();
+        UUID uuid3 = hierarchyCollection.createHierarchy(generalEntityUUID2, false, false).getUUID();
+        UUID uuid4 = hierarchyCollection.createHierarchy(generalEntityUUID3, true, false).getUUID();
 
         UUID uuid = hierarchy.getUUID();
         UUID child1 = UUID.randomUUID();
@@ -103,30 +77,59 @@ public class HierarchyCollectionXmlManagerTest {
 
         XmlManager.writeToFile(document, PATH);
 
-        HierarchyCollection hierarchyCollectionFromXml = HierarchyCollectionXmlManager.getHierarchyCollectionFromElement(XmlManager.readXml(PATH).getDocumentElement());
+        NodeList nodeList = diagram.getElementsByTagName("hierarchies");
+        Element hierarchiesElement = (Element) nodeList.item(0);
+        NodeList hierarchyElements = hierarchiesElement.getElementsByTagName(HIERARCHY);
+        Element hierarchyElement = (Element) hierarchyElements.item(0);
 
-        Assert.assertEquals(generalEntityUUID, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID).iterator().next().getGeneralEntityUUID());
-        Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID).iterator().next().isExclusive());
-        Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID).iterator().next().isTotal());
+        Assert.assertFalse(Boolean.valueOf(hierarchyElement.getAttribute(EXCLUSIVEATTRIBUTE)));
+        Assert.assertTrue(Boolean.valueOf(hierarchyElement.getAttribute(TOTALATTRIBUTE)));
+        Assert.assertEquals(generalEntityUUID.toString(), hierarchyElement.getAttribute(GENERALENTITYATTRIBUTE));
+        Assert.assertEquals(uuid, UUID.fromString(hierarchyElement.getAttribute(IDATTRIBUTE)));
+        NodeList specificsHierarchies = hierarchyElement.getElementsByTagName(SPECIFICENTITIES);
+        NodeList entityIdsElement = ((Element) specificsHierarchies.item(0)).getElementsByTagName(ENTITYID);
+        Text id = (Text) (entityIdsElement.item(0)).getFirstChild();
+        Assert.assertEquals(child1, UUID.fromString(id.getNodeValue()));
 
-        Assert.assertEquals(generalEntityUUID1, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID1).iterator().next().getGeneralEntityUUID());
-        Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID1).iterator().next().isExclusive());
-        Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID1).iterator().next().isTotal());
 
-        Assert.assertEquals(generalEntityUUID2, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID2).iterator().next().getGeneralEntityUUID());
-        Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID2).iterator().next().isExclusive());
-        Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID2).iterator().next().isTotal());
+    }
 
-        Assert.assertEquals(generalEntityUUID3, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID3).iterator().next().getGeneralEntityUUID());
-        Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID3).iterator().next().isExclusive());
-        Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID3).iterator().next().isTotal());
+    @Test
+    public void testCreateHierarchyCollectionFromXml() {
 
-        hierarchy = hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(generalEntityUUID).iterator().next();
-        Assert.assertEquals(true, hierarchy.hasChild(child1));
-        Assert.assertEquals(true, hierarchy.hasChild(child2));
-        Assert.assertEquals(true, hierarchy.hasChild(child3));
-        Assert.assertEquals(true, hierarchy.hasChild(child4));
-        Assert.assertEquals(false, hierarchy.hasChild(UUID.randomUUID()));
+        String xml = "<diagram>\n" +
+                "  <hierarchies>\n" +
+                "    <hierarchy exclusive=\"false\" generalEntityId=\"3552f6a7-b89f-49da-8b40-faa8311f44a5\" id=\"6999e406-b57b-4c4e-a681-073ab2b6cfa7\" total=\"true\">\n" +
+                "      <specificEntities>\n" +
+                "        <entityId>831d2bc8-983b-4321-ab90-d12fd942a1c1</entityId>\n" +
+                "        <entityId>d2ace698-3fdd-4309-8c5b-9e380b0da8cb</entityId>\n" +
+                "      </specificEntities>\n" +
+                "    </hierarchy>\n" +
+                "    <hierarchy exclusive=\"true\" generalEntityId=\"9c2213a8-5d05-44ec-ad58-d1d59018ff90\" id=\"16731eba-d505-4101-99a3-4fd7dbc05296\" total=\"true\">\n" +
+                "      <specificEntities/>\n" +
+                "    </hierarchy>\n" +
+                "  </hierarchies>\n" +
+                "</diagram>";
+
+        Document document = null;
+        try {
+            document = TestUtilities.loadXMLFromString(xml);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        HierarchyCollection hierarchyCollectionFromXml = HierarchyCollectionXmlManager.getHierarchyCollectionFromElement(document.getDocumentElement());
+
+        Assert.assertEquals("3552f6a7-b89f-49da-8b40-faa8311f44a5", hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("3552f6a7-b89f-49da-8b40-faa8311f44a5")).iterator().next().getGeneralEntityUUID().toString());
+        Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("3552f6a7-b89f-49da-8b40-faa8311f44a5")).iterator().next().isExclusive());
+        Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("3552f6a7-b89f-49da-8b40-faa8311f44a5")).iterator().next().isTotal());
+
+        Assert.assertEquals("9c2213a8-5d05-44ec-ad58-d1d59018ff90", hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("9c2213a8-5d05-44ec-ad58-d1d59018ff90")).iterator().next().getGeneralEntityUUID().toString());
+        Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("9c2213a8-5d05-44ec-ad58-d1d59018ff90")).iterator().next().isExclusive());
+        Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("9c2213a8-5d05-44ec-ad58-d1d59018ff90")).iterator().next().isTotal());
+
+        Hierarchy hierarchy = hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("3552f6a7-b89f-49da-8b40-faa8311f44a5")).iterator().next();
+        Assert.assertEquals(true, hierarchy.hasChild(UUID.fromString("d2ace698-3fdd-4309-8c5b-9e380b0da8cb")));
+        Assert.assertEquals(true, hierarchy.hasChild(UUID.fromString("831d2bc8-983b-4321-ab90-d12fd942a1c1")));
     }
 
 }

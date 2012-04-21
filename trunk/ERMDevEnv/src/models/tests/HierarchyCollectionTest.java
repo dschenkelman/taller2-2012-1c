@@ -40,6 +40,42 @@ public class HierarchyCollectionTest {
         }
 
         Assert.assertEquals(2, hierarchyCollection.count());
+
+        exclusive = false;
+        total = true;
+        try {
+            hierarchyUUID = UUID.randomUUID();
+            hierarchy = hierarchyCollection.createHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
+            Assert.assertEquals(hierarchyUUID, hierarchy.getUUID());
+            Assert.assertEquals(exclusive, hierarchy.isExclusive());
+            Assert.assertEquals(total, hierarchy.isTotal());
+        } catch (Exception e) {
+            Assert.fail();
+        }
+
+        exclusive = false;
+        total = false;
+        try {
+            hierarchyUUID = UUID.randomUUID();
+            hierarchy = hierarchyCollection.createHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
+            Assert.assertEquals(hierarchyUUID, hierarchy.getUUID());
+            Assert.assertEquals(exclusive, hierarchy.isExclusive());
+            Assert.assertEquals(total, hierarchy.isTotal());
+        } catch (Exception e) {
+            Assert.fail();
+        }
+
+        exclusive = true;
+        total = false;
+        try {
+            hierarchyUUID = UUID.randomUUID();
+            hierarchy = hierarchyCollection.createHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
+            Assert.assertEquals(hierarchyUUID, hierarchy.getUUID());
+            Assert.assertEquals(exclusive, hierarchy.isExclusive());
+            Assert.assertEquals(total, hierarchy.isTotal());
+        } catch (Exception e) {
+            Assert.fail();
+        }
     }
 
     @Test(expected = Exception.class)
@@ -50,6 +86,36 @@ public class HierarchyCollectionTest {
         UUID hierarchyUUID = UUID.randomUUID();
         boolean exclusive = true;
         boolean total = true;
+
+        hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(hierarchyUUID, generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
+
+        generalEntityUUID = UUID.randomUUID();
+        hierarchyUUID = UUID.randomUUID();
+        exclusive = false;
+        total = true;
+
+        hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(hierarchyUUID, generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
+
+        generalEntityUUID = UUID.randomUUID();
+        hierarchyUUID = UUID.randomUUID();
+        exclusive = false;
+        total = false;
+
+        hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(hierarchyUUID, generalEntityUUID, exclusive, total, new ArrayList<UUID>());
+        hierarchyCollection.createHierarchy(hierarchyUUID, UUID.randomUUID(), exclusive, total, new ArrayList<UUID>());
+
+        generalEntityUUID = UUID.randomUUID();
+        hierarchyUUID = UUID.randomUUID();
+        exclusive = true;
+        total = false;
 
         hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
         hierarchyCollection.createHierarchy(generalEntityUUID, exclusive, total, new ArrayList<UUID>());
