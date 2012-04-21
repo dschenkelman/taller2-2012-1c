@@ -13,13 +13,13 @@ public class HierarchyCollection {
     }
 
     public Hierarchy createHierarchy(UUID generalEntityUUID, boolean exclusive, boolean total, ArrayList<UUID> childrenUUID) {
-        Hierarchy hierarchy = new Hierarchy(generalEntityUUID, total, exclusive, childrenUUID);
+        Hierarchy hierarchy = new Hierarchy(generalEntityUUID, exclusive, total, childrenUUID);
         this.hierarchies.add(hierarchy);
         return hierarchy;
     }
 
     public Hierarchy createHierarchy(UUID generalEntityUUID, boolean exclusive, boolean total) {
-        Hierarchy hierarchy = new Hierarchy(generalEntityUUID, total, exclusive);
+        Hierarchy hierarchy = new Hierarchy(generalEntityUUID, exclusive, total);
         this.hierarchies.add(hierarchy);
         return hierarchy;
     }
