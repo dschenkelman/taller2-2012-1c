@@ -1,8 +1,7 @@
 package controllers;
 
 import infrastructure.IControllerFactory;
-import models.Attribute;
-import models.IKey;
+import models.*;
 import views.IAttributeView;
 
 import java.util.ArrayList;
@@ -13,10 +12,12 @@ public class AttributeController extends BaseController implements IAttributeCon
 
     private IAttributeView attributeView;
     private IControllerFactory<IKeysController, Iterable<IKey>> keysControllerFactory;
+    private List<Attribute> attributes;
 
     public AttributeController(IProjectContext projectContext, IAttributeView attributeView, IControllerFactory<IKeysController, Iterable<IKey>> keysControllerFactory) {
         super(projectContext);
         this.keysControllerFactory = keysControllerFactory;
+        this.attributes = new ArrayList<Attribute>();
         this.attributeView = attributeView;
         this.attributeView.setController(this);
     }
@@ -33,8 +34,23 @@ public class AttributeController extends BaseController implements IAttributeCon
     }
 
     @Override
+    public Iterable<INameable> getPossibleAttributes() {
+        return this.projectContext.getPossibleAttributes();
+    }
+
+    @Override
+    public void addAttribute(INameable attribute) {
+        this.attributes.add((Attribute) attribute);
+    }
+
+    @Override
+    public void addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression) {
+        this.attributes.add(new Attribute(name, isKey, cardinality, cardinality, new IdGroupCollection(), attributeType, expression));
+    }
+
+    @Override
     public Iterable<Attribute> getAttributesSelected() {
-        return this.attributeView.getAttributesSelected();
+        return attributes;
     }
 
     @Override

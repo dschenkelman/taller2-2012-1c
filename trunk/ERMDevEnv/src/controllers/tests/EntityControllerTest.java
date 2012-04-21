@@ -3,10 +3,13 @@ package controllers.tests;
 import controllers.EntityController;
 import controllers.tests.mocks.*;
 import junit.framework.Assert;
-import models.EntityCollection;
-import models.EntityType;
+import models.*;
 import org.junit.Before;
 import org.junit.Test;
+import sun.rmi.runtime.NewThreadAction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntityControllerTest {
 
@@ -16,6 +19,10 @@ public class EntityControllerTest {
     private MockIEventListener mockEntityCreatedListener;
     private EntityController entityController;
     private static final String ENTITY_NAME = "NAME";
+    private static final String ATT_NAME_1 = "ADSADS";
+    private static final String ATT_NAME_2 = "SSADSADS";
+    private static final String ATT_NAME_3 = "ADSSSSADS";
+    private static final String ATT_NAME_4 = "ADSASADDS";
 
     @Test
     public void TestCreation() {
@@ -52,6 +59,12 @@ public class EntityControllerTest {
     public void TestAddEntity() {
         EntityCollection entityCollection = new EntityCollection();
         entityCollection.add(ENTITY_NAME, EntityType.Domain);
+        List<Attribute> list = new ArrayList<Attribute>();
+        list.add(new Attribute(ATT_NAME_1));
+        list.add(new Attribute(ATT_NAME_2));
+        list.add(new Attribute(ATT_NAME_3));
+        list.add(new Attribute(ATT_NAME_4));
+        mockAttributeController.setAttributes(list);
         
         mockEntityCreatedListener = new MockIEventListener();
         this.entityController.addSubscriber(this.mockEntityCreatedListener);
@@ -70,6 +83,14 @@ public class EntityControllerTest {
         Assert.assertFalse(this.entityController.addEntity());
         this.mockEntityCreatedListener.called = false;
         Assert.assertFalse(this.mockEntityCreatedListener.called);
+        
+        Entity entity = (Entity) mockEntityCreatedListener.get()[0];
+        AttributeCollection attributeCollection = entity.getAttributes();
+        Assert.assertNotNull(attributeCollection.getAttribute(ATT_NAME_1));
+        Assert.assertNotNull(attributeCollection.getAttribute(ATT_NAME_2));
+        Assert.assertNotNull(attributeCollection.getAttribute(ATT_NAME_3));
+        Assert.assertNotNull(attributeCollection.getAttribute(ATT_NAME_4));
+
 
 
     }
