@@ -45,7 +45,7 @@ public class AttributeController extends BaseController implements IAttributeCon
 
     @Override
     public void addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression) {
-        this.attributes.add(new Attribute(name, isKey, cardinality, cardinality, new IdGroupCollection(), attributeType, expression));
+        this.attributes.add(new Attribute(name, isKey, cardinality, new IdGroupCollection(), attributeType, expression));
     }
 
     @Override
