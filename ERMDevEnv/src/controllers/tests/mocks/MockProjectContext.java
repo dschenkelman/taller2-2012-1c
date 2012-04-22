@@ -4,11 +4,12 @@ import controllers.IProjectContext;
 import models.Attribute;
 import models.Entity;
 import models.EntityCollection;
+import models.INameable;
 
 public class MockProjectContext implements IProjectContext {
 
     private Iterable<Entity> entityCollection;
-    private Iterable<Attribute> attributes;
+    private Iterable<INameable> attributes;
 
     @Override
     public Iterable<Entity> getEntityCollection() {
@@ -16,7 +17,7 @@ public class MockProjectContext implements IProjectContext {
     }
 
     @Override
-    public Iterable<Attribute> getPossibleAttributes() {
+    public Iterable<INameable> getPossibleAttributes() {
         return this.attributes;
     }
 
@@ -24,7 +25,7 @@ public class MockProjectContext implements IProjectContext {
         this.entityCollection = entityCollection;
     }
 
-    public void setPossibleAttributes(Iterable<Attribute> attributeIterable){
+    public void setPossibleAttributes(Iterable<INameable> attributeIterable){
         this.attributes = attributeIterable;
     }
 }
