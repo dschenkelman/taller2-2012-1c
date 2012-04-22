@@ -10,7 +10,6 @@ import java.util.UUID;
 
 public class AttributeCollection implements Iterable<Attribute>{
 
-	private UUID ownerId;
 	private List<Attribute> items;
 
 	public AttributeCollection() {
@@ -22,20 +21,18 @@ public class AttributeCollection implements Iterable<Attribute>{
 		return new Attribute(name);
 	}
 
-	public Attribute createItemInstance(String name, boolean isKeyField,
-			Cardinality minimumCardinality, Cardinality maximumCardinality,
-			IdGroupCollection idGroup, AttributeType type, String expression) {
+	public static Attribute createItemInstance(String name, boolean isKeyField,
+			Cardinality cardinality, IdGroupCollection idGroup, AttributeType type, String expression) {
 
-		return new Attribute(name, isKeyField, minimumCardinality,
-				maximumCardinality, idGroup, type, expression);
+		return new Attribute(name, isKeyField, cardinality, idGroup, type, expression);
 	}
 
-	public UUID getOwnerId() {
-		return ownerId;
-	}
+	public static Attribute createItemInstance(String name, boolean isKeyField,
+			Cardinality cardinality, IdGroupCollection idGroup, AttributeType type, String expression, 
+			AttributeCollection attCol,UUID ownerID,UUID myID) {
 
-	public void setOwnerId(UUID ownerId) {
-		this.ownerId = ownerId;
+		return new  Attribute(name,  isKeyField,  cardinality,  idGroup, 
+				 type,  expression, attCol , ownerID,  myID);
 	}
 
 	public int count() {
@@ -63,12 +60,11 @@ public class AttributeCollection implements Iterable<Attribute>{
 	}
 
 	public void addAttribute(String name, boolean isKeyField,
-			Cardinality minimumCardinality, Cardinality maximumCardinality,
-			IdGroupCollection idGroup, AttributeType type, String expression)
+			Cardinality cardinality,IdGroupCollection idGroup, AttributeType type, String expression)
 			throws Exception {
 		
-		this.addAttribute(this.createItemInstance(name, isKeyField,
-				minimumCardinality, maximumCardinality, idGroup, type,
+		this.addAttribute(AttributeCollection.createItemInstance(name, isKeyField,
+				cardinality, idGroup, type,
 				expression));
 	}
 

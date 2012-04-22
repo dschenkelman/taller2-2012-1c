@@ -96,11 +96,13 @@
                     <xs:attribute name="expression" type="xs:string"/>
                     <xs:attribute name="minimumCardinality" type="cardinality"/>
                     <xs:attribute name="maximumCardinality" type="cardinality"/>
+                    <xs:attribute name="ownerId" type="guid" use="optional"/>
+                    <xs:attribute name="id" type="guid" use="required"/>
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
         <!-- If the attribute refers to an external element so the guid is necessary -->
-        <xs:attribute name="ownerId" type="guid" use="optional"/>
+        
     </xs:complexType>
 
     <xs:complexType name="hierarchiesCollection">
