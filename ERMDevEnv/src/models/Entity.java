@@ -11,13 +11,28 @@ public class Entity implements INameable{
 	
 	public Entity(String name) 
 	{
+		this(name, UUID.randomUUID(), EntityType.None, new AttributeCollection());
+	}
+	
+	public Entity(String name, UUID id, EntityType type)
+	{
+		this(name, id, type, new AttributeCollection());
+	}
+	
+	public Entity(String name, EntityType type, AttributeCollection attributes)
+	{
+		this(name, UUID.randomUUID(), type, attributes);
+	}
+	
+	public Entity(String name, UUID id, EntityType type, AttributeCollection attributes)
+	{
 		super();
 		this.setName(name);
-		this.setType(EntityType.None);
-		this.id = UUID.randomUUID();
-		this.attributes = new AttributeCollection();
+		this.setType(type);
+		this.id = id;
+		this.attributes = attributes;
 	}
-
+	
 	public String getName() 
 	{
 		return this.name;
