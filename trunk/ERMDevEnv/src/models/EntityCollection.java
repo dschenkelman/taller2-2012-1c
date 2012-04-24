@@ -1,5 +1,7 @@
 package models;
 
+import java.util.List;
+
 public class EntityCollection extends ModelCollection<Entity>{
 	
 	public EntityCollection () {
@@ -8,12 +10,14 @@ public class EntityCollection extends ModelCollection<Entity>{
 	
 	
 	public boolean add(String entityName, EntityType entityType) {
-		if (this.get(entityName) == null) 
+		return this.add(new Entity(entityName, entityType));
+	}
+	
+	public boolean add(Entity entity)
+	{
+		if (this.get(entity.getName()) == null)
 		{
-			Entity entity = new Entity(entityName);
-			entity.setType(entityType);
 			this.items.add(entity);
-			return true;
 		}
 		return false;
 	}
