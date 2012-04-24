@@ -16,6 +16,7 @@ public class EntityXmlManager {
 		entityElement.setAttribute("name", entity.getName().toString());
 		entityElement.setAttribute("id", entity.getId().toString());
 		entityElement.setAttribute("type", entity.getType().toString());
+		
 		return entityElement;
 	}
 

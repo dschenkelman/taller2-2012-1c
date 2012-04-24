@@ -30,7 +30,6 @@ public abstract class ModelCollection<T extends INameable> implements Iterable<T
 
 	protected abstract T createItemInstance (String itemName);
 	
-	
 	public T get(String itemName) {
 		return IterableExtensions.firstOrDefault(this.items,
 				new Func<T, String, Boolean>() {
