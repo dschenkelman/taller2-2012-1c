@@ -25,6 +25,5 @@ public class EntityCollection extends ModelCollection<Entity>{
 	@Override
 	public Entity createItemInstance (String entityName) {
 		return new Entity(entityName);
-	}
-		
+	}	
 }
