@@ -114,6 +114,10 @@ public class Attribute implements INameable, IKey {
 	public void setOwnerId(UUID ownerId) {
 		this.ownerId = ownerId;
 	}
+	
+	public boolean isComposite() {
+		return (attributes != null);
+	}
 
 	public AttributeCollection getAttributes() {
 		return attributes;
