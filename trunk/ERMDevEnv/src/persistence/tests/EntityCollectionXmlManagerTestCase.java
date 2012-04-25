@@ -49,10 +49,24 @@ public class EntityCollectionXmlManagerTestCase {
 	}
 	
 	@Test
-	public void testShouldGenetarteAnEntityCollectionFromXml()
+	public void testShouldGenetarteAnEntityCollectionFromXml() throws Exception
 	{
+		String xml = "<entities><entity name='entity1' " +
+				"id='3F2504E0-4F89-11D3-9A0C-030CFFFFFFFF' type='Domain'/>" +
+				"<entity name='entity2' " +
+				"id='3F2504E0-4F89-11D3-9A0C-030DFFFFFFFF' type='Thing'/></entities>";
 		
+		Document document = TestUtilities.loadXMLFromString(xml);
 		
+		EntityCollectionXmlManager xmlManager = new EntityCollectionXmlManager();
+		Element entityCollectionElement = document.getDocumentElement();
 		
+		EntityCollection entityCollection = xmlManager.getItemFromElement(entityCollectionElement);
+		
+		Assert.assertEquals(2, entityCollection.count());
+		Assert.assertNotNull(entityCollection.get("entity1"));
+		Assert.assertNotNull(entityCollection.get("entity2"));
+		Assert.assertEquals("Domain", entityCollection.get("entity1").getType().toString());
+		Assert.assertEquals("Thing", entityCollection.get("entity2").getType().toString());
 	}
 }

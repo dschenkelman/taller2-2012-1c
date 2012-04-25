@@ -35,7 +35,7 @@ public abstract class ModelCollection<T extends INameable> implements Iterable<T
 				new Func<T, String, Boolean>() {
 					@Override
 					public Boolean execute(T item, String itemName) {
-						return item.getName() == itemName;
+						return item.getName().equals(itemName);
 					}
 				}, itemName);
 	}	
