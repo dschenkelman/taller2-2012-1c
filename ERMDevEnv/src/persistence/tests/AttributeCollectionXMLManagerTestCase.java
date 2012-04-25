@@ -20,7 +20,7 @@ import persistence.AttributeCollectionXmlManager;
 import persistence.HierarchyCollectionXmlManager;
 import persistence.XmlManager;
 
-public class AttributeCollectionXMLManager {
+public class AttributeCollectionXMLManagerTestCase {
 
 	private String xmlPath="";
 	
@@ -51,7 +51,7 @@ public class AttributeCollectionXMLManager {
 	     Element diagram = document.createElement("diagram");
 	     document.appendChild(diagram);
 	     
-	     Element attributes = AttributeCollectionXmlManager.getAttributesElementFromHierarchyCollection(attCol, document);
+	     Element attributes = AttributeCollectionXmlManager.getXMLElementFromItem(attCol, document);
 	     diagram.appendChild(attributes);
 
 	     XmlManager.writeToFile(document, xmlPath);
