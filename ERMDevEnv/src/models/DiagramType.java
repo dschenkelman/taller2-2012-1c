@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.UUID;
 
 
-public class DiagramType implements Iterable<Relationship>{
+public class DiagramType implements Iterable<DiagramType>{
 	
 	private UUID id;
 	private EntityCollection entities;
@@ -20,7 +20,8 @@ public class DiagramType implements Iterable<Relationship>{
 	
 	public DiagramType()
 	{
-		this(null, new ArrayList<Relationship>(), null, new ArrayList<DiagramType>());
+		this(new EntityCollection(), new ArrayList<Relationship>(), 
+				new HierarchyCollection(), new ArrayList<DiagramType>());
 	}
 
 	public DiagramType(EntityCollection entities,
@@ -136,7 +137,9 @@ public class DiagramType implements Iterable<Relationship>{
 	}
 	
 	@Override
-	public Iterator<Relationship> iterator() {
-		return this.relationships.iterator();
+	public Iterator<DiagramType> iterator() {
+		return this.subDiagrams.iterator();
 	}
+	
+	
 }

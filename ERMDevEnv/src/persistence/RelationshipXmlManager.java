@@ -22,7 +22,7 @@ public class RelationshipXmlManager {
 		
 		relationshipElement.setAttribute("id", relationship.getId().toString());
 		relationshipElement.setAttribute("name", 
-				StringExtensions.isNullOrEmpty(relationship.getName()) ? relationship.getName() : "");
+				StringExtensions.isNullOrEmpty(relationship.getName()) ? "" : relationship.getName());
 		relationshipElement.setAttribute("composition", relationship.isComposition().toString());
 		
 		Element entitiesElement = document.createElement("entities");

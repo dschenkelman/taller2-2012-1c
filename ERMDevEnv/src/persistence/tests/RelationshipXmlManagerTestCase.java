@@ -52,7 +52,7 @@ public class RelationshipXmlManagerTestCase {
 		
 		Assert.assertEquals("relationship", element.getTagName());
 		Assert.assertEquals(relationship.getId().toString(), element.getAttribute("id"));
-		Assert.assertEquals("", element.getAttribute("name"));
+		Assert.assertEquals("RelationshipName", element.getAttribute("name"));
 		Assert.assertEquals(relationship.isComposition().toString(), element.getAttribute("composition"));
 		
 		NodeList entitiesList = element.getElementsByTagName("entities");

@@ -1,7 +1,5 @@
 package persistence.tests;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import junit.framework.Assert;
 
 import models.Entity;
