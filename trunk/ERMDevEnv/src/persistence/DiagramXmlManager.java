@@ -1,5 +1,7 @@
 package persistence;
 
+import java.util.UUID;
+
 import models.DiagramType;
 
 import org.w3c.dom.Document;
@@ -22,6 +24,24 @@ public class DiagramXmlManager {
 		diagramElement.appendChild(element);
 	
 		return diagramElement;
+	}
+
+	public DiagramType getItemFromElement(Element diagramElement) throws Exception {
+		DiagramType diagram = new DiagramType(UUID.fromString(diagramElement.getAttribute("id")));
+		
+		Element entitiesElement = (Element) diagramElement.getElementsByTagName("entities").item(0);
+		Element relationshipsElement = (Element) diagramElement.getElementsByTagName("relationships").item(0);
+		Element hierarchiesElement = (Element) diagramElement.getElementsByTagName("hierarchies").item(0);
+		Element diagramsElement = (Element) diagramElement.getElementsByTagName("diagrams").item(0);
+		
+		diagram.setEntities(new EntityCollectionXmlManager().getItemFromElement(entitiesElement));
+		diagram.setRelationships(new RelationshipCollectionXmlManager().getItemFromElement(relationshipsElement));
+		diagram.setHierarchies(HierarchyCollectionXmlManager.getHierarchyCollectionFromElement(hierarchiesElement));
+		
+		for (int i = 0; i < diagramsElement.getChildNodes().getLength(); i++) {
+			diagram.addSubDiagram(new DiagramXmlManager().getItemFromElement((Element) diagramsElement.getChildNodes().item(i)));
+		}
+		return diagram;
 	}
 
 }

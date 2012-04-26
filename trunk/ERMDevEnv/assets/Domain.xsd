@@ -8,10 +8,10 @@
             <xs:element maxOccurs="1" minOccurs="0" name="entities" type="entityCollection"/>
             <xs:element maxOccurs="1" minOccurs="0" name="relationships" type="relationshipCollection"/>
             <xs:element maxOccurs="1" minOccurs="0" name="hierarchies" type="hierarchiesCollection"/>
-            <xs:element name="diagrams" minOccurs="0" maxOccurs="unbounded">
+            <xs:element maxOccurs="1" minOccurs="0" name="diagrams">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element type="diagramType" name="diagram"/>
+                        <xs:element type="diagramType" name="diagram" maxOccurs="unbounded" minOccurs="0"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
