@@ -1,5 +1,7 @@
 package persistence;
 
+import infrastructure.StringExtensions;
+
 import java.util.UUID;
 
 import models.Entity;
@@ -20,9 +22,12 @@ public class EntityXmlManager {
 		return entityElement;
 	}
 
-	public Entity getItemFromXmlElement(Element entityElement) throws Exception{
+	public Entity getItemFromXmlElement(Element entityElement) throws Exception
+	{
 		String name = entityElement.getAttribute("name");
-		EntityType type = EntityType.valueOf(entityElement.getAttribute("type"));
+		EntityType type = EntityType.valueOf(StringExtensions.isNullOrEmpty
+				(entityElement.getAttribute("type"))? 
+						"None" : entityElement.getAttribute("type"));
 		UUID id = UUID.fromString(entityElement.getAttribute("id"));
 		
 		return new Entity(name, id, type);

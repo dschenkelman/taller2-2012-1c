@@ -20,17 +20,32 @@ public class DiagramType implements Iterable<DiagramType>{
 	
 	public DiagramType()
 	{
-		this(new EntityCollection(), new ArrayList<Relationship>(), 
-				new HierarchyCollection(), new ArrayList<DiagramType>());
+		this(UUID.randomUUID(), new EntityCollection(), 
+				new ArrayList<Relationship>(), new HierarchyCollection(), 
+				new ArrayList<DiagramType>());
 	}
 
+	public DiagramType(UUID id)
+	{
+		this(id, new EntityCollection(), new ArrayList<Relationship>(), 
+				new HierarchyCollection(), new ArrayList<DiagramType>());
+	}
+	
 	public DiagramType(EntityCollection entities,
+			List<Relationship> relationships,
+			HierarchyCollection hierarchies, List<DiagramType> subDiagrams)
+	{
+		this(UUID.randomUUID(), entities, relationships, hierarchies, 
+				subDiagrams);
+	}
+	
+	public DiagramType(UUID id, EntityCollection entities,
 			List<Relationship> relationships,
 			HierarchyCollection hierarchies, List<DiagramType> subDiagram) 
 	{
-		this.id = UUID.randomUUID();
+		this.id = id;
 		this.setEntities(entities);
-		this.relationships = relationships;
+		this.setRelationships(relationships);
 		this.setHierarchies(hierarchies);
 		this.setSubDiagrams(subDiagram);
 	}
@@ -45,6 +60,11 @@ public class DiagramType implements Iterable<DiagramType>{
 
 	public List<Relationship> getRelationships() {
 		return relationships;
+	}
+	
+	public void setRelationships(List<Relationship> relationships)
+	{
+		this.relationships = relationships;
 	}
 
 	public void setHierarchies(HierarchyCollection hierarchies) {
@@ -67,9 +87,9 @@ public class DiagramType implements Iterable<DiagramType>{
 		return id;
 	}
 	
-	public Relationship getRelationship(UUID relationshipName) {
+	public Relationship getRelationship(UUID relationshipId) {
 		return IterableExtensions.firstOrDefault(this.relationships, 
-				new RelationshipsCompFunc(), relationshipName); 
+				new RelationshipsCompFunc(), relationshipId); 
 	}
 
 
