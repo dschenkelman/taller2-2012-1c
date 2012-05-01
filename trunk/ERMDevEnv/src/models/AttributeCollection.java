@@ -29,10 +29,10 @@ public class AttributeCollection implements Iterable<Attribute>{
 
 	public static Attribute createItemInstance(String name, boolean isKeyField,
 			Cardinality cardinality, IdGroupCollection idGroup, AttributeType type, String expression, 
-			AttributeCollection attCol,UUID ownerID,UUID myID) {
+			AttributeCollection attCol,UUID myID) {
 
 		return new  Attribute(name,  isKeyField,  cardinality,  idGroup, 
-				 type,  expression, attCol , ownerID,  myID);
+				 type,  expression, attCol ,  myID);
 	}
 
 	public int count() {

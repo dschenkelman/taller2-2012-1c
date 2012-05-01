@@ -2,7 +2,7 @@ package models;
 
 import java.util.UUID;
 
-public interface IKey {
+public interface IStrongEntity {
     public String getName();
     public UUID getId();
 }
