@@ -14,14 +14,14 @@ public class EntityController extends BaseController implements IEntityControlle
     private Iterable<Entity> entityCollection;
     private IEntityView entityView;
     private Entity pendingEntity;
-    private List<IEventListener<Entity>> listeners;
+    private List<IEntityEventListener> listeners;
     private IAttributeController attributeController;
 
     public EntityController(IProjectContext projectContext, IEntityView entityView, IAttributeController attributeController) {
         super(projectContext);
         this.entityCollection = projectContext.getEntityCollection();
         this.attributeController = attributeController;
-        this.listeners = new ArrayList<IEventListener<Entity>>();
+        this.listeners = new ArrayList<IEntityEventListener>();
         this.entityView = entityView;
         this.entityView.setController(this);
         this.pendingEntity = new Entity("");
@@ -35,7 +35,7 @@ public class EntityController extends BaseController implements IEntityControlle
     }
 
     @Override
-    public void addSubscriber(IEventListener<Entity> listener) {
+    public void addSubscriber(IEntityEventListener listener) {
         this.listeners.add(listener);
     }
 
@@ -75,7 +75,7 @@ public class EntityController extends BaseController implements IEntityControlle
             }
         }
 
-        for (IEventListener<Entity> listener : this.listeners) {
+        for (IEntityEventListener listener : this.listeners) {
             listener.handleEvent(pendingEntity);
         }
 

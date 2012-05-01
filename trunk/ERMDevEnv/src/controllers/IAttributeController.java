@@ -6,7 +6,7 @@ import models.Cardinality;
 import models.INameable;
 import views.IAttributeView;
 
-public interface IAttributeController {
+public interface IAttributeController extends IIdGroupEventListener{
 
     public void selectKeys();
 

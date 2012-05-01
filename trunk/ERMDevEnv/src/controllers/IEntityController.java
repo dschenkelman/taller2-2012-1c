@@ -1,17 +1,16 @@
 package controllers;
 
-import models.Entity;
 import views.IEntityView;
 
 public interface IEntityController {
 
-    public void create(); //should be public void create()
+    void create(); //should be public void create()
 
-    public void addSubscriber(IEventListener<Entity> listener);
+    void addSubscriber(IEntityEventListener listener);
 
-    public boolean addEntity();
+    boolean addEntity();
 
-    public boolean validateEntityName(String name);
+    boolean validateEntityName(String name);
 
-    public void setEntityView(IEntityView entityView);
+    void setEntityView(IEntityView entityView);
 }
