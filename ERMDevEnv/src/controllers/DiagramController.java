@@ -7,6 +7,7 @@ import java.util.Map;
 
 import models.Attribute;
 import models.Entity;
+import models.Relationship;
 
 import jgraph.extensions.CustomGraph;
 
@@ -16,7 +17,7 @@ import com.mxgraph.view.mxGraph;
 import views.IDiagramView;
 
 public class DiagramController extends BaseController 
-	implements IDiagramController, IEventListener<Entity> {
+	implements IDiagramController{
 
 	private CustomGraph graph;
 	private Map<String, mxCell> entityCells;
@@ -24,11 +25,14 @@ public class DiagramController extends BaseController
 	private Map<String, mxCell> attributeConnectorCells;
 	private IControllerFactory<IEntityController, Entity> entityControllerFactory;
 	private Entity pendingEntity;
+	private IControllerFactory<IRelationshipController, Relationship> relationshipControllerFactory;
 
 	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
-			IControllerFactory<IEntityController, Entity> entityControllerFactory) {
+			IControllerFactory<IEntityController, Entity> entityControllerFactory,
+			IControllerFactory<IRelationshipController, Relationship> relationshipControllerFactory) {
 		super(projectContext);
 		this.entityControllerFactory = entityControllerFactory;
+		this.relationshipControllerFactory = relationshipControllerFactory;
 		this.graph = new CustomGraph();
 		this.entityCells = new HashMap<String, mxCell>();
 		this.attributeCells = new HashMap<String, mxCell>();
@@ -49,6 +53,22 @@ public class DiagramController extends BaseController
 		}
 	}
 	
+    @Override
+    public void handleEvent(Entity entity) {
+        this.pendingEntity = entity;
+    }
+
+	public void createRelationship() {
+		IRelationshipController relationshipController = 
+			this.relationshipControllerFactory.create();
+		
+		relationshipController.create();
+	}
+
+	@Override
+	public void handleEvent(Relationship relationship) {
+		
+	}
 
 	public void addEntity(double x, double y) 
 	{
@@ -118,9 +138,4 @@ public class DiagramController extends BaseController
 	public boolean hasPendingEntity() {
 		return this.pendingEntity != null;
 	}
-
-    @Override
-    public void handleEvent(Entity... entities) {
-        this.pendingEntity = entities[0];
-    }
 }

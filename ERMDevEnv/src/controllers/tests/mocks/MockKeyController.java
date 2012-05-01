@@ -1,6 +1,6 @@
 package controllers.tests.mocks;
 
-import controllers.IEventListener;
+import controllers.IIdGroupEventListener;
 import controllers.IKeysController;
 import models.IKey;
 
@@ -8,7 +8,7 @@ public class MockKeyController implements IKeysController {
     private Iterable<IKey> iKeys;
 
     @Override
-    public void addSubscriber(IEventListener listener) {
+    public void addSubscriber(IIdGroupEventListener listener) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

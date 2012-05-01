@@ -14,6 +14,8 @@ import controllers.tests.mocks.MockDiagramView;
 import controllers.tests.mocks.MockEntityController;
 import controllers.tests.mocks.MockEntityControllerFactory;
 import controllers.tests.mocks.MockProjectContext;
+import controllers.tests.mocks.MockRelationshipController;
+import controllers.tests.mocks.MockRelationshipControllerFactory;
 
 public class DiagramControllerTestCase {
 
@@ -21,6 +23,8 @@ public class DiagramControllerTestCase {
 	private MockDiagramView diagramView;
 	private MockEntityController entityController;
 	private MockEntityControllerFactory entityControllerFactory;
+	private MockRelationshipControllerFactory relationshipControllerFactory;
+	private MockRelationshipController relationshipController;
 
 	@Before
 	public void setUp() throws Exception {
@@ -29,6 +33,9 @@ public class DiagramControllerTestCase {
 		this.entityController = new MockEntityController();
 		this.entityControllerFactory = new MockEntityControllerFactory();
 		this.entityControllerFactory.setController(this.entityController);
+		this.relationshipController = new MockRelationshipController();
+		this.relationshipControllerFactory = new MockRelationshipControllerFactory();
+		this.relationshipControllerFactory.setController(this.relationshipController);
 	}
 	
 	@Test
@@ -79,6 +86,7 @@ public class DiagramControllerTestCase {
 	
 	@Test
 	public void testShouldCreateCellsForEntityAttributesAndLinksWhenAddingEntity() throws Exception
+
 	{
 		Entity entity = new Entity("Product");
 		entity.getAttributes().addAttribute("Stock");
@@ -133,8 +141,20 @@ public class DiagramControllerTestCase {
 		Assert.assertSame(entityPriceCell, entityPriceConnectors[0]);
 	}
 
+	@Test
+	public void testShouldCreateRelationshipThroughRelationshipControllerWhenCreateRelationshipIsCalled(){
+		DiagramController controller = this.createController();
+		
+		Assert.assertFalse(this.relationshipController.createWasCalled());
+		
+		controller.createRelationship();
+		
+		Assert.assertTrue(this.relationshipController.createWasCalled());
+	}
+	
 	private DiagramController createController() {
-		return new DiagramController(this.projectContext, this.diagramView, this.entityControllerFactory);
+		return new DiagramController(this.projectContext, this.diagramView,
+				this.entityControllerFactory, this.relationshipControllerFactory);
 	}
 
 }

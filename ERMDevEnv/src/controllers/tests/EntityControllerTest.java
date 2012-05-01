@@ -15,7 +15,7 @@ public class EntityControllerTest {
     private MockAttributeController mockAttributeController;
     private MockEntityView mockEntityView;
     private MockProjectContext mockProjectContext;
-    private MockIEventListener mockEntityCreatedListener;
+    private MockEntityEventListener mockEntityCreatedListener;
     private EntityController entityController;
     private static final String ENTITY_NAME = "NAME";
     private static final String ATT_NAME_1 = "ADSADS";
@@ -65,7 +65,7 @@ public class EntityControllerTest {
         list.add(new Attribute(ATT_NAME_4));
         mockAttributeController.setAttributes(list);
         
-        mockEntityCreatedListener = new MockIEventListener();
+        mockEntityCreatedListener = new MockEntityEventListener();
         this.entityController.addSubscriber(this.mockEntityCreatedListener);
         this.mockEntityView.setEntityName("");
         Assert.assertFalse(this.entityController.addEntity());
@@ -83,7 +83,7 @@ public class EntityControllerTest {
         this.mockEntityCreatedListener.called = false;
         Assert.assertFalse(this.mockEntityCreatedListener.called);
         
-        Entity entity = (Entity) mockEntityCreatedListener.get()[0];
+        Entity entity = mockEntityCreatedListener.get();
         AttributeCollection attributeCollection = entity.getAttributes();
         Assert.assertNotNull(attributeCollection.getAttribute(ATT_NAME_1));
         Assert.assertNotNull(attributeCollection.getAttribute(ATT_NAME_2));
@@ -99,7 +99,7 @@ public class EntityControllerTest {
         mockAttributeController = new MockAttributeController();
         mockEntityView = new MockEntityView();
         mockProjectContext = new MockProjectContext();
-        mockEntityCreatedListener = new MockIEventListener();
+        mockEntityCreatedListener = new MockEntityEventListener();
         entityController = new EntityController(mockProjectContext, mockEntityView, mockAttributeController);
     }
 }

@@ -4,7 +4,8 @@ import infrastructure.IControllerFactory;
 import models.Entity;
 import controllers.IEntityController;
 
-public class MockEntityControllerFactory implements IControllerFactory<IEntityController, Entity> 
+public class MockEntityControllerFactory 
+	implements IControllerFactory<IEntityController, Entity> 
 {
 		private IEntityController controller;
 		

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AttributeController extends BaseController implements IAttributeController, IEventListener {
+public class AttributeController extends BaseController implements IAttributeController {
 
     private IAttributeView attributeView;
     private IControllerFactory<IKeysController, Iterable<IKey>> keysControllerFactory;
@@ -59,8 +59,7 @@ public class AttributeController extends BaseController implements IAttributeCon
     }
 
     @Override
-    public void handleEvent(Object... object) {
-        HashMap<Integer, List<IKey>> keys = (HashMap<Integer, List<IKey>>) object[0];
+    public void handleEvent(HashMap<Integer, List<IKey>> keys) {
         for (Integer idGroup : keys.keySet()) {
             for (IKey key : keys.get(idGroup)) {
                 try {

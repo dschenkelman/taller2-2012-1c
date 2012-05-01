@@ -4,10 +4,12 @@ import controllers.IAttributeController;
 import models.Attribute;
 import models.AttributeType;
 import models.Cardinality;
+import models.IKey;
 import models.INameable;
 import views.IAttributeView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MockAttributeController implements IAttributeController {
@@ -54,4 +56,8 @@ public class MockAttributeController implements IAttributeController {
     public void setAttributes(List<Attribute> attributes){
         this.attributes = attributes;
     }
+
+	@Override
+	public void handleEvent(HashMap<Integer, List<IKey>> param) {
+	}
 }

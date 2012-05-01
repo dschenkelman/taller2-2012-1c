@@ -20,7 +20,7 @@ public class AttributeControllerTest {
 
     private MockAttributeView mockAttributeView;
     private MockProjectContext mockProjectContext;
-    private MockIEventListener mockEntityCreatedListener;
+    private MockEntityEventListener mockEntityCreatedListener;
     private MockEntityController mockEntityController;
     private AttributeController attributeController;
     private static final String ENTITY_NAME = "NAME";
@@ -31,7 +31,7 @@ public class AttributeControllerTest {
     public void setUp() throws Exception {
         mockAttributeView = new MockAttributeView();
         mockProjectContext = new MockProjectContext();
-        mockEntityCreatedListener = new MockIEventListener();
+        mockEntityCreatedListener = new MockEntityEventListener();
         mockEntityController = new MockEntityController();
         mockKeyControllerFactory = new MockKeyControllerFactory();
         mockKeyController = new MockKeyController();
