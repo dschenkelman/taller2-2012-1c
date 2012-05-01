@@ -5,6 +5,7 @@ import infrastructure.StringExtensions;
 import java.util.Iterator;
 import java.util.UUID;
 
+import models.AttributeCollection;
 import models.Cardinality;
 import models.Entity;
 import models.Relationship;
@@ -14,7 +15,20 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import persistence.tests.mocks.MockAttributeCollectionXmlManager;
+
 public class RelationshipXmlManager implements IXmlManager<Relationship> {
+
+	private IXmlManager<AttributeCollection> attributeCollectionXmlManager;
+
+	public RelationshipXmlManager(){
+		this(new AttributeCollectionXmlManager());
+	}
+	
+	public RelationshipXmlManager(
+			IXmlManager<AttributeCollection> attributeCollectionXmlManager) {
+		this.attributeCollectionXmlManager = attributeCollectionXmlManager;
+	}
 
 	public Element getElementFromItem(Relationship relationship,
 			Document document) {
@@ -33,6 +47,9 @@ public class RelationshipXmlManager implements IXmlManager<Relationship> {
 					new RelationshipEntityXmlManager()
 						.getElementFromItem(relationshipEntity, document));
 		}
+		
+		Element attributes = this.attributeCollectionXmlManager.getElementFromItem(relationship.getAttributes(), document);
+		relationshipElement.appendChild(attributes);
 		
 		relationshipElement.appendChild(entitiesElement);
 		
@@ -57,6 +74,11 @@ public class RelationshipXmlManager implements IXmlManager<Relationship> {
 			relationship.addRelationshipEntity(
 					new RelationshipEntityXmlManager().getItemFromXmlElement(entityElement));
 		}
+		
+		Element attributesElement = (Element) relationshipElement.getElementsByTagName("attributes").item(0);
+		
+		AttributeCollection attributes = this.attributeCollectionXmlManager.getItemFromXmlElement(attributesElement);
+		relationship.setAttributes(attributes);
 		
 		return relationship;
 	}

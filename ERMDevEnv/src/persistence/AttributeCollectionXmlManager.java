@@ -1,6 +1,5 @@
 package persistence;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -8,16 +7,12 @@ import models.Attribute;
 import models.AttributeCollection;
 import models.AttributeType;
 import models.Cardinality;
-import models.Hierarchy;
-import models.HierarchyCollection;
 import models.IdGroupCollection;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 public class AttributeCollectionXmlManager implements IXmlManager<AttributeCollection>{
 
