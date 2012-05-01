@@ -6,7 +6,6 @@ import junit.framework.Assert;
 import models.*;
 import org.junit.Before;
 import org.junit.Test;
-import sun.rmi.runtime.NewThreadAction;
 
 import java.util.ArrayList;
 import java.util.List;
