@@ -22,9 +22,9 @@ public class DiagramTestCase {
 	public void testCreatingDiagramProvidesContentsIsNone()
 	{
 		DiagramType diagram = new DiagramType();
-		Assert.assertNull(diagram.getEntities());
+		Assert.assertEquals(0, diagram.getEntities().count());
 		Assert.assertEquals(0, diagram.getRelationships().size());
-		Assert.assertNull(diagram.getHierarchies());
+		Assert.assertEquals(0, diagram.getHierarchies().count());
 		Assert.assertEquals(0, diagram.getSubDiagrams().size());
 	}
 	
