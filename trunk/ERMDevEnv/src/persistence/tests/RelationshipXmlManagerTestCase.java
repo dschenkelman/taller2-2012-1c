@@ -18,8 +18,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import persistence.RelationshipXmlManager;
+import persistence.tests.mocks.MockAttributeCollectionXmlManager;
 
 public class RelationshipXmlManagerTestCase {
+
+	private MockAttributeCollectionXmlManager attributeCollectionXmlManager;
 
 	@Test
 	public void testShouldGenerateXmlElementFromRelationship() throws Exception{
@@ -46,7 +49,7 @@ public class RelationshipXmlManagerTestCase {
 		
 		Document document = TestUtilities.createDocument();
 		
-		RelationshipXmlManager xmlManager = new RelationshipXmlManager();
+		RelationshipXmlManager xmlManager = new RelationshipXmlManager(this.attributeCollectionXmlManager);
 		
 		Element element = xmlManager.getElementFromItem(relationship, document);
 		
@@ -54,6 +57,9 @@ public class RelationshipXmlManagerTestCase {
 		Assert.assertEquals(relationship.getId().toString(), element.getAttribute("id"));
 		Assert.assertEquals("RelationshipName", element.getAttribute("name"));
 		Assert.assertEquals(relationship.isComposition().toString(), element.getAttribute("composition"));
+		Node node = element.getElementsByTagName("attributes").item(0);
+		Assert.assertNotNull(node);
+		Assert.assertSame(this.attributeCollectionXmlManager.getCreatedElement(), node);
 		
 		NodeList entitiesList = element.getElementsByTagName("entities");
 		
@@ -100,8 +106,13 @@ public class RelationshipXmlManagerTestCase {
 	
 	@Test
 	public void testShouldGenerateRelationshipFromXml() throws Exception{
-		String xml = "<relationships><relationship id='01854049-A762-4392-9357-A213C4110220' " +
-				"name='Relationship' composition='true'><entities>" +
+		String xml = "<relationships>" +
+				"<relationship id='01854049-A762-4392-9357-A213C4110220' " +
+				"name='Relationship' composition='true'>" +
+				"<attributes>" +
+				"<attribute name='nombre' id='0E688A75-A645-4665-85C8-21179BF362B8'/>" +
+				"</attributes>" +
+				"<entities>" +
 				"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B8' minimumCardinality='0'" +
 				" maximumCardinality='1' role='Role1' />" +
 				"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B7' minimumCardinality='0'" +
@@ -115,9 +126,12 @@ public class RelationshipXmlManagerTestCase {
 		Document document = TestUtilities.loadXMLFromString(xml);
 		Element relationshipElement = (Element) document.getElementsByTagName("relationship").item(0);
 		
-		RelationshipXmlManager xmlManager = new RelationshipXmlManager();
+		RelationshipXmlManager xmlManager = new RelationshipXmlManager(this.attributeCollectionXmlManager);
 		
 		Relationship relationship = xmlManager.getItemFromXmlElement(relationshipElement);
+		
+		Assert.assertNotNull(relationship.getAttributes());
+		Assert.assertSame(relationship.getAttributes(), this.attributeCollectionXmlManager.getAttributeCollection());
 		
 		Assert.assertEquals("01854049-a762-4392-9357-a213c4110220", relationship.getId().toString());
 		Assert.assertEquals("Relationship", relationship.getName());
@@ -170,6 +184,7 @@ public class RelationshipXmlManagerTestCase {
 	
 	@Before
 	public void setUp() throws Exception {
+		this.attributeCollectionXmlManager = new MockAttributeCollectionXmlManager();
 	}
 
 }

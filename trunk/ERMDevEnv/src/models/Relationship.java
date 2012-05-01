@@ -77,4 +77,8 @@ public class Relationship {
 	public AttributeCollection getAttributes() {
 		return this.attributes; 
 	}
+
+	public void setAttributes(AttributeCollection attributes) {
+		this.attributes = attributes;
+	}
 }

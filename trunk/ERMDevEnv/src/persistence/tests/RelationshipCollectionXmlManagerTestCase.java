@@ -94,6 +94,9 @@ public class RelationshipCollectionXmlManagerTestCase {
 		"<relationships>" +
 		"<relationship id='01854049-A762-4392-9357-A213C4110220' " +
 		"name='Relationship' composition='true'>" +
+		"<attributes>" +
+		"<attribute name='nombre' id='0E688A75-A645-4665-85C8-21179BF362B8'/>" +
+		"</attributes>" +
 		"<entities>" +
 		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B8' minimumCardinality='0'" +
 		" maximumCardinality='1' role='Role1' />" +
@@ -107,6 +110,9 @@ public class RelationshipCollectionXmlManagerTestCase {
 		"</relationship>" +
 		"<relationship id='01854049-A762-4392-9357-A213C4110221' " +
 		"name='Relationship' composition='true'>" +
+		"<attributes>" +
+		"<attribute name='nombre' id='0E688A75-A645-4665-85C8-21179BF362B8'/>" +
+		"</attributes>" +
 		"<entities>" +
 		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B4' minimumCardinality='0'" +
 		" maximumCardinality='1' role='Role1' />" +
