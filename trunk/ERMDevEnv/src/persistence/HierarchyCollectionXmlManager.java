@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 
-public class HierarchyCollectionXmlManager {
+public class HierarchyCollectionXmlManager implements IXmlManager<HierarchyCollection> {
 
     private static String HIERARCHIES = "hierarchies";
     private static String HIERARCHY = "hierarchy";
@@ -20,7 +20,7 @@ public class HierarchyCollectionXmlManager {
     private static String TRUE = "true";
     private static String FALSE = "false";
 
-    public static HierarchyCollection getHierarchyCollectionFromElement(Element diagram) {
+    public HierarchyCollection getItemFromXmlElement(Element diagram) {
         HierarchyCollection hierarchyCollection = new HierarchyCollection();
 
         NodeList hierarchiesElements = diagram.getElementsByTagName(HIERARCHIES);
@@ -34,7 +34,7 @@ public class HierarchyCollectionXmlManager {
         return hierarchyCollection;
     }
 
-    public static Element getHierarchiesElementFromHierarchyCollection(HierarchyCollection hierarchyCollection, Document document) {
+    public Element getElementFromItem(HierarchyCollection hierarchyCollection, Document document) {
 
         Element hierarchiesElement = document.createElement(HIERARCHIES);
 

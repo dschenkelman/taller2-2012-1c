@@ -10,38 +10,38 @@ import java.util.Iterator;
 import java.util.UUID;
 
 
-public class DiagramType implements Iterable<DiagramType>{
+public class Diagram implements Iterable<Diagram>{
 	
 	private UUID id;
 	private EntityCollection entities;
 	private List<Relationship> relationships;
 	private HierarchyCollection hierarchies;
-	private List<DiagramType> subDiagrams;
+	private List<Diagram> subDiagrams;
 	
-	public DiagramType()
+	public Diagram()
 	{
 		this(UUID.randomUUID(), new EntityCollection(), 
 				new ArrayList<Relationship>(), new HierarchyCollection(), 
-				new ArrayList<DiagramType>());
+				new ArrayList<Diagram>());
 	}
 
-	public DiagramType(UUID id)
+	public Diagram(UUID id)
 	{
 		this(id, new EntityCollection(), new ArrayList<Relationship>(), 
-				new HierarchyCollection(), new ArrayList<DiagramType>());
+				new HierarchyCollection(), new ArrayList<Diagram>());
 	}
 	
-	public DiagramType(EntityCollection entities,
+	public Diagram(EntityCollection entities,
 			List<Relationship> relationships,
-			HierarchyCollection hierarchies, List<DiagramType> subDiagrams)
+			HierarchyCollection hierarchies, List<Diagram> subDiagrams)
 	{
 		this(UUID.randomUUID(), entities, relationships, hierarchies, 
 				subDiagrams);
 	}
 	
-	public DiagramType(UUID id, EntityCollection entities,
+	public Diagram(UUID id, EntityCollection entities,
 			List<Relationship> relationships,
-			HierarchyCollection hierarchies, List<DiagramType> subDiagram) 
+			HierarchyCollection hierarchies, List<Diagram> subDiagram) 
 	{
 		this.id = id;
 		this.setEntities(entities);
@@ -75,11 +75,11 @@ public class DiagramType implements Iterable<DiagramType>{
 		return hierarchies;
 	}
 
-	public void setSubDiagrams(List<DiagramType> subDiagrams) {
+	public void setSubDiagrams(List<Diagram> subDiagrams) {
 		this.subDiagrams = subDiagrams;
 	}
 
-	public List<DiagramType> getSubDiagrams() {
+	public List<Diagram> getSubDiagrams() {
 		return subDiagrams;
 	}
 
@@ -109,11 +109,11 @@ public class DiagramType implements Iterable<DiagramType>{
 		}
 	}
 	
-	public void addSubDiagram(DiagramType subDiagram) {
+	public void addSubDiagram(Diagram subDiagram) {
 		this.subDiagrams.add(subDiagram);
 	}
 
-	public DiagramType getSubDiagram(UUID id) {
+	public Diagram getSubDiagram(UUID id) {
 		return IterableExtensions.firstOrDefault(this.subDiagrams, 
 				new SubDiagramsCompFunc(), id);
 	}
@@ -147,17 +147,17 @@ public class DiagramType implements Iterable<DiagramType>{
 	}
 				
 	private class SubDiagramsCompFunc extends
-	Func<DiagramType, UUID, Boolean>
+	Func<Diagram, UUID, Boolean>
 	{
 		@Override
-		public Boolean execute(DiagramType diagram, UUID id)
+		public Boolean execute(Diagram diagram, UUID id)
 		{	
 			return diagram.getId().equals(id);
 		}
 	}
 	
 	@Override
-	public Iterator<DiagramType> iterator() {
+	public Iterator<Diagram> iterator() {
 		return this.subDiagrams.iterator();
 	}
 	

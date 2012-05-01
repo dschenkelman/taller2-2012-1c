@@ -8,13 +8,13 @@ import org.w3c.dom.NodeList;
 
 import java.util.UUID;
 
-public class StrongEntitiesXmlManager {
+public class StrongEntitiesXmlManager implements IXmlManager<StrongEntityCollection> {
     private static final String STRONG_ENTITIES_TAG = "strongEntities";
     private static final String STRONG_ENTITY_TAG = "strongEntity";
     private static final String NAME_ATTRIBUTE = "name";
     private static final String ID_ATTRIBUTE = "id";
 
-    public static StrongEntityCollection getStrongEntityCollectionFromElement(Element element) {
+    public StrongEntityCollection getItemFromXmlElement(Element element) {
         StrongEntityCollection strongEntityCollection = new StrongEntityCollection();
         NodeList nodeList = element.getElementsByTagName(STRONG_ENTITIES_TAG);
         if (nodeList.getLength() != 0) {
@@ -32,7 +32,7 @@ public class StrongEntitiesXmlManager {
         return strongEntityCollection;
     }
 
-    public static Element getElementFromStrongEntityCollection(StrongEntityCollection strongEntityCollection, Document document) {
+    public Element getElementFromItem(StrongEntityCollection strongEntityCollection, Document document) {
         Element strongEntitiesTag = document.createElement(STRONG_ENTITIES_TAG);
         for (IStrongEntity strongEntity : strongEntityCollection) {
             Element strongEntityTag = document.createElement(STRONG_ENTITY_TAG);

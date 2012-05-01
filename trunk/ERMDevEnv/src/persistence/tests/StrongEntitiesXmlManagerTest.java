@@ -54,7 +54,7 @@ public class StrongEntitiesXmlManagerTest {
         Element diagram = document.createElement("diagram");
         document.appendChild(diagram);
 
-        Element strongEntityCollectionElement = StrongEntitiesXmlManager.getElementFromStrongEntityCollection(strongEntityCollection, document);
+        Element strongEntityCollectionElement = new StrongEntitiesXmlManager().getElementFromItem(strongEntityCollection, document);
         diagram.appendChild(strongEntityCollectionElement);
 
         XmlManager.writeToFile(document, PATH);
@@ -105,7 +105,7 @@ public class StrongEntitiesXmlManagerTest {
         }
 
         assert document != null;
-        StrongEntityCollection strongEntityCollection = StrongEntitiesXmlManager.getStrongEntityCollectionFromElement(document.getDocumentElement());
+        StrongEntityCollection strongEntityCollection = new StrongEntitiesXmlManager().getItemFromXmlElement(document.getDocumentElement());
 
         IStrongEntity strongEntity = strongEntityCollection.getStrongEntity(UUID.fromString("16c094cd-593f-4299-9369-ceefde93a4b0"));
         Assert.assertNotNull(strongEntity);

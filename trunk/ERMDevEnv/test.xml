@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram>
+  <attributes>
+    <attribute id="a74025fc-2d8d-4992-92ae-cf5be5023f4a" name="SimpleAttribute1"/>
+    <attribute id="f5620d91-31b9-4930-b559-bdc612729b29" maximumCardinality="10.0" minimumCardinality="1.0" name="SimpleAttribute2" type="characterization">
+      <idGroups/>
+    </attribute>
+    <attribute expression="expression1" id="83c741b8-7800-4ead-9470-63cce9a78e8e" maximumCardinality="10.0" minimumCardinality="0.0" name="ComplexAttribute" type="calculated">
+      <attributes>
+        <attribute id="a983cd1e-f8f4-4ede-b882-ec86decbcb47" name="SimpleAttribute3"/>
+        <attribute id="d9489336-08dc-4cd0-a9a2-6f43fdbc05d4" name="SimpleAttribute4"/>
+      </attributes>
+      <idGroups/>
+    </attribute>
+  </attributes>
+</diagram>

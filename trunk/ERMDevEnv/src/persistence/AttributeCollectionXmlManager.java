@@ -19,9 +19,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-public class AttributeCollectionXmlManager {
+public class AttributeCollectionXmlManager implements IXmlManager<AttributeCollection>{
 
-	public static AttributeCollection getItemFromXmlElement(Element attributesElem) throws NumberFormatException, Exception{
+	public AttributeCollection getItemFromXmlElement(Element attributesElem) throws NumberFormatException, Exception{
 		NodeList attributes = attributesElem.getElementsByTagName("attribute");
 		AttributeCollection attCollection  = new AttributeCollection();
 		for (int i = 0 ; i < attributes.getLength() ; i++) {
@@ -45,12 +45,12 @@ public class AttributeCollectionXmlManager {
 			IdGroupCollection idGroup = null;
 			
 			if (attribute.getElementsByTagName("idGroups").getLength() > 0)
-				idGroup = IdGroupCollectionXmlManager.getIdGroupCollectionFromElement((Element)attribute.getElementsByTagName("idGroups").item(0));
+				idGroup = new IdGroupCollectionXmlManager().getItemFromXmlElement((Element)attribute.getElementsByTagName("idGroups").item(0));
 			
 			
 			AttributeCollection attrCol = null;
 			if (attribute.getElementsByTagName("attributes").getLength() > 0)
-				attrCol = AttributeCollectionXmlManager.getItemFromXmlElement((Element)attribute.getElementsByTagName("attributes").item(0));
+				attrCol = new AttributeCollectionXmlManager().getItemFromXmlElement((Element)attribute.getElementsByTagName("attributes").item(0));
 			
 			UUID myID = UUID.fromString(attribute.getAttribute("id"));
 
@@ -61,7 +61,7 @@ public class AttributeCollectionXmlManager {
 		return attCollection;
 	}
 
-	public static Element getXMLElementFromItem (AttributeCollection attCol, Document doc) {
+	public Element getElementFromItem (AttributeCollection attCol, Document doc) {
 		Element attColElement = doc.createElement("attributes");
 		
 		Iterator<Attribute> ite = attCol.iterator();
@@ -78,11 +78,11 @@ public class AttributeCollectionXmlManager {
 			Document document) {
 		 Element attributeElement = document.createElement("attribute");
 		 if (attribute.getAttributes()!= null) {
-			 attributeElement.appendChild(AttributeCollectionXmlManager.getXMLElementFromItem(attribute.getAttributes()
+			 attributeElement.appendChild(new AttributeCollectionXmlManager().getElementFromItem(attribute.getAttributes()
 					 , document));
 		 }
 		 if (attribute.getIdGroup()!= null) {
-			 attributeElement.appendChild(IdGroupCollectionXmlManager.getIdGroupCollectionToAttribute(attribute.getIdGroup(),
+			 attributeElement.appendChild(new IdGroupCollectionXmlManager().getElementFromItem(attribute.getIdGroup(),
 					 document));
 		 }
 		 

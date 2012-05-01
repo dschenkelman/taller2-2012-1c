@@ -72,7 +72,7 @@ public class HierarchyCollectionXmlManagerTest {
         Element diagram = document.createElement("diagram");
         document.appendChild(diagram);
 
-        Element hierarchies = HierarchyCollectionXmlManager.getHierarchiesElementFromHierarchyCollection(hierarchyCollection, document);
+        Element hierarchies = new HierarchyCollectionXmlManager().getElementFromItem(hierarchyCollection, document);
         diagram.appendChild(hierarchies);
 
         XmlManager.writeToFile(document, PATH);
@@ -118,7 +118,7 @@ public class HierarchyCollectionXmlManagerTest {
             e.printStackTrace();
         }
         assert document != null;
-        HierarchyCollection hierarchyCollectionFromXml = HierarchyCollectionXmlManager.getHierarchyCollectionFromElement(document.getDocumentElement());
+        HierarchyCollection hierarchyCollectionFromXml = new HierarchyCollectionXmlManager().getItemFromXmlElement(document.getDocumentElement());
 
         Assert.assertEquals("3552f6a7-b89f-49da-8b40-faa8311f44a5", hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("3552f6a7-b89f-49da-8b40-faa8311f44a5")).iterator().next().getGeneralEntityUUID().toString());
         Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("3552f6a7-b89f-49da-8b40-faa8311f44a5")).iterator().next().isExclusive());

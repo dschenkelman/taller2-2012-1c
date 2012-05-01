@@ -127,7 +127,7 @@ public class RelationshipCollectionXmlManagerTestCase {
 		
 		RelationshipCollectionXmlManager xmlManager = new RelationshipCollectionXmlManager();
 		
-		List<Relationship> relationships = xmlManager.getItemFromElement(relationshipsElement);
+		List<Relationship> relationships = xmlManager.getItemFromXmlElement(relationshipsElement);
 		
 		Assert.assertEquals(2, relationships.size());
 		

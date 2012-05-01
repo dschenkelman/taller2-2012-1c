@@ -5,13 +5,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class IdGroupCollectionXmlManager {
+public class IdGroupCollectionXmlManager implements IXmlManager<IdGroupCollection>{
 
     private static String IDGROUPSTAG = "idGroups";
     private static String IDGROUPTAG = "idGroup";
     private static String NUMBERATTRIBUTE = "number";
 
-    public static IdGroupCollection getIdGroupCollectionFromElement(Element element) {
+    public IdGroupCollection getItemFromXmlElement(Element element) {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
         NodeList idGroupsList = element.getElementsByTagName(IDGROUPSTAG);
         if (idGroupsList.getLength() != 0) {
@@ -30,7 +30,7 @@ public class IdGroupCollectionXmlManager {
         return idGroupCollection;
     }
 
-    public static Element getIdGroupCollectionToAttribute(IdGroupCollection idGroupCollection, Document document){
+    public Element getElementFromItem(IdGroupCollection idGroupCollection, Document document){
 
         Element idGroupsElement = document.createElement(IDGROUPSTAG);
 
