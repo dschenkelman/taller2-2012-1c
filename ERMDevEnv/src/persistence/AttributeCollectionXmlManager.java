@@ -53,12 +53,8 @@ public class AttributeCollectionXmlManager {
 				attrCol = AttributeCollectionXmlManager.getItemFromXmlElement((Element)attribute.getElementsByTagName("attributes").item(0));
 			
 			UUID myID = UUID.fromString(attribute.getAttribute("id"));
-			UUID ownerId = null;
-			
-			if (!attribute.getAttribute("ownerId").isEmpty()){
-				ownerId = UUID.fromString(attribute.getAttribute("ownerId"));
-			}
-			attCollection.addAttribute(new Attribute(name,false,cardinality,idGroup,type,expression,attrCol,ownerId,myID));
+
+			attCollection.addAttribute(new Attribute(name,false,cardinality,idGroup,type,expression,attrCol,myID));
 			
 		}
 		
@@ -99,7 +95,6 @@ public class AttributeCollectionXmlManager {
 			 attributeElement.setAttribute("minimumCardinality",String.valueOf(attribute.getCardinality().getMinimum()));
 			 attributeElement.setAttribute("maximumCardinality",String.valueOf(attribute.getCardinality().getMaximum()));
 		 }
-		 if (attribute.getOwnerId() != null) attributeElement.setAttribute("ownerId",attribute.getOwnerId().toString());
 		 attributeElement.setAttribute("id",attribute.getId().toString());
 		return attributeElement;
 	}

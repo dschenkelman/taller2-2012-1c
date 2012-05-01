@@ -25,6 +25,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="attributes" type="attributeCollection" maxOccurs="1" minOccurs="0"/>
+                        <xs:element name="strongEntities" type="strongEntitiesCollection" maxOccurs="1" minOccurs="0"/>
                     </xs:sequence>
                     <xs:attribute name="id" type="guid" use="required"/>
                     <xs:attribute name="name" type="xs:string" use="required"/>
@@ -96,7 +97,6 @@
                     <xs:attribute name="expression" type="xs:string"/>
                     <xs:attribute name="minimumCardinality" type="cardinality"/>
                     <xs:attribute name="maximumCardinality" type="cardinality"/>
-                    <xs:attribute name="ownerId" type="guid" use="optional"/>
                     <xs:attribute name="id" type="guid" use="required"/>
                 </xs:complexType>
             </xs:element>
@@ -146,5 +146,16 @@
         <xs:attribute name="minimumCardinality" type="cardinality" use="optional"/>
         <xs:attribute name="maximumCardinality" type="cardinality" use="optional"/>
         <xs:attribute name="role" type="xs:string" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="strongEntitiesCollection">
+        <xs:sequence>
+            <xs:element name="strongEntity" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="id" type="guid" use="required"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
     </xs:complexType>
 </xs:schema>

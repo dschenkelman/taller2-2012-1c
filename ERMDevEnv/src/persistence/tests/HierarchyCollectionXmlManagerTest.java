@@ -77,7 +77,7 @@ public class HierarchyCollectionXmlManagerTest {
 
         XmlManager.writeToFile(document, PATH);
 
-        NodeList nodeList = diagram.getElementsByTagName("hierarchies");
+        NodeList nodeList = diagram.getElementsByTagName(HIERARCHIES);
         Element hierarchiesElement = (Element) nodeList.item(0);
         NodeList hierarchyElements = hierarchiesElement.getElementsByTagName(HIERARCHY);
         Element hierarchyElement = (Element) hierarchyElements.item(0);
@@ -117,6 +117,7 @@ public class HierarchyCollectionXmlManagerTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        assert document != null;
         HierarchyCollection hierarchyCollectionFromXml = HierarchyCollectionXmlManager.getHierarchyCollectionFromElement(document.getDocumentElement());
 
         Assert.assertEquals("3552f6a7-b89f-49da-8b40-faa8311f44a5", hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("3552f6a7-b89f-49da-8b40-faa8311f44a5")).iterator().next().getGeneralEntityUUID().toString());
