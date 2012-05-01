@@ -66,7 +66,7 @@ public class AttributeCollectionXMLManagerTestCase {
 	    Element diagram = document.createElement("diagram");
 	    document.appendChild(diagram);
 	     
-	    Element attributes = AttributeCollectionXmlManager.getXMLElementFromItem(attCol, document);
+	    Element attributes = new AttributeCollectionXmlManager().getElementFromItem(attCol, document);
 	    diagram.appendChild(attributes);
 	     
 	    XmlManager.writeToFile(document, xmlPath);
@@ -126,7 +126,7 @@ public class AttributeCollectionXMLManagerTestCase {
 
 		AttributeCollection attCol = null;
 		try {
-			attCol = AttributeCollectionXmlManager.getItemFromXmlElement(document.getDocumentElement());
+			attCol = new AttributeCollectionXmlManager().getItemFromXmlElement(document.getDocumentElement());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			fail();

@@ -10,7 +10,7 @@ import models.EntityType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class EntityXmlManager {
+public class EntityXmlManager implements IXmlManager<Entity> {
 
 	public Element getElementFromItem(Entity entity, Document document) {
 		Element entityElement = document.createElement("entity");

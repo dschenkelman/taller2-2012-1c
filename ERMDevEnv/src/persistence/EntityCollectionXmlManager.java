@@ -7,7 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class EntityCollectionXmlManager {
+public class EntityCollectionXmlManager implements IXmlManager<EntityCollection> {
 
 	public Element getElementFromItem(EntityCollection entityCollection,
 			Document document) {
@@ -20,7 +20,7 @@ public class EntityCollectionXmlManager {
 		return element;
 	}
 
-	public EntityCollection getItemFromElement(Element entityCollectionElement) throws Exception {
+	public EntityCollection getItemFromXmlElement(Element entityCollectionElement) throws Exception {
 		EntityCollection entityCollection = new EntityCollection();
 		
 		NodeList entities = entityCollectionElement.getElementsByTagName("entity");

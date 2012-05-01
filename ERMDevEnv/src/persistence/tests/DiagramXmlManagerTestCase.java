@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import junit.framework.Assert;
 
-import models.DiagramType;
+import models.Diagram;
 import models.EntityCollection;
 import models.Hierarchy;
 import models.HierarchyCollection;
@@ -28,9 +28,9 @@ public class DiagramXmlManagerTestCase {
 		EntityCollection entities = new EntityCollection();
 		List<Relationship> relationships = new ArrayList<Relationship>();
 		HierarchyCollection hierarchies = new HierarchyCollection();
-		List<DiagramType> subDiagrams = new ArrayList<DiagramType>();
-		DiagramType subDiagram1 = new DiagramType();
-		DiagramType subDiagram2 = new DiagramType();
+		List<Diagram> subDiagrams = new ArrayList<Diagram>();
+		Diagram subDiagram1 = new Diagram();
+		Diagram subDiagram2 = new Diagram();
 		
 		entities.add("entity1");
 		entities.add("entity2");
@@ -45,7 +45,7 @@ public class DiagramXmlManagerTestCase {
 		subDiagrams.add(subDiagram1);
 		subDiagrams.add(subDiagram2);
 		
-		DiagramType diagram = new DiagramType(entities, relationships, hierarchies, subDiagrams);
+		Diagram diagram = new Diagram(entities, relationships, hierarchies, subDiagrams);
 		
 		Document document = TestUtilities.createDocument();
 		
@@ -108,7 +108,7 @@ public class DiagramXmlManagerTestCase {
 		
 		Element diagramElement = document.getDocumentElement();
 		
-		DiagramType diagram = xmlManager.getItemFromElement(diagramElement);
+		Diagram diagram = xmlManager.getItemFromXmlElement(diagramElement);
 		
 		Assert.assertEquals("3F2504E0-4F89-11D3-9A0C-0300FFFFFFFF", diagram.getId().toString());
 		

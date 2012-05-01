@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import junit.framework.Assert;
-import models.DiagramType;
+import models.Diagram;
 import models.EntityCollection;
 import models.HierarchyCollection;
 import models.Relationship;
@@ -21,7 +21,7 @@ public class DiagramTestCase {
 	@Test
 	public void testCreatingDiagramProvidesContentsIsNone()
 	{
-		DiagramType diagram = new DiagramType();
+		Diagram diagram = new Diagram();
 		Assert.assertEquals(0, diagram.getEntities().count());
 		Assert.assertEquals(0, diagram.getRelationships().size());
 		Assert.assertEquals(0, diagram.getHierarchies().count());
@@ -31,9 +31,9 @@ public class DiagramTestCase {
 	@Test
 	public void testCreateAnCompleteDiagram()
 	{
-		DiagramType diagram = new DiagramType(new EntityCollection(), 
+		Diagram diagram = new Diagram(new EntityCollection(), 
 				new ArrayList<Relationship>(), new HierarchyCollection(), 
-				new ArrayList<DiagramType>());
+				new ArrayList<Diagram>());
 		
 		Assert.assertEquals(0, diagram.getEntities().count());
 		Assert.assertEquals(0, diagram.getRelationships().size());			
@@ -46,15 +46,15 @@ public class DiagramTestCase {
 	@Test
 	public void testTwoDiagramProvidesDifferentsIdNumbers()
 	{
-		DiagramType diagram = new DiagramType();
-		DiagramType diagram1 = new DiagramType();
+		Diagram diagram = new Diagram();
+		Diagram diagram1 = new Diagram();
 		Assert.assertTrue(diagram.getId().toString() != diagram1.getId().toString());
 	}
 	
 	@Test
 	public void testAddingAnRelationshipCanBeRetrived()
 	{
-		DiagramType diagram = new DiagramType();
+		Diagram diagram = new Diagram();
 		
 		UUID uid1 = UUID.randomUUID();
 		diagram.getRelationships().add(new Relationship(uid1, "TestName", false));
@@ -65,7 +65,7 @@ public class DiagramTestCase {
 	@Test
 	public void testAddingTwoRelationshipsCanBeRetrived()
 	{
-		DiagramType diagram = new DiagramType();
+		Diagram diagram = new Diagram();
 		
 		UUID uid1 = UUID.randomUUID();
 		UUID uid2 = UUID.randomUUID();
@@ -79,7 +79,7 @@ public class DiagramTestCase {
 	@Test
 	public void testDelettingOneRelationshipAndANonExistentRelationship()
 	{
-		DiagramType diagram = new DiagramType();
+		Diagram diagram = new Diagram();
 		
 		UUID id = UUID.randomUUID();
 		diagram.getRelationships().add(new Relationship(id, "TestName", true));
@@ -102,8 +102,8 @@ public class DiagramTestCase {
 	@Test
 	public void testAddingASubdiagramCanBeRetrived()
 	{
-		DiagramType diagram = new DiagramType();
-		DiagramType diagram2 = new DiagramType();
+		Diagram diagram = new Diagram();
+		Diagram diagram2 = new Diagram();
 		
 		diagram.addSubDiagram(diagram2);
 		Assert.assertTrue(diagram.existsSubDiagram(diagram2.getId()));
@@ -114,9 +114,9 @@ public class DiagramTestCase {
 	@Test
 	public void testAddingTwoSubDiagrams()
 	{
-		DiagramType diagram = new DiagramType();
-		DiagramType diagram2 = new DiagramType();
-		DiagramType diagram3 = new DiagramType();
+		Diagram diagram = new Diagram();
+		Diagram diagram2 = new Diagram();
+		Diagram diagram3 = new Diagram();
 		
 		diagram.addSubDiagram(diagram2);
 		diagram.addSubDiagram(diagram3);
@@ -130,7 +130,7 @@ public class DiagramTestCase {
 	@Test
 	public void testRemovingExistentAndNonExistentSubDiagrams()
 	{
-		DiagramType diagram = new DiagramType();
+		Diagram diagram = new Diagram();
 		UUID id = UUID.randomUUID();
 		try 
 		{
@@ -139,7 +139,7 @@ public class DiagramTestCase {
 		{
 		}
 				
-		DiagramType diagram2 = new DiagramType();
+		Diagram diagram2 = new Diagram();
 		diagram.addSubDiagram(diagram2);
 		try 
 		{

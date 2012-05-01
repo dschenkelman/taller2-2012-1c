@@ -9,7 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class RelationshipCollectionXmlManager {
+public class RelationshipCollectionXmlManager implements IXmlManager<List<Relationship>> {
 
 	public Element getElementFromItem(List<Relationship> collection,
 			Document document) {
@@ -22,7 +22,7 @@ public class RelationshipCollectionXmlManager {
 		return element;
 	}
 
-	public List<Relationship> getItemFromElement(Element relationshipsElement) throws Exception {
+	public List<Relationship> getItemFromXmlElement(Element relationshipsElement) throws Exception {
 		List<Relationship> relationships = new ArrayList<Relationship>();
 		
 		NodeList relationshipsList = relationshipsElement.getElementsByTagName("relationship");

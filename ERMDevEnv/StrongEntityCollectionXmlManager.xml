@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram>
+  <strongEntities>
+    <strongEntity id="ff92b20e-829b-440d-865d-1da5ca0ce986" name="TestEntity0"/>
+    <strongEntity id="de9c5822-3934-41c4-b4a9-3f47dbee213c" name="TestEntity1"/>
+    <strongEntity id="abcb3629-3a22-4108-9b68-729601bf383c" name="TestEntity2"/>
+    <strongEntity id="c498bff6-6cb5-4d52-b528-a8946aa76041" name="TestEntity3"/>
+    <strongEntity id="bf9a0176-f90f-43d8-bf18-81f2492754ac" name="TestEntity4"/>
+  </strongEntities>
+</diagram>

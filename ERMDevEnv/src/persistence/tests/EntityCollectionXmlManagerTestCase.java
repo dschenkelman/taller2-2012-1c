@@ -59,7 +59,7 @@ public class EntityCollectionXmlManagerTestCase {
 		EntityCollectionXmlManager xmlManager = new EntityCollectionXmlManager();
 		Element entityCollectionElement = document.getDocumentElement();
 		
-		EntityCollection entityCollection = xmlManager.getItemFromElement(entityCollectionElement);
+		EntityCollection entityCollection = xmlManager.getItemFromXmlElement(entityCollectionElement);
 		
 		Assert.assertEquals(2, entityCollection.count());
 		Assert.assertNotNull(entityCollection.get("entity1"));
