@@ -89,7 +89,6 @@ public class DiagramControllerTestCase {
 	
 	@Test
 	public void testShouldCreateCellsForEntityAttributesAndLinksWhenAddingEntity() throws Exception
-
 	{
 		Entity entity = new Entity("Product");
 		entity.getAttributes().addAttribute("Stock");
@@ -212,6 +211,41 @@ public class DiagramControllerTestCase {
 		Assert.assertTrue(diagramController.getGraph().getModel().isVertex(relationshipCell));
 		Assert.assertEquals(40.0, relationshipCell.getGeometry().getX(), 0);
 		Assert.assertEquals(65.0, relationshipCell.getGeometry().getY(), 0);
+		
+		mxCell entity1Cell = diagramController.getEntityCell(entity1.getId().toString());
+		mxCell relationshipEntity11Cell = 
+			diagramController.getRelationshipConnectorCell
+				(relationship.getId().toString()+entity1.getId().toString()+"Role1");
+		mxCell relationshipEntity12Cell = 
+			diagramController.getRelationshipConnectorCell
+				(relationship.getId().toString()+entity1.getId().toString()+"Role2");
+		Assert.assertTrue(diagramController.getGraph().getModel().isEdge(relationshipEntity11Cell));
+		Object[] entity1RelationshipConnectors = diagramController.getGraph().getEdgesBetween(entity1Cell, relationshipCell);
+		Assert.assertEquals(2, entity1RelationshipConnectors.length);
+		Assert.assertSame(relationshipEntity11Cell, entity1RelationshipConnectors[0]);
+		Assert.assertSame(relationshipEntity12Cell, entity1RelationshipConnectors[1]);
+		Assert.assertEquals("Role1 (0,1)", relationshipEntity11Cell.getValue());
+		Assert.assertEquals("Role2 (1,1)", relationshipEntity12Cell.getValue());
+		
+		mxCell entity2Cell = diagramController.getEntityCell(entity2.getId().toString());
+		mxCell relationshipEntity2Cell = 
+			diagramController.getRelationshipConnectorCell
+				(relationship.getId().toString()+entity2.getId().toString()+"");
+		Assert.assertTrue(diagramController.getGraph().getModel().isEdge(relationshipEntity2Cell));
+		Object[] entity2RelationshipConnectors = diagramController.getGraph().getEdgesBetween(entity2Cell, relationshipCell);
+		Assert.assertEquals(1, entity2RelationshipConnectors.length);
+		Assert.assertSame(relationshipEntity2Cell, entity2RelationshipConnectors[0]);
+		Assert.assertEquals("(0,*)", relationshipEntity2Cell.getValue());
+		
+		mxCell entity3Cell = diagramController.getEntityCell(entity3.getId().toString());
+		mxCell relationshipEntity3Cell = 
+			diagramController.getRelationshipConnectorCell
+				(relationship.getId().toString()+entity3.getId().toString()+"");
+		Assert.assertTrue(diagramController.getGraph().getModel().isEdge(relationshipEntity3Cell));
+		Object[] entity3RelationshipConnectors = diagramController.getGraph().getEdgesBetween(entity3Cell, relationshipCell);
+		Assert.assertEquals(1, entity3RelationshipConnectors.length);
+		Assert.assertSame(relationshipEntity3Cell, entity3RelationshipConnectors[0]);
+		Assert.assertEquals("(*,*)", relationshipEntity3Cell.getValue());
 	}
 
 	private void addEntityToDiagram(DiagramController diagramController, 
