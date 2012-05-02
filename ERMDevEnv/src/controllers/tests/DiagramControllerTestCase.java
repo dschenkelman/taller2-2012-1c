@@ -1,7 +1,10 @@
 package controllers.tests;
 
 
+import models.Cardinality;
 import models.Entity;
+import models.Relationship;
+import models.RelationshipEntity;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -175,6 +178,49 @@ public class DiagramControllerTestCase {
 		Assert.assertSame(diagramController, this.entityController.getListeners().toArray()[0]);
 	}
 		
+	@Test
+	public void testShouldCreateCellsForRelationshipWhenAddingRelationshipWithoutAttributes() throws Exception{
+		Entity entity1 = new Entity("Entity1");
+		Entity entity2 = new Entity("Entity2");
+		Entity entity3 = new Entity("Entity3");
+		
+		DiagramController diagramController = this.createController();
+		
+		this.addEntityToDiagram(diagramController, entity1, 20, 30);
+		this.addEntityToDiagram(diagramController, entity2, 60, 30);
+		this.addEntityToDiagram(diagramController, entity3, 20, 100);
+		
+		RelationshipEntity relationshipEntity11 = 
+			new RelationshipEntity(entity1, new Cardinality(0, 1), "Role1");
+		RelationshipEntity relationshipEntity12 = 
+			new RelationshipEntity(entity1, new Cardinality(1, 1), "Role2");
+		RelationshipEntity relationshipEntity2 = 
+			new RelationshipEntity(entity2, new Cardinality(0, Double.POSITIVE_INFINITY), "");
+		RelationshipEntity relationshipEntity3 = 
+			new RelationshipEntity(entity3, new Cardinality(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY), "");
+		
+		Relationship relationship = new Relationship(relationshipEntity11, relationshipEntity12);
+		relationship.setName("Relationship");
+		relationship.addRelationshipEntity(relationshipEntity2);
+		relationship.addRelationshipEntity(relationshipEntity3);
+		
+		diagramController.handleCreatedEvent(relationship);
+		
+		mxCell relationshipCell = diagramController.getRelationshipCell(relationship.getId().toString());
+		
+		Assert.assertEquals("Relationship", diagramController.getGraph().getLabel(relationshipCell));
+		Assert.assertTrue(diagramController.getGraph().getModel().isVertex(relationshipCell));
+		Assert.assertEquals(40.0, relationshipCell.getGeometry().getX(), 0);
+		Assert.assertEquals(65.0, relationshipCell.getGeometry().getY(), 0);
+	}
+
+	private void addEntityToDiagram(DiagramController diagramController, 
+			Entity entity, double x, double y) {
+		diagramController.createEntity();
+		diagramController.handleCreatedEvent(entity);
+		diagramController.addEntity(x, y);
+	}
+	
 	private DiagramController createController() {
 		return new DiagramController(this.projectContext, this.diagramView,
 				this.entityControllerFactory, this.relationshipControllerFactory);
