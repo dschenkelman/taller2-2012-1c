@@ -11,6 +11,7 @@ import models.Entity;
 import models.Relationship;
 import models.RelationshipEntity;
 
+import org.hamcrest.core.IsNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -109,15 +110,26 @@ public class RelationshipXmlManager implements IXmlManager<Relationship> {
 
 		public RelationshipEntity getItemFromXmlElement(Element entityElement) throws Exception {
 			UUID id = UUID.fromString(entityElement.getAttribute("entityId"));
-			double minimum = this.getCardinalityFromString(
-					XmlExtensions.getStringOrNull(entityElement, "minimumCardinality"));
-			double maximum = this.getCardinalityFromString(
-					XmlExtensions.getStringOrNull(entityElement, "maximumCardinality"));
+			String minimumCard = XmlExtensions.getStringOrNull(entityElement, "minimumCardinality");
+			String maximumCard = XmlExtensions.getStringOrNull(entityElement, "maximumCardinality");
 			String role = XmlExtensions.getStringOrNull(entityElement, "role");
-			
+			double minimum;
+			double maximum;
+			if (minimumCard == null && maximumCard == null)
+				return new RelationshipEntity(id, null, role);
+			if (minimumCard == null) {
+				maximum = this.getCardinalityFromString(maximumCard);
+				return new RelationshipEntity(id, new Cardinality(0, maximum), role);
+			}
+			if (maximumCard == null) {
+				minimum = this.getCardinalityFromString(minimumCard);
+				return new RelationshipEntity(id, new Cardinality(minimum, Double.POSITIVE_INFINITY), role);
+			}
+			minimum = this.getCardinalityFromString(minimumCard);		
+			maximum = this.getCardinalityFromString(maximumCard);
 			return new RelationshipEntity(id, new Cardinality(minimum, maximum), role);
 		}
-
+		
 		private double getCardinalityFromString(String attribute) {
 			return attribute.equalsIgnoreCase("*") ? Double.POSITIVE_INFINITY : Double.parseDouble(attribute);
 		}

@@ -38,6 +38,8 @@ public class DiagramXmlManager implements IXmlManager<Diagram> {
 		diagram.setRelationships(new RelationshipCollectionXmlManager().getItemFromXmlElement(relationshipsElement));
 		diagram.setHierarchies(new HierarchyCollectionXmlManager().getItemFromXmlElement(hierarchiesElement));
 		
+		if (diagramsElement == null)
+			return diagram;
 		for (int i = 0; i < diagramsElement.getChildNodes().getLength(); i++) {
 			diagram.addSubDiagram(new DiagramXmlManager().getItemFromXmlElement((Element) diagramsElement.getChildNodes().item(i)));
 		}

@@ -23,6 +23,8 @@ public class EntityCollectionXmlManager implements IXmlManager<EntityCollection>
 	public EntityCollection getItemFromXmlElement(Element entityCollectionElement) throws Exception {
 		EntityCollection entityCollection = new EntityCollection();
 		
+		if (entityCollectionElement == null)
+			return entityCollection;
 		NodeList entities = entityCollectionElement.getElementsByTagName("entity");
 		
 		for (int i = 0; i < entities.getLength(); i++)

@@ -25,6 +25,8 @@ public class RelationshipCollectionXmlManager implements IXmlManager<List<Relati
 	public List<Relationship> getItemFromXmlElement(Element relationshipsElement) throws Exception {
 		List<Relationship> relationships = new ArrayList<Relationship>();
 		
+		if (relationshipsElement == null)
+			return relationships;
 		NodeList relationshipsList = relationshipsElement.getElementsByTagName("relationship");
 		
 		for (int i = 0; i < relationshipsList.getLength(); i++) {
