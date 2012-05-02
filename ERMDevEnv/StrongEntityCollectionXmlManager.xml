@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram>
   <strongEntities>
-    <strongEntity id="ccc36432-de3c-4e36-b700-d36bc419be3b" name="TestEntity0"/>
-    <strongEntity id="f45867fc-6a15-45c6-97c4-332740fda139" name="TestEntity1"/>
-    <strongEntity id="7cab1a89-e2c7-4d88-bd29-4616f1568250" name="TestEntity2"/>
-    <strongEntity id="551d11ec-b7d5-4165-842c-d751b63e8f15" name="TestEntity3"/>
-    <strongEntity id="151e3c16-78f3-48b4-b99a-78e11416cf29" name="TestEntity4"/>
+    <strongEntity id="df9a0d3d-12d9-4c31-86d3-a67c4841d251" name="TestEntity0"/>
+    <strongEntity id="c685095c-7d4c-4f2c-8441-52975723b525" name="TestEntity1"/>
+    <strongEntity id="7c3d475a-fd20-4393-8503-41e9a8cb860b" name="TestEntity2"/>
+    <strongEntity id="12aaf301-1c68-41f9-9445-226953124c63" name="TestEntity3"/>
+    <strongEntity id="af27917a-8d01-4d55-8af7-0a72ff92fb97" name="TestEntity4"/>
   </strongEntities>
 </diagram>

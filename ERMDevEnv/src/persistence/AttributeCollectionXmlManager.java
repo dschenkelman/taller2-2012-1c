@@ -17,7 +17,6 @@ import org.w3c.dom.NodeList;
 public class AttributeCollectionXmlManager implements IXmlManager<AttributeCollection>{
 
 	public  AttributeCollection getItemFromXmlElement(Element attributesElem) throws NumberFormatException, Exception{
-		//NodeList attributes = attributesElem.getChildNodes();
 
 		AttributeCollection attCollection  = new AttributeCollection();
 		if (attributesElem == null)
