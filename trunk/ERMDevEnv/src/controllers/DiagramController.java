@@ -1,13 +1,13 @@
 package controllers;
 
 import infrastructure.IControllerFactory;
-import infrastructure.IterableExtensions;
+import infrastructure.StringExtensions;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import models.Attribute;
+import models.Cardinality;
 import models.Entity;
 import models.Relationship;
 import models.RelationshipEntity;
@@ -27,10 +27,11 @@ public class DiagramController extends BaseController
 	private Map<String, mxCell> relationshipCells;
 	private Map<String, mxCell> attributeCells;
 	private Map<String, mxCell> attributeConnectorCells;
+	private Map<String, mxCell> relationshipConnectorCells;
 	private IControllerFactory<IEntityController, Entity> entityControllerFactory;
 	private Entity pendingEntity;
 	private IControllerFactory<IRelationshipController, Relationship> relationshipControllerFactory;
-
+	
 	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
 			IControllerFactory<IEntityController, Entity> entityControllerFactory,
 			IControllerFactory<IRelationshipController, Relationship> relationshipControllerFactory) {
@@ -42,6 +43,7 @@ public class DiagramController extends BaseController
 		this.attributeCells = new HashMap<String, mxCell>();
 		this.attributeConnectorCells = new HashMap<String, mxCell>();
 		this.relationshipCells = new HashMap<String, mxCell>();
+		this.relationshipConnectorCells = new HashMap<String, mxCell>();
 		diagramView.setController(this);
 	}
 
@@ -81,12 +83,17 @@ public class DiagramController extends BaseController
 		
 		try{
 			Object parent = this.graph.getDefaultParent();
-			this.addRelationshipToGraph(relationship, parent, x, y);
+			mxCell relationshipCell = this.addRelationshipToGraph(relationship, parent, x, y);
+			
+			for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
+				this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity);
+			}
 		}
 		finally {
 			this.graph.getModel().endUpdate();
 		}
 	}
+	
 	public void addEntity(double x, double y) 
 	{
 		this.graph.getModel().beginUpdate();
@@ -105,6 +112,32 @@ public class DiagramController extends BaseController
 		}
 		
 		this.pendingEntity = null;
+	}
+
+	private mxCell addRelationshipConnectorToGraph(Object parent, Relationship relationship, mxCell relationshipCell,
+			RelationshipEntity relationshipEntity) {
+		String cardinalityDisplay = String.format("(%s,%s)", 
+				Cardinality.getStringForCardinality(relationshipEntity
+						.getCardinality().getMinimum()),
+				Cardinality.getStringForCardinality(relationshipEntity
+						.getCardinality().getMaximum()));
+		
+		String displayValue = StringExtensions.isNullOrEmpty(relationshipEntity.getRole()) ? 
+				cardinalityDisplay
+				: String.format("%s %s", relationshipEntity.getRole(), cardinalityDisplay);
+		
+		String connectorId = relationship.getId().toString() + 
+			relationshipEntity.getEntityId().toString() + 
+			relationshipEntity.getRole();
+		
+		mxCell entityCell = this.getEntityCell(relationshipEntity.getEntityId().toString());
+		
+		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, connectorId, displayValue, 
+				relationshipCell, entityCell, StyleConstants.RELATIONSHIP_CONNECTOR_STYLE);
+		
+		this.relationshipConnectorCells.put(connectorId, connectorCell);
+		
+		return connectorCell;
 	}
 
 	private mxCell addAttributeConnectorToGraph(Object parent, Entity entity, mxCell entityCell,
@@ -201,5 +234,10 @@ public class DiagramController extends BaseController
 
 	public mxCell getRelationshipCell(String id) {
 		return this.relationshipCells.get(id);
+	}
+
+	
+	public mxCell getRelationshipConnectorCell(String id) {
+		return this.relationshipConnectorCells.get(id);
 	}
 }

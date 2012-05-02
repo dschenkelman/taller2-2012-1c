@@ -93,8 +93,8 @@ public class RelationshipXmlManager implements IXmlManager<Relationship> {
 			entityElement.setAttribute("entityId", relationshipEntity.getEntityId().toString());
 			if (relationshipEntity.getCardinality() != null)
 			{
-				String minimum = this.getStringForCardinality(relationshipEntity.getCardinality().getMinimum());
-				String maximum = this.getStringForCardinality(relationshipEntity.getCardinality().getMaximum());
+				String minimum = Cardinality.getStringForCardinality(relationshipEntity.getCardinality().getMinimum());
+				String maximum = Cardinality.getStringForCardinality(relationshipEntity.getCardinality().getMaximum());
 				
 				entityElement.setAttribute("minimumCardinality", minimum);
 				entityElement.setAttribute("maximumCardinality", maximum);
@@ -118,24 +118,16 @@ public class RelationshipXmlManager implements IXmlManager<Relationship> {
 			if (minimumCard == null && maximumCard == null)
 				return new RelationshipEntity(id, null, role);
 			if (minimumCard == null) {
-				maximum = this.getCardinalityFromString(maximumCard);
+				maximum = Cardinality.getCardinalityFromString(maximumCard);
 				return new RelationshipEntity(id, new Cardinality(0, maximum), role);
 			}
 			if (maximumCard == null) {
-				minimum = this.getCardinalityFromString(minimumCard);
+				minimum = Cardinality.getCardinalityFromString(minimumCard);
 				return new RelationshipEntity(id, new Cardinality(minimum, Double.POSITIVE_INFINITY), role);
 			}
-			minimum = this.getCardinalityFromString(minimumCard);		
-			maximum = this.getCardinalityFromString(maximumCard);
+			minimum = Cardinality.getCardinalityFromString(minimumCard);		
+			maximum = Cardinality.getCardinalityFromString(maximumCard);
 			return new RelationshipEntity(id, new Cardinality(minimum, maximum), role);
-		}
-		
-		private double getCardinalityFromString(String attribute) {
-			return attribute.equalsIgnoreCase("*") ? Double.POSITIVE_INFINITY : Double.parseDouble(attribute);
-		}
-
-		private String getStringForCardinality(double value) {
-			return value == Double.POSITIVE_INFINITY ? "*" : Integer.toString((int) value);
 		}
 	}
 }

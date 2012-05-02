@@ -34,4 +34,12 @@ public class Cardinality {
 		return maximum;
 	}
 
+	public static double getCardinalityFromString(String value) {
+		return value.equalsIgnoreCase("*") ? Double.POSITIVE_INFINITY : Double.parseDouble(value);
+	}
+
+	public static String getStringForCardinality(double value) {
+		return value == Double.POSITIVE_INFINITY ? "*" : Integer.toString((int) value);
+	}
+
 }
