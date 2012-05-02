@@ -103,19 +103,25 @@ public class AttributeCollectionXMLManagerTestCase {
 	public void testCreateHierarchyCollectionFromXml() {
 		 String xml = 
 		
-			"<attributes> " +
+			"<attributes>" +
 				"<attribute id=\"63fbe9a3-a337-431b-b18c-24c2fe45f438\" maximumCardinality=\"10.0\" minimumCardinality=\"1.0\" " +
 					"name=\"SimpleAttribute1\" type=\"characterization\">"+
-					"<idGroups />" +
+					"<idGroups/>" +
 				"</attribute>"+
 				"<attribute expression=\"expression1\" id=\"46f4c7c7-ab54-4afc-bfa8-87fa0f27c09b\" maximumCardinality=\"10.0\" " +
 					"minimumCardinality=\"0.0\" name=\"ComplexAttribute\" type=\"calculated\">" +
 					"<attributes>"+
 						"<attribute id=\"a835f4cc-c85d-4606-996a-93b89b36ae34\" name=\"SimpleAttribute2\"/>" +
+						"<attribute id=\"a835f4cc-c85d-4606-996a-93b89b36ae35\" name=\"SimpleAttribute3\"/>" +
 					"</attributes>" +
 					"<idGroups/>" +
 				"</attribute>" +
+				"<attribute id=\"a835f4cc-c85d-4606-996a-93b89b36ae36\" name=\"SimpleAttribute4\"/>" +	
 			"</attributes>" ;
+		
+
+					
+			
 		 
 		Document document = null;
 		try {
@@ -136,25 +142,33 @@ public class AttributeCollectionXMLManagerTestCase {
 		}
 
 		Iterator<Attribute> ite = attCol.iterator();
-		Attribute att = ite.next();
-		assertEquals(att.getName(),"SimpleAttribute1");
-		assertEquals(att.getId().toString(),"63fbe9a3-a337-431b-b18c-24c2fe45f438");
-		assertTrue(att.getCardinality().getMinimum()==1);
-		assertTrue(att.getCardinality().getMaximum()==10);
-		assertTrue(att.getType()==AttributeType.characterization);
-		assertTrue(att.getIdGroup()!=null);
+		Attribute att1 = ite.next();
+		Attribute att2 = ite.next();
+		Attribute att3 = ite.next();
 		
-		att = ite.next();
-		assertEquals(att.getName(),"ComplexAttribute");
-		assertEquals(att.getId().toString(),"46f4c7c7-ab54-4afc-bfa8-87fa0f27c09b");
-		assertTrue(att.getCardinality().getMinimum()==0);
-		assertTrue(att.getCardinality().getMaximum()==10);
-		assertTrue(att.getType()==AttributeType.calculated);
-		assertTrue(att.getIdGroup()!=null);
-		assertEquals(att.getExpression(),"expression1");
+		assertEquals(att1.getName(),"SimpleAttribute1");
+		assertEquals(att1.getId().toString(),"63fbe9a3-a337-431b-b18c-24c2fe45f438");
+		assertTrue(att1.getCardinality().getMinimum()==1);
+		assertTrue(att1.getCardinality().getMaximum()==10);
+		assertTrue(att1.getType()==AttributeType.characterization);
+		assertTrue(att1.getIdGroup()!=null);
 		
-		assertTrue(att.getAttributes().count()==1);
-		ite = att.getAttributes().iterator();
+		
+		assertEquals(att2.getName(),"ComplexAttribute");
+		assertEquals(att2.getId().toString(),"46f4c7c7-ab54-4afc-bfa8-87fa0f27c09b");
+		assertTrue(att2.getCardinality().getMinimum()==0);
+		assertTrue(att2.getCardinality().getMaximum()==10);
+		assertTrue(att2.getType()==AttributeType.calculated);
+		assertTrue(att2.getIdGroup()!=null);
+		assertEquals(att2.getExpression(),"expression1");
+		
+		assertTrue(att2.getAttributes().count()==2);
+		ite = att2.getAttributes().iterator();
 		assertEquals(ite.next().getName(),"SimpleAttribute2");
+		assertEquals(ite.next().getName(),"SimpleAttribute3");
+		
+		assertEquals(att3.getName(),"SimpleAttribute4");
+		
+		
 	}
 }

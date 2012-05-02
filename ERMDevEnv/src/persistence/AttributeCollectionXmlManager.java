@@ -16,12 +16,17 @@ import org.w3c.dom.NodeList;
 
 public class AttributeCollectionXmlManager implements IXmlManager<AttributeCollection>{
 
-	public AttributeCollection getItemFromXmlElement(Element attributesElem) throws NumberFormatException, Exception{
-		NodeList attributes = attributesElem.getElementsByTagName("attribute");
+	public  AttributeCollection getItemFromXmlElement(Element attributesElem) throws NumberFormatException, Exception{
+		NodeList attributes = attributesElem.getChildNodes();
+
 		AttributeCollection attCollection  = new AttributeCollection();
-		for (int i = 0 ; i < attributes.getLength() ; i++) {
-			Element attribute  = (Element) attributes.item(i);		
+		for (int i = 0 ; i < attributesElem.getChildNodes().getLength() ; i++) {
+	
+			
+			Element attribute  = (Element)attributesElem.getChildNodes().item(i) ;
+										
 			String name  = attribute.getAttribute("name");
+			
 			Cardinality cardinality = null;
 			if (!attribute.getAttribute("minimumCardinality").isEmpty() && !attribute.getAttribute("maximumCardinality").isEmpty()) {
 				cardinality  = new Cardinality (Double.valueOf(attribute.getAttribute("minimumCardinality")),
@@ -39,13 +44,19 @@ public class AttributeCollectionXmlManager implements IXmlManager<AttributeColle
 			
 			IdGroupCollection idGroup = null;
 			
-			if (attribute.getElementsByTagName("idGroups").getLength() > 0)
-				idGroup = new IdGroupCollectionXmlManager().getItemFromXmlElement((Element)attribute.getElementsByTagName("idGroups").item(0));
+			if (attribute.getChildNodes().getLength()>0 && 
+					(attribute.getChildNodes().item(0).getNodeName().equals("idGroups") ||
+					attribute.getChildNodes().item(1).getNodeName().equals("idGroups"))  ){
 			
+							idGroup = new IdGroupCollectionXmlManager().getItemFromXmlElement((Element)attribute);
+			}
 			
 			AttributeCollection attrCol = null;
-			if (attribute.getElementsByTagName("attributes").getLength() > 0)
-				attrCol = new AttributeCollectionXmlManager().getItemFromXmlElement((Element)attribute.getElementsByTagName("attributes").item(0));
+			
+
+			if (attribute.getChildNodes().getLength()>0 && 
+					attribute.getChildNodes().item(0).getNodeName().equals("attributes"))
+				attrCol = getItemFromXmlElement((Element)attribute.getChildNodes().item(0));
 			
 			UUID myID = UUID.fromString(attribute.getAttribute("id"));
 
@@ -56,6 +67,7 @@ public class AttributeCollectionXmlManager implements IXmlManager<AttributeColle
 		return attCollection;
 	}
 
+	
 	public Element getElementFromItem (AttributeCollection attCol, Document doc) {
 		Element attColElement = doc.createElement("attributes");
 		
