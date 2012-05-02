@@ -110,13 +110,13 @@ public class DiagramXmlManagerTestCase {
 		
 		Diagram diagram = xmlManager.getItemFromXmlElement(diagramElement);
 		
-		Assert.assertEquals("3F2504E0-4F89-11D3-9A0C-0300FFFFFFFF", diagram.getId().toString());
+		Assert.assertEquals("3f2504e0-4f89-11d3-9a0c-0300ffffffff", diagram.getId().toString());
 		
 		Assert.assertEquals(2, diagram.getEntities().count());
 		Assert.assertNotNull(diagram.getEntities().get("entity1"));
 		Assert.assertNotNull(diagram.getEntities().get("entity2"));
-		Assert.assertEquals("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFF", diagram.getEntities().get("entity1").getId().toString());
-		Assert.assertEquals("3F2504E0-4F89-11D3-9A0C-030DFFFFFFFF", diagram.getEntities().get("entity2").getId().toString());
+		Assert.assertEquals("3f2504e0-4f89-11d3-9a0c-030cffffffff", diagram.getEntities().get("entity1").getId().toString());
+		Assert.assertEquals("3f2504e0-4f89-11d3-9a0c-030dffffffff", diagram.getEntities().get("entity2").getId().toString());
 		
 		Assert.assertEquals(1, diagram.getRelationships().size());
 		Assert.assertNotNull(diagram.getRelationship(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFA")));
@@ -127,9 +127,9 @@ public class DiagramXmlManagerTestCase {
 		Assert.assertNotNull(diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")));
 		Assert.assertTrue(diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")).isExclusive());
 		Assert.assertTrue(diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")).isTotal());
-		Assert.assertEquals("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFF", diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")).getGeneralEntityUUID().toString());
+		Assert.assertEquals("3f2504e0-4f89-11d3-9a0c-030cffffffff", diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")).getGeneralEntityUUID().toString());
 		
-		Assert.assertEquals(2, diagram.getSubDiagrams());
+		Assert.assertEquals(2, diagram.getSubDiagrams().size());
 		Assert.assertNotNull(diagram.getSubDiagram(UUID.fromString("3F2504E0-4F89-11D3-9A0C-0301FFFFFFFF")));
 		Assert.assertNotNull(diagram.getSubDiagram(UUID.fromString("3F2504E0-4F89-11D3-9A0C-0302FFFFFFFF")));
 		

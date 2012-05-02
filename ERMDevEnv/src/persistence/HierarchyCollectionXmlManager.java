@@ -20,16 +20,13 @@ public class HierarchyCollectionXmlManager implements IXmlManager<HierarchyColle
     private static String TRUE = "true";
     private static String FALSE = "false";
 
-    public HierarchyCollection getItemFromXmlElement(Element diagram) {
+    public HierarchyCollection getItemFromXmlElement(Element hierarchiesElement) {
         HierarchyCollection hierarchyCollection = new HierarchyCollection();
 
-        NodeList hierarchiesElements = diagram.getElementsByTagName(HIERARCHIES);
-
-        if (hierarchiesElements.getLength() != 0) {
-            Element hierarchiesElement = (Element) hierarchiesElements.item(0);
-            NodeList hierarchies = hierarchiesElement.getElementsByTagName(HIERARCHY);
-            addHierarchiesToHierarchyCollection(hierarchies, hierarchyCollection);
-        }
+        if (hierarchiesElement == null)
+        	return hierarchyCollection;
+        NodeList hierarchies = hierarchiesElement.getElementsByTagName(HIERARCHY);
+        addHierarchiesToHierarchyCollection(hierarchies, hierarchyCollection);
 
         return hierarchyCollection;
     }
