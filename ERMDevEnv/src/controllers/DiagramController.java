@@ -49,12 +49,13 @@ public class DiagramController extends BaseController
 		if (!this.hasPendingEntity())
 		{
 			IEntityController entityController = this.entityControllerFactory.create();
+			entityController.addSubscriber(this);
 			entityController.create();
 		}
 	}
 	
     @Override
-    public void handleEvent(Entity entity) {
+    public void handleCreatedEvent(Entity entity) {
         this.pendingEntity = entity;
     }
 
@@ -62,11 +63,13 @@ public class DiagramController extends BaseController
 		IRelationshipController relationshipController = 
 			this.relationshipControllerFactory.create();
 		
+		relationshipController.addCreateListener(this);
+		
 		relationshipController.create();
 	}
 
 	@Override
-	public void handleEvent(Relationship relationship) {
+	public void handleCreatedEvent(Relationship relationship) {
 		
 	}
 

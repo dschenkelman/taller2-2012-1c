@@ -57,7 +57,7 @@ public class DiagramControllerTestCase {
 		Assert.assertFalse(diagramController.hasPendingEntity());
 		
 		diagramController.createEntity();
-		diagramController.handleEvent(entity);
+		diagramController.handleCreatedEvent(entity);
 		
 		Assert.assertEquals(1, this.entityController.getCreateCallsCount());
 		Assert.assertTrue(diagramController.hasPendingEntity());
@@ -73,7 +73,7 @@ public class DiagramControllerTestCase {
 		Assert.assertFalse(diagramController.hasPendingEntity());
 		
 		diagramController.createEntity();
-		diagramController.handleEvent(entity);
+		diagramController.handleCreatedEvent(entity);
 		
 		Assert.assertEquals(1, this.entityController.getCreateCallsCount());
 		Assert.assertTrue(diagramController.hasPendingEntity());
@@ -96,7 +96,7 @@ public class DiagramControllerTestCase {
 		DiagramController diagramController = this.createController();
 		
 		diagramController.createEntity();
-		diagramController.handleEvent(entity);
+		diagramController.handleCreatedEvent(entity);
 		
 		Assert.assertTrue(diagramController.hasPendingEntity());
 		
@@ -152,6 +152,29 @@ public class DiagramControllerTestCase {
 		Assert.assertTrue(this.relationshipController.createWasCalled());
 	}
 	
+	@Test
+	public void testShouldRegisterToHandleRelationshipCreatedEvents(){
+		DiagramController controller = this.createController();
+		
+		Assert.assertEquals(0, this.relationshipController.getListeners().size());
+		
+		controller.createRelationship();
+		
+		Assert.assertEquals(1, this.relationshipController.getListeners().size());
+		Assert.assertSame(controller, this.relationshipController.getListeners().toArray()[0]);
+	}
+	
+	@Test
+	public void testShouldRegisterToHandleEntityCreatedEvents(){
+		DiagramController diagramController = this.createController();
+		Assert.assertEquals(0, this.entityController.getListeners().size());
+		
+		diagramController.createEntity();
+		
+		Assert.assertEquals(1, this.entityController.getListeners().size());
+		Assert.assertSame(diagramController, this.entityController.getListeners().toArray()[0]);
+	}
+		
 	private DiagramController createController() {
 		return new DiagramController(this.projectContext, this.diagramView,
 				this.entityControllerFactory, this.relationshipControllerFactory);
