@@ -17,6 +17,7 @@ public class Attribute implements INameable, IKey {
     public Attribute(String name) {
         this.setName(name);
         myID = UUID.randomUUID();
+        isKeyField=false;
     }
 
     public Attribute(String name, boolean isKeyField, Cardinality cardinality, IdGroupCollection idGroup,
