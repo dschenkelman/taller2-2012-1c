@@ -1,5 +1,8 @@
 package controllers.tests.mocks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import views.IEntityView;
 import controllers.IEntityController;
 import controllers.IEntityEventListener;
@@ -7,6 +10,12 @@ import controllers.IEntityEventListener;
 public class MockEntityController implements IEntityController{
 
 	private int createCalls;
+	private List<IEntityEventListener> listeners;
+	
+	public MockEntityController(){
+		this.createCalls = 0;
+		this.listeners = new ArrayList<IEntityEventListener>();
+	}
 	
 	@Override
 	public void create() {
@@ -34,7 +43,12 @@ public class MockEntityController implements IEntityController{
 	}
 
 	@Override
-	public void addSubscriber(IEntityEventListener listener) {		
+	public void addSubscriber(IEntityEventListener listener) {
+		this.listeners.add(listener);
+	}
+
+	public List<IEntityEventListener> getListeners() {
+		return this.listeners;
 	}
 	
 }

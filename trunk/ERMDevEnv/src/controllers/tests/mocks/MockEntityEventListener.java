@@ -8,7 +8,7 @@ public class MockEntityEventListener implements IEntityEventListener {
     private Entity entity;
 
     @Override
-    public void handleEvent(Entity entity) {
+    public void handleCreatedEvent(Entity entity) {
         called = true;
         this.entity = entity;
 

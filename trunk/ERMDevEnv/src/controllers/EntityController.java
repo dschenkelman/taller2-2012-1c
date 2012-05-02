@@ -76,7 +76,7 @@ public class EntityController extends BaseController implements IEntityControlle
         }
 
         for (IEntityEventListener listener : this.listeners) {
-            listener.handleEvent(pendingEntity);
+            listener.handleCreatedEvent(pendingEntity);
         }
 
         return true;
