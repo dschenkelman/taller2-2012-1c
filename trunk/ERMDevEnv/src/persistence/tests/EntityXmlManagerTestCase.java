@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import persistence.EntityXmlManager;
 
@@ -36,13 +37,24 @@ public class EntityXmlManagerTestCase {
 		Assert.assertEquals(entity.getName(), element.getAttribute("name"));
 		Assert.assertEquals(entity.getId().toString(), element.getAttribute("id"));
 		Assert.assertEquals(entity.getType().toString(), element.getAttribute("type"));
+		
+		NodeList attributesElement = element.getChildNodes().item(0).getChildNodes();
+		Assert.assertEquals(3, attributesElement.getLength());
+		Assert.assertEquals("att1", ((Element) attributesElement.item(0)).getAttribute("name"));
+		Assert.assertEquals("att2", ((Element) attributesElement.item(1)).getAttribute("name"));
+		Assert.assertEquals("att3", ((Element) attributesElement.item(2)).getAttribute("name"));
 	}
 	
 	@Test
 	public void testShouldGenerateAnEntityFromXml() throws Exception
 	{
 		String xml = "<entities><entity name='TestName' type='Historic' " +
-				"id='3F2504E0-4F89-11D3-9A0C-030CFFFFFFFF'></entity></entities>";
+				"id='3F2504E0-4F89-11D3-9A0C-030CFFFFFFFF'><attributes>" +
+				"<attribute name='attr1' id='3F2504E0-4F89-11D3-9A0C-130CFFFFFFFF'" +
+				" isKeyField='true'/><attribute name='attr2' " +
+				"id='3F2504E0-4F89-11D3-9A0C-230CFFFFFFFF' isKeyField='false'/>" +
+				"<attribute name='attr3' id='3F2504E0-4F89-11D3-9A0C-330CFFFFFFFF'" +
+				" isKeyField='true'/></attributes></entity></entities>";
 		
 		Document document = TestUtilities.loadXMLFromString(xml);
 		
@@ -54,6 +66,11 @@ public class EntityXmlManagerTestCase {
 		Assert.assertEquals("TestName", entity.getName());
 		Assert.assertEquals("Historic", entity.getType().toString());
 		Assert.assertEquals("3f2504e0-4f89-11d3-9a0c-030cffffffff", entity.getId().toString());
+		
+		Assert.assertEquals(3, entity.getAttributes().count());
+		Assert.assertNotNull(entity.getAttributes().getAttribute("attr1"));
+		Assert.assertNotNull(entity.getAttributes().getAttribute("attr2"));
+		Assert.assertNotNull(entity.getAttributes().getAttribute("attr3"));
 	}
 	
 	@Before
