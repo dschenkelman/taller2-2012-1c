@@ -17,7 +17,7 @@ public class Attribute implements INameable, IKey {
     public Attribute(String name) {
         this.setName(name);
         myID = UUID.randomUUID();
-        isKeyField=false;
+        isKeyField = false;
     }
 
     public Attribute(String name, boolean isKeyField, Cardinality cardinality, IdGroupCollection idGroup,
@@ -26,7 +26,7 @@ public class Attribute implements INameable, IKey {
         this(name);
         this.isKeyField = isKeyField;
         this.setCardinality(cardinality);
-        this.idGroup = idGroup;
+        this.idGroup = idGroup == null ? new IdGroupCollection() : idGroup;
         this.type = type;
 
         if (expression != null) setExpression(expression); //Throws IllegalArgumentException
