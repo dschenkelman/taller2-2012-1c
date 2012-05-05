@@ -5,6 +5,7 @@ import controllers.IEntityController;
 import models.EntityType;
 import views.IAttributeView;
 import views.IEntityView;
+import views.IStrongEntityView;
 
 public class MockEntityView implements IEntityView {
     private IEntityController controller;
@@ -25,6 +26,11 @@ public class MockEntityView implements IEntityView {
     @Override
     public void addAttributeView(IAttributeView attributeView) {
         this.addViewWasCall = true;
+    }
+
+    @Override
+    public void addStrongEntityView(IStrongEntityView strongEntityView) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

@@ -1,10 +1,8 @@
 package controllers;
 
-import models.Attribute;
-import models.AttributeCollection;
-import models.Entity;
-import models.EntityCollection;
+import models.*;
 import views.IEntityView;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,20 +14,22 @@ public class EntityController extends BaseController implements IEntityControlle
     private Entity pendingEntity;
     private List<IEntityEventListener> listeners;
     private IAttributeController attributeController;
+    private IStrongEntityController strongEntityController;
 
-    public EntityController(IProjectContext projectContext, IEntityView entityView, IAttributeController attributeController) {
+    public EntityController(IProjectContext projectContext, Entity entity, IEntityView entityView, IAttributeController attributeController, IStrongEntityController strongEntityController) {
         super(projectContext);
-        this.entityCollection = projectContext.getEntityCollection();
+        this.pendingEntity = entity;
+        this.entityCollection = projectContext.getEntityCollection(this.pendingEntity);
         this.attributeController = attributeController;
+        this.strongEntityController = strongEntityController;
         this.listeners = new ArrayList<IEntityEventListener>();
-        this.entityView = entityView;
-        this.entityView.setController(this);
-        this.pendingEntity = new Entity("");
+        this.setEntityView(entityView);
     }
 
 
     @Override
     public void create() {
+        this.entityView.addStrongEntityView(this.strongEntityController.getStrongEntityView());
         this.entityView.addAttributeView(this.attributeController.getAttributeView());
         this.entityView.showView();
     }
@@ -47,10 +47,9 @@ public class EntityController extends BaseController implements IEntityControlle
         Iterator<Entity> iterator = this.entityCollection.iterator();
 
         boolean isRepeated = false;
-        String entityName = this.entityView.getEntityName();
 
         while (iterator.hasNext() && !isRepeated) {
-            isRepeated = iterator.next().getName().equals(entityName);
+            isRepeated = iterator.next().getName().equals(name);
         }
 
         return !isRepeated;
@@ -67,10 +66,21 @@ public class EntityController extends BaseController implements IEntityControlle
         pendingEntity.setType(this.entityView.getType());
 
         AttributeCollection attributeCollection = this.pendingEntity.getAttributes();
-        for (Attribute attribute : this.attributeController.getAttributesSelected()) {
+        for (Attribute attribute : this.attributeController.getAttributes()) {
             try {
                 attributeCollection.addAttribute(attribute);
             } catch (Exception e) {
+                //When editing an entity
+                e.printStackTrace();
+            }
+        }
+
+        StrongEntityCollection strongEntityCollection = this.pendingEntity.getStrongEntities();
+        for (IStrongEntity strongEntity : this.strongEntityController.getStrongEntities()) {
+            try {
+                strongEntityCollection.addStrongEntity(strongEntity);
+            } catch (Exception e) {
+                //When editing an entity
                 e.printStackTrace();
             }
         }
@@ -86,6 +96,8 @@ public class EntityController extends BaseController implements IEntityControlle
     @Override
     public void setEntityView(IEntityView entityView) {
         this.entityView = entityView;
+        this.entityView.setEntityName(this.pendingEntity.getName());
+        this.entityView.setController(this);
     }
 
 }

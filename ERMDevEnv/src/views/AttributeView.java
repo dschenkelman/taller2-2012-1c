@@ -1,13 +1,14 @@
-package controllers.tests.mocks;
+package views;
 
 import controllers.IAttributeController;
 import models.Attribute;
-import views.IAttributeView;
+import models.INameable;
 
 import java.util.List;
 
-public class MockAttributeView implements IAttributeView {
+public class AttributeView implements IAttributeView {
     private IAttributeController controller;
+    private Object internalFrame;
 
     @Override
     public void setController(IAttributeController attributeController) {
@@ -19,7 +20,7 @@ public class MockAttributeView implements IAttributeView {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public IAttributeController getController() {
-        return this.controller;
+    public Object getInternalFrame() {
+        return internalFrame;
     }
 }

@@ -1,14 +1,10 @@
 package controllers.tests;
 
 import controllers.AttributeController;
-import controllers.IKeysController;
 import controllers.tests.mocks.*;
-import infrastructure.IControllerFactory;
 import infrastructure.IterableExtensions;
 import junit.framework.Assert;
-import models.Attribute;
-import models.IKey;
-import models.IdGroupCollection;
+import models.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,10 +16,7 @@ public class AttributeControllerTest {
 
     private MockAttributeView mockAttributeView;
     private MockProjectContext mockProjectContext;
-    private MockEntityEventListener mockEntityCreatedListener;
-    private MockEntityController mockEntityController;
     private AttributeController attributeController;
-    private static final String ENTITY_NAME = "NAME";
     private MockKeyControllerFactory mockKeyControllerFactory;
     private MockKeyController mockKeyController;
 
@@ -31,17 +24,15 @@ public class AttributeControllerTest {
     public void setUp() throws Exception {
         mockAttributeView = new MockAttributeView();
         mockProjectContext = new MockProjectContext();
-        mockEntityCreatedListener = new MockEntityEventListener();
-        mockEntityController = new MockEntityController();
         mockKeyControllerFactory = new MockKeyControllerFactory();
         mockKeyController = new MockKeyController();
-        attributeController = new AttributeController(mockProjectContext, mockAttributeView, mockKeyControllerFactory);
+        attributeController = new AttributeController(mockProjectContext, new ArrayList<Attribute>(),mockAttributeView, mockKeyControllerFactory);
     }
 
     @Test
     public void TestCreate() {
         Assert.assertEquals(mockAttributeView.getController(), attributeController);
-        Assert.assertEquals(0, IterableExtensions.count(attributeController.getAttributesSelected()));
+        Assert.assertEquals(0, IterableExtensions.count(attributeController.getAttributes()));
     }
 
     @Test
@@ -49,7 +40,7 @@ public class AttributeControllerTest {
         mockKeyControllerFactory.setKeyController(mockKeyController);
         attributeController.selectKeys();
         Assert.assertTrue(mockKeyControllerFactory.createCalled());
-        Assert.assertEquals(attributeController.getAttributesSelected(), mockKeyController.getKeys());
+        Assert.assertEquals(attributeController.getAttributes(), mockKeyController.getKeys());
     }
 
     @Test
@@ -80,8 +71,25 @@ public class AttributeControllerTest {
 
         for (Integer idGroup : keys.keySet()) {
             for (IKey key : list) {
-                Assert.assertTrue(((Attribute) key).getIdGroup().exists(idGroup));
+                Assert.assertTrue(key.getIdGroup().exists(idGroup));
             }
         }
+    }
+
+    @Test
+    public void testAddAttribute() {
+        Assert.assertEquals(0, IterableExtensions.count(this.attributeController.getAttributes()));
+        try {
+            this.attributeController.addNewAttribute("att", false, new Cardinality(1, 1), AttributeType.calculated, "aaksda");
+        } catch (Exception e) {
+            Assert.fail();
+        }
+        Assert.assertEquals(1, IterableExtensions.count(this.attributeController.getAttributes()));
+
+        Attribute attribute = this.attributeController.getAttributes().iterator().next();
+        Assert.assertEquals("att",attribute.getName());
+        Assert.assertEquals(false,attribute.isKey());
+        Assert.assertEquals(AttributeType.calculated,attribute.getType());
+
     }
 }

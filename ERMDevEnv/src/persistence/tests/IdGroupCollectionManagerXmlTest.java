@@ -78,9 +78,7 @@ public class IdGroupCollectionManagerXmlTest {
 
         XmlManager.writeToFile(document, PATH);
 
-
-
-        IdGroupCollection idGroupCollectionFromXml = new IdGroupCollectionXmlManager().getItemFromXmlElement((Element) XmlManager.readXml(PATH).getDocumentElement().getElementsByTagName("attribute").item(0));
+        IdGroupCollection idGroupCollectionFromXml = new IdGroupCollectionXmlManager().getItemFromXmlElement((Element) ((Element) XmlManager.readXml(PATH).getDocumentElement().getElementsByTagName("attribute").item(0)).getElementsByTagName("idGroups").item(0));
 
         for (int i = 0; i < 10; i++) {
             try {

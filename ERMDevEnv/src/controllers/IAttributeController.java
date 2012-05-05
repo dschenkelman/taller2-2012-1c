@@ -10,13 +10,11 @@ public interface IAttributeController extends IIdGroupEventListener{
 
     public void selectKeys();
 
-    public Iterable<INameable> getPossibleAttributes();
-
-    public void addAttribute(INameable attribute);
-
     public void addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression);
 
-    Iterable<Attribute> getAttributesSelected();
+    Iterable<Attribute> getAttributes();
 
     IAttributeView getAttributeView();
+
+    public void setAttributeView(IAttributeView attributeView);
 }
