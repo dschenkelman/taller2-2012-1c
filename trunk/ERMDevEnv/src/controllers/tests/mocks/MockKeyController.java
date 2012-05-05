@@ -3,6 +3,7 @@ package controllers.tests.mocks;
 import controllers.IIdGroupEventListener;
 import controllers.IKeysController;
 import models.IKey;
+import views.IKeysView;
 
 public class MockKeyController implements IKeysController {
     private Iterable<IKey> iKeys;
@@ -19,6 +20,11 @@ public class MockKeyController implements IKeysController {
 
     @Override
     public void addKeys() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void setKeyView(IKeysView keysView) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

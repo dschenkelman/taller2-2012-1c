@@ -4,10 +4,12 @@ import controllers.IKeysController;
 import infrastructure.IControllerFactory;
 import models.IKey;
 
-public class MockKeyControllerFactory implements IControllerFactory<IKeysController, Iterable<IKey>> {
+import java.util.List;
+
+public class MockKeyControllerFactory implements IControllerFactory<IKeysController, List<IKey>> {
 
     private boolean createCalled = false;
-    private MockKeyController  keyController;
+    private MockKeyController keyController;
 
     @Override
     public IKeysController create() {
@@ -15,17 +17,17 @@ public class MockKeyControllerFactory implements IControllerFactory<IKeysControl
     }
 
     @Override
-    public IKeysController create(Iterable<IKey> iKeys) {
+    public IKeysController create(List<IKey> objects) {
         this.createCalled = true;
-        this.keyController.setKeys(iKeys);
+        this.keyController.setKeys(objects);
         return this.keyController;
     }
 
-    public boolean createCalled(){
+    public boolean createCalled() {
         return this.createCalled;
     }
 
-    public void setKeyController(MockKeyController keyController){
+    public void setKeyController(MockKeyController keyController) {
         this.keyController = keyController;
     }
 }

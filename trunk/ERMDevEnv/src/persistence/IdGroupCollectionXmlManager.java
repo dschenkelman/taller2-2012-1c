@@ -5,7 +5,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class IdGroupCollectionXmlManager implements IXmlManager<IdGroupCollection>{
+public class IdGroupCollectionXmlManager implements IXmlManager<IdGroupCollection> {
 
     private static String IDGROUPSTAG = "idGroups";
     private static String IDGROUPTAG = "idGroup";
@@ -13,31 +13,26 @@ public class IdGroupCollectionXmlManager implements IXmlManager<IdGroupCollectio
 
     public IdGroupCollection getItemFromXmlElement(Element element) {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
-        NodeList idGroupsList = element.getElementsByTagName(IDGROUPSTAG);
-        if (idGroupsList.getLength() != 0) {
-            Element idGroups = (Element) idGroupsList.item(0);
-            NodeList idGroupList = idGroups.getElementsByTagName(IDGROUPTAG);
-            for (int i = 0; i < idGroupList.getLength(); i++) {
-                Element idGroupElement = (Element) idGroupList.item(i);
-                try {
-                    idGroupCollection.addIdGroup(Integer.parseInt(idGroupElement.getAttribute(NUMBERATTRIBUTE)));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        NodeList idGroupList = element.getElementsByTagName(IDGROUPTAG);
+        for (int i = 0; i < idGroupList.getLength(); i++) {
+            Element idGroupElement = (Element) idGroupList.item(i);
+            try {
+                idGroupCollection.addIdGroup(Integer.parseInt(idGroupElement.getAttribute(NUMBERATTRIBUTE)));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-
         return idGroupCollection;
     }
 
-    public Element getElementFromItem(IdGroupCollection idGroupCollection, Document document){
+    public Element getElementFromItem(IdGroupCollection idGroupCollection, Document document) {
 
         Element idGroupsElement = document.createElement(IDGROUPSTAG);
 
         Iterable<Integer> idGroupList = idGroupCollection.getIdGroups();
-        for(Integer number : idGroupList){
+        for (Integer number : idGroupList) {
             Element idGroupElement = document.createElement(IDGROUPTAG);
-            idGroupElement.setAttribute(NUMBERATTRIBUTE,number.toString());
+            idGroupElement.setAttribute(NUMBERATTRIBUTE, number.toString());
             idGroupsElement.appendChild(idGroupElement);
         }
 

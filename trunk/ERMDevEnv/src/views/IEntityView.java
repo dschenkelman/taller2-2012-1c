@@ -11,6 +11,8 @@ public interface IEntityView {
 
     public void addAttributeView(IAttributeView attributeView);
 
+    public void addStrongEntityView(IStrongEntityView strongEntityView);
+
     public IAttributeView getAttributeView();
 
     public String getEntityName();
@@ -18,4 +20,6 @@ public interface IEntityView {
     public EntityType getType();
 
     public boolean isVisible();
+
+    public void setEntityName(String name);
 }

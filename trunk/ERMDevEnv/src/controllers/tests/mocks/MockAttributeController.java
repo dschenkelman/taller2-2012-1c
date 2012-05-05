@@ -25,22 +25,12 @@ public class MockAttributeController implements IAttributeController {
     }
 
     @Override
-    public Iterable<INameable> getPossibleAttributes() {
-        return null;
-    }
-
-    @Override
-    public void addAttribute(INameable attribute) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public void addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public Iterable<Attribute> getAttributesSelected() {
+    public Iterable<Attribute> getAttributes() {
         return this.attributes;
     }
 

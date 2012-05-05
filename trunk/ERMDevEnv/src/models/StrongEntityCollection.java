@@ -17,7 +17,7 @@ public class StrongEntityCollection implements Iterable<IStrongEntity>{
     }
 
     public IStrongEntity getStrongEntity(UUID uuid) {
-        return IterableExtensions.firstOrDefault(this, new EntityCmpFunction(), uuid);
+        return IterableExtensions.firstOrDefault(this, new EntityCmpUUIDFunction(), uuid);
     }
 
     public void addStrongEntity(IStrongEntity strongEntity) throws Exception {
@@ -37,10 +37,21 @@ public class StrongEntityCollection implements Iterable<IStrongEntity>{
         return this.strongEntities.iterator();
     }
 
-    private class EntityCmpFunction extends Func<IStrongEntity, UUID, Boolean> {
+    public IStrongEntity getStrongEntity(String strongEntity) {
+        return IterableExtensions.firstOrDefault(this, new EntityCmpNameFunction(), strongEntity);
+    }
+
+    private class EntityCmpUUIDFunction extends Func<IStrongEntity, UUID, Boolean> {
         @Override
         public Boolean execute(IStrongEntity strongEntity, UUID uuid) {
             return strongEntity.getId().equals(uuid);
+        }
+    }
+
+    private class EntityCmpNameFunction extends Func<IStrongEntity,String,Boolean> {
+        @Override
+        public Boolean execute(IStrongEntity iStrongEntity, String s) {
+            return iStrongEntity.getName().equals(s);
         }
     }
 }

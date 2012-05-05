@@ -56,6 +56,7 @@ public class StrongEntityCollectionTest {
             Assert.fail();
         }
         Assert.assertNotNull(strongEntityCollection.getStrongEntity(entity.getId()));
+        Assert.assertNotNull(strongEntityCollection.getStrongEntity(entity.getName()));
     }
 
     @Before

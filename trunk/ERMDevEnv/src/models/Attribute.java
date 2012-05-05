@@ -52,10 +52,12 @@ public class Attribute implements INameable, IKey {
         return this.name;
     }
 
+    @Override
     public void isKey(boolean value) {
         this.isKeyField = value;
     }
 
+    @Override
     public boolean isKey() {
         return this.isKeyField;
     }
@@ -92,6 +94,7 @@ public class Attribute implements INameable, IKey {
             throw new IllegalArgumentException();
     }
 
+    @Override
     public IdGroupCollection getIdGroup() {
         return idGroup;
     }

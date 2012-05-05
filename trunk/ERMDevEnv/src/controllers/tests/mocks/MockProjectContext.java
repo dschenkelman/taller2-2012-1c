@@ -1,10 +1,9 @@
 package controllers.tests.mocks;
 
 import controllers.IProjectContext;
-import models.Attribute;
-import models.Entity;
-import models.EntityCollection;
-import models.INameable;
+import models.*;
+
+import java.util.List;
 
 public class MockProjectContext implements IProjectContext {
 
@@ -12,13 +11,13 @@ public class MockProjectContext implements IProjectContext {
     private Iterable<INameable> attributes;
 
     @Override
-    public Iterable<Entity> getEntityCollection() {
+    public Iterable<Entity> getEntityCollection(Entity entityToExclude) {
         return this.entityCollection;
     }
 
     @Override
-    public Iterable<INameable> getPossibleAttributes() {
-        return this.attributes;
+    public Iterable<IStrongEntity> getPossibleStrongEntities(List<IStrongEntity> strongEntitiesToExclude) {
+        return null;
     }
 
     public void setEntityCollection(Iterable<Entity> entityCollection){
