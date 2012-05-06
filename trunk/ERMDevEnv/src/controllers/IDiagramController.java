@@ -1,5 +1,7 @@
 package controllers;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
@@ -11,4 +13,5 @@ public interface IDiagramController extends IEntityEventListener, IRelationshipE
 	mxCell getAttributeCell(String id);
 	mxCell getAttributeConnectorCell(String id);
 	boolean hasPendingEntity();
+	void save() throws ParserConfigurationException;
 }
