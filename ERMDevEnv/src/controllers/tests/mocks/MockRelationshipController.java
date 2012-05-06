@@ -3,7 +3,6 @@ package controllers.tests.mocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import controllers.IEntityEventListener;
 import controllers.IRelationshipController;
 import controllers.IRelationshipEventListener;
 

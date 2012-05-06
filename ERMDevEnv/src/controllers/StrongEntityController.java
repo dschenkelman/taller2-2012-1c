@@ -3,6 +3,8 @@ package controllers;
 import models.IStrongEntity;
 import views.IStrongEntityView;
 
+import infrastructure.IProjectContext;
+
 import java.util.List;
 
 public class StrongEntityController implements IStrongEntityController {

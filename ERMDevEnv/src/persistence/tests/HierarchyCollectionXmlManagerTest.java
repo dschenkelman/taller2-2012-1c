@@ -1,21 +1,23 @@
 package persistence.tests;
 
+import java.util.UUID;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import junit.framework.Assert;
 import models.Hierarchy;
 import models.HierarchyCollection;
+
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
 import persistence.HierarchyCollectionXmlManager;
 import persistence.XmlFileManager;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.util.ArrayList;
-import java.util.UUID;
 
 public class HierarchyCollectionXmlManagerTest {
 

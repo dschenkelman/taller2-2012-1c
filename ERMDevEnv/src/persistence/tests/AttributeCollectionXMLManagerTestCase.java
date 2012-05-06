@@ -1,16 +1,17 @@
 package persistence.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Iterator;
-import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.Assert;
-
 import models.Attribute;
 import models.AttributeCollection;
 import models.AttributeType;
@@ -21,10 +22,8 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 
 import persistence.AttributeCollectionXmlManager;
-import persistence.HierarchyCollectionXmlManager;
 import persistence.XmlFileManager;
 
 public class AttributeCollectionXMLManagerTestCase {

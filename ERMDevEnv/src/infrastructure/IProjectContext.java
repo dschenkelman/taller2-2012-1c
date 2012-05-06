@@ -1,7 +1,6 @@
-package controllers;
+package infrastructure;
 
 import models.Entity;
-import models.INameable;
 import models.IStrongEntity;
 
 import java.util.List;

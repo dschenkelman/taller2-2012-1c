@@ -1,6 +1,5 @@
 package controllers.tests.mocks;
 
-import controllers.EntityController;
 import controllers.IEntityController;
 import models.EntityType;
 import views.IAttributeView;

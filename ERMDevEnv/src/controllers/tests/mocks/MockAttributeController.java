@@ -5,7 +5,6 @@ import models.Attribute;
 import models.AttributeType;
 import models.Cardinality;
 import models.IKey;
-import models.INameable;
 import views.IAttributeView;
 
 import java.util.ArrayList;

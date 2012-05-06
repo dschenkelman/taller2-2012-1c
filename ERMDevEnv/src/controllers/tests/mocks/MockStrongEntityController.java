@@ -1,11 +1,10 @@
 package controllers.tests.mocks;
 
-import controllers.IStrongEntityController;
-import models.Entity;
+import java.util.List;
+
 import models.IStrongEntity;
 import views.IStrongEntityView;
-
-import java.util.List;
+import controllers.IStrongEntityController;
 
 public class MockStrongEntityController implements IStrongEntityController {
     private boolean getStrongEntityViewCalled = false;

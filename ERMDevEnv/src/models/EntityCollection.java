@@ -1,7 +1,5 @@
 package models;
 
-import java.util.List;
-
 public class EntityCollection extends ModelCollection<Entity>{
 	
 	public EntityCollection () {
