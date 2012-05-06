@@ -5,6 +5,7 @@ import infrastructure.StringExtensions;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -105,6 +106,12 @@ public class DiagramController extends BaseController
 			for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
 				this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity);
 			}
+			
+			for (Attribute attribute : relationship.getAttributes()) {
+				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, relationship.getId());
+				boolean isKey = attribute.isKey();
+				this.addAttributeConnectorToGraph(parent, relationship.getId(), relationshipCell, attribute, attributeCell, isKey);
+			}
 		}
 		finally {
 			this.diagram.getRelationships().add(relationship);
@@ -120,9 +127,9 @@ public class DiagramController extends BaseController
 			mxCell entityCell = this.addEntityToGraph(this.pendingEntity, parent, x, y);
 			
 			for (Attribute attribute : this.pendingEntity.getAttributes()) {
-				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, this.pendingEntity);
+				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, this.pendingEntity.getId());
 				boolean isKey = attribute.isKey();
-				this.addAttributeConnectorToGraph(parent, this.pendingEntity, entityCell, attribute, attributeCell, isKey);
+				this.addAttributeConnectorToGraph(parent, this.pendingEntity.getId(), entityCell, attribute, attributeCell, isKey);
 			}
 		}
 		finally {
@@ -159,9 +166,9 @@ public class DiagramController extends BaseController
 		return connectorCell;
 	}
 
-	private mxCell addAttributeConnectorToGraph(Object parent, Entity entity, mxCell entityCell,
+	private mxCell addAttributeConnectorToGraph(Object parent, UUID ownerId, mxCell entityCell,
 			Attribute attribute, mxCell attributeCell, boolean isKey) { 
-		String attributeConnectorId = entity.getId().toString()+attribute.getName()+"AttributeConnector";
+		String attributeConnectorId = ownerId.toString()+attribute.getName()+"AttributeConnector";
 		
 		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, attributeConnectorId, "", 
 				entityCell, attributeCell, StyleConstants.ATTRIBUTE_LINK_STYLE);
@@ -171,8 +178,8 @@ public class DiagramController extends BaseController
 		return connectorCell;		
 	}
 
-	private mxCell addAttributeToGraph(Attribute attribute, Object parent, Entity entity) {
-		String attributeId = entity.getId().toString()+attribute.getName();
+	private mxCell addAttributeToGraph(Attribute attribute, Object parent, UUID ownerId) {
+		String attributeId = ownerId.toString()+attribute.getName();
 		mxCell attributeCell = (mxCell) this.graph.insertVertex(parent, attributeId, 
 				attribute.getName(), 0, 0,
 				StyleConstants.ATTRIBUTE_WIDTH, StyleConstants.ATTRIBUTE_HEIGHT);
