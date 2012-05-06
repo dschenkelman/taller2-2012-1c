@@ -1,7 +1,6 @@
 package controllers.tests;
 
 import controllers.EntityController;
-import controllers.IStrongEntityController;
 import controllers.tests.mocks.*;
 import junit.framework.Assert;
 import models.*;

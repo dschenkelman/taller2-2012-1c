@@ -1,6 +1,6 @@
 package controllers;
 
-import infrastructure.IControllerFactory;
+import infrastructure.IProjectContext;
 import infrastructure.StringExtensions;
 
 import java.util.HashMap;
@@ -27,6 +27,9 @@ import jgraph.extensions.CustomGraph;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
+import controllers.factories.IEntityControllerFactory;
+import controllers.factories.IRelationshipControllerFactory;
+
 import views.IDiagramView;
 
 public class DiagramController extends BaseController 
@@ -38,16 +41,16 @@ public class DiagramController extends BaseController
 	private Map<String, mxCell> attributeCells;
 	private Map<String, mxCell> attributeConnectorCells;
 	private Map<String, mxCell> relationshipConnectorCells;
-	private IControllerFactory<IEntityController, Entity> entityControllerFactory;
+	private IEntityControllerFactory entityControllerFactory;
 	private Entity pendingEntity;
-	private IControllerFactory<IRelationshipController, Relationship> relationshipControllerFactory;
+	private IRelationshipControllerFactory relationshipControllerFactory;
 	private Diagram diagram;
 	private IXmlFileManager xmlFileManager;
 	private IXmlManager<Diagram> diagramXmlManager;
 	
 	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
-			IControllerFactory<IEntityController, Entity> entityControllerFactory,
-			IControllerFactory<IRelationshipController, Relationship> relationshipControllerFactory,
+			IEntityControllerFactory entityControllerFactory,
+			IRelationshipControllerFactory relationshipControllerFactory,
 			IXmlFileManager xmlFileManager,
 			IXmlManager<Diagram> diagramXmlManager) {
 		super(projectContext);

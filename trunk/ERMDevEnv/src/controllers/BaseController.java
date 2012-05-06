@@ -1,5 +1,7 @@
 package controllers;
 
+import infrastructure.IProjectContext;
+
 public abstract class BaseController {
 	
 	protected IProjectContext projectContext;

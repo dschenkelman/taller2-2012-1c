@@ -1,10 +1,7 @@
 package controllers;
 
-import models.Entity;
 import models.IStrongEntity;
 import views.IStrongEntityView;
-
-import java.util.List;
 
 public interface IStrongEntityController {
     public IStrongEntityView getStrongEntityView();

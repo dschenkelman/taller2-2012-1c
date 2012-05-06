@@ -2,7 +2,6 @@ package views;
 
 import controllers.IAttributeController;
 import models.Attribute;
-import models.INameable;
 
 import java.util.List;
 

@@ -1,12 +1,12 @@
 package controllers.tests.mocks;
 
 import controllers.IKeysController;
-import infrastructure.IControllerFactory;
+import controllers.factories.IKeysControllerFactory;
 import models.IKey;
 
 import java.util.List;
 
-public class MockKeyControllerFactory implements IControllerFactory<IKeysController, List<IKey>> {
+public class MockKeyControllerFactory implements IKeysControllerFactory {
 
     private boolean createCalled = false;
     private MockKeyController keyController;

@@ -1,6 +1,6 @@
 package controllers;
 
-import infrastructure.IControllerFactory;
+import infrastructure.IProjectContext;
 import models.*;
 import views.IAttributeView;
 
@@ -8,13 +8,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import controllers.factories.IKeysControllerFactory;
+
 public class AttributeController extends BaseController implements IAttributeController {
 
     private IAttributeView attributeView;
-    private IControllerFactory<IKeysController, List<IKey>> keysControllerFactory;
+    private IKeysControllerFactory keysControllerFactory;
     private List<Attribute> attributes;
 
-    public AttributeController(IProjectContext projectContext, List<Attribute> attributes, IAttributeView attributeView, IControllerFactory<IKeysController, List<IKey>> keysControllerFactory) {
+    public AttributeController(IProjectContext projectContext, List<Attribute> attributes, 
+    		IAttributeView attributeView, IKeysControllerFactory keysControllerFactory) {
         super(projectContext);
         this.keysControllerFactory = keysControllerFactory;
         this.attributes = attributes;

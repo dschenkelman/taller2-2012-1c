@@ -1,11 +1,11 @@
 package controllers.tests.mocks;
 
-import infrastructure.IControllerFactory;
 import models.Entity;
 import controllers.IEntityController;
+import controllers.factories.IEntityControllerFactory;
 
 public class MockEntityControllerFactory 
-	implements IControllerFactory<IEntityController, Entity> 
+	implements IEntityControllerFactory 
 {
 		private IEntityController controller;
 		
