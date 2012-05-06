@@ -9,7 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import persistence.StrongEntitiesXmlManager;
-import persistence.XmlManager;
+import persistence.XmlFileManager;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -57,7 +57,7 @@ public class StrongEntitiesXmlManagerTest {
         Element strongEntityCollectionElement = new StrongEntitiesXmlManager().getElementFromItem(strongEntityCollection, document);
         diagram.appendChild(strongEntityCollectionElement);
 
-        XmlManager.writeToFile(document, PATH);
+        new XmlFileManager().write(document, PATH);
 
         NodeList nodeList = diagram.getElementsByTagName(STRONG_ENTITIES_TAG);
         Element element = (Element) nodeList.item(0);

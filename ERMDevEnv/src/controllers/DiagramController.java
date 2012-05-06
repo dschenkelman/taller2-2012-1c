@@ -6,8 +6,17 @@ import infrastructure.StringExtensions;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import persistence.IXmlFileManager;
+import persistence.IXmlManager;
+
 import models.Attribute;
 import models.Cardinality;
+import models.Diagram;
 import models.Entity;
 import models.Relationship;
 import models.RelationshipEntity;
@@ -31,11 +40,17 @@ public class DiagramController extends BaseController
 	private IControllerFactory<IEntityController, Entity> entityControllerFactory;
 	private Entity pendingEntity;
 	private IControllerFactory<IRelationshipController, Relationship> relationshipControllerFactory;
+	private Diagram diagram;
+	private IXmlFileManager xmlFileManager;
+	private IXmlManager<Diagram> diagramXmlManager;
 	
 	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
 			IControllerFactory<IEntityController, Entity> entityControllerFactory,
-			IControllerFactory<IRelationshipController, Relationship> relationshipControllerFactory) {
+			IControllerFactory<IRelationshipController, Relationship> relationshipControllerFactory,
+			IXmlFileManager xmlFileManager,
+			IXmlManager<Diagram> diagramXmlManager) {
 		super(projectContext);
+		this.diagram = new Diagram();
 		this.entityControllerFactory = entityControllerFactory;
 		this.relationshipControllerFactory = relationshipControllerFactory;
 		this.graph = new CustomGraph();
@@ -44,6 +59,8 @@ public class DiagramController extends BaseController
 		this.attributeConnectorCells = new HashMap<String, mxCell>();
 		this.relationshipCells = new HashMap<String, mxCell>();
 		this.relationshipConnectorCells = new HashMap<String, mxCell>();
+		this.xmlFileManager = xmlFileManager;
+		this.diagramXmlManager = diagramXmlManager;
 		diagramView.setController(this);
 	}
 
@@ -90,6 +107,7 @@ public class DiagramController extends BaseController
 			}
 		}
 		finally {
+			this.diagram.getRelationships().add(relationship);
 			this.graph.getModel().endUpdate();
 		}
 	}
@@ -108,6 +126,7 @@ public class DiagramController extends BaseController
 			}
 		}
 		finally {
+			this.diagram.getEntities().add(this.pendingEntity);
 			this.graph.getModel().endUpdate();
 		}
 		
@@ -239,5 +258,20 @@ public class DiagramController extends BaseController
 	
 	public mxCell getRelationshipConnectorCell(String id) {
 		return this.relationshipConnectorCells.get(id);
+	}
+
+	public Diagram getDiagram() {
+		return this.diagram;
+	}
+
+	public void save() throws ParserConfigurationException {
+		Document document = this.xmlFileManager.createDocument();
+		Element element = 
+			this.diagramXmlManager.getElementFromItem(this.diagram, document);
+		
+		document.appendChild(element);
+		this.xmlFileManager.write(document, this.diagram.getName() + "-comp");
+		
+		//this.xmlFileManager.write(, filePath)
 	}
 }

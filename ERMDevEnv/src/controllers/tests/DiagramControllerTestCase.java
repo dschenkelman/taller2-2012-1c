@@ -1,6 +1,10 @@
 package controllers.tests;
 
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import infrastructure.Func;
+import infrastructure.IterableExtensions;
 import models.Cardinality;
 import models.Entity;
 import models.Relationship;
@@ -9,16 +13,22 @@ import models.RelationshipEntity;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import persistence.tests.TestUtilities;
 
 import com.mxgraph.model.mxCell;
 
 import controllers.DiagramController;
 import controllers.tests.mocks.MockDiagramView;
+import controllers.tests.mocks.MockDiagramXmlManager;
 import controllers.tests.mocks.MockEntityController;
 import controllers.tests.mocks.MockEntityControllerFactory;
 import controllers.tests.mocks.MockProjectContext;
 import controllers.tests.mocks.MockRelationshipController;
 import controllers.tests.mocks.MockRelationshipControllerFactory;
+import controllers.tests.mocks.MockXmlFileManager;
 
 public class DiagramControllerTestCase {
 
@@ -28,6 +38,8 @@ public class DiagramControllerTestCase {
 	private MockEntityControllerFactory entityControllerFactory;
 	private MockRelationshipControllerFactory relationshipControllerFactory;
 	private MockRelationshipController relationshipController;
+	private MockXmlFileManager xmlFileManager;
+	private MockDiagramXmlManager diagramXmlManager;
 
 	@Before
 	public void setUp() throws Exception {
@@ -39,6 +51,8 @@ public class DiagramControllerTestCase {
 		this.relationshipController = new MockRelationshipController();
 		this.relationshipControllerFactory = new MockRelationshipControllerFactory();
 		this.relationshipControllerFactory.setController(this.relationshipController);
+		this.xmlFileManager = new MockXmlFileManager();
+		this.diagramXmlManager = new MockDiagramXmlManager();
 	}
 	
 	@Test
@@ -105,6 +119,15 @@ public class DiagramControllerTestCase {
 		diagramController.addEntity(20, 30);
 		
 		Assert.assertFalse(diagramController.hasPendingEntity());
+		
+		Assert.assertSame(entity, IterableExtensions.firstOrDefault
+				(diagramController.getDiagram().getEntities(), new Func<Entity, String, Boolean>() {
+
+					@Override
+					public Boolean execute(Entity entity, String name) {
+						return entity.getName().equalsIgnoreCase(name);
+					}
+				}, "Product"));
 		
 		mxCell entityCell = diagramController.getEntityCell(entity.getId().toString());
 		Assert.assertEquals("Product", diagramController.getGraph().getLabel(entityCell));
@@ -179,6 +202,7 @@ public class DiagramControllerTestCase {
 		
 	@Test
 	public void testShouldCreateCellsForRelationshipWhenAddingRelationshipWithoutAttributes() throws Exception{
+
 		Entity entity1 = new Entity("Entity1");
 		Entity entity2 = new Entity("Entity2");
 		Entity entity3 = new Entity("Entity3");
@@ -204,6 +228,29 @@ public class DiagramControllerTestCase {
 		relationship.addRelationshipEntity(relationshipEntity3);
 		
 		diagramController.handleCreatedEvent(relationship);
+		
+		Func<Entity, String, Boolean> cmpFunc = new Func<Entity, String, Boolean>() {
+			@Override
+			public Boolean execute(Entity entity, String name) {
+				return entity.getName().equalsIgnoreCase(name);
+			};
+		};
+		
+		Assert.assertSame(entity1, IterableExtensions.firstOrDefault
+				(diagramController.getDiagram().getEntities(), cmpFunc, "Entity1"));
+		
+		Assert.assertSame(entity2, IterableExtensions.firstOrDefault
+				(diagramController.getDiagram().getEntities(), cmpFunc, "Entity2"));
+		
+		Assert.assertSame(entity3, IterableExtensions.firstOrDefault
+				(diagramController.getDiagram().getEntities(), cmpFunc, "Entity3"));
+		
+		Assert.assertSame(relationship, IterableExtensions.firstOrDefault
+				(diagramController.getDiagram().getRelationships(), new Func<Relationship, String, Boolean>() {
+					@Override
+					public Boolean execute(Relationship relationship, String name) {
+						return relationship.getName().equalsIgnoreCase(name);
+					};}, "Relationship"));
 		
 		mxCell relationshipCell = diagramController.getRelationshipCell(relationship.getId().toString());
 		
@@ -248,6 +295,31 @@ public class DiagramControllerTestCase {
 		Assert.assertEquals("(*,*)", relationshipEntity3Cell.getValue());
 	}
 
+	@Test
+	public void testShouldCallSaveWithDiagramNameDashCompWhenSaveIsCalled() throws ParserConfigurationException{
+		Document document = TestUtilities.createDocument();
+		this.xmlFileManager.setDocumentToCreate(document);
+		this.diagramXmlManager.setElementNameOfRoot("diagram");
+		
+		DiagramController controller = this.createController();
+		controller.getDiagram().setName("Diagram");
+		
+		Assert.assertNull(this.xmlFileManager.getDocumentToSave());
+		Assert.assertNull(this.xmlFileManager.getPathToSave());
+		Assert.assertFalse(this.xmlFileManager.wasCreateDocumentCalled());
+		
+		controller.save();
+		
+		Assert.assertTrue(this.xmlFileManager.wasCreateDocumentCalled());
+		Assert.assertNotNull(this.xmlFileManager.getDocumentToSave());
+		Assert.assertNotNull(this.xmlFileManager.getPathToSave());
+		
+		Assert.assertSame(controller.getDiagram(), this.diagramXmlManager.getDiagramRelatedToElement());
+		Assert.assertSame(document, this.xmlFileManager.getDocumentToSave());
+		Assert.assertEquals("diagram", ((Element)document.getFirstChild()).getTagName());
+		Assert.assertEquals("Diagram-comp", this.xmlFileManager.getPathToSave());
+	}
+	
 	private void addEntityToDiagram(DiagramController diagramController, 
 			Entity entity, double x, double y) {
 		diagramController.createEntity();
@@ -257,7 +329,7 @@ public class DiagramControllerTestCase {
 	
 	private DiagramController createController() {
 		return new DiagramController(this.projectContext, this.diagramView,
-				this.entityControllerFactory, this.relationshipControllerFactory);
+				this.entityControllerFactory, this.relationshipControllerFactory, this.xmlFileManager, this.diagramXmlManager);
 	}
 
 }

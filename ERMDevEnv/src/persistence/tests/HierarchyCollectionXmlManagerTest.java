@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import persistence.HierarchyCollectionXmlManager;
-import persistence.XmlManager;
+import persistence.XmlFileManager;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -75,7 +75,7 @@ public class HierarchyCollectionXmlManagerTest {
         Element hierarchies = new HierarchyCollectionXmlManager().getElementFromItem(hierarchyCollection, document);
         diagram.appendChild(hierarchies);
 
-        XmlManager.writeToFile(document, PATH);
+        new XmlFileManager().write(document, PATH);
 
         NodeList nodeList = diagram.getElementsByTagName(HIERARCHIES);
         Element hierarchiesElement = (Element) nodeList.item(0);

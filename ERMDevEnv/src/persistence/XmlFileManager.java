@@ -13,9 +13,9 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class XmlManager {
+public class XmlFileManager implements IXmlFileManager{
 
-    public static void writeToFile(Document document, String path) {
+    public void write(Document document, String path) {
 // write the XML document to disk
         try {
 
@@ -51,7 +51,7 @@ public class XmlManager {
         }
     }
 
-    public static Document readXml(String path) {
+    public Document read(String path) {
 
         DocumentBuilderFactory dBF = DocumentBuilderFactory.newInstance();
         dBF.setIgnoringComments(true); // Ignore the comments present in the
@@ -76,5 +76,14 @@ public class XmlManager {
 
         return doc;
     }
+
+	@Override
+	public Document createDocument() throws ParserConfigurationException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = dbf.newDocumentBuilder();
+        Document document = builder.newDocument();
+        
+        return document;
+	}
 
 }

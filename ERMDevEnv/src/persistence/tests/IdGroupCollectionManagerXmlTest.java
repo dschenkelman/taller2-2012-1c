@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import persistence.IdGroupCollectionXmlManager;
-import persistence.XmlManager;
+import persistence.XmlFileManager;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,7 +44,7 @@ public class IdGroupCollectionManagerXmlTest {
         Element idGroups = new IdGroupCollectionXmlManager().getElementFromItem(idGroupCollection, document);
         attribute.appendChild(idGroups);
 
-        XmlManager.writeToFile(document, PATH);
+        new XmlFileManager().write(document, PATH);
     }
 
     @Test
@@ -76,9 +76,9 @@ public class IdGroupCollectionManagerXmlTest {
         Element idGroups = new IdGroupCollectionXmlManager().getElementFromItem(idGroupCollection, document);
         attribute.appendChild(idGroups);
 
-        XmlManager.writeToFile(document, PATH);
+        new XmlFileManager().write(document, PATH);
 
-        IdGroupCollection idGroupCollectionFromXml = new IdGroupCollectionXmlManager().getItemFromXmlElement((Element) ((Element) XmlManager.readXml(PATH).getDocumentElement().getElementsByTagName("attribute").item(0)).getElementsByTagName("idGroups").item(0));
+        IdGroupCollection idGroupCollectionFromXml = new IdGroupCollectionXmlManager().getItemFromXmlElement((Element) ((Element) new XmlFileManager().read(PATH).getDocumentElement().getElementsByTagName("attribute").item(0)).getElementsByTagName("idGroups").item(0));
 
         for (int i = 0; i < 10; i++) {
             try {

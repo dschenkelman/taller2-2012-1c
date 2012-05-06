@@ -17,6 +17,7 @@ public class Diagram implements Iterable<Diagram>{
 	private List<Relationship> relationships;
 	private HierarchyCollection hierarchies;
 	private List<Diagram> subDiagrams;
+	private String name;
 	
 	public Diagram()
 	{
@@ -160,6 +161,12 @@ public class Diagram implements Iterable<Diagram>{
 	public Iterator<Diagram> iterator() {
 		return this.subDiagrams.iterator();
 	}
-	
-	
+
+	public void setName(String value) {
+		this.name = value;
+	}
+
+	public String getName() {
+		return this.name;
+	}
 }

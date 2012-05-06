@@ -25,7 +25,7 @@ import org.w3c.dom.Text;
 
 import persistence.AttributeCollectionXmlManager;
 import persistence.HierarchyCollectionXmlManager;
-import persistence.XmlManager;
+import persistence.XmlFileManager;
 
 public class AttributeCollectionXMLManagerTestCase {
 
@@ -69,7 +69,7 @@ public class AttributeCollectionXMLManagerTestCase {
         Element attributes = new AttributeCollectionXmlManager().getElementFromItem(attCol, document);
         diagram.appendChild(attributes);
 
-        XmlManager.writeToFile(document, xmlPath);
+        new XmlFileManager().write(document, xmlPath);
 
         //TEST VALUES OF XML NODES
 
