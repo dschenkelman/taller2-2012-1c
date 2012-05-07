@@ -47,6 +47,7 @@ public class DiagramController extends BaseController
 	private Diagram diagram;
 	private IXmlFileManager xmlFileManager;
 	private IXmlManager<Diagram> diagramXmlManager;
+	private IDiagramView diagramView;
 	
 	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
 			IEntityControllerFactory entityControllerFactory,
@@ -65,7 +66,12 @@ public class DiagramController extends BaseController
 		this.relationshipConnectorCells = new HashMap<String, mxCell>();
 		this.xmlFileManager = xmlFileManager;
 		this.diagramXmlManager = diagramXmlManager;
-		diagramView.setController(this);
+		this.diagramView = diagramView;
+		this.diagramView.setController(this);
+	}
+	
+	public IDiagramView getView(){
+		return this.diagramView;
 	}
 
 	public mxGraph getGraph() {
