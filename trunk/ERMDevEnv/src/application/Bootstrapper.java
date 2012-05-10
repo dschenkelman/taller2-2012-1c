@@ -1,10 +1,19 @@
 package application;
 
+import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
+
 import infrastructure.IProjectContext;
 import infrastructure.ProjectContext;
 
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
+
+import com.mxgraph.canvas.mxGraphics2DCanvas;
+import com.mxgraph.shape.mxIMarker;
+import com.mxgraph.view.mxCellState;
+import com.mxgraph.shape.mxMarkerRegistry;
+import com.mxgraph.util.mxPoint;
 
 import persistence.DiagramXmlManager;
 import persistence.IXmlFileManager;
@@ -30,6 +39,27 @@ public class Bootstrapper {
 	public void run() {
 		this.container = this.createContainer();
 		this.configureContainer();
+		this.registerJGraphExtensions();
+	}
+
+	private void registerJGraphExtensions() {
+		mxMarkerRegistry.registerMarker("emptyCircle", new mxIMarker()
+		{
+			public mxPoint paintMarker(mxGraphics2DCanvas canvas,
+					mxCellState state, String type, mxPoint pe, double nx,
+					double ny, double size)
+			{
+				double cx = pe.getX() - nx / 2;
+				double cy = pe.getY() - ny / 2;
+				double a = size / 2;
+				Shape shape = new Ellipse2D.Double(cx - a, cy - a, size, size);
+
+				//canvas.fillShape(shape);
+				canvas.getGraphics().draw(shape);
+
+				return new mxPoint(-nx / 2, -ny / 2);
+			}
+		});
 	}
 
 	private void configureContainer() {

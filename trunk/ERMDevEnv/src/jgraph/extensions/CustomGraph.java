@@ -17,7 +17,7 @@ public class CustomGraph extends mxGraph
 	@Override
 	public boolean isCellLocked(Object cell) 
 	{
-		return false;
+		return this.getModel().isEdge(cell);
 	}
 }
 

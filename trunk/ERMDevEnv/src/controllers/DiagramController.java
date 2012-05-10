@@ -115,7 +115,8 @@ public class DiagramController extends BaseController
 			double centerX = relationshipCell.getGeometry().getCenterX();
 			double centerY = relationshipCell.getGeometry().getCenterY();
 			
-			double partialAngle = (2 * Math.PI) / this.pendingEntity.getAttributes().count();
+			int attributeCount = relationship.getAttributes().count();
+			double partialAngle = (2 * Math.PI) / attributeCount != 0 ? attributeCount : 0;
 			double currentAngle = 0;
 			
 			for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
@@ -152,7 +153,8 @@ public class DiagramController extends BaseController
 			double centerX = entityCell.getGeometry().getCenterX();
 			double centerY = entityCell.getGeometry().getCenterY();
 			
-			double partialAngle = (2 * Math.PI) / this.pendingEntity.getAttributes().count();
+			int attributeCount = this.pendingEntity.getAttributes().count();
+			double partialAngle = (2 * Math.PI) / attributeCount != 0 ? attributeCount : 0;
 			double currentAngle = 0;
 			
 			for (Attribute attribute : this.pendingEntity.getAttributes()) {
@@ -228,7 +230,7 @@ public class DiagramController extends BaseController
 	private mxCell addRelationshipToGraph(Relationship relationship, Object parent, double x, double y) {
 		mxCell relationshipCell = (mxCell) this.graph.insertVertex(parent, relationship.getId().toString(), 
 				relationship.getName(), x, y,
-				StyleConstants.ENTITY_WIDTH, StyleConstants.ENTITY_HEIGHT);
+				StyleConstants.RELATIONSHIP_WIDTH, StyleConstants.RELATIONSHIP_HEIGHT, StyleConstants.RELATIONSHIP_STYLE);
 		
 		this.relationshipCells.put(relationship.getId().toString(), relationshipCell);
 

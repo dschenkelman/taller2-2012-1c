@@ -1,5 +1,8 @@
 package controllers.factories;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import views.IEntityView;
 import models.Entity;
 import controllers.IEntityController;
@@ -7,7 +10,7 @@ import controllers.IEntityEventListener;
 
 public class EntityControllerFactory implements IEntityControllerFactory {
 
-	private static int InstanceNumber = 0;
+	public static List<Entity> Entites = new ArrayList<Entity>();
 	
 	@Override
 	public IEntityController create() {
@@ -26,7 +29,8 @@ public class EntityControllerFactory implements IEntityControllerFactory {
 			
 			@Override
 			public void create() {
-				Entity entity = new Entity("Entity" + (++InstanceNumber));
+				Entity entity = new Entity("Entity" + (EntityControllerFactory.Entites.size() + 1));
+				EntityControllerFactory.Entites.add(entity);
 				try {
 					entity.getAttributes().addAttribute("Attribute1");
 					entity.getAttributes().addAttribute("Attribute2");
