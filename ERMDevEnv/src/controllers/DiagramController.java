@@ -112,14 +112,29 @@ public class DiagramController extends BaseController
 			Object parent = this.graph.getDefaultParent();
 			mxCell relationshipCell = this.addRelationshipToGraph(relationship, parent, x, y);
 			
+			double centerX = relationshipCell.getGeometry().getCenterX();
+			double centerY = relationshipCell.getGeometry().getCenterY();
+			
+			double partialAngle = (2 * Math.PI) / this.pendingEntity.getAttributes().count();
+			double currentAngle = 0;
+			
 			for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
 				this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity);
 			}
 			
 			for (Attribute attribute : relationship.getAttributes()) {
-				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, relationship.getId());
+				double xDistance = Math.cos(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
+				double yDistance = Math.sin(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
+				
+				double attributeX = centerX + xDistance;
+				double attributeY = centerY + yDistance;
+				
+				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, relationship.getId(), attributeX, attributeY);
+				
 				boolean isKey = attribute.isKey();
 				this.addAttributeConnectorToGraph(parent, relationship.getId(), relationshipCell, attribute, attributeCell, isKey);
+				
+				currentAngle += partialAngle;
 			}
 		}
 		finally {
@@ -134,11 +149,23 @@ public class DiagramController extends BaseController
 		Object parent = this.graph.getDefaultParent();
 		try {
 			mxCell entityCell = this.addEntityToGraph(this.pendingEntity, parent, x, y);
+			double centerX = entityCell.getGeometry().getCenterX();
+			double centerY = entityCell.getGeometry().getCenterY();
+			
+			double partialAngle = (2 * Math.PI) / this.pendingEntity.getAttributes().count();
+			double currentAngle = 0;
 			
 			for (Attribute attribute : this.pendingEntity.getAttributes()) {
-				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, this.pendingEntity.getId());
+				double xDistance = Math.cos(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
+				double yDistance = Math.sin(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
+				
+				double attributeX = centerX + xDistance;
+				double attributeY = centerY + yDistance;
+				
+				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, this.pendingEntity.getId(), attributeX, attributeY);
 				boolean isKey = attribute.isKey();
 				this.addAttributeConnectorToGraph(parent, this.pendingEntity.getId(), entityCell, attribute, attributeCell, isKey);
+				currentAngle += partialAngle;
 			}
 		}
 		finally {
@@ -187,10 +214,10 @@ public class DiagramController extends BaseController
 		return connectorCell;		
 	}
 
-	private mxCell addAttributeToGraph(Attribute attribute, Object parent, UUID ownerId) {
+	private mxCell addAttributeToGraph(Attribute attribute, Object parent, UUID ownerId, double x, double y) {
 		String attributeId = ownerId.toString()+attribute.getName();
 		mxCell attributeCell = (mxCell) this.graph.insertVertex(parent, attributeId, 
-				attribute.getName(), 0, 0,
+				attribute.getName(), x, y,
 				StyleConstants.ATTRIBUTE_WIDTH, StyleConstants.ATTRIBUTE_HEIGHT);
 		
 		this.attributeCells.put(attributeId, attributeCell);

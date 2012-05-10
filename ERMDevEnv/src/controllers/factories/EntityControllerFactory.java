@@ -7,6 +7,8 @@ import controllers.IEntityEventListener;
 
 public class EntityControllerFactory implements IEntityControllerFactory {
 
+	private static int InstanceNumber = 0;
+	
 	@Override
 	public IEntityController create() {
 		return new IEntityController() {
@@ -24,7 +26,18 @@ public class EntityControllerFactory implements IEntityControllerFactory {
 			
 			@Override
 			public void create() {
-				listener.handleCreatedEvent(new Entity("Entity"));
+				Entity entity = new Entity("Entity" + (++InstanceNumber));
+				try {
+					entity.getAttributes().addAttribute("Attribute1");
+					entity.getAttributes().addAttribute("Attribute2");
+					entity.getAttributes().addAttribute("Attribute3");
+					entity.getAttributes().addAttribute("Attribute4");
+					entity.getAttributes().addAttribute("Attribute5");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				listener.handleCreatedEvent(entity);
 			}
 			
 			@Override
