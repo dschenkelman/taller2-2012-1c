@@ -10,6 +10,7 @@ import com.mxgraph.view.mxGraph;
 public interface IDiagramController extends IEntityEventListener, IRelationshipEventListener{
 	mxGraph getGraph();
 	void createEntity();
+	void createRelationship();
 	void addEntity(double x, double y);
 	mxCell getEntityCell(String id);
 	mxCell getAttributeCell(String id);
