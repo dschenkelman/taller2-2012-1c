@@ -17,6 +17,8 @@ public class EntityControllerTest {
     private MockProjectContext mockProjectContext;
     private MockEntityEventListener mockEntityCreatedListener;
     private MockStrongEntityController mockStrongEntityController;
+    private MockAttributeControllerFactory mockAttributeControllerFactory;
+    private MockStrongEntityControllerFactory mockStrongEntityControllerFactory;
     private EntityController entityController;
     private static final String ENTITY_NAME = "NAME";
     private static final String ATT_NAME_1 = "ADSADS";
@@ -47,7 +49,8 @@ public class EntityControllerTest {
 
         this.mockProjectContext.setEntityCollection(entityCollection);
         this.mockStrongEntityController.setStrongEntities(new ArrayList<IStrongEntity>());
-        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeController, mockStrongEntityController);
+        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeControllerFactory, mockStrongEntityControllerFactory);
+        entityController.create();
 
         mockEntityView.setEntityName("");
         Assert.assertFalse(this.entityController.addEntity());
@@ -86,8 +89,13 @@ public class EntityControllerTest {
 
         this.mockProjectContext.setEntityCollection(entityCollection);
 
-        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeController, mockStrongEntityController);
+        mockAttributeControllerFactory = new MockAttributeControllerFactory();
+        mockAttributeControllerFactory.setAttributeController(mockAttributeController);
+        mockStrongEntityControllerFactory = new MockStrongEntityControllerFactory();
+        mockStrongEntityControllerFactory.setStrongEntityController(mockStrongEntityController);
+        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeControllerFactory, mockStrongEntityControllerFactory);
         this.entityController.addSubscriber(this.mockEntityCreatedListener);
+        entityController.create();
         this.mockEntityView.setEntityName("sdadasd");
 
 
@@ -120,6 +128,10 @@ public class EntityControllerTest {
         mockProjectContext = new MockProjectContext();
         mockEntityCreatedListener = new MockEntityEventListener();
         mockStrongEntityController = new MockStrongEntityController();
-        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeController, mockStrongEntityController);
+        mockAttributeControllerFactory = new MockAttributeControllerFactory();
+        mockAttributeControllerFactory.setAttributeController(mockAttributeController);
+        mockStrongEntityControllerFactory = new MockStrongEntityControllerFactory();
+        mockStrongEntityControllerFactory.setStrongEntityController(mockStrongEntityController);
+        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeControllerFactory, mockStrongEntityControllerFactory);
     }
 }

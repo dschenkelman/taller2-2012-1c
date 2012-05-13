@@ -15,7 +15,7 @@ public class KeysController extends BaseController implements IKeysController {
     private Iterable<IKey> possibleKeys;
     private List<IIdGroupEventListener> listeners;
 
-    protected KeysController(IProjectContext projectContext, IKeysView keysView, Iterable<IKey> possibleKeys) {
+    public KeysController(IProjectContext projectContext, IKeysView keysView, Iterable<IKey> possibleKeys) {
         super(projectContext);
         this.possibleKeys = possibleKeys;
         this.listeners = new ArrayList<IIdGroupEventListener>();

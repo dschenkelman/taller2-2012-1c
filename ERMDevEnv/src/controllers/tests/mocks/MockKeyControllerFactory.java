@@ -12,11 +12,6 @@ public class MockKeyControllerFactory implements IKeysControllerFactory {
     private MockKeyController keyController;
 
     @Override
-    public IKeysController create() {
-        return null;
-    }
-
-    @Override
     public IKeysController create(List<IKey> objects) {
         this.createCalled = true;
         this.keyController.setKeys(objects);

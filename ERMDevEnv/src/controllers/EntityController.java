@@ -1,10 +1,13 @@
 package controllers;
 
+import controllers.factories.IAttributeControllerFactory;
+import controllers.factories.IStrongEntityControllerFactory;
 import models.*;
 import views.IEntityView;
 
 import infrastructure.IProjectContext;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,24 +18,28 @@ public class EntityController extends BaseController implements IEntityControlle
     private IEntityView entityView;
     private Entity pendingEntity;
     private List<IEntityEventListener> listeners;
+    private IAttributeControllerFactory attributeControllerFactory;
+    private IStrongEntityControllerFactory strongEntityControllerFactory;
     private IAttributeController attributeController;
     private IStrongEntityController strongEntityController;
 
-    public EntityController(IProjectContext projectContext, Entity entity, IEntityView entityView, IAttributeController attributeController, IStrongEntityController strongEntityController) {
+    public EntityController(IProjectContext projectContext, Entity entity, IEntityView entityView, IAttributeControllerFactory attributeControllerFactory, IStrongEntityControllerFactory strongEntityControllerFactory) {
         super(projectContext);
         this.pendingEntity = entity;
-        this.entityCollection = projectContext.getEntityCollection(this.pendingEntity);
-        this.attributeController = attributeController;
-        this.strongEntityController = strongEntityController;
+        this.attributeControllerFactory= attributeControllerFactory;
+        this.strongEntityControllerFactory = strongEntityControllerFactory;
         this.listeners = new ArrayList<IEntityEventListener>();
+        this.entityCollection = projectContext.getEntityCollection(this.pendingEntity);
         this.setEntityView(entityView);
     }
 
 
     @Override
     public void create() {
-        this.entityView.addStrongEntityView(this.strongEntityController.getStrongEntityView());
-        this.entityView.addAttributeView(this.attributeController.getAttributeView());
+        attributeController = this.attributeControllerFactory.create(this.pendingEntity.getAttributes());
+        strongEntityController = this.strongEntityControllerFactory.create(this.pendingEntity.getStrongEntities());
+        this.entityView.addStrongEntityView(strongEntityController.getStrongEntityView());
+        this.entityView.addAttributeView(attributeController.getAttributeView());
         this.entityView.showView();
     }
 

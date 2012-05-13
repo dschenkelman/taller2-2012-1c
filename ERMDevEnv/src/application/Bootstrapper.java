@@ -3,6 +3,8 @@ package application;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
+import controllers.factories.*;
+import controllers.factories.mock.MockEntityControllerFactory;
 import infrastructure.IProjectContext;
 import infrastructure.ProjectContext;
 
@@ -23,10 +25,6 @@ import views.DiagramView;
 import views.IDiagramView;
 import controllers.DiagramController;
 import controllers.IDiagramController;
-import controllers.factories.EntityControllerFactory;
-import controllers.factories.IEntityControllerFactory;
-import controllers.factories.IRelationshipControllerFactory;
-import controllers.factories.RelationshipControllerFactory;
 
 public class Bootstrapper {
 
@@ -70,8 +68,11 @@ public class Bootstrapper {
 					.addComponent(IXmlManager.class, DiagramXmlManager.class)
 					.addComponent(IXmlFileManager.class, XmlFileManager.class)
 					.addComponent(IProjectContext.class, ProjectContext.class)
-					.addComponent(IEntityControllerFactory.class, EntityControllerFactory.class)
-					.addComponent(IRelationshipControllerFactory.class, RelationshipControllerFactory.class);
+					.addComponent(IEntityControllerFactory.class, MockEntityControllerFactory.class)
+					.addComponent(IRelationshipControllerFactory.class, RelationshipControllerFactory.class)
+					.addComponent(IStrongEntityControllerFactory.class, StrongEntityControllerFactory.class)
+					.addComponent(IKeysControllerFactory.class, KeyControllerFactory.class)
+					.addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class);
 	}
 
 	public MutablePicoContainer createContainer() {

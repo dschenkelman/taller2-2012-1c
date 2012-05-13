@@ -31,8 +31,8 @@ public class AttributeController extends BaseController implements IAttributeCon
             possibleKeys.add(attribute);
         }
         IKeysController keysController = keysControllerFactory.create(possibleKeys);
-        keysController.create();
         keysController.addSubscriber(this);
+        keysController.create();
     }
 
     @Override

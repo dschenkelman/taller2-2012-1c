@@ -9,6 +9,7 @@ import infrastructure.Func;
 import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -79,6 +80,11 @@ public class IterableExtensionsTestCase {
         Assert.assertEquals(0, count);
     }
 
+    @Test
+    public void TestGetListOf() {
+
+    }
+
     @Before
     public void setUp() throws Exception {
         this.iterable1 = new ArrayList<Integer>();
@@ -103,6 +109,15 @@ public class IterableExtensionsTestCase {
 
     @After
     public void tearDown() throws Exception {
+        List<Integer> iterable = new ArrayList<Integer>();
+        for (int i = 0; i < 50; i++) {
+            iterable.add(i);
+        }
+        List<Integer> integerList = IterableExtensions.getListOf(iterable);
+        Assert.assertEquals(50, integerList.size());
+        for (Integer i = 0; i < 50; i++) {
+            Assert.assertEquals(i, integerList.get(i));
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package infrastructure;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class IterableExtensions {
     public static <T> int count(Iterable<T> iterable) {
@@ -9,6 +10,14 @@ public class IterableExtensions {
             count++;
         }
         return count;
+    }
+
+    public static <T> List<T> getListOf(Iterable<T> iterable){
+        List<T> list = new ArrayList<T>();
+        for(T item : iterable){
+            list.add(item);
+        }
+        return list;
     }
 
     public static <T, U> T firstOrDefault(Iterable<T> iterable, Func<T, U, Boolean> func, U param) {

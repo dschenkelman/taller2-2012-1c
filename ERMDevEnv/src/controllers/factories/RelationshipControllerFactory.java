@@ -2,11 +2,11 @@ package controllers.factories;
 
 import java.util.Random;
 
+import controllers.factories.mock.MockEntityControllerFactory;
 import models.Cardinality;
 import models.Entity;
 import models.Relationship;
 import models.RelationshipEntity;
-import controllers.IEntityEventListener;
 import controllers.IRelationshipController;
 import controllers.IRelationshipEventListener;
 
@@ -22,12 +22,12 @@ public class RelationshipControllerFactory implements
 			@Override
 			public void create() {
 				Random r = new Random();
-				int entityNumber = r.nextInt(EntityControllerFactory.Entites.size());
-				Entity entity1 = EntityControllerFactory.Entites.get(entityNumber);
+				int entityNumber = r.nextInt(MockEntityControllerFactory.Entites.size());
+				Entity entity1 = MockEntityControllerFactory.Entites.get(entityNumber);
 				
-				entityNumber = r.nextInt(EntityControllerFactory.Entites.size());
+				entityNumber = r.nextInt(MockEntityControllerFactory.Entites.size());
 				
-				Entity entity2 = EntityControllerFactory.Entites.get(entityNumber);
+				Entity entity2 = MockEntityControllerFactory.Entites.get(entityNumber);
 				
 				try {
 					this.listener.handleCreatedEvent(new Relationship(
