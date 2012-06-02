@@ -1,7 +1,10 @@
 package infrastructure;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class IterableExtensions {
     public static <T> int count(Iterable<T> iterable) {
@@ -20,6 +23,15 @@ public class IterableExtensions {
         return list;
     }
 
+    public static <T> T firstOrDefault(Iterable<T> iterable) {
+        return IterableExtensions.firstOrDefault(iterable, new Func<T, Boolean, Boolean>(){
+
+			@Override
+			public Boolean execute(T p1, Boolean p2) {
+				return p2;
+			}}, true);
+    }
+    
     public static <T, U> T firstOrDefault(Iterable<T> iterable, Func<T, U, Boolean> func, U param) {
         for (T item : iterable) {
             if (func.execute(item, param)) {
@@ -39,4 +51,14 @@ public class IterableExtensions {
         }
         return allItems;
     }
+
+	public static <T> Iterable<T> distinct(Iterable<T> iterable, Comparator<T> comparator) {
+		Set<T> set = new TreeSet<T>(comparator);
+		
+		for (T item : iterable) {
+			set.add(item);
+		}
+		
+		return set;
+	}
 }

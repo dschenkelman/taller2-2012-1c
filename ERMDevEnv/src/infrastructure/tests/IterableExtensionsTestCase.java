@@ -9,6 +9,7 @@ import infrastructure.Func;
 import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -79,10 +80,27 @@ public class IterableExtensionsTestCase {
         }
         Assert.assertEquals(0, count);
     }
-
+    
     @Test
-    public void TestGetListOf() {
-
+    public void testShouldGetDistinctElements()
+    {
+    	Assert.assertEquals(100, this.iterable3.size());
+    	
+    	Iterable<Integer> distinct = IterableExtensions.distinct(this.iterable3, new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				if (o1 < o2)
+				{
+					return -1;
+				}
+				else if (o1 > o2){
+					return 1;
+				}
+				return 0;
+			}
+		});
+    	
+    	Assert.assertEquals(50, IterableExtensions.count(distinct));
     }
 
     @Before
@@ -106,18 +124,4 @@ public class IterableExtensionsTestCase {
             this.iterable3.add(i);
         }
     }
-
-    @After
-    public void tearDown() throws Exception {
-        List<Integer> iterable = new ArrayList<Integer>();
-        for (int i = 0; i < 50; i++) {
-            iterable.add(i);
-        }
-        List<Integer> integerList = IterableExtensions.getListOf(iterable);
-        Assert.assertEquals(50, integerList.size());
-        for (Integer i = 0; i < 50; i++) {
-            Assert.assertEquals(i, integerList.get(i));
-        }
-    }
-
 }

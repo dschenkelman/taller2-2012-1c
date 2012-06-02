@@ -1,8 +1,10 @@
 package controllers;
 
 import infrastructure.IProjectContext;
+import infrastructure.IterableExtensions;
 import infrastructure.StringExtensions;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -105,7 +107,7 @@ public class DiagramController extends BaseController
 
 	@Override
 	public void handleCreatedEvent(Relationship relationship) {
-		double[] coordinates = this.getCoordinates(relationship.getRelationshipEntities());
+		double[] coordinates = this.getRelationshipNodeCoordinates(relationship.getRelationshipEntities());
 		double x = coordinates[0];
 		double y = coordinates[1];
 		this.graph.getModel().beginUpdate();
@@ -249,13 +251,37 @@ public class DiagramController extends BaseController
 		return entityCell;
 	}
 	
-	private double[] getCoordinates(Iterable<RelationshipEntity> relationshipEntities) {
+	private double[] getRelationshipNodeCoordinates(Iterable<RelationshipEntity> relationshipEntities) {
 		double maxX = 0;
 		double maxY = 0;
 		double minY = Double.POSITIVE_INFINITY;
 		double minX = Double.POSITIVE_INFINITY;
 		
-		for (RelationshipEntity entity : relationshipEntities) {
+		Iterable<RelationshipEntity> distinctEntities = IterableExtensions.distinct(relationshipEntities, new Comparator<RelationshipEntity>() {
+
+			@Override
+			public int compare(RelationshipEntity e1, RelationshipEntity e2) {
+				if (e1.getEntityId() == e2.getEntityId())
+				{
+					return 0;
+				}
+				
+				return 1;
+			}
+		});
+		
+		if (IterableExtensions.count(distinctEntities) == 1)
+		{
+			RelationshipEntity entity = IterableExtensions.firstOrDefault(distinctEntities);
+			
+			mxCell entityCell = this.getEntityCell(entity.getEntityId().toString());
+			double x = entityCell.getGeometry().getX();
+			double y = entityCell.getGeometry().getY();
+			
+			return new double[]{x, y + StyleConstants.ENTITY_HEIGHT * 3};
+		}
+		
+		for (RelationshipEntity entity : distinctEntities) {
 			mxCell entityCell = this.getEntityCell(entity.getEntityId().toString());
 			double x = entityCell.getGeometry().getX();
 			double y = entityCell.getGeometry().getY();
