@@ -346,7 +346,7 @@ public class DiagramControllerTestCase {
 	}
 	
 	private void addEntityToDiagram(DiagramController diagramController, 
-			Entity entity, double x, double y) {
+			Entity entity, double x, double y) throws Exception {
 		diagramController.createEntity();
 		diagramController.handleCreatedEvent(entity);
 		diagramController.addEntity(x, y);

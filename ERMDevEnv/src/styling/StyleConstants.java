@@ -1,4 +1,4 @@
-package controllers;
+package styling;
 
 public class StyleConstants {
 	public static String ENTITY_STYLE = "";
@@ -7,6 +7,11 @@ public class StyleConstants {
 	public static String KEY_ATTRIBUTE_LINK_STYLE = "endArrow=oval";
 	public static String RELATIONSHIP_STYLE = "shape=rhombus;perimeter=rhombusPerimeter;portConstraint=eastwestsouthnorth";
 	public static String RELATIONSHIP_CONNECTOR_STYLE = "endArrow=none;edgeStyle=elbowEdgeStyle;verticalAlign=bottom;align=left";
+	public static String THING_COLOR = "fillColor=#F684B6";
+	public static String DOMAIN_COLOR = "fillColor=#A9A4ED";
+	public static String HISTORIC_COLOR = "fillColor=#A4EDA8";
+	public static String PROGRAMMED_COLOR = "fillColor=#EDD5A4";
+	public static String NONE_COLOR = "fillColor=#FFFFFF";
 	public static double ENTITY_WIDTH = 80;
 	public static double ENTITY_HEIGHT = 30;
 	public static double ATTRIBUTE_WIDTH = 0;
