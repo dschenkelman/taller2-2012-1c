@@ -2,10 +2,12 @@ package controllers.factories.mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import controllers.factories.IEntityControllerFactory;
 import views.IEntityView;
 import models.Entity;
+import models.EntityType;
 import controllers.IEntityController;
 import controllers.IEntityEventListener;
 
@@ -30,7 +32,11 @@ public class MockEntityControllerFactory implements IEntityControllerFactory {
 			
 			@Override
 			public void create() {
+				Random random = new Random();
 				Entity entity = new Entity("Entity" + (MockEntityControllerFactory.Entities.size() + 1));
+				EntityType[] types = {EntityType.None, EntityType.Domain,EntityType.Thing,EntityType.Programmed,EntityType.Historic};
+				int value = random.nextInt(4);
+				entity.setType(types[value]);
 				MockEntityControllerFactory.Entities.add(entity);
 				try {
 					entity.getAttributes().addAttribute("Attribute1");

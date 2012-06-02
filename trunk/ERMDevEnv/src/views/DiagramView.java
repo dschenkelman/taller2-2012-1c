@@ -74,7 +74,12 @@ public class DiagramView extends JPanel implements IDiagramView{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (diagramController.hasPendingEntity()){
-					diagramController.addEntity(e.getPoint().x, e.getPoint().y);
+					try {
+						diagramController.addEntity(e.getPoint().x, e.getPoint().y);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		};

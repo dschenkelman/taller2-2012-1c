@@ -11,7 +11,7 @@ public interface IDiagramController extends IEntityEventListener, IRelationshipE
 	mxGraph getGraph();
 	void createEntity();
 	void createRelationship();
-	void addEntity(double x, double y);
+	void addEntity(double x, double y) throws Exception;
 	mxCell getEntityCell(String id);
 	mxCell getAttributeCell(String id);
 	mxCell getAttributeConnectorCell(String id);

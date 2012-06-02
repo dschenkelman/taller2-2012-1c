@@ -14,6 +14,8 @@ import org.w3c.dom.Element;
 
 import persistence.IXmlFileManager;
 import persistence.IXmlManager;
+import styling.StyleConstants;
+import styling.Styler;
 
 import models.Attribute;
 import models.Cardinality;
@@ -144,7 +146,7 @@ public class DiagramController extends BaseController
 		}
 	}
 	
-	public void addEntity(double x, double y) 
+	public void addEntity(double x, double y) throws Exception 
 	{
 		this.graph.getModel().beginUpdate();
 		Object parent = this.graph.getDefaultParent();
@@ -237,10 +239,10 @@ public class DiagramController extends BaseController
 		return relationshipCell;
 	}
 
-	private mxCell addEntityToGraph(Entity entity, Object parent, double x, double y) {
+	private mxCell addEntityToGraph(Entity entity, Object parent, double x, double y) throws Exception {
 		mxCell entityCell = (mxCell) this.graph.insertVertex(parent, entity.getId().toString(), 
 				entity.getName(), x, y,
-				StyleConstants.ENTITY_WIDTH, StyleConstants.ENTITY_HEIGHT);
+				StyleConstants.ENTITY_WIDTH, StyleConstants.ENTITY_HEIGHT, Styler.getFillColor(entity.getType()));
 		
 		this.entityCells.put(entity.getId().toString(), entityCell);
 
