@@ -11,7 +11,7 @@ import controllers.IEntityEventListener;
 
 public class MockEntityControllerFactory implements IEntityControllerFactory {
 
-	public static List<Entity> Entites = new ArrayList<Entity>();
+	public static List<Entity> Entities = new ArrayList<Entity>();
 	
 	@Override
 	public IEntityController create() {
@@ -30,8 +30,8 @@ public class MockEntityControllerFactory implements IEntityControllerFactory {
 			
 			@Override
 			public void create() {
-				Entity entity = new Entity("Entity" + (MockEntityControllerFactory.Entites.size() + 1));
-				MockEntityControllerFactory.Entites.add(entity);
+				Entity entity = new Entity("Entity" + (MockEntityControllerFactory.Entities.size() + 1));
+				MockEntityControllerFactory.Entities.add(entity);
 				try {
 					entity.getAttributes().addAttribute("Attribute1");
 					entity.getAttributes().addAttribute("Attribute2");

@@ -3,7 +3,15 @@ package application;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
-import controllers.factories.*;
+import controllers.factories.AttributeControllerFactory;
+import controllers.factories.IAttributeControllerFactory;
+import controllers.factories.IEntityControllerFactory;
+import controllers.factories.IKeysControllerFactory;
+import controllers.factories.IRelationshipControllerFactory;
+import controllers.factories.IStrongEntityControllerFactory;
+import controllers.factories.KeyControllerFactory;
+import controllers.factories.RelationshipControllerFactory;
+import controllers.factories.StrongEntityControllerFactory;
 import controllers.factories.mock.MockEntityControllerFactory;
 import infrastructure.IProjectContext;
 import infrastructure.ProjectContext;
