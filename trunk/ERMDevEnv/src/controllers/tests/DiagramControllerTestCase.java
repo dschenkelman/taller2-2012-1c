@@ -6,6 +6,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import infrastructure.Func;
 import infrastructure.IterableExtensions;
 import models.Cardinality;
+import models.Diagram;
 import models.Entity;
 import models.Relationship;
 import models.RelationshipEntity;
@@ -343,6 +344,19 @@ public class DiagramControllerTestCase {
 		Assert.assertSame(document, this.xmlFileManager.getDocumentToSave());
 		Assert.assertEquals("diagram", ((Element)document.getFirstChild()).getTagName());
 		Assert.assertEquals("Diagram-comp", this.xmlFileManager.getPathToSave());
+	}
+	
+	@Test
+	public void testShouldOpenADiagram() throws Exception
+	{
+		String path = "diagrama.xml";
+		DiagramController controller = this.createController();
+		
+		controller.openDiagram(path);
+		
+		Assert.assertEquals(path, this.xmlFileManager.getPathRead());
+		Assert.assertSame(this.xmlFileManager.getCreatedDocument().getDocumentElement(), this.diagramXmlManager.getElementPassedAsParameter());
+		Assert.assertSame(this.diagramXmlManager.getDiagramRelatedToElement(), controller.getDiagram());
 	}
 	
 	private void addEntityToDiagram(DiagramController diagramController, 

@@ -10,6 +10,7 @@ public class MockDiagramXmlManager implements IXmlManager<Diagram> {
 
 	private String rootName;
 	private Diagram diagram;
+	private Element element;
 
 	@Override
 	public Element getElementFromItem(Diagram item, Document document) {
@@ -19,7 +20,10 @@ public class MockDiagramXmlManager implements IXmlManager<Diagram> {
 
 	@Override
 	public Diagram getItemFromXmlElement(Element element) throws Exception {
-		return null;
+		Diagram diagram = new Diagram();
+		this.diagram = diagram;
+		this.element = element;
+		return diagram;
 	}
 
 	public void setElementNameOfRoot(String value) {
@@ -28,5 +32,9 @@ public class MockDiagramXmlManager implements IXmlManager<Diagram> {
 
 	public Diagram getDiagramRelatedToElement() {
 		return this.diagram;
+	}
+
+	public Element getElementPassedAsParameter() {
+		return this.element;
 	}
 }
