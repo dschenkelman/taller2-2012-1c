@@ -347,4 +347,10 @@ public class DiagramController extends BaseController
 		
 		//this.xmlFileManager.write(, filePath)
 	}
+	
+	public void openDiagram(String path) throws Exception {
+		Document document = this.xmlFileManager.read(path);
+		Element element = document.getDocumentElement();
+		this.diagram = this.diagramXmlManager.getItemFromXmlElement(element);
+	}
 }
