@@ -7,7 +7,6 @@ import views.IEntityView;
 
 import infrastructure.IProjectContext;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -72,7 +71,7 @@ public class EntityController extends BaseController implements IEntityControlle
             return false;
         }
         this.pendingEntity.setName(entityName);
-        pendingEntity.setType(this.entityView.getType());
+        pendingEntity.setType(this.entityView.getEntityType());
 
         AttributeCollection attributeCollection = this.pendingEntity.getAttributes();
         for (Attribute attribute : this.attributeController.getAttributes()) {

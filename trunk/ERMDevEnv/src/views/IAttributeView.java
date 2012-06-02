@@ -10,4 +10,6 @@ public interface IAttributeView {
     public void setController(IAttributeController attributeController);
 
     public void setAttributes(List<Attribute> attributes);
+
+    public Object getInternalFrame();
 }

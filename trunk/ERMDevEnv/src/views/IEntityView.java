@@ -17,7 +17,7 @@ public interface IEntityView {
 
     public String getEntityName();
 
-    public EntityType getType();
+    public EntityType getEntityType();
 
     public boolean isVisible();
 
