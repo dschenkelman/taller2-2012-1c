@@ -19,6 +19,11 @@ public class MockAttributeView implements IAttributeView {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
+    public Object getInternalFrame() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public IAttributeController getController() {
         return this.controller;
     }
