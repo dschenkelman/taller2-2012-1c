@@ -30,9 +30,13 @@ public class RelationshipControllerFactory implements
 				Entity entity2 = MockEntityControllerFactory.Entities.get(entityNumber);
 				
 				try {
-					this.listener.handleCreatedEvent(new Relationship(
+					Relationship relationship = new Relationship(
 							new RelationshipEntity(entity1, new Cardinality(0, 1), entity1.getName() + "A"), 
-							new RelationshipEntity(entity2, new Cardinality(0, 1), entity2.getName() + "B")));
+							new RelationshipEntity(entity2, new Cardinality(0, 1), entity2.getName() + "B"));
+					
+					relationship.getAttributes().addAttribute("Attribute1");
+					relationship.getAttributes().addAttribute("Attribute2");
+					this.listener.handleCreatedEvent(relationship);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
