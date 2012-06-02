@@ -8,7 +8,7 @@ import styling.Styler;
 import models.EntityType;
 
 
-public class StylerTests {
+public class StylerTestCase {
 	
 	@Test
 	public void testShouldReturnCorrectColorBasedOnEntityType() throws Exception
