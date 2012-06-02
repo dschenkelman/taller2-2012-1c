@@ -26,54 +26,13 @@ public class AttributeControllerTest {
         mockProjectContext = new MockProjectContext();
         mockKeyControllerFactory = new MockKeyControllerFactory();
         mockKeyController = new MockKeyController();
-        attributeController = new AttributeController(mockProjectContext, new ArrayList<Attribute>(),mockAttributeView, mockKeyControllerFactory);
+        attributeController = new AttributeController(mockProjectContext, new ArrayList<Attribute>(),mockAttributeView);
     }
 
     @Test
     public void TestCreate() {
         Assert.assertEquals(mockAttributeView.getController(), attributeController);
         Assert.assertEquals(0, IterableExtensions.count(attributeController.getAttributes()));
-    }
-
-    @Test
-    public void TestSelectKeys() {
-        mockKeyControllerFactory.setKeyController(mockKeyController);
-        attributeController.selectKeys();
-        Assert.assertTrue(mockKeyControllerFactory.createCalled());
-        Assert.assertEquals(attributeController.getAttributes(), mockKeyController.getKeys());
-    }
-
-    @Test
-    public void TestHandleEvent() {
-        HashMap<Integer, List<IKey>> keys = new HashMap<Integer, List<IKey>>();
-        List<IKey> list = new ArrayList<IKey>();
-
-        Attribute attribute = new Attribute("Name");
-        attribute.setIdGroup(new IdGroupCollection());
-        list.add(attribute);
-
-        attribute = new Attribute("azsdasd");
-        attribute.setIdGroup(new IdGroupCollection());
-        list.add(attribute);
-
-        attribute = new Attribute("asdasd");
-        attribute.setIdGroup(new IdGroupCollection());
-        list.add(attribute);
-
-        keys.put(0, list);
-
-        attribute = new Attribute("asdasdasdasda");
-        attribute.setIdGroup(new IdGroupCollection());
-        list.add(attribute);
-        keys.put(1, list);
-
-        attributeController.handleEvent(keys);
-
-        for (Integer idGroup : keys.keySet()) {
-            for (IKey key : list) {
-                Assert.assertTrue(key.getIdGroup().exists(idGroup));
-            }
-        }
     }
 
     @Test

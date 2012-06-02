@@ -20,10 +20,6 @@ public class MockAttributeController implements IAttributeController {
     }
 
     @Override
-    public void selectKeys() {
-    }
-
-    @Override
     public void addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -45,8 +41,4 @@ public class MockAttributeController implements IAttributeController {
     public void setAttributes(List<Attribute> attributes){
         this.attributes = attributes;
     }
-
-	@Override
-	public void handleEvent(HashMap<Integer, List<IKey>> param) {
-	}
 }

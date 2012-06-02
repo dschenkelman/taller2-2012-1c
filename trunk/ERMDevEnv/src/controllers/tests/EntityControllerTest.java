@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EntityControllerTest {
@@ -24,6 +25,8 @@ public class EntityControllerTest {
     private static final String ATT_NAME_2 = "SSADSADS";
     private static final String ATT_NAME_3 = "ADSSSSADS";
     private static final String ATT_NAME_4 = "ADSASADDS";
+    private MockKeyControllerFactory mockKeyControllerFactory;
+    private MockKeyController mockKeyController;
 
 
     @Test
@@ -44,7 +47,7 @@ public class EntityControllerTest {
         entityCollection.add(ENTITY_NAME, EntityType.Domain);
 
         this.mockProjectContext.setEntityCollection(entityCollection);
-        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeControllerFactory);
+        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeControllerFactory, mockKeyControllerFactory);
         entityController.create();
 
         mockEntityView.setEntityName("");
@@ -80,7 +83,7 @@ public class EntityControllerTest {
         mockAttributeControllerFactory = new MockAttributeControllerFactory();
         mockAttributeControllerFactory.setAttributeController(mockAttributeController);
         mockStrongEntityControllerFactory = new MockStrongEntityControllerFactory();
-        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeControllerFactory);
+        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeControllerFactory, mockKeyControllerFactory);
         this.entityController.addSubscriber(this.mockEntityCreatedListener);
         entityController.create();
         this.mockEntityView.setEntityName("sdadasd");
@@ -102,6 +105,58 @@ public class EntityControllerTest {
         Assert.assertNotNull(attributeCollection.getAttribute(ATT_NAME_4));
     }
 
+    @Test
+    public void TestSelectKeys() {
+        entityController = new EntityController(mockProjectContext,new Entity(""),new MockEntityView(),mockAttributeControllerFactory,mockKeyControllerFactory);
+        entityController.create();
+
+        entityController.selectKeys();
+
+        Assert.assertFalse(mockKeyControllerFactory.createCalled());
+
+        List<Attribute> list = new ArrayList<Attribute>();
+        list.add(new Attribute("nombre"));
+        this.mockAttributeController.setAttributes(list);
+
+        entityController.selectKeys();
+
+        Assert.assertEquals(mockKeyController.getKeys(),list);
+        Assert.assertTrue(mockKeyControllerFactory.createCalled());
+    }
+
+    @Test
+    public void TestHandleEvent() {
+        HashMap<Integer, List<IKey>> keys = new HashMap<Integer, List<IKey>>();
+        List<IKey> list = new ArrayList<IKey>();
+
+        Attribute attribute = new Attribute("Name");
+        attribute.setIdGroup(new IdGroupCollection());
+        list.add(attribute);
+
+        attribute = new Attribute("azsdasd");
+        attribute.setIdGroup(new IdGroupCollection());
+        list.add(attribute);
+
+        attribute = new Attribute("asdasd");
+        attribute.setIdGroup(new IdGroupCollection());
+        list.add(attribute);
+
+        keys.put(0, list);
+
+        attribute = new Attribute("asdasdasdasda");
+        attribute.setIdGroup(new IdGroupCollection());
+        list.add(attribute);
+        keys.put(1, list);
+
+        entityController.handleEvent(keys);
+
+        for (Integer idGroup : keys.keySet()) {
+            for (IKey key : list) {
+                Assert.assertTrue(key.getIdGroup().exists(idGroup));
+            }
+        }
+    }
+
     @Before
     public void setUp() throws Exception {
         mockAttributeController = new MockAttributeController();
@@ -111,6 +166,12 @@ public class EntityControllerTest {
         mockAttributeControllerFactory = new MockAttributeControllerFactory();
         mockAttributeControllerFactory.setAttributeController(mockAttributeController);
         mockStrongEntityControllerFactory = new MockStrongEntityControllerFactory();
-        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeControllerFactory);
+        mockKeyControllerFactory = new MockKeyControllerFactory();
+        mockKeyController = new MockKeyController();
+        entityController = new EntityController(mockProjectContext, new Entity(""), mockEntityView, mockAttributeControllerFactory, mockKeyControllerFactory);
+
+        mockAttributeControllerFactory.setAttributeController(mockAttributeController);
+        mockKeyControllerFactory.setKeyController(mockKeyController);
+
     }
 }

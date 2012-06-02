@@ -13,26 +13,12 @@ import controllers.factories.IKeysControllerFactory;
 public class AttributeController extends BaseController implements IAttributeController {
 
     private IAttributeView attributeView;
-    private IKeysControllerFactory keysControllerFactory;
     private List<Attribute> attributes;
 
-    public AttributeController(IProjectContext projectContext, List<Attribute> attributes, 
-    		IAttributeView attributeView, IKeysControllerFactory keysControllerFactory) {
+    public AttributeController(IProjectContext projectContext, List<Attribute> attributes, IAttributeView attributeView) {
         super(projectContext);
-        this.keysControllerFactory = keysControllerFactory;
         this.attributes = attributes;
         this.setAttributeView(attributeView);
-    }
-
-    @Override
-    public void selectKeys() {
-        List<IKey> possibleKeys = new ArrayList<IKey>();
-        for (Attribute attribute : this.getAttributes()) {
-            possibleKeys.add(attribute);
-        }
-        IKeysController keysController = keysControllerFactory.create(possibleKeys);
-        keysController.addSubscriber(this);
-        keysController.create();
     }
 
     @Override
@@ -55,18 +41,5 @@ public class AttributeController extends BaseController implements IAttributeCon
         this.attributeView = attributeView;
         this.attributeView.setController(this);
         this.attributeView.setAttributes(this.attributes);
-    }
-
-    @Override
-    public void handleEvent(HashMap<Integer, List<IKey>> keys) {
-        for (Integer idGroup : keys.keySet()) {
-            for (IKey key : keys.get(idGroup)) {
-                try {
-                    key.getIdGroup().addIdGroup(idGroup);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 }

@@ -18,6 +18,6 @@ public class AttributeControllerFactory implements IAttributeControllerFactory{
         Bootstrapper bootstrapper = new Bootstrapper();
         MutablePicoContainer container = bootstrapper.getContainer();
         List<Attribute> attributeList = IterableExtensions.getListOf(possibleAttributes);
-        return new AttributeController(container.getComponent(IProjectContext.class),attributeList,new AttributeView(),container.getComponent(IKeysControllerFactory.class));
+        return new AttributeController(container.getComponent(IProjectContext.class),attributeList,new AttributeView());
     }
 }

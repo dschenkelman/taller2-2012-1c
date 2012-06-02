@@ -5,9 +5,7 @@ import models.AttributeType;
 import models.Cardinality;
 import views.IAttributeView;
 
-public interface IAttributeController extends IIdGroupEventListener{
-
-    public void selectKeys();
+public interface IAttributeController{
 
     public void addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression);
 
