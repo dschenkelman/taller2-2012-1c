@@ -1,7 +1,6 @@
 package controllers;
 
 import controllers.factories.IAttributeControllerFactory;
-import controllers.factories.IStrongEntityControllerFactory;
 import models.*;
 import views.IEntityView;
 
@@ -18,15 +17,12 @@ public class EntityController extends BaseController implements IEntityControlle
     private Entity pendingEntity;
     private List<IEntityEventListener> listeners;
     private IAttributeControllerFactory attributeControllerFactory;
-    private IStrongEntityControllerFactory strongEntityControllerFactory;
     private IAttributeController attributeController;
-    private IStrongEntityController strongEntityController;
 
-    public EntityController(IProjectContext projectContext, Entity entity, IEntityView entityView, IAttributeControllerFactory attributeControllerFactory, IStrongEntityControllerFactory strongEntityControllerFactory) {
+    public EntityController(IProjectContext projectContext, Entity entity, IEntityView entityView, IAttributeControllerFactory attributeControllerFactory) {
         super(projectContext);
         this.pendingEntity = entity;
         this.attributeControllerFactory= attributeControllerFactory;
-        this.strongEntityControllerFactory = strongEntityControllerFactory;
         this.listeners = new ArrayList<IEntityEventListener>();
         this.entityCollection = projectContext.getEntityCollection(this.pendingEntity);
         this.setEntityView(entityView);
@@ -36,8 +32,6 @@ public class EntityController extends BaseController implements IEntityControlle
     @Override
     public void create() {
         attributeController = this.attributeControllerFactory.create(this.pendingEntity.getAttributes());
-        strongEntityController = this.strongEntityControllerFactory.create(this.pendingEntity.getStrongEntities());
-        this.entityView.addStrongEntityView(strongEntityController.getStrongEntityView());
         this.entityView.addAttributeView(attributeController.getAttributeView());
         this.entityView.showView();
     }
@@ -77,16 +71,6 @@ public class EntityController extends BaseController implements IEntityControlle
         for (Attribute attribute : this.attributeController.getAttributes()) {
             try {
                 attributeCollection.addAttribute(attribute);
-            } catch (Exception e) {
-                //When editing an entity
-                e.printStackTrace();
-            }
-        }
-
-        StrongEntityCollection strongEntityCollection = this.pendingEntity.getStrongEntities();
-        for (IStrongEntity strongEntity : this.strongEntityController.getStrongEntities()) {
-            try {
-                strongEntityCollection.addStrongEntity(strongEntity);
             } catch (Exception e) {
                 //When editing an entity
                 e.printStackTrace();

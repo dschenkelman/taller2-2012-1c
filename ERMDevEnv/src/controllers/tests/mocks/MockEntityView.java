@@ -28,11 +28,6 @@ public class MockEntityView implements IEntityView {
     }
 
     @Override
-    public void addStrongEntityView(IStrongEntityView strongEntityView) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public IAttributeView getAttributeView() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }

@@ -11,8 +11,6 @@ public interface IEntityView {
 
     public void addAttributeView(IAttributeView attributeView);
 
-    public void addStrongEntityView(IStrongEntityView strongEntityView);
-
     public IAttributeView getAttributeView();
 
     public String getEntityName();
