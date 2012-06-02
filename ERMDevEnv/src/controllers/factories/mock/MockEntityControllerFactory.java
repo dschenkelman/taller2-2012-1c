@@ -29,8 +29,13 @@ public class MockEntityControllerFactory implements IEntityControllerFactory {
 			@Override
 			public void setEntityView(IEntityView entityView) {
 			}
-			
-			@Override
+
+            @Override
+            public void selectKeys() {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
 			public void create() {
 				Random random = new Random();
 				Entity entity = new Entity("Entity" + (MockEntityControllerFactory.Entities.size() + 1));

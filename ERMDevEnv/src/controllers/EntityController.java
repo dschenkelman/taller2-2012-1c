@@ -1,28 +1,32 @@
 package controllers;
 
 import controllers.factories.IAttributeControllerFactory;
+import controllers.factories.IKeysControllerFactory;
 import models.*;
 import views.IEntityView;
 
 import infrastructure.IProjectContext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class EntityController extends BaseController implements IEntityController {
+public class EntityController extends BaseController implements IEntityController, IIdGroupEventListener {
 
     private Iterable<Entity> entityCollection;
     private IEntityView entityView;
     private Entity pendingEntity;
     private List<IEntityEventListener> listeners;
+    private IKeysControllerFactory keysControllerFactory;
     private IAttributeControllerFactory attributeControllerFactory;
     private IAttributeController attributeController;
 
-    public EntityController(IProjectContext projectContext, Entity entity, IEntityView entityView, IAttributeControllerFactory attributeControllerFactory) {
+    public EntityController(IProjectContext projectContext, Entity entity, IEntityView entityView, IAttributeControllerFactory attributeControllerFactory, IKeysControllerFactory keysControllerFactory) {
         super(projectContext);
         this.pendingEntity = entity;
-        this.attributeControllerFactory= attributeControllerFactory;
+        this.attributeControllerFactory = attributeControllerFactory;
+        this.keysControllerFactory = keysControllerFactory;
         this.listeners = new ArrayList<IEntityEventListener>();
         this.entityCollection = projectContext.getEntityCollection(this.pendingEntity);
         this.setEntityView(entityView);
@@ -92,4 +96,30 @@ public class EntityController extends BaseController implements IEntityControlle
         this.entityView.setController(this);
     }
 
+    @Override
+    public void selectKeys() {
+        List<IKey> possibleKeys = new ArrayList<IKey>();
+        for (Attribute attribute : this.attributeController.getAttributes()) {
+            possibleKeys.add(attribute);
+        }
+        if (possibleKeys.size() > 0) {
+            IKeysController keysController = keysControllerFactory.create(possibleKeys);
+            keysController.addSubscriber(this);
+            keysController.create();
+        }
+
+    }
+
+    @Override
+    public void handleEvent(HashMap<Integer, List<IKey>> keys) {
+        for (Integer idGroup : keys.keySet()) {
+            for (IKey key : keys.get(idGroup)) {
+                try {
+                    key.getIdGroup().addIdGroup(idGroup);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

@@ -37,7 +37,12 @@ public class MockEntityController implements IEntityController{
 		
 	}
 
-	@Override
+    @Override
+    public void selectKeys() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
 	public boolean validateEntityName(String name) {
 		return false;
 	}

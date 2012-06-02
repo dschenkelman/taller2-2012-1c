@@ -24,6 +24,18 @@ public class EntityView implements IEntityView {
 
     public EntityView() {
         initComponents();
+        createButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                createEntity();
+            }
+        });
+        selectKeysButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                entityController.selectKeys();
+            }
+        });
         frame1.setTitle(TITLE);
     }
 
@@ -35,6 +47,8 @@ public class EntityView implements IEntityView {
         entityName = new JTextField();
         entityTypeText = new JLabel();
         entityTypeComboBox = new JComboBox();
+        attributePanel = new JPanel();
+        selectKeysButton = new JButton();
         createButton = new JButton();
 
         //======== frame1 ========
@@ -43,7 +57,7 @@ public class EntityView implements IEntityView {
             Container frame1ContentPane = frame1.getContentPane();
             frame1ContentPane.setLayout(new FormLayout(
                 "28*(default, $lcgap), default",
-                "19*(default, $lgap), default"));
+                "20*(default, $lgap), default"));
 
             //---- entityNameText ----
             entityNameText.setText("Name: ");
@@ -57,6 +71,26 @@ public class EntityView implements IEntityView {
             frame1ContentPane.add(entityTypeText, CC.xy(5, 7));
             frame1ContentPane.add(entityTypeComboBox, CC.xy(9, 7));
 
+            //======== attributePanel ========
+            {
+
+                // JFormDesigner evaluation mark
+                attributePanel.setBorder(new javax.swing.border.CompoundBorder(
+                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
+                        "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
+                        javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
+                        java.awt.Color.red), attributePanel.getBorder())); attributePanel.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+
+                attributePanel.setLayout(new FormLayout(
+                    "3*(default, $lcgap), default",
+                    "2*(default, $lgap), default"));
+            }
+            frame1ContentPane.add(attributePanel, CC.xywh(1, 15, 52, 17));
+
+            //---- selectKeysButton ----
+            selectKeysButton.setText("Select Keys");
+            frame1ContentPane.add(selectKeysButton, CC.xy(47, 33));
+
             //---- createButton ----
             createButton.setText("Create");
             frame1ContentPane.add(createButton, CC.xy(51, 39));
@@ -67,9 +101,11 @@ public class EntityView implements IEntityView {
     }
 
     private void createEntity() {
-        if (entityController.addEntity()) {
+        this.frame1.remove(this.attributePanel);
+        this.entityNameText.setText("Hola");
+        /*if (entityController.addEntity()) {
             this.frame1.setVisible(false);
-        }
+        }*/
     }
 
     @Override
@@ -80,7 +116,7 @@ public class EntityView implements IEntityView {
     @Override
     public void addAttributeView(IAttributeView attributeView) {
         this.attributeView = attributeView;
-        //this.attributePanel = (JPanel) attributeView.getInternalFrame();
+        this.attributePanel = (JPanel) attributeView.getInternalFrame();
     }
 
     @Override
@@ -120,6 +156,8 @@ public class EntityView implements IEntityView {
     private JTextField entityName;
     private JLabel entityTypeText;
     private JComboBox entityTypeComboBox;
+    private JPanel attributePanel;
+    private JButton selectKeysButton;
     private JButton createButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 

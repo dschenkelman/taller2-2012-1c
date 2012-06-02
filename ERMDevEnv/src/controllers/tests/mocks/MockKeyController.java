@@ -7,6 +7,7 @@ import views.IKeysView;
 
 public class MockKeyController implements IKeysController {
     private Iterable<IKey> iKeys;
+    private boolean createdCall = false;
 
     @Override
     public void addSubscriber(IIdGroupEventListener listener) {
@@ -15,7 +16,7 @@ public class MockKeyController implements IKeysController {
 
     @Override
     public void create() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        this.createdCall = true;
     }
 
     @Override
@@ -32,7 +33,10 @@ public class MockKeyController implements IKeysController {
         this.iKeys = iKeys;
     }
 
-    public Iterable<IKey> getKeys(){
+    public Iterable<IKey> getKeys() {
         return this.iKeys;
+    }
+    public boolean createdCalled(){
+        return this.createdCall;
     }
 }

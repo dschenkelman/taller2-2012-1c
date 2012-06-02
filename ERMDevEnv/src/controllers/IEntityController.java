@@ -13,4 +13,6 @@ public interface IEntityController {
     boolean validateEntityName(String name);
 
     void setEntityView(IEntityView entityView);
+
+    void selectKeys();
 }
