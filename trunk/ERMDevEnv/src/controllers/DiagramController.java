@@ -132,16 +132,55 @@ public class DiagramController extends BaseController
 			double centerY = relationshipCell.getGeometry().getCenterY();
 			
 			int attributeCount = relationship.getAttributes().count();
-			double partialAngle = (2 * Math.PI) / attributeCount != 0 ? attributeCount : 0;
-			double currentAngle = 0;
+			
+			Map<UUID, Integer> entityCount = new HashMap<UUID, Integer>();
 			
 			for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
-				this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity);
+				if (!entityCount.containsKey(relationshipEntity.getEntityId()))
+				{
+					entityCount.put(relationshipEntity.getEntityId(), 1);
+				}
+				else
+				{
+					Integer count = entityCount.get(relationshipEntity.getEntityId()); 
+					count++;
+					entityCount.put(relationshipEntity.getEntityId(), count);
+				}
+			}
+			
+			List<UUID> repeatedRelationships = new ArrayList<UUID>();
+			int relationshipEntitiesCount = 0;
+			for (UUID uuid : entityCount.keySet()) {
+				Integer count = entityCount.get(uuid);
+				if (count > 1){
+					repeatedRelationships.add(uuid);
+					relationshipEntitiesCount += count;
+				}
+			}
+			
+			double partialAttributeAngle = attributeCount != 0 ? (2 * Math.PI) / attributeCount : 0;
+			double partialRelationshipEntitiesAngle = relationshipEntitiesCount != 0 ? (2 * Math.PI) / relationshipEntitiesCount : 0;
+			double currentAttributeAngle = 0;
+			double currentRelationshipEntitiesAngle = 0;
+			
+			for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
+				
+				double xExit = 0;
+				double yExit = 0;
+				Boolean useExit = false;
+				if (repeatedRelationships.contains(relationshipEntity.getEntityId())){
+					xExit = Math.cos(currentRelationshipEntitiesAngle) * 0.5 + 0.5;
+					yExit = Math.sin(currentRelationshipEntitiesAngle) * 0.5 + 0.5;
+					currentRelationshipEntitiesAngle += partialRelationshipEntitiesAngle;
+					useExit = true;
+				}
+				
+				this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity, xExit, yExit, useExit);				
 			}
 			
 			for (Attribute attribute : relationship.getAttributes()) {
-				double xDistance = Math.cos(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
-				double yDistance = Math.sin(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
+				double xDistance = Math.cos(currentAttributeAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
+				double yDistance = Math.sin(currentAttributeAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
 				
 				double attributeX = centerX + xDistance;
 				double attributeY = centerY + yDistance;
@@ -151,7 +190,7 @@ public class DiagramController extends BaseController
 				boolean isKey = attribute.isKey();
 				this.addAttributeConnectorToGraph(parent, relationship.getId(), relationshipCell, attribute, attributeCell, isKey);
 				
-				currentAngle += partialAngle;
+				currentAttributeAngle += partialAttributeAngle;
 			}
 		}
 		finally {
@@ -195,7 +234,7 @@ public class DiagramController extends BaseController
 	}
 
 	private mxCell addRelationshipConnectorToGraph(Object parent, Relationship relationship, mxCell relationshipCell,
-			RelationshipEntity relationshipEntity) {
+			RelationshipEntity relationshipEntity, double exitX, double exitY, Boolean useExit) {
 		String cardinalityDisplay = String.format("(%s,%s)", 
 				Cardinality.getStringForCardinality(relationshipEntity
 						.getCardinality().getMinimum()),
@@ -212,8 +251,14 @@ public class DiagramController extends BaseController
 		
 		mxCell entityCell = this.getEntityCell(relationshipEntity.getEntityId().toString());
 		
+		String exitStyle = "";
+		
+		if (useExit){
+			exitStyle = ";" + Styler.getEdgeExitStyle(exitX, exitY);
+		} 
+		
 		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, connectorId, displayValue, 
-				relationshipCell, entityCell, StyleConstants.RELATIONSHIP_CONNECTOR_STYLE);
+				relationshipCell, entityCell, StyleConstants.RELATIONSHIP_CONNECTOR_STYLE + exitStyle);
 		
 		this.relationshipConnectorCells.put(connectorId, connectorCell);
 		
