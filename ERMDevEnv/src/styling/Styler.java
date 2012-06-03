@@ -22,4 +22,8 @@ public class Styler {
 		throw new Exception();
 	}
 
+	public static String getEdgeExitStyle(double exitX, double exitY) {
+		return String.format("exitX=%s;exitY=%s", exitX, exitY);
+	}
+
 }

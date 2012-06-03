@@ -16,7 +16,7 @@ public class StyleConstants {
 	public static double ENTITY_HEIGHT = 30;
 	public static double ATTRIBUTE_WIDTH = 0;
 	public static double ATTRIBUTE_HEIGHT = 0;
-	public static double RELATIONSHIP_HEIGHT = 30;
-	public static double RELATIONSHIP_WIDTH = 30;
+	public static double RELATIONSHIP_HEIGHT = 60;
+	public static double RELATIONSHIP_WIDTH = 60;
 	public static double ATTRIBUTE_DEFAULT_DISTANCE = 70;
 }
