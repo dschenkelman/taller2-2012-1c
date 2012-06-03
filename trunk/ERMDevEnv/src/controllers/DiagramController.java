@@ -4,8 +4,11 @@ import infrastructure.IProjectContext;
 import infrastructure.IterableExtensions;
 import infrastructure.StringExtensions;
 
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,6 +32,9 @@ import models.RelationshipEntity;
 import jgraph.extensions.CustomGraph;
 
 import com.mxgraph.model.mxCell;
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
 
 import controllers.factories.IEntityControllerFactory;
@@ -37,7 +43,7 @@ import controllers.factories.IRelationshipControllerFactory;
 import views.IDiagramView;
 
 public class DiagramController extends BaseController 
-	implements IDiagramController{
+	implements IDiagramController, mxIEventListener{
 
 	private CustomGraph graph;
 	private Map<String, mxCell> entityCells;
@@ -52,6 +58,8 @@ public class DiagramController extends BaseController
 	private IXmlFileManager xmlFileManager;
 	private IXmlManager<Diagram> diagramXmlManager;
 	private IDiagramView diagramView;
+	private List<mxCell> selectedCells;
+	private Point dragStartPoint;
 	
 	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
 			IEntityControllerFactory entityControllerFactory,
@@ -60,9 +68,13 @@ public class DiagramController extends BaseController
 			IXmlManager<Diagram> diagramXmlManager) {
 		super(projectContext);
 		this.diagram = new Diagram();
+		this.selectedCells = new ArrayList<mxCell>();
 		this.entityControllerFactory = entityControllerFactory;
 		this.relationshipControllerFactory = relationshipControllerFactory;
 		this.graph = new CustomGraph();
+						
+		this.graph.getSelectionModel().addListener(mxEvent.CHANGE, this);
+		
 		this.entityCells = new HashMap<String, mxCell>();
 		this.attributeCells = new HashMap<String, mxCell>();
 		this.attributeConnectorCells = new HashMap<String, mxCell>();
@@ -344,13 +356,81 @@ public class DiagramController extends BaseController
 		
 		document.appendChild(element);
 		this.xmlFileManager.write(document, this.diagram.getName() + "-comp");
-		
-		//this.xmlFileManager.write(, filePath)
 	}
-	
+
+
 	public void openDiagram(String path) throws Exception {
 		Document document = this.xmlFileManager.read(path);
 		Element element = document.getDocumentElement();
 		this.diagram = this.diagramXmlManager.getItemFromXmlElement(element);
+	}
+	
+	@Override
+	public void invoke(Object arg0, mxEventObject arg1) {
+		// JGraph has a bug "removed" are those added to the selection. "added" are those that were removed from the selection
+		ArrayList added = arg1.getProperties().containsKey("removed") ? (ArrayList)arg1.getProperties().get("removed") : null;
+		ArrayList removed = arg1.getProperties().containsKey("added") ? (ArrayList)arg1.getProperties().get("added") : null;
+		
+		if (removed != null)
+		{
+			for (Object cell : removed) {
+				this.selectedCells.remove((mxCell)cell);
+			}
+		}
+		
+		if (added != null)
+		{
+			for (Object cell : added) {
+				if (this.entityCells.containsValue(cell) || this.relationshipCells.containsValue(cell))
+				{
+					this.selectedCells.add((mxCell)cell);
+				}
+			}
+		}
+	}
+
+	public void handleDrop(Point end) {
+		if (this.dragStartPoint != null)
+		{
+			double dx = end.getX() - this.dragStartPoint.getX();
+			double dy = end.getY() - this.dragStartPoint.getY();
+			
+			List<mxCell> attributesCellsToMove = new ArrayList<mxCell>();
+			
+			for (mxCell cell : this.selectedCells) {
+				for (String attributeKey : this.attributeCells.keySet()) {
+					if (attributeKey.startsWith(cell.getId()))
+					{
+						mxCell attributeCell = this.attributeCells.get(attributeKey);
+						attributesCellsToMove.add(attributeCell);
+					}
+				}
+			}
+		
+			if (attributesCellsToMove.size() == 0)
+			{
+				return;
+			}
+			
+			this.graph.getModel().beginUpdate();
+			
+			try
+			{
+				this.graph.moveCells(attributesCellsToMove.toArray(), dx, dy);
+			}
+			finally
+			{
+				this.graph.getModel().endUpdate();
+			}
+			
+			this.dragStartPoint = null;
+		}
+	}
+
+	public void handleDragStart(Point start) {
+		if (this.dragStartPoint == null && this.selectedCells.size() != 0)
+		{
+			this.dragStartPoint = new Point(start);
+		}
 	}
 }

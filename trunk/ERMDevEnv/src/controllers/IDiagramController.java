@@ -1,5 +1,7 @@
 package controllers;
 
+import java.awt.Point;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 import views.IDiagramView;
@@ -18,4 +20,6 @@ public interface IDiagramController extends IEntityEventListener, IRelationshipE
 	boolean hasPendingEntity();
 	void save() throws ParserConfigurationException;
 	IDiagramView getView();
+	void handleDrop(Point end);
+	void handleDragStart(Point start);
 }

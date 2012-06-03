@@ -1,8 +1,14 @@
 package views;
 
+import java.awt.Point;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.TooManyListenersException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -15,7 +21,7 @@ import com.mxgraph.swing.mxGraphComponent;
 
 import controllers.IDiagramController;
 
-public class DiagramView extends JPanel implements IDiagramView{
+public class DiagramView extends JPanel implements IDiagramView, DropTargetListener{
 
 	private IDiagramController diagramController;
 	private JButton btnEntity;
@@ -86,6 +92,13 @@ public class DiagramView extends JPanel implements IDiagramView{
 		
 		graphComponent.getGraphControl().addMouseListener(listener);
 		
+		try {
+			graphComponent.getDropTarget().addDropTargetListener(this);
+		} catch (TooManyListenersException e1) {
+			// should not occur
+			e1.printStackTrace();
+		}
+		
 		this.add(graphComponent, "4, 4, 14, 1, fill, fill");
 		
 		this.btnEntity.addMouseListener(new MouseAdapter() {
@@ -101,5 +114,29 @@ public class DiagramView extends JPanel implements IDiagramView{
 				diagramController.createRelationship();
 			}
 		});
+	}
+
+	@Override
+	public void dragEnter(DropTargetDragEvent dtde) {
+		Point point = dtde.getLocation();
+		this.diagramController.handleDragStart(point);
+	}
+
+	@Override
+	public void dragExit(DropTargetEvent dte) {
+	}
+
+	@Override
+	public void dragOver(DropTargetDragEvent dtde) {
+	}
+
+	@Override
+	public void drop(DropTargetDropEvent dtde) {
+		Point point = dtde.getLocation();
+		this.diagramController.handleDrop(point);
+	}
+
+	@Override
+	public void dropActionChanged(DropTargetDragEvent dtde) {
 	}
 }
