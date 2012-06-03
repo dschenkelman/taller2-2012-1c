@@ -1,6 +1,9 @@
 package controllers.tests;
 
 
+import java.awt.Point;
+import java.util.ArrayList;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 import infrastructure.Func;
@@ -20,6 +23,7 @@ import org.w3c.dom.Element;
 import persistence.tests.TestUtilities;
 
 import com.mxgraph.model.mxCell;
+import com.mxgraph.util.mxEventObject;
 
 import controllers.DiagramController;
 import controllers.tests.mocks.MockDiagramView;
@@ -344,6 +348,87 @@ public class DiagramControllerTestCase {
 		Assert.assertSame(document, this.xmlFileManager.getDocumentToSave());
 		Assert.assertEquals("diagram", ((Element)document.getFirstChild()).getTagName());
 		Assert.assertEquals("Diagram-comp", this.xmlFileManager.getPathToSave());
+	}
+	
+	@Test
+	public void TestShouldMoveAttributesWhenMovingRelationshipNodeOrEntity() throws Exception
+	{
+		Entity entity1 = new Entity("Entity1");
+		entity1.getAttributes().addAttribute("Attribute1");
+		
+		Entity entity2 = new Entity("Entity2");
+		entity2.getAttributes().addAttribute("Attribute1");
+		
+		DiagramController diagramController = this.createController();
+		
+		this.addEntityToDiagram(diagramController, entity1, 20, 30);
+		this.addEntityToDiagram(diagramController, entity2, 60, 30);
+		
+		RelationshipEntity relationshipEntity11 = 
+			new RelationshipEntity(entity1, new Cardinality(0, 1), "Role1");
+		RelationshipEntity relationshipEntity12 = 
+			new RelationshipEntity(entity1, new Cardinality(1, 1), "Role2");
+		RelationshipEntity relationshipEntity2 = 
+			new RelationshipEntity(entity2, new Cardinality(0, Double.POSITIVE_INFINITY), "");
+		
+		Relationship relationship = new Relationship(relationshipEntity11, relationshipEntity12);
+		relationship.setName("Relationship");
+		relationship.addRelationshipEntity(relationshipEntity2);
+		
+		relationship.getAttributes().addAttribute("Attribute1");
+		
+		diagramController.handleCreatedEvent(relationship);
+		
+		mxCell entity1Cell = diagramController.getEntityCell(entity1.getId().toString());
+		mxCell entity2Cell = diagramController.getEntityCell(entity1.getId().toString());
+		mxCell relationshipCell = diagramController.getRelationshipCell(relationship.getId().toString());
+		
+		mxEventObject eventObject = new mxEventObject("name");
+		
+		// there is a bug in JGraph. "removed" means added to selection, and "added" means removed from selection
+		ArrayList<Object> added = new ArrayList<Object>();
+		ArrayList<Object> removed = new ArrayList<Object>();
+		removed.add(entity1Cell);
+		removed.add(entity2Cell);
+		eventObject.getProperties().put("removed", removed);
+		diagramController.invoke(null, eventObject);
+		
+		added.add(entity2Cell);
+		removed.clear();
+		removed.add(relationshipCell);
+		eventObject.getProperties().put("removed", removed);
+		eventObject.getProperties().put("added", added);
+		diagramController.invoke(null, eventObject);
+		
+		Point start = new Point(20, 30);
+		
+		Point end = new Point(80, 40);
+		
+		mxCell entity1Attribute = diagramController.getAttributeCell(entity1.getId().toString()+"Attribute1");
+		mxCell entity2Attribute = diagramController.getAttributeCell(entity2.getId().toString()+"Attribute1");
+		mxCell relationshipAttribute = diagramController.getAttributeCell(relationship.getId().toString()+"Attribute1");
+		
+		double entity1AttributeStartX = entity1Attribute.getGeometry().getX();
+		double entity1AttributeStartY = entity1Attribute.getGeometry().getY();
+		
+		double entity2AttributeStartX = entity2Attribute.getGeometry().getX();
+		double entity2AttributeStartY = entity2Attribute.getGeometry().getY();
+		
+		double relationshipAttributeStartX = relationshipAttribute.getGeometry().getX();
+		double relationshipAttributeStartY = relationshipAttribute.getGeometry().getY();
+		
+		diagramController.handleDragStart(start);
+		
+		diagramController.handleDrop(end);
+		
+		Assert.assertEquals(entity1AttributeStartX + 60, entity1Attribute.getGeometry().getX(), 0);
+		Assert.assertEquals(entity1AttributeStartY + 10, entity1Attribute.getGeometry().getY(), 0);
+		
+		Assert.assertEquals(entity2AttributeStartX, entity2Attribute.getGeometry().getX(), 0);
+		Assert.assertEquals(entity2AttributeStartY, entity2Attribute.getGeometry().getY(), 0);
+		
+		Assert.assertEquals(relationshipAttributeStartX + 60, relationshipAttribute.getGeometry().getX(), 0);
+		Assert.assertEquals(relationshipAttributeStartY + 10, relationshipAttribute.getGeometry().getY(), 0);
 	}
 	
 	@Test

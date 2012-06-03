@@ -5,8 +5,8 @@ public class StyleConstants {
 	public static String ATTRIBUTE_STYLE = "fontSize=9;strokeColor=white;fillColor=white;gradientColor=white;verticalAlign=top;align=center";
 	public static String ATTRIBUTE_LINK_STYLE = "endArrow=emptyCircle";
 	public static String KEY_ATTRIBUTE_LINK_STYLE = "endArrow=oval";
-	public static String RELATIONSHIP_STYLE = "shape=rhombus;perimeter=rhombusPerimeter;portConstraint=eastwestsouthnorth";
-	public static String RELATIONSHIP_CONNECTOR_STYLE = "endArrow=none;edgeStyle=elbowEdgeStyle;verticalAlign=bottom;align=left";
+	public static String RELATIONSHIP_STYLE = "shape=rhombus;perimeter=rhombusPerimeter;portConstraint=eastwestsouthnorth;fillColor=#A7ABAB;strokeColor=#A7ABAB";
+	public static String RELATIONSHIP_CONNECTOR_STYLE = "endArrow=none;edgeStyle=elbowEdgeStyle;verticalAlign=bottom;align=left;strokeColor=#FF0000";
 	public static String THING_COLOR = "fillColor=#F684B6";
 	public static String DOMAIN_COLOR = "fillColor=#A9A4ED";
 	public static String HISTORIC_COLOR = "fillColor=#A4EDA8";
