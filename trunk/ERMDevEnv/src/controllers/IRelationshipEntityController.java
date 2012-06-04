@@ -6,6 +6,7 @@ import java.util.UUID;
 import models.Cardinality;
 import models.RelationshipEntity;
 
+import views.IRelationshipEntityView;
 import views.RelatinshipEntityView;
 
 public interface IRelationshipEntityController {
@@ -15,6 +16,7 @@ public interface IRelationshipEntityController {
 	public void modify(UUID uuid,Cardinality card, String role);
 	public void remove(UUID uuid);
 	public List<RelationshipEntity> getRelationshipEntities();
-	public void setRelationshipEntityView (RelatinshipEntityView view);
+	public void setRelationshipEntityView (IRelationshipEntityView view);
+	void addCreateListener(IRelationshipEntityEventListener listener);
 		
 }
