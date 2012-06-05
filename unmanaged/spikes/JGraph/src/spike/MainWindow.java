@@ -3,16 +3,21 @@ package spike;
 import java.awt.EventQueue;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.swing.JFrame;
 
+import org.w3c.dom.Document;
+
 import com.mxgraph.canvas.mxGraphics2DCanvas;
-import com.mxgraph.layout.orthogonal.mxOrthogonalLayout;
+import com.mxgraph.io.mxCodec;
 import com.mxgraph.shape.mxIMarker;
 import com.mxgraph.shape.mxMarkerRegistry;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxPoint;
+import com.mxgraph.util.mxXmlUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 
@@ -101,30 +106,21 @@ public class MainWindow {
 		graph.getModel().beginUpdate();
 		try 
 		{
-			Object billEntry = graph.insertVertex(parent, null, "BillEntry", 170, 0,
+			Object relationshipNode = graph.insertVertex(parent, null, "", 210, 50,
+					0, 0);
+			Object person = graph.insertVertex(parent, null, "Persona", 170, 0,
 					80, 30);
-			Object product = graph.insertVertex(parent, null, "Product", 240, 150,
-					60, 30);
-			Object productName = graph.insertVertex(parent, null, "Name", 320, 190,
-					0, 0,"fontSize=9;strokeColor=white;fillColor=white;gradientColor=white;verticalAlign=top;align=center");
-			Object productPrice = graph.insertVertex(parent, null, "Price", 320, 160,
-					0, 0,"fontSize=9;strokeColor=white;fillColor=white;gradientColor=white;verticalAlign=top;align=center");
-			Object bill = graph.insertVertex(parent, null, "Bill", 100, 150,
-					60, 30);
-			Object linkProductEntry = graph.insertVertex(parent, null, "", 240, 70,
-					30, 30, "shape=rhombus;perimeter=rhombusPerimeter");	
-			Object linkBillEntry = graph.insertVertex(parent, null, "", 100, 70,
-					30, 30, "shape=rhombus;perimeter=rhombusPerimeter");
+			Object student = graph.insertVertex(parent, null, "Estudiante", 100, 100,
+					80, 30);
+			Object teacher = graph.insertVertex(parent, null, "Docente", 240, 100,
+					80, 30);
+			Object other = graph.insertVertex(parent, null, "No Docente", 330, 100,
+					80, 30);
 			
-			graph.insertEdge(parent, null, "(1,n)", bill, linkBillEntry, "endArrow=none;edgeStyle=elbowEdgeStyle;verticalAlign=bottom;align=left");
-			graph.insertEdge(parent, null, "(0,n)", product, linkProductEntry, "endArrow=none;edgeStyle=elbowEdgeStyle;verticalAlign=bottom;align=left");
-			graph.insertEdge(parent, null, "(1,1)", billEntry, linkProductEntry, "endArrow=none;edgeStyle=elbowEdgeStyle;verticalAlign=bottom;align=left");
-			graph.insertEdge(parent, null, "(1,1)", billEntry, linkBillEntry, "endArrow=none;edgeStyle=elbowEdgeStyle;verticalAlign=bottom;align=left");
-			graph.insertEdge(parent, null, "", product, productName, "endArrow=oval");
-			graph.insertEdge(parent, null, "", product, productPrice, "endArrow=emptyCircle");
-			Object keyEdge1 = graph.insertEdge(parent, null, "", billEntry, bill, "endArrow=none;");
-			Object keyEdge2 = graph.insertEdge(parent, null, "", billEntry, product, "endArrow=none;");
-			graph.insertEdge(parent, null, "", keyEdge1, keyEdge2, "endArrow=oval;startArrow=oval");
+			graph.insertEdge(parent, null, "", student, relationshipNode, "endArrow=none;edgeStyle=orthogonalEdgeStyle;verticalAlign=bottom;align=left;exitX=0.5;exitY=0");
+			graph.insertEdge(parent, null, "", teacher, relationshipNode, "endArrow=none;edgeStyle=orthogonalEdgeStyle;verticalAlign=bottom;align=left;exitX=0.5;exitY=0");
+			graph.insertEdge(parent, null, "", other, relationshipNode, "endArrow=none;edgeStyle=orthogonalEdgeStyle;verticalAlign=bottom;align=left;exitX=0.5;exitY=0");
+			graph.insertEdge(parent, null, "", relationshipNode, person, "endArrow=block;edgeStyle=orthogonalEdgeStyle;verticalAlign=bottom;align=left;");			
 		} 
 		finally
 		{
@@ -133,6 +129,24 @@ public class MainWindow {
 		
 		mxGraphComponent graphComponent = new mxGraphComponent(graph);
 		
+//		mxCodec codec = new mxCodec();
+//		String xml = mxXmlUtils.getXml(codec.encode(graph.getModel()));
+//			
+//		
+//		FileWriter writer = new FileWriter(new File("graph.xml"));
+//		writer.write(xml);
+//		writer.close();
+		
+//		byte[] buffer = new byte[(int) new File("graph.xml").length()];
+//		FileInputStream f = new FileInputStream("graph.xml");
+//		f.read(buffer);
+//		String xml = new String(buffer);
+//		
+//		Document document = mxXmlUtils.parseXml(xml);
+//		
+//		mxCodec codec = new mxCodec(document);
+//		codec.decode(document.getDocumentElement(), graph.getModel());
+			
 		frame.getContentPane().add(graphComponent);
 	}
 
