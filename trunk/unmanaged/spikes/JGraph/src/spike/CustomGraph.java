@@ -6,12 +6,12 @@ public class CustomGraph extends mxGraph
 {
 	public CustomGraph()
 	{
-		this.cellsEditable = false;
-		this.cellsResizable = false;
-		this.cellsBendable = false;
-		this.cellsCloneable = false;
-		this.cellsDeletable = false;
-		this.cellsDisconnectable = false;
+		this.cellsEditable = true;
+		this.cellsResizable = true;
+		this.cellsBendable = true;
+		this.cellsCloneable = true;
+		this.cellsDeletable = true;
+		this.cellsDisconnectable = true;
 	}
 	
 	@Override
