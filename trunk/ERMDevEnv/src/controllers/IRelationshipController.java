@@ -1,5 +1,10 @@
 package controllers;
 
+import java.util.List;
+
+import models.Attribute;
+import models.RelationshipEntity;
+
 public interface IRelationshipController {
 	
 	void create();
@@ -12,6 +17,8 @@ public interface IRelationshipController {
 	void add();
 	
 	void setRealationshipView ();
+	List<Attribute> getAttributes();
+	List<RelationshipEntity> getRelationshipEntities();
 	
 	
 }

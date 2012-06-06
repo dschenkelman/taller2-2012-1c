@@ -1,8 +1,19 @@
 package controllers;
 
+import infrastructure.IProjectContext;
 import infrastructure.ProjectContext;
 
 import java.util.UUID;
+
+import views.IRelationshipView;
+import views.mock.MockRelationshipView;
+import controllers.factories.IAttributeControllerFactory;
+import controllers.factories.IRelationshipEntityControllerFactory;
+import controllers.factories.IStrongEntityControllerFactory;
+import controllers.factories.mock.MockRelationshipEntityControllerFactory;
+import controllers.tests.mocks.MockAttributeControllerFactory;
+import controllers.tests.mocks.MockProjectContext;
+import controllers.tests.mocks.MockStrongEntityControllerFactory;
 
 import models.Relationship;
 
@@ -16,6 +27,16 @@ public class RelationshipController implements IRelationshipController {
 		
 	}
 	
+	public RelationshipController(
+			IProjectContext pContext,
+			IRelationshipView view,
+			IAttributeControllerFactory attributeControllerFactory,
+			IStrongEntityControllerFactory strongEntityControllerFactory,
+			IRelationshipEntityControllerFactory relationshipEntityControllerFactory) {
+		
+		
+	}
+
 	@Override
 	public void create() {
 		// TODO Auto-generated method stub

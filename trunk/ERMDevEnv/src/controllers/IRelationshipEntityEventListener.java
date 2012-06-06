@@ -1,5 +1,8 @@
 package controllers;
 
-public interface IRelationshipEntityEventListener {
 
+import models.RelationshipEntity;
+
+public interface IRelationshipEntityEventListener {
+	public void handleCreatedEvent(RelationshipEntity relationshipEntity);
 }

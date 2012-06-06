@@ -13,10 +13,10 @@ public interface IRelationshipEntityController {
 
 	public void create();
 	public void add(UUID uuid,Cardinality card, String role);
-	public void modify(UUID uuid,Cardinality card, String role);
-	public void remove(UUID uuid);
+	public void modify(UUID uuid,Cardinality card, String role) throws Exception;
+	public void remove(UUID uuid) throws Exception;
 	public List<RelationshipEntity> getRelationshipEntities();
 	public void setRelationshipEntityView (IRelationshipEntityView view);
-	void addCreateListener(IRelationshipEntityEventListener listener);
-		
+	void addSuscriber(IRelationshipEntityEventListener listener);
+	
 }
