@@ -1,7 +1,9 @@
 package controllers.factories;
 
+import java.util.List;
 import java.util.Random;
 
+import models.Attribute;
 import models.Cardinality;
 import models.Entity;
 import models.Relationship;
@@ -75,6 +77,18 @@ public class RelationshipControllerFactory implements
 
 			@Override
 			public String getName() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public List<Attribute> getAttributes() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public List<RelationshipEntity> getRelationshipEntities() {
 				// TODO Auto-generated method stub
 				return null;
 			}

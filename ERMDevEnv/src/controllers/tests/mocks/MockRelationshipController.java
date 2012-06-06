@@ -3,6 +3,9 @@ package controllers.tests.mocks;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Attribute;
+import models.RelationshipEntity;
+
 import controllers.IRelationshipController;
 import controllers.IRelationshipEventListener;
 
@@ -62,6 +65,18 @@ public class MockRelationshipController implements IRelationshipController{
 	public void setRealationshipView() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<Attribute> getAttributes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<RelationshipEntity> getRelationshipEntities() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

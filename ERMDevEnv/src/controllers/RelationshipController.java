@@ -3,6 +3,7 @@ package controllers;
 import infrastructure.IProjectContext;
 import infrastructure.ProjectContext;
 
+import java.util.List;
 import java.util.UUID;
 
 import views.IRelationshipView;
@@ -15,7 +16,9 @@ import controllers.tests.mocks.MockAttributeControllerFactory;
 import controllers.tests.mocks.MockProjectContext;
 import controllers.tests.mocks.MockStrongEntityControllerFactory;
 
+import models.Attribute;
 import models.Relationship;
+import models.RelationshipEntity;
 
 public class RelationshipController implements IRelationshipController {
 
@@ -76,6 +79,18 @@ public class RelationshipController implements IRelationshipController {
 	
 	@Override
 	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Attribute> getAttributes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<RelationshipEntity> getRelationshipEntities() {
 		// TODO Auto-generated method stub
 		return null;
 	}
