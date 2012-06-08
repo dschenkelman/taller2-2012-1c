@@ -34,7 +34,7 @@ public class StrongEntityCollection implements Iterable<IStrongEntity>{
 
     @Override
     public Iterator<IStrongEntity> iterator() {
-        return this.strongEntities.iterator();
+    	return this.strongEntities.iterator();
     }
 
     public IStrongEntity getStrongEntity(String strongEntity) {

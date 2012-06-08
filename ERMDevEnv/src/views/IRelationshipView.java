@@ -1,9 +1,11 @@
 package views;
 
-import controllers.RelationshipController;
+import controllers.IRelationshipController;
 
 public interface IRelationshipView {
 
-	RelationshipController getController();
+	IRelationshipController getController();
+
+	void setController(IRelationshipController relationshipController);
 	
 }

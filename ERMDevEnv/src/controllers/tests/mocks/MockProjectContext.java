@@ -28,4 +28,9 @@ public class MockProjectContext implements IProjectContext {
     public void setPossibleAttributes(Iterable<INameable> attributeIterable){
         this.attributes = attributeIterable;
     }
+
+	public void setRelationshipCollection(List<Relationship> relationships) {
+		// TODO Auto-generated method stub
+		
+	}
 }

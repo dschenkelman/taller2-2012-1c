@@ -2,12 +2,14 @@ package controllers.factories;
 
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import models.Attribute;
 import models.Cardinality;
 import models.Entity;
 import models.Relationship;
 import models.RelationshipEntity;
+import models.StrongEntityCollection;
 import controllers.IRelationshipController;
 import controllers.IRelationshipEventListener;
 import controllers.factories.mock.MockEntityControllerFactory;
@@ -57,12 +59,7 @@ public class RelationshipControllerFactory implements
 				return false;
 			}
 
-			@Override
-			public void add() {
-				// TODO Auto-generated method stub
-				
-			}
-
+		
 			@Override
 			public void setRealationshipView() {
 				// TODO Auto-generated method stub
@@ -91,6 +88,38 @@ public class RelationshipControllerFactory implements
 			public List<RelationshipEntity> getRelationshipEntities() {
 				// TODO Auto-generated method stub
 				return null;
+			}
+
+			@Override
+			public void addRelationshipEntity(
+					RelationshipEntity relationshipEntity) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void addRelationshipEntity(UUID randomUUID,
+					Cardinality cardinality, String role) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void addRealationship() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public StrongEntityCollection getStrongEntities() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public int getType() {
+				// TODO Auto-generated method stub
+				return 0;
 			}
 		};
 	}
