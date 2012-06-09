@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.picocontainer.MutablePicoContainer;
 import persistence.DiagramXmlManager;
+import persistence.GraphPersistenceService;
+import persistence.IGraphPersistenceService;
 import persistence.IXmlFileManager;
 import persistence.IXmlManager;
 import persistence.XmlFileManager;
@@ -54,7 +56,7 @@ public class BootstrapperTests {
 		
 		bootstrapper.run();
 		
-		Assert.assertEquals(12, this.container.getMappings().size());
+		Assert.assertEquals(13, this.container.getMappings().size());
 		Assert.assertSame(this.container, this.container.getMappings().get(MutablePicoContainer.class));
 		Assert.assertSame(DiagramController.class, this.container.getMappings().get(IDiagramController.class));
 		Assert.assertSame(DiagramView.class, this.container.getMappings().get(IDiagramView.class));
@@ -67,6 +69,7 @@ public class BootstrapperTests {
 		Assert.assertSame(StrongEntityControllerFactory.class, this.container.getMappings().get(IStrongEntityControllerFactory.class));
 		Assert.assertSame(AttributeControllerFactory.class, this.container.getMappings().get(IAttributeControllerFactory.class));
 		Assert.assertSame(KeyControllerFactory.class, this.container.getMappings().get(IKeysControllerFactory.class));
+		Assert.assertSame(GraphPersistenceService.class, this.container.getMappings().get(IGraphPersistenceService.class));
 	}
 	
 	private TestableBootstrapper createBootstrapper(){

@@ -13,6 +13,7 @@ import java.util.TooManyListenersException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.xml.parsers.ParserConfigurationException;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -27,7 +28,8 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 	private IDiagramController diagramController;
 	private JButton btnEntity;
 	private JButton btnRelationship;
-	private Component btnHierarchy;
+	private JButton btnHierarchy;
+	private JButton btnSave;
 
 	/**
 	 * Create the panel.
@@ -68,6 +70,9 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 		
 		this.btnHierarchy = new JButton("Jerarquia");
 		add(this.btnHierarchy, "8, 2");
+		
+		this.btnSave = new JButton("Grabar");
+		add(this.btnSave, "10, 2");
 	}
 
 	@Override
@@ -121,6 +126,17 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				diagramController.createHierarchy();
+			}
+		});
+		
+		this.btnSave.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					diagramController.save();
+				} catch (ParserConfigurationException exception) {
+					exception.printStackTrace();
+				}
 			}
 		});
 	}

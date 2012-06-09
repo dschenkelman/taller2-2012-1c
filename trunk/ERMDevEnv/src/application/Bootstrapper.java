@@ -19,6 +19,8 @@ import com.mxgraph.shape.mxMarkerRegistry;
 import com.mxgraph.util.mxPoint;
 
 import persistence.DiagramXmlManager;
+import persistence.GraphPersistenceService;
+import persistence.IGraphPersistenceService;
 import persistence.IXmlFileManager;
 import persistence.IXmlManager;
 import persistence.XmlFileManager;
@@ -74,6 +76,7 @@ public class Bootstrapper {
 					.addComponent(IHierarchyControllerFactory.class, MockHierarchyControllerFactory.class)
 					.addComponent(IStrongEntityControllerFactory.class, StrongEntityControllerFactory.class)
 					.addComponent(IKeysControllerFactory.class, KeyControllerFactory.class)
+					.addComponent(IGraphPersistenceService.class, GraphPersistenceService.class)
 					.addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class);
 	}
 
