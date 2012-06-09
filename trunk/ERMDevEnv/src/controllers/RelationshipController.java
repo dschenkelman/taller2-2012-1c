@@ -54,9 +54,7 @@ public class RelationshipController implements IRelationshipController {
 		this.view = view;
 		this.attributeControllerFactory = attributeControllerFactory;
 		this.strongEntityControllerFactory = strongEntityControllerFactory;
-		this.relationshipEntityControllerFactory = relationshipEntityControllerFactory;
-		
-		
+		this.relationshipEntityControllerFactory = relationshipEntityControllerFactory;	
 	}
 
 	@Override
@@ -65,7 +63,6 @@ public class RelationshipController implements IRelationshipController {
 		relEntController = relationshipEntityControllerFactory.create(pendingRelationship);
 		attController = this.attributeControllerFactory.create(new AttributeCollection());
 		strongEntController = strongEntityControllerFactory.create(new StrongEntityCollection());
-		
 	}
 
 	@Override
@@ -95,7 +92,7 @@ public class RelationshipController implements IRelationshipController {
 	}
 
 	@Override
-	public void setRealationshipView(IRelationshipView view) {
+	public void setRelationshipView(IRelationshipView view) {
 		this.view = view;		
 	}
 
@@ -123,7 +120,7 @@ public class RelationshipController implements IRelationshipController {
 	}
 
 	@Override
-	public void addRealationship() {
+	public void addRelationship() {
 		
 		
 	}

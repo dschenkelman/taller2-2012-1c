@@ -2,6 +2,8 @@ package controllers.tests;
 
 import static org.junit.Assert.*;
 
+import infrastructure.IterableExtensions;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -129,7 +131,7 @@ public class RelationshipControllerTest {
 		relController.create();
 		assertTrue(view.getController() == relController);
 		assertTrue(view.visible == true);
-		assertTrue(relController.getAttributes().size() == 0);
+		assertTrue(IterableExtensions.count(relController.getAttributes()) == 0);
 		assertTrue(0 == relController.getRelationshipEntities().size() );
 		assertTrue(0 == relController.getStrongEntities().count());
 	}
@@ -157,7 +159,7 @@ public class RelationshipControllerTest {
 		
 		relController.create();
 		relController.setName("Relationship1");
-		relController.addRealationship();
+		relController.addRelationship();
 		
 	}
 
@@ -176,7 +178,7 @@ public class RelationshipControllerTest {
 		}
 			
 		//throws exception because there are 2 Relationships with the same name	
-		relController.addRealationship();
+		relController.addRelationship();
 	}
 
 	@Test
@@ -193,7 +195,7 @@ public class RelationshipControllerTest {
 		}
 			
 		
-		relController.addRealationship();
+		relController.addRelationship();
 		assertTrue (relationships.size() == 1);
 		assertTrue (relController.getType() == 2);
 	}

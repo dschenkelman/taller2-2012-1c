@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import views.IRelationshipView;
+
 import models.Attribute;
 import models.Cardinality;
 import models.RelationshipEntity;
@@ -58,13 +60,6 @@ public class MockRelationshipController implements IRelationshipController{
 		return false;
 	}
 
-
-	@Override
-	public void setRealationshipView() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public List<Attribute> getAttributes() {
 		// TODO Auto-generated method stub
@@ -91,7 +86,7 @@ public class MockRelationshipController implements IRelationshipController{
 	}
 
 	@Override
-	public void addRealationship() {
+	public void addRelationship() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -106,6 +101,18 @@ public class MockRelationshipController implements IRelationshipController{
 	public int getType() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void isComposition(boolean composition) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setRelationshipView(IRelationshipView view) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import views.IRelationshipView;
+
 import models.Attribute;
 import models.Cardinality;
 import models.Entity;
@@ -59,13 +61,6 @@ public class RelationshipControllerFactory implements
 				return false;
 			}
 
-		
-			@Override
-			public void setRealationshipView() {
-				// TODO Auto-generated method stub
-				
-			}
-
 			@Override
 			public void setName(String name) {
 				// TODO Auto-generated method stub
@@ -105,7 +100,7 @@ public class RelationshipControllerFactory implements
 			}
 
 			@Override
-			public void addRealationship() {
+			public void addRelationship() {
 				// TODO Auto-generated method stub
 				
 			}
@@ -120,6 +115,18 @@ public class RelationshipControllerFactory implements
 			public int getType() {
 				// TODO Auto-generated method stub
 				return 0;
+			}
+
+			@Override
+			public void isComposition(boolean composition) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void setRelationshipView(IRelationshipView view) {
+				// TODO Auto-generated method stub
+				
 			}
 		};
 	}
