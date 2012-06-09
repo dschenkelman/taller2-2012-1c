@@ -9,7 +9,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import infrastructure.Func;
 import infrastructure.IterableExtensions;
 import models.Cardinality;
-import models.Diagram;
 import models.Entity;
 import models.Relationship;
 import models.RelationshipEntity;
@@ -30,6 +29,8 @@ import controllers.tests.mocks.MockDiagramView;
 import controllers.tests.mocks.MockDiagramXmlManager;
 import controllers.tests.mocks.MockEntityController;
 import controllers.tests.mocks.MockEntityControllerFactory;
+import controllers.tests.mocks.MockHierarchyController;
+import controllers.tests.mocks.MockHierarchyControllerFactory;
 import controllers.tests.mocks.MockProjectContext;
 import controllers.tests.mocks.MockRelationshipController;
 import controllers.tests.mocks.MockRelationshipControllerFactory;
@@ -45,6 +46,8 @@ public class DiagramControllerTestCase {
 	private MockRelationshipController relationshipController;
 	private MockXmlFileManager xmlFileManager;
 	private MockDiagramXmlManager diagramXmlManager;
+	private MockHierarchyController hierarchyController;
+	private MockHierarchyControllerFactory hierarchyControllerFactory;
 
 	@Before
 	public void setUp() throws Exception {
@@ -58,6 +61,9 @@ public class DiagramControllerTestCase {
 		this.relationshipControllerFactory.setController(this.relationshipController);
 		this.xmlFileManager = new MockXmlFileManager();
 		this.diagramXmlManager = new MockDiagramXmlManager();
+		this.hierarchyController = new MockHierarchyController();
+		this.hierarchyControllerFactory = new MockHierarchyControllerFactory();
+		this.hierarchyControllerFactory.setController(this.hierarchyController);
 	}
 	
 	@Test
@@ -444,6 +450,31 @@ public class DiagramControllerTestCase {
 		Assert.assertSame(this.diagramXmlManager.getDiagramRelatedToElement(), controller.getDiagram());
 	}
 	
+	@Test
+	public void testShouldCreateHierarchyThroughHierarchyControllerWhenCreatingHierarchy(){
+		DiagramController diagramController = this.createController();
+		
+		Assert.assertEquals(0, this.hierarchyController.getCreateCallsCount());
+		Assert.assertEquals(0, this.hierarchyControllerFactory.getCreateCallsCount());
+		
+		diagramController.createHierarchy();
+		
+		Assert.assertEquals(1, this.hierarchyControllerFactory.getCreateCallsCount());
+		Assert.assertEquals(1, this.hierarchyController.getCreateCallsCount());
+	}
+	
+	@Test
+	public void testShouldAddSubscriptionToHierarchyCreatedToController(){
+		DiagramController diagramController = this.createController();
+		
+		Assert.assertEquals(0, this.hierarchyController.getListeners().size());
+				
+		diagramController.createHierarchy();
+		
+		Assert.assertEquals(1, this.hierarchyController.getListeners().size());
+		Assert.assertSame(diagramController, this.hierarchyController.getListeners().get(0));
+	}
+	
 	private void addEntityToDiagram(DiagramController diagramController, 
 			Entity entity, double x, double y) throws Exception {
 		diagramController.createEntity();
@@ -453,7 +484,8 @@ public class DiagramControllerTestCase {
 	
 	private DiagramController createController() {
 		return new DiagramController(this.projectContext, this.diagramView,
-				this.entityControllerFactory, this.relationshipControllerFactory, this.xmlFileManager, this.diagramXmlManager);
+				this.entityControllerFactory, this.relationshipControllerFactory, 
+				this.hierarchyControllerFactory, this.xmlFileManager, this.diagramXmlManager);
 	}
 
 }

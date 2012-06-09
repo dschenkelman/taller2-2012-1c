@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.omg.CORBA.IntHolder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -26,6 +27,7 @@ import models.Attribute;
 import models.Cardinality;
 import models.Diagram;
 import models.Entity;
+import models.Hierarchy;
 import models.Relationship;
 import models.RelationshipEntity;
 
@@ -38,6 +40,7 @@ import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
 
 import controllers.factories.IEntityControllerFactory;
+import controllers.factories.IHierarchyControllerFactory;
 import controllers.factories.IRelationshipControllerFactory;
 
 import views.IDiagramView;
@@ -60,10 +63,12 @@ public class DiagramController extends BaseController
 	private IDiagramView diagramView;
 	private List<mxCell> selectedCells;
 	private Point dragStartPoint;
+	private IHierarchyControllerFactory hierarchyControllerFactory;
 	
 	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
 			IEntityControllerFactory entityControllerFactory,
 			IRelationshipControllerFactory relationshipControllerFactory,
+			IHierarchyControllerFactory hierarchyControllerFactory,
 			IXmlFileManager xmlFileManager,
 			IXmlManager<Diagram> diagramXmlManager) {
 		super(projectContext);
@@ -71,6 +76,7 @@ public class DiagramController extends BaseController
 		this.selectedCells = new ArrayList<mxCell>();
 		this.entityControllerFactory = entityControllerFactory;
 		this.relationshipControllerFactory = relationshipControllerFactory;
+		this.hierarchyControllerFactory = hierarchyControllerFactory;
 		this.graph = new CustomGraph();
 						
 		this.graph.getSelectionModel().addListener(mxEvent.CHANGE, this);
@@ -477,5 +483,17 @@ public class DiagramController extends BaseController
 		{
 			this.dragStartPoint = new Point(start);
 		}
+	}
+
+	@Override
+	public void createHierarchy() {
+		IHierarchyController hierarchyController = this.hierarchyControllerFactory.create();
+		hierarchyController.addSuscriber(this);
+		hierarchyController.create();
+	}
+
+	@Override
+	public void handleCreatedEvent(Hierarchy hierarchy) {
+		
 	}
 }
