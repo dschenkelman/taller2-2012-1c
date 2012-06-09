@@ -30,6 +30,7 @@ import controllers.tests.mocks.MockDiagramView;
 import controllers.tests.mocks.MockDiagramXmlManager;
 import controllers.tests.mocks.MockEntityController;
 import controllers.tests.mocks.MockEntityControllerFactory;
+import controllers.tests.mocks.MockGraphPersistenceService;
 import controllers.tests.mocks.MockHierarchyController;
 import controllers.tests.mocks.MockHierarchyControllerFactory;
 import controllers.tests.mocks.MockProjectContext;
@@ -49,6 +50,7 @@ public class DiagramControllerTestCase {
 	private MockDiagramXmlManager diagramXmlManager;
 	private MockHierarchyController hierarchyController;
 	private MockHierarchyControllerFactory hierarchyControllerFactory;
+	private MockGraphPersistenceService graphPersistenceService;
 
 	@Before
 	public void setUp() throws Exception {
@@ -65,6 +67,7 @@ public class DiagramControllerTestCase {
 		this.hierarchyController = new MockHierarchyController();
 		this.hierarchyControllerFactory = new MockHierarchyControllerFactory();
 		this.hierarchyControllerFactory.setController(this.hierarchyController);
+		this.graphPersistenceService = new MockGraphPersistenceService();
 	}
 	
 	@Test
@@ -344,12 +347,17 @@ public class DiagramControllerTestCase {
 		Assert.assertNull(this.xmlFileManager.getDocumentToSave());
 		Assert.assertNull(this.xmlFileManager.getPathToSave());
 		Assert.assertFalse(this.xmlFileManager.wasCreateDocumentCalled());
+		Assert.assertEquals(0, this.graphPersistenceService.getSaveCalls());
+		Assert.assertNull(this.graphPersistenceService.getGraphToSave());
 		
 		controller.save();
 		
 		Assert.assertTrue(this.xmlFileManager.wasCreateDocumentCalled());
 		Assert.assertNotNull(this.xmlFileManager.getDocumentToSave());
 		Assert.assertNotNull(this.xmlFileManager.getPathToSave());
+		
+		Assert.assertEquals(1, this.graphPersistenceService.getSaveCalls());
+		Assert.assertSame(controller.getGraph(), this.graphPersistenceService.getGraphToSave());
 		
 		Assert.assertSame(controller.getDiagram(), this.diagramXmlManager.getDiagramRelatedToElement());
 		Assert.assertSame(document, this.xmlFileManager.getDocumentToSave());
@@ -545,7 +553,7 @@ public class DiagramControllerTestCase {
 	private DiagramController createController() {
 		return new DiagramController(this.projectContext, this.diagramView,
 				this.entityControllerFactory, this.relationshipControllerFactory, 
-				this.hierarchyControllerFactory, this.xmlFileManager, this.diagramXmlManager);
+				this.hierarchyControllerFactory, this.xmlFileManager, this.diagramXmlManager, this.graphPersistenceService);
 	}
 
 }

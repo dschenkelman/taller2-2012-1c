@@ -17,6 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import persistence.IGraphPersistenceService;
 import persistence.IXmlFileManager;
 import persistence.IXmlManager;
 import styling.StyleConstants;
@@ -41,6 +42,7 @@ import com.mxgraph.view.mxGraph;
 import controllers.factories.IEntityControllerFactory;
 import controllers.factories.IHierarchyControllerFactory;
 import controllers.factories.IRelationshipControllerFactory;
+import controllers.tests.mocks.MockGraphPersistenceService;
 
 import views.IDiagramView;
 
@@ -75,13 +77,15 @@ public class DiagramController extends BaseController
 	private List<mxCell> selectedCells;
 	private Point dragStartPoint;
 	private IHierarchyControllerFactory hierarchyControllerFactory;
+	private IGraphPersistenceService graphPersistenceService;
 	
 	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
 			IEntityControllerFactory entityControllerFactory,
 			IRelationshipControllerFactory relationshipControllerFactory,
 			IHierarchyControllerFactory hierarchyControllerFactory,
 			IXmlFileManager xmlFileManager,
-			IXmlManager<Diagram> diagramXmlManager) {
+			IXmlManager<Diagram> diagramXmlManager,
+			IGraphPersistenceService graphPersistenceService) {
 		super(projectContext);
 		this.diagram = new Diagram();
 		this.selectedCells = new ArrayList<mxCell>();
@@ -103,6 +107,7 @@ public class DiagramController extends BaseController
 		this.diagramXmlManager = diagramXmlManager;
 		this.diagramView = diagramView;
 		this.diagramView.setController(this);
+		this.graphPersistenceService = graphPersistenceService;
 	}
 	
 	public IDiagramView getView(){
@@ -420,6 +425,8 @@ public class DiagramController extends BaseController
 		
 		document.appendChild(element);
 		this.xmlFileManager.write(document, this.diagram.getName() + "-comp");
+		
+		this.graphPersistenceService.save(this.diagram.getName() + "-rep", this.graph);
 	}
 
 
