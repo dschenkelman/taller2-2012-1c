@@ -30,10 +30,10 @@ public interface IRelationshipController {
 			String role);
 	
 	
-	void addRealationship();
+	void addRelationship();
 	StrongEntityCollection getStrongEntities();
 	int getType();
-	void setRealationshipView(IRelationshipView view);
+	void setRelationshipView(IRelationshipView view);
 	
 	
 	

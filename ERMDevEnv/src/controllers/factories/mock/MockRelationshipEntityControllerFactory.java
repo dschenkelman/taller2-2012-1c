@@ -20,8 +20,6 @@ public class MockRelationshipEntityControllerFactory implements
 
 	@Override
 	public IRelationshipEntityController create(Relationship pendingRelationship) {
-		
-		
 		return null ;
 	}
 
