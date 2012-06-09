@@ -49,7 +49,7 @@ public class HierarchyCollectionXmlManager implements IXmlManager<HierarchyColle
         Element hierarchyElement = document.createElement(HIERARCHY);
 
         Attr generalEntityIdAttribute = document.createAttribute(GENERALENTITYATTRIBUTE);
-        generalEntityIdAttribute.setValue(hierarchy.getGeneralEntityUUID().toString());
+        generalEntityIdAttribute.setValue(hierarchy.getGeneralEntityId().toString());
         hierarchyElement.setAttributeNode(generalEntityIdAttribute);
 
         Attr totalAttribute = document.createAttribute(TOTALATTRIBUTE);
@@ -61,7 +61,7 @@ public class HierarchyCollectionXmlManager implements IXmlManager<HierarchyColle
         hierarchyElement.setAttributeNode(exclusiveAttribute);
 
         Attr idAttribute = document.createAttribute(IDATTRIBUTE);
-        idAttribute.setValue(hierarchy.getUUID().toString());
+        idAttribute.setValue(hierarchy.getId().toString());
         hierarchyElement.setAttributeNode(idAttribute);
 
         Element specificEntitiesElement = document.createElement(SPECIFICENTITIES);

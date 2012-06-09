@@ -43,11 +43,11 @@ public class HierarchyCollectionXmlManagerTest {
         UUID generalEntityUUID3 = UUID.randomUUID();
         Hierarchy hierarchy;
         hierarchy = hierarchyCollection.createHierarchy(generalEntityUUID, false, true);
-        UUID uuid2 = hierarchyCollection.createHierarchy(generalEntityUUID1, true, true).getUUID();
-        UUID uuid3 = hierarchyCollection.createHierarchy(generalEntityUUID2, false, false).getUUID();
-        UUID uuid4 = hierarchyCollection.createHierarchy(generalEntityUUID3, true, false).getUUID();
+        UUID uuid2 = hierarchyCollection.createHierarchy(generalEntityUUID1, true, true).getId();
+        UUID uuid3 = hierarchyCollection.createHierarchy(generalEntityUUID2, false, false).getId();
+        UUID uuid4 = hierarchyCollection.createHierarchy(generalEntityUUID3, true, false).getId();
 
-        UUID uuid = hierarchy.getUUID();
+        UUID uuid = hierarchy.getId();
         UUID child1 = UUID.randomUUID();
         UUID child2 = UUID.randomUUID();
         UUID child3 = UUID.randomUUID();
@@ -122,11 +122,11 @@ public class HierarchyCollectionXmlManagerTest {
         assert document != null;
         HierarchyCollection hierarchyCollectionFromXml = new HierarchyCollectionXmlManager().getItemFromXmlElement(document.getDocumentElement());
 
-        Assert.assertEquals("3552f6a7-b89f-49da-8b40-faa8311f44a5", hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("3552f6a7-b89f-49da-8b40-faa8311f44a5")).iterator().next().getGeneralEntityUUID().toString());
+        Assert.assertEquals("3552f6a7-b89f-49da-8b40-faa8311f44a5", hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("3552f6a7-b89f-49da-8b40-faa8311f44a5")).iterator().next().getGeneralEntityId().toString());
         Assert.assertEquals(false, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("3552f6a7-b89f-49da-8b40-faa8311f44a5")).iterator().next().isExclusive());
         Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("3552f6a7-b89f-49da-8b40-faa8311f44a5")).iterator().next().isTotal());
 
-        Assert.assertEquals("9c2213a8-5d05-44ec-ad58-d1d59018ff90", hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("9c2213a8-5d05-44ec-ad58-d1d59018ff90")).iterator().next().getGeneralEntityUUID().toString());
+        Assert.assertEquals("9c2213a8-5d05-44ec-ad58-d1d59018ff90", hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("9c2213a8-5d05-44ec-ad58-d1d59018ff90")).iterator().next().getGeneralEntityId().toString());
         Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("9c2213a8-5d05-44ec-ad58-d1d59018ff90")).iterator().next().isExclusive());
         Assert.assertEquals(true, hierarchyCollectionFromXml.getHierarchiesWithGeneralEntityUUID(UUID.fromString("9c2213a8-5d05-44ec-ad58-d1d59018ff90")).iterator().next().isTotal());
 

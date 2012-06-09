@@ -37,7 +37,7 @@ public class DiagramXmlManagerTestCase {
 		relationships.add(new Relationship(UUID.randomUUID(), "relation1", true));
 		relationships.add(new Relationship(UUID.randomUUID(), "relation2", false));
 		Hierarchy hierarchy = hierarchies.createHierarchy(entities.get("entity1").getId(), true, true);
-		hierarchies.addChild(hierarchy.getUUID(), entities.get("entity2").getId());
+		hierarchies.addChild(hierarchy.getId(), entities.get("entity2").getId());
 		
 		subDiagram1.setEntities(entities);
 		subDiagram1.addSubDiagram(subDiagram2);
@@ -68,7 +68,7 @@ public class DiagramXmlManagerTestCase {
 		
 		items = hierarchiesElement.getChildNodes();
 		Assert.assertEquals(1, items.getLength());
-		Assert.assertEquals(hierarchy.getUUID().toString(), ((Element) items.item(0)).getAttribute("id"));
+		Assert.assertEquals(hierarchy.getId().toString(), ((Element) items.item(0)).getAttribute("id"));
 		
 		NodeList relationsList = relationshipsElement.getElementsByTagName("relationship");
 		NodeList subDiagList = subDiagramsElement.getChildNodes();
@@ -127,7 +127,7 @@ public class DiagramXmlManagerTestCase {
 		Assert.assertNotNull(diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")));
 		Assert.assertTrue(diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")).isExclusive());
 		Assert.assertTrue(diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")).isTotal());
-		Assert.assertEquals("3f2504e0-4f89-11d3-9a0c-030cffffffff", diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")).getGeneralEntityUUID().toString());
+		Assert.assertEquals("3f2504e0-4f89-11d3-9a0c-030cffffffff", diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")).getGeneralEntityId().toString());
 		
 		Assert.assertEquals(2, diagram.getSubDiagrams().size());
 		Assert.assertNotNull(diagram.getSubDiagram(UUID.fromString("3F2504E0-4F89-11D3-9A0C-0301FFFFFFFF")));

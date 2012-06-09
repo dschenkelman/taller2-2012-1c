@@ -66,7 +66,7 @@ public class HierarchyControllerTestCase {
 		
 		Assert.assertTrue(this.hierarchyController.setGeneralEntity(entity));
 		
-		Assert.assertEquals(entity.getId().toString(), this.hierarchyController.getPendingHierarchy().getGeneralEntityUUID().toString());
+		Assert.assertEquals(entity.getId().toString(), this.hierarchyController.getPendingHierarchy().getGeneralEntityId().toString());
 		Assert.assertFalse(this.hierarchyController.addHierarchy());
 		Assert.assertFalse(this.hierarchyController.addSpecificEntity(entity));	
 	}
@@ -142,7 +142,7 @@ public class HierarchyControllerTestCase {
 		
 		Assert.assertTrue(hierarchy.isTotal());
 		Assert.assertTrue(hierarchy.isExclusive());
-		Assert.assertEquals(entity1.getId().toString(), hierarchy.getGeneralEntityUUID().toString());
+		Assert.assertEquals(entity1.getId().toString(), hierarchy.getGeneralEntityId().toString());
 		Assert.assertTrue(hierarchy.hasChild(entity2.getId()));
 		Assert.assertTrue(hierarchy.hasChild(entity3.getId()));
 	}

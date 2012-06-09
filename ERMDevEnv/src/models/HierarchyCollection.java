@@ -78,7 +78,7 @@ public class HierarchyCollection {
     private class GeneralHierarchyCmpFunc extends Func<Hierarchy, UUID, Boolean> {
         @Override
         public Boolean execute(Hierarchy hierarchy, UUID uuid) {
-            return hierarchy.getGeneralEntityUUID().equals(uuid);
+            return hierarchy.getGeneralEntityId().equals(uuid);
         }
 
     }
@@ -86,8 +86,12 @@ public class HierarchyCollection {
     private class HierarchyCmpFunc extends Func<Hierarchy, UUID, Boolean> {
         @Override
         public Boolean execute(Hierarchy hierarchy, UUID uuid) {
-            return hierarchy.getUUID().equals(uuid);
+            return hierarchy.getId().equals(uuid);
         }
 
     }
+
+	public void add(Hierarchy hierarchy) {
+		this.hierarchies.add(hierarchy);
+	}
 }

@@ -1,5 +1,6 @@
 package views;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -26,6 +27,7 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 	private IDiagramController diagramController;
 	private JButton btnEntity;
 	private JButton btnRelationship;
+	private Component btnHierarchy;
 
 	/**
 	 * Create the panel.
@@ -64,8 +66,8 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 		this.btnRelationship = new JButton("Relacion");
 		add(this.btnRelationship, "6, 2");
 		
-		JButton btnHierarchy = new JButton("Jerarquia");
-		add(btnHierarchy, "8, 2");
+		this.btnHierarchy = new JButton("Jerarquia");
+		add(this.btnHierarchy, "8, 2");
 	}
 
 	@Override
@@ -112,6 +114,13 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				diagramController.createRelationship();
+			}
+		});
+		
+		this.btnHierarchy.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				diagramController.createHierarchy();
 			}
 		});
 	}

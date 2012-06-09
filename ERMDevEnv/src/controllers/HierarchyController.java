@@ -42,7 +42,7 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 
 	@Override
 	public boolean addHierarchy() {
-		if (this.pendingHierarchy.getGeneralEntityUUID() == null)
+		if (this.pendingHierarchy.getGeneralEntityId() == null)
 			return false;
 		if (this.pendingHierarchy.count() == 0)
 			return false;
@@ -56,19 +56,19 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 	public boolean setGeneralEntity(Entity entity) {
 		if (this.pendingHierarchy.hasChild(entity.getId()))
 			return false;
-		this.pendingHierarchy.setGeneralEntityUUID(entity.getId());
+		this.pendingHierarchy.setGeneralEntityId(entity.getId());
 		return true;
 	}
 
 	@Override
 	public UUID getGeneralEntityUUID() {
-		return this.pendingHierarchy.getGeneralEntityUUID();
+		return this.pendingHierarchy.getGeneralEntityId();
 	}
 	
 	@Override
 	public boolean addSpecificEntity(Entity entity) {
-		if (this.pendingHierarchy.getGeneralEntityUUID() != null)
-			if (this.pendingHierarchy.getGeneralEntityUUID().equals(entity.getId()))
+		if (this.pendingHierarchy.getGeneralEntityId() != null)
+			if (this.pendingHierarchy.getGeneralEntityId().equals(entity.getId()))
 				return false;
 		
 		try {
