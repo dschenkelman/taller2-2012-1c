@@ -10,6 +10,7 @@ import infrastructure.Func;
 import infrastructure.IterableExtensions;
 import models.Cardinality;
 import models.Entity;
+import models.Hierarchy;
 import models.Relationship;
 import models.RelationshipEntity;
 
@@ -357,7 +358,7 @@ public class DiagramControllerTestCase {
 	}
 	
 	@Test
-	public void TestShouldMoveAttributesWhenMovingRelationshipNodeOrEntity() throws Exception
+	public void testShouldMoveAttributesWhenMovingRelationshipNodeOrEntity() throws Exception
 	{
 		Entity entity1 = new Entity("Entity1");
 		entity1.getAttributes().addAttribute("Attribute1");
@@ -473,6 +474,65 @@ public class DiagramControllerTestCase {
 		
 		Assert.assertEquals(1, this.hierarchyController.getListeners().size());
 		Assert.assertSame(diagramController, this.hierarchyController.getListeners().get(0));
+	}
+	
+	@Test
+	public void testShouldAddHierarchyConnectorsWhenHandlingHierarchyCreated() throws Exception
+	{
+		Entity entity1 = new Entity("Entity1");
+		Entity entity2 = new Entity("Entity2");
+		Entity entity3 = new Entity("Entity3");
+		Entity entity4 = new Entity("Entity4");
+		
+		DiagramController diagramController = this.createController();
+		
+		this.addEntityToDiagram(diagramController, entity1, 20, 30);
+		this.addEntityToDiagram(diagramController, entity2, 60, 30);
+		this.addEntityToDiagram(diagramController, entity3, 20, 100);
+		this.addEntityToDiagram(diagramController, entity4, 20, 100);
+		
+		Hierarchy hierarchy = new Hierarchy();
+		hierarchy.setGeneralEntityId(entity1.getId());
+		hierarchy.addChildEntity(entity2.getId());
+		hierarchy.addChildEntity(entity3.getId());
+		hierarchy.addChildEntity(entity4.getId());
+		
+		hierarchy.setExclusive(true);
+		hierarchy.setTotal(false);
+		
+		Assert.assertEquals(0, diagramController.getDiagram().getHierarchies().count());
+		
+		diagramController.handleCreatedEvent(hierarchy);
+		
+		Assert.assertEquals(1, diagramController.getDiagram().getHierarchies().count());
+		Assert.assertNotNull(diagramController.getDiagram().getHierarchies().getHierarchy(hierarchy.getId()));
+		
+		mxCell nodeCell = diagramController.getHierarchyNodeCell(hierarchy.getId().toString());
+		mxCell entity1Cell = diagramController.getEntityCell(entity1.getId().toString());
+		mxCell entity2Cell = diagramController.getEntityCell(entity2.getId().toString());
+		mxCell entity3Cell = diagramController.getEntityCell(entity3.getId().toString());
+		mxCell entity4Cell = diagramController.getEntityCell(entity4.getId().toString());
+		
+		mxCell entity1HierarchyConnectorCell = diagramController.getHierarchyConnectorCell(hierarchy.getId().toString() + entity1.getId().toString());
+		Object[] entity1HierarchyConnectors = diagramController.getGraph().getEdgesBetween(nodeCell, entity1Cell);
+		Assert.assertEquals(1, entity1HierarchyConnectors.length);
+		Assert.assertSame(entity1HierarchyConnectorCell, entity1HierarchyConnectors[0]);
+		Assert.assertEquals("(P,E)", entity1HierarchyConnectorCell.getValue());
+		
+		mxCell entity2HierarchyConnectorCell = diagramController.getHierarchyConnectorCell(hierarchy.getId().toString() + entity2.getId().toString());
+		Object[] entity2HierarchyConnectors = diagramController.getGraph().getEdgesBetween(nodeCell, entity2Cell);
+		Assert.assertEquals(1, entity2HierarchyConnectors.length);
+		Assert.assertSame(entity2HierarchyConnectorCell, entity2HierarchyConnectors[0]);
+		
+		mxCell entity3HierarchyConnectorCell = diagramController.getHierarchyConnectorCell(hierarchy.getId().toString() + entity3.getId().toString());
+		Object[] entity3HierarchyConnectors = diagramController.getGraph().getEdgesBetween(nodeCell, entity3Cell);
+		Assert.assertEquals(1, entity3HierarchyConnectors.length);
+		Assert.assertSame(entity3HierarchyConnectorCell, entity3HierarchyConnectors[0]);
+
+		mxCell entity4HierarchyConnectorCell = diagramController.getHierarchyConnectorCell(hierarchy.getId().toString() + entity4.getId().toString());
+		Object[] entity4HierarchyConnectors = diagramController.getGraph().getEdgesBetween(nodeCell, entity4Cell);
+		Assert.assertEquals(1, entity4HierarchyConnectors.length);
+		Assert.assertSame(entity4HierarchyConnectorCell, entity4HierarchyConnectors[0]);
 	}
 	
 	private void addEntityToDiagram(DiagramController diagramController, 

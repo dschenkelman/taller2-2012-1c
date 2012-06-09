@@ -14,7 +14,6 @@ import java.util.UUID;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.omg.CORBA.IntHolder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -54,6 +53,8 @@ public class DiagramController extends BaseController
 	private Map<String, mxCell> attributeCells;
 	private Map<String, mxCell> attributeConnectorCells;
 	private Map<String, mxCell> relationshipConnectorCells;
+	private Map<String, mxCell> hierarchyNodeCells;
+	private Map<String, mxCell> hierarchyConnectorCells;
 	private IEntityControllerFactory entityControllerFactory;
 	private Entity pendingEntity;
 	private IRelationshipControllerFactory relationshipControllerFactory;
@@ -86,6 +87,8 @@ public class DiagramController extends BaseController
 		this.attributeConnectorCells = new HashMap<String, mxCell>();
 		this.relationshipCells = new HashMap<String, mxCell>();
 		this.relationshipConnectorCells = new HashMap<String, mxCell>();
+		this.hierarchyConnectorCells = new HashMap<String, mxCell>();
+		this.hierarchyNodeCells = new HashMap<String, mxCell>();
 		this.xmlFileManager = xmlFileManager;
 		this.diagramXmlManager = diagramXmlManager;
 		this.diagramView = diagramView;
@@ -494,6 +497,53 @@ public class DiagramController extends BaseController
 
 	@Override
 	public void handleCreatedEvent(Hierarchy hierarchy) {
+		this.graph.getModel().beginUpdate();
 		
+		try
+		{
+			Object parent = this.graph.getDefaultParent();
+			mxCell hierarchyNode = this.addHierarchyNode(hierarchy, parent);
+			
+			for (UUID childId : hierarchy.getChildren()) {
+				this.connectChildToHierarchy(parent, hierarchyNode, hierarchy.getId(), childId);
+			}
+		}
+		finally {
+			this.diagram.getHierarchies().add(hierarchy);
+			this.graph.getModel().endUpdate();
+		}
+	}
+
+	private void connectChildToHierarchy(Object parent, mxCell hierarchyNode, UUID hierarchyId, UUID childId) {
+		String stringId = childId.toString();
+		mxCell childCell = this.entityCells.get(stringId);
+		
+		mxCell hierarchyConnectorCell = (mxCell) this.graph
+			.insertEdge(parent, null, "", childCell, hierarchyNode, StyleConstants.HIERARCHY_CHILD_CONNECTOR_STYLE);
+		
+		this.hierarchyConnectorCells.put(hierarchyId.toString() + childId, hierarchyConnectorCell);
+	}
+
+	private mxCell addHierarchyNode(Hierarchy hierarchy, Object parent) {
+		String parentId = hierarchy.getGeneralEntityId().toString();
+		mxCell parentCell = this.entityCells.get(parentId);
+		double x = parentCell.getGeometry().getCenterX();
+		double y = parentCell.getGeometry().getCenterY() + StyleConstants.ENTITY_HEIGHT / 2 + StyleConstants.HIERARCHY_DISTANCE_TO_PARENT;
+		mxCell hierarchyNode = (mxCell) this.graph.insertVertex(parent, null, "", x, y, 0, 0);
+		mxCell hierarchyConnectorCell = (mxCell) this.graph
+			.insertEdge(parent, null, hierarchy.getSummary(), hierarchyNode, parentCell, StyleConstants.HIERARCHY_PARENT_CONNECTOR_STYLE);
+		this.hierarchyNodeCells.put(hierarchy.getId().toString(), hierarchyNode);
+		this.hierarchyConnectorCells.put(hierarchy.getId().toString() + parentId, hierarchyConnectorCell);
+		
+		return hierarchyNode;
+	}
+
+	
+	public mxCell getHierarchyNodeCell(String id) {
+		return this.hierarchyNodeCells.get(id);
+	}
+
+	public mxCell getHierarchyConnectorCell(String id) {
+		return this.hierarchyConnectorCells.get(id);
 	}
 }

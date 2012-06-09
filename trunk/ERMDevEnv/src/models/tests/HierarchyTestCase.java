@@ -14,7 +14,7 @@ public class HierarchyTestCase {
         UUID uuid = UUID.randomUUID();
         Hierarchy hierarchy = new Hierarchy(uuid, false, false);
 
-        Assert.assertEquals(uuid, hierarchy.getGeneralEntityUUID());
+        Assert.assertEquals(uuid, hierarchy.getGeneralEntityId());
         Assert.assertEquals(false, hierarchy.isExclusive());
         Assert.assertEquals(false, hierarchy.isTotal());
 

@@ -5,6 +5,7 @@ import java.awt.geom.Ellipse2D;
 
 import controllers.factories.*;
 import controllers.factories.mock.MockEntityControllerFactory;
+import controllers.factories.mock.MockHierarchyControllerFactory;
 import infrastructure.IProjectContext;
 import infrastructure.ProjectContext;
 
@@ -68,8 +69,9 @@ public class Bootstrapper {
 					.addComponent(IXmlManager.class, DiagramXmlManager.class)
 					.addComponent(IXmlFileManager.class, XmlFileManager.class)
 					.addComponent(IProjectContext.class, ProjectContext.class)
-					.addComponent(IEntityControllerFactory.class, EntityControllerFactory.class)
+					.addComponent(IEntityControllerFactory.class, MockEntityControllerFactory.class)
 					.addComponent(IRelationshipControllerFactory.class, RelationshipControllerFactory.class)
+					.addComponent(IHierarchyControllerFactory.class, MockHierarchyControllerFactory.class)
 					.addComponent(IStrongEntityControllerFactory.class, StrongEntityControllerFactory.class)
 					.addComponent(IKeysControllerFactory.class, KeyControllerFactory.class)
 					.addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class);

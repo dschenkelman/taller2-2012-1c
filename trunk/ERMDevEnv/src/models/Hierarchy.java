@@ -37,15 +37,15 @@ public class Hierarchy {
 		this(null, false, false);
 	}
 
-	public void setGeneralEntityUUID(UUID generalEntityUUID) {
+	public void setGeneralEntityId(UUID generalEntityUUID) {
 		this.generalEntityUUID = generalEntityUUID;
 	}
 
-	public UUID getGeneralEntityUUID() {
+	public UUID getGeneralEntityId() {
 		return generalEntityUUID;
 	}
 
-	public UUID getUUID() {
+	public UUID getId() {
 		return hierarchyUUID;
 	}
 
@@ -114,6 +114,35 @@ public class Hierarchy {
 		}
 		return IterableExtensions.firstOrDefault(this.children,
 				new UUIDCmpFunc(), uuid) != null;
+	}
+
+	public String getSummary() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("(");
+
+		if (this.total)
+		{
+			builder.append("T");
+		} 
+		else
+		{
+			builder.append("P");
+		}
+		
+		builder.append(",");
+		
+		if (this.exclusive)
+		{
+			builder.append("E");
+		} 
+		else
+		{
+			builder.append("NE");
+		}
+		
+		builder.append(")");
+		
+		return builder.toString();
 	}
 
 }
