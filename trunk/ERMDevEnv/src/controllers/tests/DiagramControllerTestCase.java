@@ -159,19 +159,19 @@ public class DiagramControllerTestCase {
 		Assert.assertEquals("Price", diagramController.getGraph().getLabel(priceCell));
 		Assert.assertTrue(diagramController.getGraph().getModel().isVertex(priceCell));
 		
-		mxCell entityStockCell = diagramController.getAttributeConnectorCell(entity.getId().toString()+"StockAttributeConnector");
+		mxCell entityStockCell = diagramController.getAttributeConnectorCell(entity.getId().toString()+"Stock");
 		Assert.assertTrue(diagramController.getGraph().getModel().isEdge(entityStockCell));
 		Object[] entityStockConnectors = diagramController.getGraph().getEdgesBetween(entityCell, stockCell);
 		Assert.assertEquals(1, entityStockConnectors.length);
 		Assert.assertSame(entityStockCell, entityStockConnectors[0]);
 		
-		mxCell entityNameCell = diagramController.getAttributeConnectorCell(entity.getId().toString()+"NameAttributeConnector");
+		mxCell entityNameCell = diagramController.getAttributeConnectorCell(entity.getId().toString()+"Name");
 		Assert.assertTrue(diagramController.getGraph().getModel().isEdge(entityNameCell));
 		Object[] entityNameConnectors = diagramController.getGraph().getEdgesBetween(entityCell, nameCell);
 		Assert.assertEquals(1, entityNameConnectors.length);
 		Assert.assertSame(entityNameCell, entityNameConnectors[0]);
 		
-		mxCell entityPriceCell = diagramController.getAttributeConnectorCell(entity.getId().toString()+"PriceAttributeConnector");
+		mxCell entityPriceCell = diagramController.getAttributeConnectorCell(entity.getId().toString()+"Price");
 		Assert.assertTrue(diagramController.getGraph().getModel().isEdge(entityPriceCell));
 		Object[] entityPriceConnectors = diagramController.getGraph().getEdgesBetween(entityCell, priceCell);
 		Assert.assertEquals(1, entityPriceConnectors.length);
@@ -313,7 +313,7 @@ public class DiagramControllerTestCase {
 		Assert.assertTrue(diagramController.getGraph().getModel().isVertex(attribute1Cell));
 		Assert.assertEquals("Attribute1", attribute1Cell.getValue());
 		
-		mxCell relationshipAttribute1Cell = diagramController.getAttributeConnectorCell(relationship.getId().toString()+"Attribute1"+"AttributeConnector");
+		mxCell relationshipAttribute1Cell = diagramController.getAttributeConnectorCell(relationship.getId().toString()+"Attribute1");
 		Assert.assertTrue(diagramController.getGraph().getModel().isEdge(relationshipAttribute1Cell));
 		
 		Object[] attribute1Connectors = diagramController.getGraph().getEdgesBetween(attribute1Cell, relationshipCell);
@@ -324,7 +324,7 @@ public class DiagramControllerTestCase {
 		Assert.assertTrue(diagramController.getGraph().getModel().isVertex(attribute2Cell));
 		Assert.assertEquals("Attribute2", attribute2Cell.getValue());
 		
-		mxCell relationshipAttribute2Cell = diagramController.getAttributeConnectorCell(relationship.getId().toString()+"Attribute2"+"AttributeConnector");
+		mxCell relationshipAttribute2Cell = diagramController.getAttributeConnectorCell(relationship.getId().toString()+"Attribute2");
 		Assert.assertTrue(diagramController.getGraph().getModel().isEdge(relationshipAttribute2Cell));
 		
 		Object[] attribute2Connectors = diagramController.getGraph().getEdgesBetween(attribute2Cell, relationshipCell);

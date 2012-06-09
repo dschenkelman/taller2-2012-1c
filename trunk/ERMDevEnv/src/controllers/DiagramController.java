@@ -47,6 +47,16 @@ import views.IDiagramView;
 public class DiagramController extends BaseController 
 	implements IDiagramController, mxIEventListener{
 
+	private static class CellConstants{
+		public static String EntityPrefix = "Entity";
+		public static String RelationshipPrefix = "Relationship";
+		public static String AttributePrefix = "Attribute";
+		public static String AttributeConnectorPrefix = "AttributeConnector";
+		public static String RelationshipConnectorPrefix = "RelationshipConnector";
+		public static String HierarchyNodePrefix = "HierarchyNode";
+		public static String HierarchyConnectorPrefix = "HierarchyConnector";
+	}
+	
 	private CustomGraph graph;
 	private Map<String, mxCell> entityCells;
 	private Map<String, mxCell> relationshipCells;
@@ -269,19 +279,19 @@ public class DiagramController extends BaseController
 		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, connectorId, displayValue, 
 				relationshipCell, entityCell, StyleConstants.RELATIONSHIP_CONNECTOR_STYLE + exitStyle);
 		
-		this.relationshipConnectorCells.put(connectorId, connectorCell);
+		this.relationshipConnectorCells.put(CellConstants.RelationshipConnectorPrefix + connectorId, connectorCell);
 		
 		return connectorCell;
 	}
 
 	private mxCell addAttributeConnectorToGraph(Object parent, UUID ownerId, mxCell entityCell,
 			Attribute attribute, mxCell attributeCell, boolean isKey) { 
-		String attributeConnectorId = ownerId.toString()+attribute.getName()+"AttributeConnector";
+		String attributeConnectorId = ownerId.toString()+attribute.getName();
 		
 		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, attributeConnectorId, "", 
 				entityCell, attributeCell, StyleConstants.ATTRIBUTE_LINK_STYLE);
 		
-		this.attributeConnectorCells.put(attributeConnectorId, connectorCell);
+		this.attributeConnectorCells.put(CellConstants.AttributeConnectorPrefix + attributeConnectorId, connectorCell);
 		
 		return connectorCell;		
 	}
@@ -292,7 +302,7 @@ public class DiagramController extends BaseController
 				attribute.getName(), x, y,
 				StyleConstants.ATTRIBUTE_WIDTH, StyleConstants.ATTRIBUTE_HEIGHT);
 		
-		this.attributeCells.put(attributeId, attributeCell);
+		this.attributeCells.put(CellConstants.AttributePrefix + attributeId, attributeCell);
 
 		return attributeCell;
 	}
@@ -302,7 +312,7 @@ public class DiagramController extends BaseController
 				relationship.getName(), x, y,
 				StyleConstants.RELATIONSHIP_WIDTH, StyleConstants.RELATIONSHIP_HEIGHT, StyleConstants.RELATIONSHIP_STYLE);
 		
-		this.relationshipCells.put(relationship.getId().toString(), relationshipCell);
+		this.relationshipCells.put(CellConstants.RelationshipPrefix + relationship.getId().toString(), relationshipCell);
 
 		return relationshipCell;
 	}
@@ -312,7 +322,7 @@ public class DiagramController extends BaseController
 				entity.getName(), x, y,
 				StyleConstants.ENTITY_WIDTH, StyleConstants.ENTITY_HEIGHT, Styler.getFillColor(entity.getType()));
 		
-		this.entityCells.put(entity.getId().toString(), entityCell);
+		this.entityCells.put(CellConstants.EntityPrefix + entity.getId().toString(), entityCell);
 
 		return entityCell;
 	}
@@ -375,15 +385,15 @@ public class DiagramController extends BaseController
 	}
 
 	public mxCell getEntityCell(String id) {
-		return this.entityCells.get(id);
+		return this.entityCells.get(CellConstants.EntityPrefix + id);
 	}
 
 	public mxCell getAttributeCell(String id) {
-		return this.attributeCells.get(id);
+		return this.attributeCells.get(CellConstants.AttributePrefix + id);
 	}
 
 	public mxCell getAttributeConnectorCell(String id) {
-		return this.attributeConnectorCells.get(id);
+		return this.attributeConnectorCells.get(CellConstants.AttributeConnectorPrefix + id);
 	}
 
 	public boolean hasPendingEntity() {
@@ -391,12 +401,12 @@ public class DiagramController extends BaseController
 	}
 
 	public mxCell getRelationshipCell(String id) {
-		return this.relationshipCells.get(id);
+		return this.relationshipCells.get(CellConstants.RelationshipPrefix + id);
 	}
 
 	
 	public mxCell getRelationshipConnectorCell(String id) {
-		return this.relationshipConnectorCells.get(id);
+		return this.relationshipConnectorCells.get(CellConstants.RelationshipConnectorPrefix + id);
 	}
 
 	public Diagram getDiagram() {
@@ -453,7 +463,7 @@ public class DiagramController extends BaseController
 			
 			for (mxCell cell : this.selectedCells) {
 				for (String attributeKey : this.attributeCells.keySet()) {
-					if (attributeKey.startsWith(cell.getId()))
+					if (attributeKey.startsWith(CellConstants.AttributePrefix + cell.getId()))
 					{
 						mxCell attributeCell = this.attributeCells.get(attributeKey);
 						attributesCellsToMove.add(attributeCell);
@@ -516,34 +526,33 @@ public class DiagramController extends BaseController
 
 	private void connectChildToHierarchy(Object parent, mxCell hierarchyNode, UUID hierarchyId, UUID childId) {
 		String stringId = childId.toString();
-		mxCell childCell = this.entityCells.get(stringId);
+		mxCell childCell = this.getEntityCell(stringId);
 		
 		mxCell hierarchyConnectorCell = (mxCell) this.graph
 			.insertEdge(parent, null, "", childCell, hierarchyNode, StyleConstants.HIERARCHY_CHILD_CONNECTOR_STYLE);
 		
-		this.hierarchyConnectorCells.put(hierarchyId.toString() + childId, hierarchyConnectorCell);
+		this.hierarchyConnectorCells.put(CellConstants.HierarchyConnectorPrefix + hierarchyId.toString() + childId, hierarchyConnectorCell);
 	}
 
 	private mxCell addHierarchyNode(Hierarchy hierarchy, Object parent) {
 		String parentId = hierarchy.getGeneralEntityId().toString();
-		mxCell parentCell = this.entityCells.get(parentId);
+		mxCell parentCell = this.getEntityCell(parentId);
 		double x = parentCell.getGeometry().getCenterX();
 		double y = parentCell.getGeometry().getCenterY() + StyleConstants.ENTITY_HEIGHT / 2 + StyleConstants.HIERARCHY_DISTANCE_TO_PARENT;
 		mxCell hierarchyNode = (mxCell) this.graph.insertVertex(parent, null, "", x, y, 0, 0);
 		mxCell hierarchyConnectorCell = (mxCell) this.graph
 			.insertEdge(parent, null, hierarchy.getSummary(), hierarchyNode, parentCell, StyleConstants.HIERARCHY_PARENT_CONNECTOR_STYLE);
-		this.hierarchyNodeCells.put(hierarchy.getId().toString(), hierarchyNode);
-		this.hierarchyConnectorCells.put(hierarchy.getId().toString() + parentId, hierarchyConnectorCell);
+		this.hierarchyNodeCells.put(CellConstants.HierarchyNodePrefix + hierarchy.getId().toString(), hierarchyNode);
+		this.hierarchyConnectorCells.put(CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + parentId, hierarchyConnectorCell);
 		
 		return hierarchyNode;
 	}
-
 	
 	public mxCell getHierarchyNodeCell(String id) {
-		return this.hierarchyNodeCells.get(id);
+		return this.hierarchyNodeCells.get(CellConstants.HierarchyNodePrefix + id);
 	}
 
 	public mxCell getHierarchyConnectorCell(String id) {
-		return this.hierarchyConnectorCells.get(id);
+		return this.hierarchyConnectorCells.get(CellConstants.HierarchyConnectorPrefix + id);
 	}
 }
