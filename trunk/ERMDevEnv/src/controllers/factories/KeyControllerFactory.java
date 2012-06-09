@@ -15,6 +15,7 @@ public class KeyControllerFactory implements IKeysControllerFactory{
     @Override
     public IKeysController create(List<IKey> keys) {
         Bootstrapper bootstrapper = new Bootstrapper();
+        bootstrapper.run();
         MutablePicoContainer container = bootstrapper.getContainer();
         return new KeysController(container.getComponent(IProjectContext.class),new KeyView(),keys);
     }
