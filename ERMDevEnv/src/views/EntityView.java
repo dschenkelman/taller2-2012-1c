@@ -9,8 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+import application.Bootstrapper;
 import com.jgoodies.forms.factories.*;
 import com.jgoodies.forms.layout.*;
+import controllers.EntityController;
 import controllers.IEntityController;
 import models.EntityType;
 
@@ -46,8 +48,8 @@ public class EntityView implements IEntityView {
         entityNameText = new JLabel();
         entityName = new JTextField();
         entityTypeText = new JLabel();
-        entityTypeComboBox = new JComboBox();
-        attributePanel = new JPanel();
+        entityTypeComboBox = new JComboBox(EntityType.entityTypes);
+        panel1 = new JPanel();
         selectKeysButton = new JButton();
         createButton = new JButton();
 
@@ -57,7 +59,7 @@ public class EntityView implements IEntityView {
             Container frame1ContentPane = frame1.getContentPane();
             frame1ContentPane.setLayout(new FormLayout(
                 "28*(default, $lcgap), default",
-                "20*(default, $lgap), default"));
+                "42*(default, $lgap), default"));
 
             //---- entityNameText ----
             entityNameText.setText("Name: ");
@@ -71,29 +73,37 @@ public class EntityView implements IEntityView {
             frame1ContentPane.add(entityTypeText, CC.xy(5, 7));
             frame1ContentPane.add(entityTypeComboBox, CC.xy(9, 7));
 
-            //======== attributePanel ========
+            //======== panel1 ========
             {
 
                 // JFormDesigner evaluation mark
-                attributePanel.setBorder(new javax.swing.border.CompoundBorder(
+                panel1.setBorder(new javax.swing.border.CompoundBorder(
                     new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
                         "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
                         javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-                        java.awt.Color.red), attributePanel.getBorder())); attributePanel.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+                        java.awt.Color.red), panel1.getBorder())); panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
 
-                attributePanel.setLayout(new FormLayout(
-                    "3*(default, $lcgap), default",
-                    "2*(default, $lgap), default"));
+
+                GroupLayout panel1Layout = new GroupLayout(panel1);
+                panel1.setLayout(panel1Layout);
+                panel1Layout.setHorizontalGroup(
+                    panel1Layout.createParallelGroup()
+                        .addGap(0, 877, Short.MAX_VALUE)
+                );
+                panel1Layout.setVerticalGroup(
+                    panel1Layout.createParallelGroup()
+                        .addGap(0, 775, Short.MAX_VALUE)
+                );
             }
-            frame1ContentPane.add(attributePanel, CC.xywh(1, 15, 52, 17));
+            frame1ContentPane.add(panel1, CC.xywh(5, 11, 47, 73));
 
             //---- selectKeysButton ----
             selectKeysButton.setText("Select Keys");
-            frame1ContentPane.add(selectKeysButton, CC.xy(47, 33));
+            frame1ContentPane.add(selectKeysButton, CC.xy(47, 85));
 
             //---- createButton ----
             createButton.setText("Create");
-            frame1ContentPane.add(createButton, CC.xy(51, 39));
+            frame1ContentPane.add(createButton, CC.xy(51, 85));
             frame1.pack();
             frame1.setLocationRelativeTo(frame1.getOwner());
         }
@@ -101,11 +111,9 @@ public class EntityView implements IEntityView {
     }
 
     private void createEntity() {
-        this.frame1.remove(this.attributePanel);
-        this.entityNameText.setText("Hola");
-        /*if (entityController.addEntity()) {
+        if (entityController.addEntity()) {
             this.frame1.setVisible(false);
-        }*/
+        }
     }
 
     @Override
@@ -116,7 +124,10 @@ public class EntityView implements IEntityView {
     @Override
     public void addAttributeView(IAttributeView attributeView) {
         this.attributeView = attributeView;
-        this.attributePanel = (JPanel) attributeView.getInternalFrame();
+        frame1.remove(panel1);
+        Container frame1ContentPane  = frame1.getContentPane();
+        frame1ContentPane.add((Component) attributeView.getInternalFrame(), CC.xywh(5, 11, 47, 73));
+
     }
 
     @Override
@@ -156,12 +167,8 @@ public class EntityView implements IEntityView {
     private JTextField entityName;
     private JLabel entityTypeText;
     private JComboBox entityTypeComboBox;
-    private JPanel attributePanel;
+    private JPanel panel1;
     private JButton selectKeysButton;
     private JButton createButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
-
-    public static void main(String args[]) {
-        (new EntityView()).showView();
-    }
 }

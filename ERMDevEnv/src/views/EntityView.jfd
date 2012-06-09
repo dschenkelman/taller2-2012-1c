@@ -5,7 +5,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
 			"$columnSpecs": "default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default"
-			"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default"
+			"$rowSpecs": "default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default, linegap, default"
 		} ) {
 			name: "frame1"
 			"title": "Entity Creation"
@@ -38,33 +38,34 @@ new FormModel {
 				"gridX": 9
 				"gridY": 7
 			} )
-			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
-				"$columnSpecs": "default, labelcompgap, default, labelcompgap, default, labelcompgap, default"
-				"$rowSpecs": "default, linegap, default, linegap, default"
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {space :0:877:x}"
+				"$verticalGroup": "par l {space :0:775:x}"
 			} ) {
-				name: "attributePanel"
+				name: "panel1"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridY": 15
-				"gridWidth": 52
-				"gridHeight": 17
+				"gridX": 5
+				"gridY": 11
+				"gridWidth": 47
+				"gridHeight": 73
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "selectKeysButton"
 				"text": "Select Keys"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 47
-				"gridY": 33
+				"gridY": 85
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "createButton"
 				"text": "Create"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
 				"gridX": 51
-				"gridY": 39
+				"gridY": 85
 			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 55, 5 )
-			"size": new java.awt.Dimension( 865, 560 )
+			"location": new java.awt.Point( 110, 90 )
+			"size": new java.awt.Dimension( 985, 1150 )
 		} )
 	}
 }

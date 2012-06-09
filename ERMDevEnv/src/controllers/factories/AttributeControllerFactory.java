@@ -12,12 +12,13 @@ import views.AttributeView;
 
 import java.util.List;
 
-public class AttributeControllerFactory implements IAttributeControllerFactory{
+public class AttributeControllerFactory implements IAttributeControllerFactory {
     @Override
     public IAttributeController create(AttributeCollection possibleAttributes) {
         Bootstrapper bootstrapper = new Bootstrapper();
+        bootstrapper.run();
         MutablePicoContainer container = bootstrapper.getContainer();
         List<Attribute> attributeList = IterableExtensions.getListOf(possibleAttributes);
-        return new AttributeController(container.getComponent(IProjectContext.class),attributeList,new AttributeView());
+        return new AttributeController(container.getComponent(IProjectContext.class), attributeList, new AttributeView());
     }
 }
