@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.swing.JFrame;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
