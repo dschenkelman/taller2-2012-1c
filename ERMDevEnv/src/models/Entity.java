@@ -54,7 +54,7 @@ public class Entity implements INameable, IStrongEntity {
     }
 
     public EntityType getType() {
-        return type;
+        return this.type;
     }
 
     public AttributeCollection getAttributes() {
@@ -65,5 +65,9 @@ public class Entity implements INameable, IStrongEntity {
         return this.strongEntityCollection;
     }
 
-
+    @Override
+    public String toString()
+    {
+    	return this.name;
+    }
 }

@@ -84,4 +84,10 @@ public class MockHierarchyController implements IHierarchyController {
 		return this.listeners;
 	}
 
+	@Override
+	public Iterable<Entity> getAvailableEntities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
