@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import models.Entity;
+import models.EntityCollection;
 import models.Hierarchy;
 import views.IHierarchyView;
 import infrastructure.IProjectContext;
@@ -54,8 +55,14 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 
 	@Override
 	public boolean setGeneralEntity(Entity entity) {
+		if (entity == null)
+		{
+			this.pendingHierarchy.setGeneralEntityId(null);
+			return true;
+		}
 		if (this.pendingHierarchy.hasChild(entity.getId()))
 			return false;
+		
 		this.pendingHierarchy.setGeneralEntityId(entity.getId());
 		return true;
 	}
@@ -101,5 +108,10 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 	@Override
 	public void setExclusive(boolean exclusive) {
 		this.pendingHierarchy.setExclusive(exclusive);
+	}
+
+	@Override
+	public Iterable<Entity> getAvailableEntities() {
+		return this.projectContext.getEntityCollection(new Entity(""));
 	}
 }

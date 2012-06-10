@@ -97,6 +97,12 @@ public class MockHierarchyControllerFactory implements IHierarchyControllerFacto
 				// TODO Auto-generated method stub
 				return false;
 			}
+
+			@Override
+			public Iterable<Entity> getAvailableEntities() {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		};
 	}
 

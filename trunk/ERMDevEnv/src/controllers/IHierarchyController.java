@@ -3,6 +3,7 @@ package controllers;
 import java.util.UUID;
 
 import models.Entity;
+import models.EntityCollection;
 import views.IHierarchyView;
 
 public interface IHierarchyController {
@@ -26,4 +27,6 @@ public interface IHierarchyController {
 	void setTotal(boolean total);
 
 	void setExclusive(boolean exclusive);
+
+	Iterable<Entity> getAvailableEntities();
 }
