@@ -8,8 +8,10 @@ import java.util.List;
 
 public class MockProjectContext implements IProjectContext {
 
+	private static String SubFolder = "Datos";
     private Iterable<Entity> entityCollection;
     private Iterable<INameable> attributes;
+	private String name;
 
     @Override
     public Iterable<Entity> getEntityCollection(Entity entityToExclude) {
@@ -30,7 +32,23 @@ public class MockProjectContext implements IProjectContext {
     }
 
 	public void setRelationshipCollection(List<Relationship> relationships) {
-		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDataDirectory() {
+		if (this.name != null){
+			return this.name + "/" + SubFolder;
+		}
 		
+		return null;
 	}
 }
