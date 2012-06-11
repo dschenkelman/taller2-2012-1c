@@ -8,7 +8,10 @@ import models.IStrongEntity;
 
 public class ProjectContext implements IProjectContext {
 
+	private static String SubFolder = "Datos";
+	
     List<Entity> entities;
+	private String name;
 
     public ProjectContext() {
         this.entities = new ArrayList<Entity>();
@@ -38,5 +41,23 @@ public class ProjectContext implements IProjectContext {
         }
         return clone;
     }
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public void setName(String value) {
+		this.name = value;
+	}
+	
+	public String getDataDirectory(){
+		if (this.name != null){
+			return this.name + "/" + SubFolder;
+		}
+		
+		return null;
+	}
 
 }
