@@ -425,9 +425,17 @@ public class DiagramController extends BaseController
 			this.diagramXmlManager.getElementFromItem(this.diagram, document);
 		
 		document.appendChild(element);
-		this.xmlFileManager.write(document, this.diagram.getName() + "-comp");
+		this.xmlFileManager.write(document, this.getComponentFilePath());
 		
-		this.graphPersistenceService.save(this.diagram.getName() + "-rep", this.graph);
+		this.graphPersistenceService.save(this.getRepresentationFilePath(), this.graph);
+	}
+
+	private String getRepresentationFilePath() {
+		return this.projectContext.getDataDirectory() + "/" + this.diagram.getName() + "-rep";
+	}
+
+	private String getComponentFilePath() {
+		return this.projectContext.getDataDirectory() + "/" + this.diagram.getName() + "-comp";
 	}
 
 

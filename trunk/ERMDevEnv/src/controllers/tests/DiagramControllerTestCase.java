@@ -337,6 +337,8 @@ public class DiagramControllerTestCase {
 
 	@Test
 	public void testShouldCallSaveWithDiagramNameDashCompWhenSaveIsCalled() throws ParserConfigurationException{
+		this.projectContext.setName("projectName");
+		
 		Document document = TestUtilities.createDocument();
 		this.xmlFileManager.setDocumentToCreate(document);
 		this.diagramXmlManager.setElementNameOfRoot("diagram");
@@ -358,11 +360,12 @@ public class DiagramControllerTestCase {
 		
 		Assert.assertEquals(1, this.graphPersistenceService.getSaveCalls());
 		Assert.assertSame(controller.getGraph(), this.graphPersistenceService.getGraphToSave());
+		Assert.assertEquals("projectName/Datos/Diagram-rep", this.graphPersistenceService.getSavePath());
 		
 		Assert.assertSame(controller.getDiagram(), this.diagramXmlManager.getDiagramRelatedToElement());
 		Assert.assertSame(document, this.xmlFileManager.getDocumentToSave());
 		Assert.assertEquals("diagram", ((Element)document.getFirstChild()).getTagName());
-		Assert.assertEquals("Diagram-comp", this.xmlFileManager.getPathToSave());
+		Assert.assertEquals("projectName/Datos/Diagram-comp", this.xmlFileManager.getPathToSave());
 	}
 	
 	@Test

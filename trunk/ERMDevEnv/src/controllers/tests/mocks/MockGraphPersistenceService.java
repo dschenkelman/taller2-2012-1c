@@ -10,6 +10,8 @@ public class MockGraphPersistenceService implements IGraphPersistenceService {
 	
 	private mxGraph graphToSave;
 
+	private String savePath;
+
 	@Override
 	public void load(String name, mxGraph graph) {
 	}
@@ -18,6 +20,7 @@ public class MockGraphPersistenceService implements IGraphPersistenceService {
 	public void save(String name, mxGraph graph) {
 		this.saveCalls++;
 		this.graphToSave = graph;
+		this.savePath = name;
 	}
 	
 	public int getSaveCalls(){
@@ -26,5 +29,9 @@ public class MockGraphPersistenceService implements IGraphPersistenceService {
 
 	public mxGraph getGraphToSave(){
 		return this.graphToSave;
+	}
+
+	public String getSavePath() {
+		return this.savePath;
 	}
 }
