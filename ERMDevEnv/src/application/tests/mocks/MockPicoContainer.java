@@ -118,12 +118,12 @@ public class MockPicoContainer implements MutablePicoContainer {
 
 	@Override
 	public Object getComponent(Object arg0) {
-		return null;
+		return this.mappings.get(arg0);
 	}
 
 	@Override
 	public <T> T getComponent(Class<T> arg0) {
-		return null;
+		return (T)this.mappings.get(arg0);
 	}
 
 	@Override
