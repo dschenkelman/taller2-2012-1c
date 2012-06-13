@@ -5,11 +5,18 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import controllers.IDiagramController;
+import controllers.IProjectController;
 
-public class ShellWindow {
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.factories.FormFactory;
+import javax.swing.JSplitPane;
+
+public class ShellWindow implements IShell {
 
 	private JFrame frame;
+	private JSplitPane splitPane;
 
 	/**
 	 * Launch the application.
@@ -20,11 +27,12 @@ public class ShellWindow {
 				try {
 					Bootstrapper bootstrapper = new Bootstrapper();
 					bootstrapper.run();
-					IDiagramController diagramController = 
-						(IDiagramController) bootstrapper.getContainer().getComponent(IDiagramController.class);
 					ShellWindow window = new ShellWindow();
+					bootstrapper.getContainer().addComponent(IShell.class, window);
+					IProjectController projectController = 
+						(IProjectController) bootstrapper.getContainer().getComponent(IProjectController.class);
 					window.frame.setVisible(true);
-					window.frame.add((Component) diagramController.getView());
+					window.setLeftContent((Component) projectController.getView());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -44,8 +52,34 @@ public class ShellWindow {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setResizable(false);
+		frame.setBounds(0, 0, 250, 675);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),},
+			new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("default:grow"),}));
+		
+		this.splitPane = new JSplitPane();
+		this.splitPane.setRightComponent(null);
+		this.splitPane.setLeftComponent(null);
+		frame.getContentPane().add(splitPane, "2, 2, fill, fill");
 	}
 
+	@Override
+	public void setLeftContent(Object c) {
+		this.splitPane.setLeftComponent((Component) c);
+	}
+
+	@Override
+	public void setRightContent(Object c) {
+		this.splitPane.setRightComponent((Component) c);
+	}
+
+	@Override
+	public void activateFullSize() {
+		frame.setSize(1200, 675);
+	}
 }

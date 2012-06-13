@@ -19,8 +19,11 @@ public class MockDiagramController implements IDiagramController {
 
 	private Diagram diagram;
 	
+	private MockDiagramView view;
+	
 	public MockDiagramController(){
 		this.diagram = new Diagram();
+		this.view = new MockDiagramView();
 	}
 	
 	@Override
@@ -61,7 +64,7 @@ public class MockDiagramController implements IDiagramController {
 
 	@Override
 	public IDiagramView getView() {
-		return null;
+		return this.view;
 	}
 
 	@Override

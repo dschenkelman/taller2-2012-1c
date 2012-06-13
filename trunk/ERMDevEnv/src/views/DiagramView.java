@@ -37,6 +37,8 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 	public DiagramView() {
 		setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("default:grow"),
@@ -63,7 +65,7 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 				RowSpec.decode("default:grow"),}));
 		
 		this.btnEntity = new JButton("Entidad");
-		add(this.btnEntity, "4, 2");
+		add(this.btnEntity, "2, 2");
 		
 		this.btnRelationship = new JButton("Relacion");
 		add(this.btnRelationship, "6, 2");
@@ -106,7 +108,7 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 			e1.printStackTrace();
 		}
 		
-		this.add(graphComponent, "4, 4, 14, 1, fill, fill");
+		this.add(graphComponent, "2, 4, 15, 1, fill, fill");
 		
 		this.btnEntity.addMouseListener(new MouseAdapter() {
 			@Override
