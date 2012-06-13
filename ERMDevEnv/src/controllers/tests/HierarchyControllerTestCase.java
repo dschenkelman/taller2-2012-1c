@@ -21,15 +21,13 @@ public class HierarchyControllerTestCase {
 	private MockProjectContext projectContext;
 	private MockHierarchyView hierarchyView;
 	private HierarchyController hierarchyController;
-	private Hierarchy pendingHierarchy;
 	
 	@Before
 	public void setUp() throws Exception {
 		this.hierarchyCreatedListener = new MockHierarchyEventListener();
 		this.projectContext = new MockProjectContext();
 		this.hierarchyView = new MockHierarchyView();
-		this.pendingHierarchy = new Hierarchy();
-		this.hierarchyController = new HierarchyController(this.projectContext, this.pendingHierarchy, this.hierarchyView);
+		this.hierarchyController = new HierarchyController(this.projectContext, this.hierarchyView);
 	}
 	
 	@Test
@@ -64,7 +62,7 @@ public class HierarchyControllerTestCase {
 		
 		this.projectContext.setEntityCollection(entityCollection);
 			
-		this.hierarchyController = new HierarchyController(this.projectContext, this.pendingHierarchy, this.hierarchyView);
+		this.hierarchyController = new HierarchyController(this.projectContext, this.hierarchyView);
 		this.hierarchyController.addSuscriber(this.hierarchyCreatedListener);
 		this.hierarchyController.create();
 		
@@ -85,7 +83,7 @@ public class HierarchyControllerTestCase {
 		EntityCollection entityCollection = new EntityCollection();
 		entityCollection.add(entity);
 		
-		this.hierarchyController = new HierarchyController(this.projectContext, this.pendingHierarchy, this.hierarchyView);
+		this.hierarchyController = new HierarchyController(this.projectContext, this.hierarchyView);
 		
 		this.hierarchyController.addSpecificEntity(entity);
 		Assert.assertFalse(this.hierarchyController.addSpecificEntity(entity));
@@ -112,7 +110,7 @@ public class HierarchyControllerTestCase {
 		
 		this.projectContext.setEntityCollection(entityCollection);
 			
-		this.hierarchyController = new HierarchyController(this.projectContext, this.pendingHierarchy, this.hierarchyView);
+		this.hierarchyController = new HierarchyController(this.projectContext, this.hierarchyView);
 		this.hierarchyController.addSpecificEntity(entity1);
 		this.hierarchyController.addSpecificEntity(entity2);
 		
@@ -133,7 +131,7 @@ public class HierarchyControllerTestCase {
 		entityCollection.add(entity3);
 		
 		this.projectContext.setEntityCollection(entityCollection);
-		this.hierarchyController = new HierarchyController(this.projectContext, this.pendingHierarchy, this.hierarchyView);
+		this.hierarchyController = new HierarchyController(this.projectContext, this.hierarchyView);
 		this.hierarchyController.addSuscriber(this.hierarchyCreatedListener);
 		this.hierarchyController.create();
 		

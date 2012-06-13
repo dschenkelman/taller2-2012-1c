@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import models.Entity;
-import models.EntityCollection;
 import models.Hierarchy;
 import views.IHierarchyView;
 import infrastructure.IProjectContext;
@@ -16,10 +15,10 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 	private Hierarchy pendingHierarchy;
 	private List<IHierarchyEventListener> listeners;
 	
-	public HierarchyController(IProjectContext projectContext, Hierarchy hierarchy, 
+	public HierarchyController(IProjectContext projectContext,
 			IHierarchyView hierachyView) {
 		super(projectContext);
-		this.pendingHierarchy = hierarchy;
+		this.pendingHierarchy = new Hierarchy();
 		this.setHierachyView(hierachyView);
 		this.listeners = new ArrayList<IHierarchyEventListener>();
 	}
@@ -33,6 +32,7 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 	
 	@Override
 	public void create() {
+		this.hierarchyView.create();
 		this.hierarchyView.showView();
 	}
 	

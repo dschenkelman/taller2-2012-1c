@@ -1,32 +1,19 @@
 package controllers.factories;
 
-import infrastructure.IProjectContext;
-
 import org.picocontainer.MutablePicoContainer;
 
-import views.HierarchyView;
-
-import application.Bootstrapper;
-import models.Hierarchy;
-
-import controllers.HierarchyController;
 import controllers.IHierarchyController;
 
 public class HierarchyControllerFactory implements IHierarchyControllerFactory {
 
+	private MutablePicoContainer container;
+	
+	public HierarchyControllerFactory(MutablePicoContainer container) {
+		this.container = container;
+	}
+	
 	@Override
 	public IHierarchyController create() {
-		return this.create(new Hierarchy());
+		return this.container.getComponent(IHierarchyController.class);
 	}
-
-	@Override
-	public IHierarchyController create(Hierarchy hierarchy) {
-		Bootstrapper bootstrapper = new Bootstrapper();
-		bootstrapper.run();
-		MutablePicoContainer container = bootstrapper.getContainer();
-		return new HierarchyController(container.getComponent(IProjectContext.class), hierarchy, new HierarchyView());
-	}
-	
-	
-
 }

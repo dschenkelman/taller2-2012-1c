@@ -3,7 +3,6 @@ package controllers;
 import java.util.UUID;
 
 import models.Entity;
-import models.EntityCollection;
 import views.IHierarchyView;
 
 public interface IHierarchyController {

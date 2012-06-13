@@ -27,4 +27,16 @@ public class MockHierarchyView implements IHierarchyView {
         this.showViewWasCall = true;
     }
 
+	@Override
+	public void create() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
