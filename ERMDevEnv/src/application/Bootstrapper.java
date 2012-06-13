@@ -26,6 +26,8 @@ import persistence.IXmlManager;
 import persistence.XmlFileManager;
 import views.DiagramView;
 import views.IDiagramView;
+import views.IProjectView;
+import views.ProjectView;
 import controllers.DiagramController;
 import controllers.IDiagramController;
 import controllers.IProjectController;
@@ -81,6 +83,7 @@ public class Bootstrapper {
 					.addComponent(IGraphPersistenceService.class, GraphPersistenceService.class)
 					.addComponent(IDiagramControllerFactory.class, DiagramControllerFactory.class)
 					.addComponent(IProjectController.class, ProjectController.class)
+					.addComponent(IProjectView.class, ProjectView.class)
 					.addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class);
 	}
 

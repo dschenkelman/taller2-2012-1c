@@ -18,6 +18,8 @@ import persistence.IXmlManager;
 import persistence.XmlFileManager;
 import views.DiagramView;
 import views.IDiagramView;
+import views.IProjectView;
+import views.ProjectView;
 import controllers.DiagramController;
 import controllers.IDiagramController;
 import controllers.IProjectController;
@@ -58,7 +60,7 @@ public class BootstrapperTests {
 		
 		bootstrapper.run();
 		
-		Assert.assertEquals(15, this.container.getMappings().size());
+		Assert.assertEquals(16, this.container.getMappings().size());
 		Assert.assertSame(this.container, this.container.getMappings().get(MutablePicoContainer.class));
 		Assert.assertSame(DiagramController.class, this.container.getMappings().get(IDiagramController.class));
 		Assert.assertSame(DiagramView.class, this.container.getMappings().get(IDiagramView.class));
@@ -74,6 +76,7 @@ public class BootstrapperTests {
 		Assert.assertSame(GraphPersistenceService.class, this.container.getMappings().get(IGraphPersistenceService.class));
 		Assert.assertSame(DiagramControllerFactory.class, this.container.getMappings().get(IDiagramControllerFactory.class));
 		Assert.assertSame(ProjectController.class, this.container.getMappings().get(IProjectController.class));
+		Assert.assertSame(ProjectView.class, this.container.getMappings().get(IProjectView.class));
 	}
 	
 	private TestableBootstrapper createBootstrapper(){
