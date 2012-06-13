@@ -4,6 +4,8 @@ import java.awt.Point;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import models.Diagram;
+
 import views.IDiagramView;
 
 import com.mxgraph.model.mxCell;
@@ -11,6 +13,7 @@ import com.mxgraph.view.mxGraph;
 
 public interface IDiagramController extends IEntityEventListener, IRelationshipEventListener, IHierarchyEventListener{
 	mxGraph getGraph();
+	Diagram getDiagram();
 	void createEntity();
 	void createRelationship();
 	void createHierarchy();

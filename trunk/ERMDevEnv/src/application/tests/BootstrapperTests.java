@@ -20,6 +20,8 @@ import views.DiagramView;
 import views.IDiagramView;
 import controllers.DiagramController;
 import controllers.IDiagramController;
+import controllers.IProjectController;
+import controllers.ProjectController;
 
 import application.Bootstrapper;
 import application.tests.mocks.MockPicoContainer;
@@ -56,7 +58,7 @@ public class BootstrapperTests {
 		
 		bootstrapper.run();
 		
-		Assert.assertEquals(13, this.container.getMappings().size());
+		Assert.assertEquals(15, this.container.getMappings().size());
 		Assert.assertSame(this.container, this.container.getMappings().get(MutablePicoContainer.class));
 		Assert.assertSame(DiagramController.class, this.container.getMappings().get(IDiagramController.class));
 		Assert.assertSame(DiagramView.class, this.container.getMappings().get(IDiagramView.class));
@@ -70,6 +72,8 @@ public class BootstrapperTests {
 		Assert.assertSame(AttributeControllerFactory.class, this.container.getMappings().get(IAttributeControllerFactory.class));
 		Assert.assertSame(KeyControllerFactory.class, this.container.getMappings().get(IKeysControllerFactory.class));
 		Assert.assertSame(GraphPersistenceService.class, this.container.getMappings().get(IGraphPersistenceService.class));
+		Assert.assertSame(DiagramControllerFactory.class, this.container.getMappings().get(IDiagramControllerFactory.class));
+		Assert.assertSame(ProjectController.class, this.container.getMappings().get(IProjectController.class));
 	}
 	
 	private TestableBootstrapper createBootstrapper(){
