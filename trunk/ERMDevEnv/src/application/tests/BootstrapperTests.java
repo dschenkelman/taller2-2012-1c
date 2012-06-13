@@ -17,11 +17,15 @@ import persistence.IXmlFileManager;
 import persistence.IXmlManager;
 import persistence.XmlFileManager;
 import views.DiagramView;
+import views.HierarchyView;
 import views.IDiagramView;
+import views.IHierarchyView;
 import views.IProjectView;
 import views.ProjectView;
 import controllers.DiagramController;
+import controllers.HierarchyController;
 import controllers.IDiagramController;
+import controllers.IHierarchyController;
 import controllers.IProjectController;
 import controllers.ProjectController;
 
@@ -60,7 +64,7 @@ public class BootstrapperTests {
 		
 		bootstrapper.run();
 		
-		Assert.assertEquals(16, this.container.getMappings().size());
+		Assert.assertEquals(18, this.container.getMappings().size());
 		Assert.assertSame(this.container, this.container.getMappings().get(MutablePicoContainer.class));
 		Assert.assertSame(DiagramController.class, this.container.getMappings().get(IDiagramController.class));
 		Assert.assertSame(DiagramView.class, this.container.getMappings().get(IDiagramView.class));
@@ -69,7 +73,9 @@ public class BootstrapperTests {
 		Assert.assertSame(ProjectContext.class, this.container.getMappings().get(IProjectContext.class));
 		Assert.assertSame(MockEntityControllerFactory.class, this.container.getMappings().get(IEntityControllerFactory.class));
 		Assert.assertSame(RelationshipControllerFactory.class, this.container.getMappings().get(IRelationshipControllerFactory.class));
-		Assert.assertSame(MockHierarchyControllerFactory.class, this.container.getMappings().get(IHierarchyControllerFactory.class));
+		Assert.assertSame(HierarchyControllerFactory.class, this.container.getMappings().get(IHierarchyControllerFactory.class));
+		Assert.assertSame(HierarchyController.class, this.container.getMappings().get(IHierarchyController.class));
+		Assert.assertSame(HierarchyView.class, this.container.getMappings().get(IHierarchyView.class));
 		Assert.assertSame(StrongEntityControllerFactory.class, this.container.getMappings().get(IStrongEntityControllerFactory.class));
 		Assert.assertSame(AttributeControllerFactory.class, this.container.getMappings().get(IAttributeControllerFactory.class));
 		Assert.assertSame(KeyControllerFactory.class, this.container.getMappings().get(IKeysControllerFactory.class));
