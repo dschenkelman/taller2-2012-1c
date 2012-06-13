@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import models.Diagram;
 import models.Entity;
 import models.Hierarchy;
 import models.Relationship;
@@ -16,6 +17,12 @@ import controllers.IDiagramController;
 
 public class MockDiagramController implements IDiagramController {
 
+	private Diagram diagram;
+	
+	public MockDiagramController(){
+		this.diagram = new Diagram();
+	}
+	
 	@Override
 	public void addEntity(double x, double y) throws Exception {
 	}
@@ -90,5 +97,10 @@ public class MockDiagramController implements IDiagramController {
 	@Override
 	public void handleCreatedEvent(Hierarchy hierarchy) {
 		
+	}
+
+	@Override
+	public Diagram getDiagram() {
+		return this.diagram;
 	}
 }

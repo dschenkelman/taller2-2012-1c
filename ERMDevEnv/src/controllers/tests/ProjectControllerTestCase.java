@@ -4,20 +4,31 @@ package controllers.tests;
 import java.io.File;
 import java.util.UUID;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import controllers.ProjectController;
+import controllers.factories.tests.mocks.MockDiagramControllerFactory;
+import controllers.tests.mocks.MockDiagramController;
 import controllers.tests.mocks.MockProjectContext;
 
 public class ProjectControllerTestCase {
 
 	private MockProjectContext projectContext;
 	
+	private MockDiagramControllerFactory diagramControllerFactory;
+
+	private MockDiagramController diagramController;
+	
 	@Before
 	public void setUp() throws Exception {
 		this.projectContext = new MockProjectContext();
+		this.diagramControllerFactory = new MockDiagramControllerFactory();
+		this.diagramController = new MockDiagramController();
+		this.diagramControllerFactory.setController(this.diagramController);
 	}
 	
 	@Test
@@ -48,6 +59,38 @@ public class ProjectControllerTestCase {
 		deleteFile(projectName);
 	}
 	
+	@Test
+	public void testShouldSetCurrentDiagramNameToPrincipal(){
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		
+		Assert.assertNull(controller.getCurrentDiagramController());
+		controller.createProject(projectName);
+		
+		Assert.assertSame(diagramController, controller.getCurrentDiagramController());
+		Assert.assertEquals("Principal", diagramController.getDiagram().getName());
+		
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	@Test
+	public void testShouldAddDiagramAsTreeModelRoot(){
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		
+		Assert.assertNull(controller.getProjectTree());
+		
+		controller.createProject(projectName);
+		
+		Assert.assertSame(this.diagramController.getDiagram(), ((DefaultMutableTreeNode)controller.getProjectTree().getRoot()).getUserObject());
+		
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
 	private void deleteFile(String name){
 		File file = new File(name);
 		file.delete();
@@ -59,6 +102,6 @@ public class ProjectControllerTestCase {
 	}
 	
 	private ProjectController createController(){
-		return new ProjectController(this.projectContext);
+		return new ProjectController(this.projectContext, this.diagramControllerFactory);
 	}
 }

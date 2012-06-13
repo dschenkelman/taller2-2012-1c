@@ -28,6 +28,8 @@ import views.DiagramView;
 import views.IDiagramView;
 import controllers.DiagramController;
 import controllers.IDiagramController;
+import controllers.IProjectController;
+import controllers.ProjectController;
 
 public class Bootstrapper {
 
@@ -77,6 +79,8 @@ public class Bootstrapper {
 					.addComponent(IStrongEntityControllerFactory.class, StrongEntityControllerFactory.class)
 					.addComponent(IKeysControllerFactory.class, KeyControllerFactory.class)
 					.addComponent(IGraphPersistenceService.class, GraphPersistenceService.class)
+					.addComponent(IDiagramControllerFactory.class, DiagramControllerFactory.class)
+					.addComponent(IProjectController.class, ProjectController.class)
 					.addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class);
 	}
 
