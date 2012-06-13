@@ -25,11 +25,15 @@ import persistence.IXmlFileManager;
 import persistence.IXmlManager;
 import persistence.XmlFileManager;
 import views.DiagramView;
+import views.HierarchyView;
 import views.IDiagramView;
+import views.IHierarchyView;
 import views.IProjectView;
 import views.ProjectView;
 import controllers.DiagramController;
+import controllers.HierarchyController;
 import controllers.IDiagramController;
+import controllers.IHierarchyController;
 import controllers.IProjectController;
 import controllers.ProjectController;
 
@@ -77,7 +81,9 @@ public class Bootstrapper {
 					.addComponent(IProjectContext.class, ProjectContext.class)
 					.addComponent(IEntityControllerFactory.class, MockEntityControllerFactory.class)
 					.addComponent(IRelationshipControllerFactory.class, RelationshipControllerFactory.class)
-					.addComponent(IHierarchyControllerFactory.class, MockHierarchyControllerFactory.class)
+					.addComponent(IHierarchyControllerFactory.class, HierarchyControllerFactory.class)
+					.addComponent(IHierarchyController.class, HierarchyController.class)
+					.addComponent(IHierarchyView.class, HierarchyView.class)
 					.addComponent(IStrongEntityControllerFactory.class, StrongEntityControllerFactory.class)
 					.addComponent(IKeysControllerFactory.class, KeyControllerFactory.class)
 					.addComponent(IGraphPersistenceService.class, GraphPersistenceService.class)
