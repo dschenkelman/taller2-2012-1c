@@ -105,11 +105,4 @@ public class MockHierarchyControllerFactory implements IHierarchyControllerFacto
 			}
 		};
 	}
-
-	@Override
-	public IHierarchyController create(Hierarchy hierarchy) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

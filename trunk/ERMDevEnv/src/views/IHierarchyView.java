@@ -9,4 +9,8 @@ public interface IHierarchyView {
 	boolean isVisible();
 
 	void showView();
+
+	public void update();
+
+	public void create();
 }

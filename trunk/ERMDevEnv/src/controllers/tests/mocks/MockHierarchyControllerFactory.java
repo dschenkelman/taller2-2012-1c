@@ -19,12 +19,6 @@ public class MockHierarchyControllerFactory implements IHierarchyControllerFacto
 		return this.controller;
 	}
 
-	@Override
-	public IHierarchyController create(Hierarchy hierarchy) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public int getCreateCallsCount() {
 		return this.createCalls;
 	}

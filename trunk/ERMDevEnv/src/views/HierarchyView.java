@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -45,7 +46,6 @@ public class HierarchyView implements IHierarchyView{
 	
 	public HierarchyView()
 	{
-		//this.availableEntities = (List<Entity>) this.hierarchyController.getAvailableEntities();
 		// frame
 		this.frame1 = new JFrame(HierarchyView.TITLE);
 		this.frame1.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -63,16 +63,9 @@ public class HierarchyView implements IHierarchyView{
 		container.add(this.comBoxGeneralEntity, CC.xywh(2, 14, 40, 10));
 		
 		// specific entities
-		DefaultListModel listModel = new DefaultListModel();
-		if (this.availableEntities != null)
-			for (Entity entity : this.availableEntities)
-			{
-				this.comBoxGeneralEntity.addItem(entity);
-				listModel.addElement(entity);
-			}
 		this.specificEntitiesLabel = new JLabel("Entidades Específicas");
 		this.availableEntitiesLabel = new JLabel("Entidades Disponibles");
-		this.lstAvailableEntities = new JList(listModel);
+		this.lstAvailableEntities = new JList();
 		this.lstSpecificEntities = new JList(new DefaultListModel());
 		this.availableEntitiesLabel.setLabelFor(this.lstAvailableEntities);
 		this.specificEntitiesLabel.setLabelFor(this.lstSpecificEntities);
@@ -138,10 +131,12 @@ public class HierarchyView implements IHierarchyView{
 				for (int i = 0; i < lstAvailableEntities.getSelectedValues().length; i++)
 				{
 					Entity entity = (Entity) lstAvailableEntities.getSelectedValues()[i];
-					listModelAvailableEntities.removeElement(entity);
-					listModelSpecificEntities.addElement(entity);
 					try {
-						hierarchyController.addSpecificEntity(entity);
+						if (hierarchyController.addSpecificEntity(entity)) {
+							comBoxGeneralEntity.removeItem(entity);
+							listModelAvailableEntities.removeElement(entity);
+							listModelSpecificEntities.addElement(entity);
+						}
 					} catch (Exception e1) {
 					}
 				}
@@ -158,6 +153,7 @@ public class HierarchyView implements IHierarchyView{
 					Entity entity = (Entity) lstSpecificEntities.getSelectedValues()[i];
 					listModelSpecificEntities.removeElement(entity);
 					listModelAvailableEntities.addElement(entity);
+					comBoxGeneralEntity.addItem(entity);
 					hierarchyController.removeSpecificEntity(entity);
 				}
 			}
@@ -191,14 +187,21 @@ public class HierarchyView implements IHierarchyView{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JComboBox comBox = (JComboBox) e.getSource();
+				
+				DefaultComboBoxModel combGeneralMdl = (DefaultComboBoxModel) comBoxGeneralEntity.getModel();
+				DefaultListModel lstAvailableMdl = (DefaultListModel) lstAvailableEntities.getModel();
+				
+				for (Entity entity : availableEntities)
+					if (combGeneralMdl.getIndexOf(entity) != -1 && lstAvailableMdl.indexOf(entity) == -1)
+						lstAvailableMdl.addElement(entity);
+				
 				if (comBox.getSelectedIndex() != 0)
 				{
 					Entity entity = (Entity) comBox.getSelectedItem();
 					hierarchyController.setGeneralEntity(entity);
-					System.out.print(entity.toString());
+					lstAvailableMdl.removeElement(entity);
 				}else{
 					hierarchyController.setGeneralEntity(null);
-					System.out.print("null");
 				}
 			}
 		});
@@ -208,6 +211,35 @@ public class HierarchyView implements IHierarchyView{
 	public void showView() {
 		this.frame1.pack();
 		this.frame1.setVisible(true);
+	}
+
+	@Override
+	public void update() {
+		this.availableEntities = (List<Entity>) this.hierarchyController.getAvailableEntities();
+		
+		//specific entities
+		DefaultComboBoxModel combGeneralMdl = (DefaultComboBoxModel) this.comBoxGeneralEntity.getModel();
+		DefaultListModel lstAvailableMdl = (DefaultListModel) this.lstAvailableEntities.getModel();
+		DefaultListModel lstSpecificMdl = (DefaultListModel) this.lstSpecificEntities.getModel();
+
+		for (Entity entity : this.availableEntities)
+			if (combGeneralMdl.getIndexOf(entity) == -1 && lstSpecificMdl.indexOf(entity) == -1) {
+					combGeneralMdl.addElement(entity);
+					lstAvailableMdl.addElement(entity);
+			}			
+	}
+
+	@Override
+	public void create() {
+		this.availableEntities = (List<Entity>) this.hierarchyController.getAvailableEntities();
+		//general entity and available entities
+		DefaultListModel listModel = new DefaultListModel();
+		for (Entity entity : this.availableEntities)
+		{
+			this.comBoxGeneralEntity.addItem(entity);
+			listModel.addElement(entity);
+		}
+		this.lstAvailableEntities.setModel(listModel);
 	}
 
 }
