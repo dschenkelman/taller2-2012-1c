@@ -1,52 +1,100 @@
-/*
- * Created by JFormDesigner on Fri Jun 08 17:55:10 ART 2012
- */
-
 package views;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.jgoodies.forms.factories.*;
 
 import com.jgoodies.forms.layout.*;
 import controllers.IAttributeController;
 import models.Attribute;
+import models.AttributeCollection;
 import models.AttributeType;
-import models.EntityType;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-/**
- * @author Gaston Daniel Festa
- */
 public class AttributeView implements IAttributeView {
-    private IAttributeController controller;
-    private DefaultListModel defaultListModel;
-    private List<Attribute> attributeModelList;
 
     public AttributeView() {
         initComponents();
         defaultListModel = new DefaultListModel();
         attributeList.setModel(defaultListModel);
+        this.attributeSelected = null;
+        attributeList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent listSelectionEvent) {
+                attributeSelected();
+            }
+        });
         createAttributeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 createAttribute();
             }
         });
+        addToAttibuteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                addAttributeToSelectedOne();
+            }
+        });
+    }
+
+    @Override
+    public void setController(IAttributeController attributeController) {
+        this.controller = attributeController;
+    }
+
+    @Override
+    public void setAttributes(List<Attribute> attributes) {
+        this.attributeModelList = attributes;
+        for (Attribute attribute : this.attributeModelList) {
+            defaultListModel.addElement(attribute);
+        }
+    }
+
+    @Override
+    public Object getInternalFrame() {
+        return panel1;
+    }
+
+    private void attributeSelected() {
+        attributeSelected = (Attribute) attributeList.getSelectedValue();
+        AttributeCollection attributeCollection = attributeSelected.getAttributes();
+        if (attributeCollection != null) {
+            DefaultListModel internalListModel = new DefaultListModel();
+            for (Attribute attribute : attributeCollection) {
+                internalListModel.addElement(attribute);
+            }
+            this.internalAttributesList.setModel(internalListModel);
+        }else {
+            this.internalAttributesList.setModel(new DefaultListModel());
+        }
+    }
+
+    private void addAttributeToSelectedOne() {
+        AttributeType attType = AttributeType.valueOf((String) type.getItemAt(type.getSelectedIndex()));
+        controller.addNewAttributeToAttribute(name.getText(), false, null, attType, expression.getText(), attributeSelected);
+        cleanView();
+        attributeSelected();
     }
 
     private void createAttribute() {
         if (!name.getText().equals("")) {
             AttributeType type = AttributeType.valueOf((String) this.type.getItemAt(this.type.getSelectedIndex()));
-            this.controller.addNewAttribute(name.getText(), false, null, type, this.expression.getText());
-            this.name.setText("");
-            this.expression.setText("");
-            this.type.setSelectedIndex(0);
+            Attribute attribute = this.controller.addNewAttribute(name.getText(), false, null, type, this.expression.getText());
+            cleanView();
+            defaultListModel.addElement(attribute);
         }
+    }
+
+    private void cleanView() {
+        this.name.setText("");
+        this.expression.setText("");
+        this.type.setSelectedIndex(0);
     }
 
     private void initComponents() {
@@ -56,6 +104,8 @@ public class AttributeView implements IAttributeView {
         attributesText = new JLabel();
         scrollPane1 = new JScrollPane();
         attributeList = new JList();
+        scrollPane3 = new JScrollPane();
+        internalAttributesList = new JList();
         nameText = new JLabel();
         name = new JTextField();
         typeText = new JLabel();
@@ -64,6 +114,7 @@ public class AttributeView implements IAttributeView {
         scrollPane2 = new JScrollPane();
         expression = new JTextArea();
         createAttributeButton = new JButton();
+        addToAttibuteButton = new JButton();
 
         //======== panel1 ========
         {
@@ -81,8 +132,8 @@ public class AttributeView implements IAttributeView {
             });
 
             panel1.setLayout(new FormLayout(
-                    "19*(default, $lcgap), default",
-                    "19*(default, $lgap), default"));
+                    "22*(default, $lcgap), 11*(default), 2*($lcgap, default), 3*(default), 3*($lcgap, default), 16*(default)",
+                    "20*(default, $lgap), default"));
 
             //---- attributesText ----
             attributesText.setText("Attributes");
@@ -92,31 +143,41 @@ public class AttributeView implements IAttributeView {
             {
                 scrollPane1.setViewportView(attributeList);
             }
-            panel1.add(scrollPane1, CC.xywh(3, 3, 20, 21));
+            panel1.add(scrollPane1, CC.xywh(3, 3, 27, 23));
+
+            //======== scrollPane3 ========
+            {
+                scrollPane3.setViewportView(internalAttributesList);
+            }
+            panel1.add(scrollPane3, CC.xywh(31, 3, 29, 23));
 
             //---- nameText ----
             nameText.setText("Name");
-            panel1.add(nameText, CC.xy(27, 3));
-            panel1.add(name, CC.xywh(31, 3, 5, 1));
+            panel1.add(nameText, CC.xy(66, 3));
+            panel1.add(name, CC.xywh(70, 3, 5, 1));
 
             //---- typeText ----
             typeText.setText("Type");
-            panel1.add(typeText, CC.xy(27, 5));
-            panel1.add(type, CC.xy(31, 5));
+            panel1.add(typeText, CC.xy(66, 5));
+            panel1.add(type, CC.xy(70, 5));
 
             //---- expressionText ----
             expressionText.setText("Expression");
-            panel1.add(expressionText, CC.xy(27, 7));
+            panel1.add(expressionText, CC.xy(66, 7));
 
             //======== scrollPane2 ========
             {
                 scrollPane2.setViewportView(expression);
             }
-            panel1.add(scrollPane2, CC.xywh(31, 7, 6, 6));
+            panel1.add(scrollPane2, CC.xywh(70, 7, 6, 6));
 
             //---- createAttributeButton ----
             createAttributeButton.setText("Create Attribute");
-            panel1.add(createAttributeButton, CC.xy(31, 19));
+            panel1.add(createAttributeButton, CC.xy(66, 21));
+
+            //---- addToAttibuteButton ----
+            addToAttibuteButton.setText("Add to selected attribute");
+            panel1.add(addToAttibuteButton, CC.xy(70, 21));
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -127,6 +188,8 @@ public class AttributeView implements IAttributeView {
     private JLabel attributesText;
     private JScrollPane scrollPane1;
     private JList attributeList;
+    private JScrollPane scrollPane3;
+    private JList internalAttributesList;
     private JLabel nameText;
     private JTextField name;
     private JLabel typeText;
@@ -135,23 +198,11 @@ public class AttributeView implements IAttributeView {
     private JScrollPane scrollPane2;
     private JTextArea expression;
     private JButton createAttributeButton;
+    private JButton addToAttibuteButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
-    @Override
-    public void setController(IAttributeController attributeController) {
-        this.controller = attributeController;
-    }
-
-    @Override
-    public void setAttributes(List<Attribute> attributes) {
-        this.attributeModelList = attributes;
-        for (Attribute attribute : this.attributeModelList) {
-            defaultListModel.addElement(attribute.getName());
-        }
-    }
-
-    @Override
-    public Object getInternalFrame() {
-        return panel1;
-    }
+    private IAttributeController controller;
+    private DefaultListModel defaultListModel;
+    private List<Attribute> attributeModelList;
+    private Attribute attributeSelected;
 }

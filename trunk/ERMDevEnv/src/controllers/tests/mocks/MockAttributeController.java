@@ -20,8 +20,9 @@ public class MockAttributeController implements IAttributeController {
     }
 
     @Override
-    public void addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression) {
+    public Attribute addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression) {
         //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
@@ -36,6 +37,11 @@ public class MockAttributeController implements IAttributeController {
 
     public void setAttributeView(IAttributeView attributeView){
         this.attributeView = attributeView;
+    }
+
+    @Override
+    public void addNewAttributeToAttribute(String nameText, boolean isKey, Cardinality cardinality, AttributeType attType, String expression, Attribute attributeSelected) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void setAttributes(List<Attribute> attributes){
