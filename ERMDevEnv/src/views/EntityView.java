@@ -58,8 +58,8 @@ public class EntityView implements IEntityView {
             frame1.setTitle("Entity Creation");
             Container frame1ContentPane = frame1.getContentPane();
             frame1ContentPane.setLayout(new FormLayout(
-                "28*(default, $lcgap), default",
-                "42*(default, $lgap), default"));
+                "56*(default, $lcgap), default",
+                "54*(default, $lgap), default"));
 
             //---- entityNameText ----
             entityNameText.setText("Name: ");
@@ -88,22 +88,22 @@ public class EntityView implements IEntityView {
                 panel1.setLayout(panel1Layout);
                 panel1Layout.setHorizontalGroup(
                     panel1Layout.createParallelGroup()
-                        .addGap(0, 877, Short.MAX_VALUE)
+                        .addGap(0, 1017, Short.MAX_VALUE)
                 );
                 panel1Layout.setVerticalGroup(
                     panel1Layout.createParallelGroup()
-                        .addGap(0, 775, Short.MAX_VALUE)
+                        .addGap(0, 1061, Short.MAX_VALUE)
                 );
             }
-            frame1ContentPane.add(panel1, CC.xywh(5, 11, 47, 73));
+            frame1ContentPane.add(panel1, CC.xywh(5, 11, 109, 97));
 
             //---- selectKeysButton ----
             selectKeysButton.setText("Select Keys");
-            frame1ContentPane.add(selectKeysButton, CC.xy(47, 85));
+            frame1ContentPane.add(selectKeysButton, CC.xy(111, 109));
 
             //---- createButton ----
             createButton.setText("Create");
-            frame1ContentPane.add(createButton, CC.xy(51, 85));
+            frame1ContentPane.add(createButton, CC.xy(113, 109));
             frame1.pack();
             frame1.setLocationRelativeTo(frame1.getOwner());
         }
@@ -125,8 +125,8 @@ public class EntityView implements IEntityView {
     public void addAttributeView(IAttributeView attributeView) {
         this.attributeView = attributeView;
         frame1.remove(panel1);
-        Container frame1ContentPane  = frame1.getContentPane();
-        frame1ContentPane.add((Component) attributeView.getInternalFrame(), CC.xywh(5, 11, 47, 73));
+        Container frame1ContentPane = frame1.getContentPane();
+        frame1ContentPane.add((Component) attributeView.getInternalFrame(), CC.xywh(5, 11, 109, 97));
 
     }
 

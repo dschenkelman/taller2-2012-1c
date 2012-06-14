@@ -22,9 +22,11 @@ public class AttributeController extends BaseController implements IAttributeCon
     }
 
     @Override
-    public void addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression) {
+    public Attribute addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression) {
         String expressionClone = (attributeType == AttributeType.calculated || attributeType == AttributeType.copy) ? expression : null;
-        this.attributes.add(new Attribute(name, isKey, cardinality, new IdGroupCollection(), attributeType, expressionClone));
+        Attribute att = new Attribute(name, isKey, cardinality, new IdGroupCollection(), attributeType, expressionClone);
+        this.attributes.add(att);
+        return att;
     }
 
     @Override
@@ -42,5 +44,24 @@ public class AttributeController extends BaseController implements IAttributeCon
         this.attributeView = attributeView;
         this.attributeView.setController(this);
         this.attributeView.setAttributes(this.attributes);
+    }
+
+    @Override
+    public void addNewAttributeToAttribute(String nameText, boolean isKey, Cardinality cardinality, AttributeType attType, String expression, Attribute attributeSelected) {
+        if (attributeSelected != null) {
+            String expressionClone = (attType == AttributeType.calculated || attType == AttributeType.copy) ? expression : null;
+            Attribute att = new Attribute(nameText, isKey, cardinality, new IdGroupCollection(), attType, expressionClone);
+            try {
+                AttributeCollection attributeCollection = attributeSelected.getAttributes();
+                if (attributeCollection == null) {
+                    attributeCollection = new AttributeCollection();
+                    attributeSelected.setAttributes(attributeCollection);
+                }
+                attributeCollection.addAttribute(att);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

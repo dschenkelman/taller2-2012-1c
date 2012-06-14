@@ -123,4 +123,9 @@ public class Attribute implements INameable, IKey {
     public UUID getId() {
         return myID;
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }
