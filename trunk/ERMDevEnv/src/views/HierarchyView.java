@@ -65,7 +65,7 @@ public class HierarchyView implements IHierarchyView{
 		// specific entities
 		this.specificEntitiesLabel = new JLabel("Entidades Específicas");
 		this.availableEntitiesLabel = new JLabel("Entidades Disponibles");
-		this.lstAvailableEntities = new JList();
+		this.lstAvailableEntities = new JList(new DefaultListModel());
 		this.lstSpecificEntities = new JList(new DefaultListModel());
 		this.availableEntitiesLabel.setLabelFor(this.lstAvailableEntities);
 		this.specificEntitiesLabel.setLabelFor(this.lstSpecificEntities);
@@ -222,24 +222,30 @@ public class HierarchyView implements IHierarchyView{
 		DefaultListModel lstAvailableMdl = (DefaultListModel) this.lstAvailableEntities.getModel();
 		DefaultListModel lstSpecificMdl = (DefaultListModel) this.lstSpecificEntities.getModel();
 
-		for (Entity entity : this.availableEntities)
-			if (combGeneralMdl.getIndexOf(entity) == -1 && lstSpecificMdl.indexOf(entity) == -1) {
-					combGeneralMdl.addElement(entity);
-					lstAvailableMdl.addElement(entity);
-			}			
+		for (Entity entity : this.availableEntities) {
+			if (this.hierarchyController.hasSpecificEntity(entity)) {
+				lstSpecificMdl.addElement(entity);
+				continue;
+			}
+			if (this.hierarchyController.isGeneralEntity(entity)) {
+				combGeneralMdl.addElement(entity);
+				continue;
+			}
+			combGeneralMdl.addElement(entity);
+			lstAvailableMdl.addElement(entity);
+		}
 	}
 
 	@Override
 	public void create() {
 		this.availableEntities = (List<Entity>) this.hierarchyController.getAvailableEntities();
 		//general entity and available entities
-		DefaultListModel listModel = new DefaultListModel();
+		DefaultListModel listModel = (DefaultListModel) this.lstAvailableEntities.getModel();
 		for (Entity entity : this.availableEntities)
 		{
 			this.comBoxGeneralEntity.addItem(entity);
 			listModel.addElement(entity);
 		}
-		this.lstAvailableEntities.setModel(listModel);
 	}
 
 }

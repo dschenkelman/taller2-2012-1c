@@ -2,9 +2,8 @@ package controllers.tests.mocks;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 import models.Entity;
+import models.Hierarchy;
 import views.IHierarchyView;
 import controllers.IHierarchyController;
 import controllers.IHierarchyEventListener;
@@ -38,12 +37,6 @@ public class MockHierarchyController implements IHierarchyController {
 	@Override
 	public void create() {
 		this.createCalls++;		
-	}
-
-	@Override
-	public UUID getGeneralEntityUUID() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -88,6 +81,24 @@ public class MockHierarchyController implements IHierarchyController {
 	public Iterable<Entity> getAvailableEntities() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean hasSpecificEntity(Entity entity) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isGeneralEntity(Entity entity) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void create(Hierarchy hierarchy) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
