@@ -40,7 +40,8 @@ public class HierarchyControllerTestCase {
 	public void testShouldAddNullGeneralEntity()
 	{
 		Assert.assertTrue(this.hierarchyController.setGeneralEntity(null));
-		Assert.assertNull(this.hierarchyController.getGeneralEntityUUID());
+		Assert.assertFalse(this.hierarchyController.isGeneralEntity(new Entity("")));
+		Assert.assertFalse(this.hierarchyController.isGeneralEntity(null));
 	}
 	
 	@Test

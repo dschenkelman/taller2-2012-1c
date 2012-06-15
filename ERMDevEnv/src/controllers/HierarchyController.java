@@ -2,8 +2,9 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+import controllers.factories.EntityControllerFactory;
+import controllers.factories.mock.MockEntityControllerFactory;
 import models.Entity;
 import models.Hierarchy;
 import views.IHierarchyView;
@@ -28,6 +29,13 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 	{
 		this.hierarchyView = hierarchyView;
 		this.hierarchyView.setController(this);
+	}
+	
+	@Override
+	public void create(Hierarchy hierarchy) {
+		this.pendingHierarchy = hierarchy;
+		this.hierarchyView.update();
+		this.hierarchyView.showView();
 	}
 	
 	@Override
@@ -65,11 +73,6 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 		
 		this.pendingHierarchy.setGeneralEntityId(entity.getId());
 		return true;
-	}
-
-	@Override
-	public UUID getGeneralEntityUUID() {
-		return this.pendingHierarchy.getGeneralEntityId();
 	}
 	
 	@Override
@@ -112,6 +115,21 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 
 	@Override
 	public Iterable<Entity> getAvailableEntities() {
-		return this.projectContext.getEntityCollection(new Entity(""));
+		//return this.projectContext.getEntityCollection(new Entity(""));
+		return MockEntityControllerFactory.Entities;
+	}
+
+	@Override
+	public boolean hasSpecificEntity(Entity entity) {
+		return this.pendingHierarchy.hasChild(entity.getId());
+	}
+
+	@Override
+	public boolean isGeneralEntity(Entity entity) {
+		if (this.pendingHierarchy.getGeneralEntityId() == null || entity == null)
+			return false;
+		if (this.pendingHierarchy.getGeneralEntityId().equals(entity.getId()))
+			return true;
+		return false;
 	}
 }

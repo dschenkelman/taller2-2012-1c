@@ -1,7 +1,5 @@
 package controllers.factories.mock;
 
-import java.util.UUID;
-
 import views.IHierarchyView;
 import models.Entity;
 import models.Hierarchy;
@@ -45,12 +43,6 @@ public class MockHierarchyControllerFactory implements IHierarchyControllerFacto
 			public boolean removeSpecificEntity(Entity entity) {
 				// TODO Auto-generated method stub
 				return false;
-			}
-			
-			@Override
-			public UUID getGeneralEntityUUID() {
-				// TODO Auto-generated method stub
-				return null;
 			}
 			
 			@Override
@@ -102,6 +94,24 @@ public class MockHierarchyControllerFactory implements IHierarchyControllerFacto
 			public Iterable<Entity> getAvailableEntities() {
 				// TODO Auto-generated method stub
 				return null;
+			}
+
+			@Override
+			public boolean hasSpecificEntity(Entity entity) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean isGeneralEntity(Entity entity) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public void create(Hierarchy hierarchy) {
+				// TODO Auto-generated method stub
+				
 			}
 		};
 	}

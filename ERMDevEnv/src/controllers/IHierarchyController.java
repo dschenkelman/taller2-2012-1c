@@ -1,8 +1,7 @@
 package controllers;
 
-import java.util.UUID;
-
 import models.Entity;
+import models.Hierarchy;
 import views.IHierarchyView;
 
 public interface IHierarchyController {
@@ -17,8 +16,6 @@ public interface IHierarchyController {
 
 	boolean setGeneralEntity(Entity entity);
 
-	UUID getGeneralEntityUUID();
-
 	boolean addSpecificEntity(Entity entity) throws Exception;
 
 	boolean removeSpecificEntity(Entity entity);
@@ -28,4 +25,11 @@ public interface IHierarchyController {
 	void setExclusive(boolean exclusive);
 
 	Iterable<Entity> getAvailableEntities();
+
+	boolean hasSpecificEntity(Entity entity);
+
+	boolean isGeneralEntity(Entity entity);
+
+	void create(Hierarchy hierarchy);
+
 }
