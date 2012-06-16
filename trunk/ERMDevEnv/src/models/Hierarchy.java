@@ -34,7 +34,7 @@ public class Hierarchy {
 	}
 
 	public Hierarchy() {
-		this(null, false, false);
+		this(null, true, true);
 	}
 
 	public void setGeneralEntityId(UUID generalEntityUUID) {

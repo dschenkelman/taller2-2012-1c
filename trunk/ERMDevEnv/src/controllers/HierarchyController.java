@@ -55,7 +55,10 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 			return false;
 		if (this.pendingHierarchy.count() == 0)
 			return false;
-		
+		if (this.pendingHierarchy.count() == 1) {
+			this.setExclusive(false);
+			this.setTotal(false);
+		}
 		for (IHierarchyEventListener listeners : this.listeners)
 			listeners.handleCreatedEvent(this.pendingHierarchy);
 		return true;
