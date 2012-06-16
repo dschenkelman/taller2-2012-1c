@@ -50,8 +50,8 @@ public class HierarchyControllerTestCase {
 		this.hierarchyController.create();
 		Assert.assertTrue(hierarchyView.isVisible());
 		Hierarchy hierarchy = this.hierarchyController.getPendingHierarchy();
-		Assert.assertFalse(hierarchy.isExclusive());
-		Assert.assertFalse(hierarchy.isTotal());
+		Assert.assertTrue(hierarchy.isExclusive());
+		Assert.assertTrue(hierarchy.isTotal());
 	}
 	
 	@Test

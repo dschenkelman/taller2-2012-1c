@@ -9,6 +9,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.DefaultButtonModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -17,6 +20,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JRadioButton;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 import models.Entity;
@@ -39,8 +43,10 @@ public class HierarchyView implements IHierarchyView{
 	private JButton arrAddSpecificEntities;
 	private JButton arrRemoveSpecificEntities;
 	private JComboBox comBoxGeneralEntity;
-	private JCheckBox chkBoxTotal;
-	private JCheckBox chkBoxExclusive;
+	private JRadioButton btnTotal;
+	private JRadioButton btnParcial;
+	private JRadioButton btnExclusive;
+	private JRadioButton btnInclusive;
 	private JButton createHierarchy;
 	private JButton cancel;
 	
@@ -81,12 +87,26 @@ public class HierarchyView implements IHierarchyView{
 		this.arrRemoveSpecificEntities = new BasicArrowButton(BasicArrowButton.WEST);
 		container.add(this.arrRemoveSpecificEntities, CC.xywh(62, 75, 8, 15));
 		
-		// checkBoxs
-		this.chkBoxTotal = new JCheckBox("Total");
-		container.add(this.chkBoxTotal, CC.xywh(88, 8, 30, 10));
+		// Button group
+		this.btnTotal = new JRadioButton("Total");
+		container.add(this.btnTotal, CC.xywh(88, 8, 30, 10));
 		
-		this.chkBoxExclusive = new JCheckBox("Exclusiva");
-		container.add(this.chkBoxExclusive, CC.xywh(88, 18, 30, 10));
+		this.btnParcial = new JRadioButton("Parcial");
+		container.add(this.btnParcial, CC.xywh(88, 18, 30, 10));
+		
+		this.btnExclusive = new JRadioButton("Exclusive");
+		container.add(this.btnExclusive, CC.xywh(58, 8, 30, 10));
+		
+		this.btnInclusive = new JRadioButton("Inclusive");
+		container.add(this.btnInclusive, CC.xywh(58, 18, 30, 10));
+		
+		ButtonGroup group1 = new ButtonGroup();
+		ButtonGroup group2 = new ButtonGroup();
+		
+		group1.add(this.btnTotal);
+		group1.add(this.btnParcial);
+		group2.add(this.btnExclusive);
+		group2.add(this.btnInclusive);
 		
 		// accept and cancel
 		this.createHierarchy = new JButton("Aceptar");
@@ -128,6 +148,7 @@ public class HierarchyView implements IHierarchyView{
 			public void mouseClicked(MouseEvent e) {
 				DefaultListModel listModelSpecificEntities = (DefaultListModel) lstSpecificEntities.getModel();
 				DefaultListModel listModelAvailableEntities = (DefaultListModel) lstAvailableEntities.getModel();
+		
 				for (int i = 0; i < lstAvailableEntities.getSelectedValues().length; i++)
 				{
 					Entity entity = (Entity) lstAvailableEntities.getSelectedValues()[i];
@@ -140,6 +161,7 @@ public class HierarchyView implements IHierarchyView{
 					} catch (Exception e1) {
 					}
 				}
+				checkCountSpecificEntities(listModelSpecificEntities.size());
 			}
 		});
 		this.arrRemoveSpecificEntities.addMouseListener(new MouseAdapter() {
@@ -156,28 +178,29 @@ public class HierarchyView implements IHierarchyView{
 					comBoxGeneralEntity.addItem(entity);
 					hierarchyController.removeSpecificEntity(entity);
 				}
+				checkCountSpecificEntities(listModelSpecificEntities.getSize());
 			}
 		});
 		
-		// check box
-		this.chkBoxTotal.addItemListener(new ItemListener() {
+		// button group
+		this.btnTotal.addItemListener(new ItemListener() {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.DESELECTED)
-					hierarchyController.setTotal(false);
-				else
+				if (e.getStateChange() == ItemEvent.SELECTED)
 					hierarchyController.setTotal(true);
+				else
+					hierarchyController.setTotal(false);
 			}
 		});
-		this.chkBoxExclusive.addItemListener(new ItemListener() {
+		this.btnExclusive.addItemListener(new ItemListener() {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.DESELECTED)
-					hierarchyController.setExclusive(false);
-				else
+				if (e.getStateChange() == ItemEvent.SELECTED)
 					hierarchyController.setExclusive(true);
+				else
+					hierarchyController.setExclusive(false);
 			}
 		});
 		
@@ -207,6 +230,22 @@ public class HierarchyView implements IHierarchyView{
 		});
 	}
 
+	private void checkCountSpecificEntities(int size) {
+		if (size == 1) {
+			btnParcial.doClick();
+			btnInclusive.doClick();
+			btnParcial.setEnabled(false);
+			btnTotal.setEnabled(false);
+			btnExclusive.setEnabled(false);
+			btnInclusive.setEnabled(false);
+		}else {
+			btnParcial.setEnabled(true);
+			btnTotal.setEnabled(true);
+			btnExclusive.setEnabled(true);
+			btnInclusive.setEnabled(true);
+		}
+	}
+	
 	@Override
 	public void showView() {
 		this.frame1.pack();
