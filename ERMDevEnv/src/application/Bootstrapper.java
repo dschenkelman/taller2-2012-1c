@@ -11,6 +11,7 @@ import infrastructure.ProjectContext;
 
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
+import static org.picocontainer.Characteristics.CACHE;
 
 import com.mxgraph.canvas.mxGraphics2DCanvas;
 import com.mxgraph.shape.mxIMarker;
@@ -73,24 +74,24 @@ public class Bootstrapper {
 
 	private void configureContainer() {
 		this.container
-					.addComponent(MutablePicoContainer.class, this.container)
+					.as(CACHE).addComponent(MutablePicoContainer.class, this.container)
 					.addComponent(IDiagramController.class, DiagramController.class)
 					.addComponent(IDiagramView.class, DiagramView.class)
 					.addComponent(IXmlManager.class, DiagramXmlManager.class)
-					.addComponent(IXmlFileManager.class, XmlFileManager.class)
-					.addComponent(IProjectContext.class, ProjectContext.class)
-					.addComponent(IEntityControllerFactory.class, MockEntityControllerFactory.class)
-					.addComponent(IRelationshipControllerFactory.class, RelationshipControllerFactory.class)
-					.addComponent(IHierarchyControllerFactory.class, HierarchyControllerFactory.class)
+					.as(CACHE).addComponent(IXmlFileManager.class, XmlFileManager.class)
+					.as(CACHE).addComponent(IProjectContext.class, ProjectContext.class)
+					.as(CACHE).addComponent(IEntityControllerFactory.class, MockEntityControllerFactory.class)
+					.as(CACHE).addComponent(IRelationshipControllerFactory.class, RelationshipControllerFactory.class)
+					.as(CACHE).addComponent(IHierarchyControllerFactory.class, HierarchyControllerFactory.class)
 					.addComponent(IHierarchyController.class, HierarchyController.class)
 					.addComponent(IHierarchyView.class, HierarchyView.class)
-					.addComponent(IStrongEntityControllerFactory.class, StrongEntityControllerFactory.class)
-					.addComponent(IKeysControllerFactory.class, KeyControllerFactory.class)
-					.addComponent(IGraphPersistenceService.class, GraphPersistenceService.class)
-					.addComponent(IDiagramControllerFactory.class, DiagramControllerFactory.class)
+					.as(CACHE).addComponent(IStrongEntityControllerFactory.class, StrongEntityControllerFactory.class)
+					.as(CACHE).addComponent(IKeysControllerFactory.class, KeyControllerFactory.class)
+					.as(CACHE).addComponent(IGraphPersistenceService.class, GraphPersistenceService.class)
+					.as(CACHE).addComponent(IDiagramControllerFactory.class, DiagramControllerFactory.class)
 					.addComponent(IProjectController.class, ProjectController.class)
 					.addComponent(IProjectView.class, ProjectView.class)
-					.addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class);
+					.as(CACHE).addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class);
 	}
 
 	public MutablePicoContainer createContainer() {
