@@ -6,7 +6,7 @@ import models.Entity;
 import models.Hierarchy;
 import views.IHierarchyView;
 import controllers.IHierarchyController;
-import controllers.IHierarchyEventListener;
+import controllers.listeners.IHierarchyEventListener;
 
 public class MockHierarchyController implements IHierarchyController {
 

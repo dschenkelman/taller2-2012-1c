@@ -172,6 +172,6 @@ public class Diagram implements Iterable<Diagram>{
 	
 	@Override
 	public String toString() {
-		return "D:" + this.getName();
+		return this.getName();
 	}
 }

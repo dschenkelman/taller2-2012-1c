@@ -43,6 +43,7 @@ import com.mxgraph.view.mxGraph;
 import controllers.factories.IEntityControllerFactory;
 import controllers.factories.IHierarchyControllerFactory;
 import controllers.factories.IRelationshipControllerFactory;
+import controllers.listeners.IDiagramEventListener;
 import controllers.tests.mocks.MockGraphPersistenceService;
 
 import views.IDiagramView;
@@ -79,6 +80,7 @@ public class DiagramController extends BaseController
 	private Point dragStartPoint;
 	private IHierarchyControllerFactory hierarchyControllerFactory;
 	private IGraphPersistenceService graphPersistenceService;
+	private List<IDiagramEventListener> listeners;
 	
 	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
 			IEntityControllerFactory entityControllerFactory,
@@ -109,6 +111,7 @@ public class DiagramController extends BaseController
 		this.diagramView = diagramView;
 		this.diagramView.setController(this);
 		this.graphPersistenceService = graphPersistenceService;
+		this.listeners = new ArrayList<IDiagramEventListener>();
 	}
 	
 	public IDiagramView getView(){
@@ -252,6 +255,9 @@ public class DiagramController extends BaseController
 		}
 		finally {
 			this.diagram.getEntities().add(this.pendingEntity);
+			for (IDiagramEventListener listener : this.listeners) {
+				listener.handleEntityAdded(this.diagram, this.pendingEntity);
+			}
 			this.graph.getModel().endUpdate();
 		}
 		
@@ -570,5 +576,9 @@ public class DiagramController extends BaseController
 
 	public mxCell getHierarchyConnectorCell(String id) {
 		return this.hierarchyConnectorCells.get(CellConstants.HierarchyConnectorPrefix + id);
+	}
+
+	public void addListener(IDiagramEventListener listener) {
+		this.listeners.add(listener);
 	}
 }

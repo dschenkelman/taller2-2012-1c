@@ -1,6 +1,6 @@
 package controllers.tests.mocks;
 
-import controllers.IEntityEventListener;
+import controllers.listeners.IEntityEventListener;
 import models.Entity;
 
 public class MockEntityEventListener implements IEntityEventListener {

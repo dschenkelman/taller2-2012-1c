@@ -1,10 +1,10 @@
 package controllers;
 
 import infrastructure.IProjectContext;
+import infrastructure.visual.DiagramTreeNode;
 
 import java.io.File;
 
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
@@ -39,7 +39,7 @@ public class ProjectController implements IProjectController {
 		this.diagramController = this.diagramControllerFactory.create();
 		this.diagramController.getDiagram().setName(DefaultDiagramName);
 		
-		this.projectTree = new DefaultTreeModel(new DefaultMutableTreeNode(this.diagramController.getDiagram()));
+		this.projectTree = new DefaultTreeModel(new DiagramTreeNode(this.diagramController.getDiagram()));
 		this.shell.setRightContent(this.diagramController.getView());
 		this.shell.activateFullSize();
 	}

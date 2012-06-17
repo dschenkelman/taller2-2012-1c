@@ -14,6 +14,7 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
 import controllers.IDiagramController;
+import controllers.listeners.IDiagramEventListener;
 
 public class MockDiagramController implements IDiagramController {
 
@@ -105,5 +106,11 @@ public class MockDiagramController implements IDiagramController {
 	@Override
 	public Diagram getDiagram() {
 		return this.diagram;
+	}
+
+	@Override
+	public void addListener(IDiagramEventListener iDiagramEventListener) {
+		// TODO Auto-generated method stub
+		
 	}
 }

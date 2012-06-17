@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Random;
 
 import controllers.factories.IEntityControllerFactory;
+import controllers.listeners.IEntityEventListener;
 import views.IEntityView;
 import models.Entity;
 import models.EntityType;
 import controllers.IEntityController;
-import controllers.IEntityEventListener;
 
 public class MockEntityControllerFactory implements IEntityControllerFactory {
 

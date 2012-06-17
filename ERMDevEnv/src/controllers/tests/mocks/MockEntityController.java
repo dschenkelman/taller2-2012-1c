@@ -5,7 +5,7 @@ import java.util.List;
 
 import views.IEntityView;
 import controllers.IEntityController;
-import controllers.IEntityEventListener;
+import controllers.listeners.IEntityEventListener;
 
 public class MockEntityController implements IEntityController{
 

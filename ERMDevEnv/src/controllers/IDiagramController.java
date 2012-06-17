@@ -11,7 +11,13 @@ import views.IDiagramView;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
+import controllers.listeners.IDiagramEventListener;
+import controllers.listeners.IEntityEventListener;
+import controllers.listeners.IHierarchyEventListener;
+import controllers.listeners.IRelationshipEventListener;
+
 public interface IDiagramController extends IEntityEventListener, IRelationshipEventListener, IHierarchyEventListener{
+	void addListener(IDiagramEventListener iDiagramEventListener);
 	mxGraph getGraph();
 	Diagram getDiagram();
 	void createEntity();
