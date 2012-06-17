@@ -61,7 +61,7 @@ public class MockPicoContainer implements MutablePicoContainer {
 
 	@Override
 	public MutablePicoContainer as(Properties... arg0) {
-		return null;
+		return this;
 	}
 
 	@Override
