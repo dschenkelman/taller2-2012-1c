@@ -1,11 +1,12 @@
 package infrastructure.visual;
 
-import javax.swing.text.html.parser.Entity;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 import models.Diagram;
 import models.Hierarchy;
 import models.Relationship;
+import models.Entity;
 
 public class DiagramTreeNode extends DefaultMutableTreeNode {
 
@@ -32,8 +33,10 @@ public class DiagramTreeNode extends DefaultMutableTreeNode {
 		this.addChildFolders();
 	}
 	
-	public void addEntity(Entity entity){
+	public void addEntity(Entity entity, DefaultTreeModel tree){
 		this.entitiesNode.add(new DefaultMutableTreeNode(entity));
+		int index = this.entitiesNode.getChildCount() - 1;
+		tree.nodesWereInserted(this.entitiesNode, new int[]{index});
 	}
 	
 	public void addRelationship(Relationship relationship){

@@ -8,21 +8,26 @@ import java.io.File;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
+import models.Diagram;
+import models.Entity;
+
 import application.IShell;
 
 import views.IProjectView;
 
 import controllers.factories.IDiagramControllerFactory;
+import controllers.listeners.IDiagramEventListener;
 
-public class ProjectController implements IProjectController {
+public class ProjectController implements IProjectController, IDiagramEventListener {
 	private static String DefaultDiagramName = "Principal";
 	
 	private IProjectContext projectContext;
 	private IDiagramControllerFactory diagramControllerFactory;
 	private IDiagramController diagramController;
-	private TreeModel projectTree;
+	private DefaultTreeModel projectTree;
 	private IProjectView projectView;
 	private IShell shell;
+	private DiagramTreeNode currentDiagramNode;
 	
 	public ProjectController(IProjectContext projectContext, IProjectView projectView, IShell shell, IDiagramControllerFactory diagramControllerFactory) {
 		this.projectContext = projectContext;
@@ -38,8 +43,10 @@ public class ProjectController implements IProjectController {
 		
 		this.diagramController = this.diagramControllerFactory.create();
 		this.diagramController.getDiagram().setName(DefaultDiagramName);
+		this.diagramController.addListener(this);
 		
-		this.projectTree = new DefaultTreeModel(new DiagramTreeNode(this.diagramController.getDiagram()));
+		this.currentDiagramNode = new DiagramTreeNode(this.diagramController.getDiagram());
+		this.projectTree = new DefaultTreeModel(this.currentDiagramNode);
 		this.shell.setRightContent(this.diagramController.getView());
 		this.shell.activateFullSize();
 	}
@@ -55,5 +62,10 @@ public class ProjectController implements IProjectController {
 	@Override
 	public IProjectView getView() {
 		return this.projectView;
+	}
+
+	@Override
+	public void handleEntityAdded(Diagram diagram, Entity entity) {
+		this.currentDiagramNode.addEntity(entity, this.projectTree);
 	}
 }

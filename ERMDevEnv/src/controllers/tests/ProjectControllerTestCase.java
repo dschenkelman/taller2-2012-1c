@@ -2,9 +2,13 @@ package controllers.tests;
 
 
 import java.io.File;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.UUID;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import models.Entity;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -114,6 +118,23 @@ public class ProjectControllerTestCase {
 	}
 	
 	@Test
+	public void testShouldAddSelfAsListenerToDiagram(){
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		
+		Assert.assertEquals(0, this.diagramController.getListeners().size());
+		
+		controller.createProject(projectName);
+		
+		Assert.assertEquals(1, this.diagramController.getListeners().size());
+		Assert.assertSame(controller, this.diagramController.getListeners().get(0));
+		
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	@Test
 	public void testShouldSetControllerViewAsShellRightContent(){
 		String projectName = UUID.randomUUID().toString();
 		
@@ -141,6 +162,39 @@ public class ProjectControllerTestCase {
 		controller.createProject(projectName);
 		
 		Assert.assertEquals(1, this.shell.getFullSizeCalls());
+		
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	@Test
+	public void testShouldAddEntityToDiagramTreeNodeWhenEntityIsAddedToDiagram(){
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		controller.createProject(projectName);
+		
+		Entity entity = new Entity("Product");
+		controller.handleEntityAdded(this.diagramController.getDiagram(), entity);
+		
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
+		
+		boolean found = false;
+		
+		Enumeration children = root.children();
+		while (children.hasMoreElements()) {
+		  DefaultMutableTreeNode element = (DefaultMutableTreeNode)children.nextElement();
+		  if (String.class.isInstance(element.getUserObject())){
+			  String value = (String)element.getUserObject();
+			  if (value.equalsIgnoreCase("Entidades")){
+				  Assert.assertSame(entity, ((DefaultMutableTreeNode)element.getLastChild()).getUserObject());
+				  found = true;
+				  break;
+			  }
+		  }
+		}
+		
+		Assert.assertTrue(found);
 		
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);

@@ -1,5 +1,7 @@
 package controllers.tests.mocks;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.Point;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,10 +23,13 @@ public class MockDiagramController implements IDiagramController {
 	private Diagram diagram;
 	
 	private MockDiagramView view;
+
+	private List<IDiagramEventListener> listeners;
 	
 	public MockDiagramController(){
 		this.diagram = new Diagram();
 		this.view = new MockDiagramView();
+		this.listeners = new ArrayList<IDiagramEventListener>();
 	}
 	
 	@Override
@@ -109,8 +114,12 @@ public class MockDiagramController implements IDiagramController {
 	}
 
 	@Override
-	public void addListener(IDiagramEventListener iDiagramEventListener) {
-		// TODO Auto-generated method stub
+	public void addListener(IDiagramEventListener listener) {
+		this.listeners.add(listener);
 		
+	}
+
+	public List<IDiagramEventListener> getListeners() {
+		return this.listeners;
 	}
 }

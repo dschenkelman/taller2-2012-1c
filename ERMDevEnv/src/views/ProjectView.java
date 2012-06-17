@@ -58,7 +58,7 @@ public class ProjectView extends JPanel implements IProjectView {
 
 	@Override
 	public void setController(IProjectController controller) {
-		this.projectController = controller;	
+		this.projectController = controller;
 		
 		this.btnCreate.addMouseListener(new MouseAdapter() {
 			@Override
