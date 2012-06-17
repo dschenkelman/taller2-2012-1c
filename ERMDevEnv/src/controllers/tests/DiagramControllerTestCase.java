@@ -570,6 +570,37 @@ public class DiagramControllerTestCase {
 		Assert.assertSame(diagramController.getDiagram(), listener.getDiagram());
 	}
 	
+	@Test
+	public void shouldRaiseRelationshipAddedEventWhenRelationshipIsAdded() throws Exception{
+		Entity entity1 = new Entity("Entity1");
+		Entity entity2 = new Entity("Entity2");
+		
+		DiagramController diagramController = this.createController();
+		
+		this.addEntityToDiagram(diagramController, entity1, 20, 30);
+		this.addEntityToDiagram(diagramController, entity2, 60, 30);
+		
+		RelationshipEntity relationshipEntity1 = 
+			new RelationshipEntity(entity1, new Cardinality(0, 1), "Role1");
+		RelationshipEntity relationshipEntity2 = 
+			new RelationshipEntity(entity2, new Cardinality(0, Double.POSITIVE_INFINITY), "");
+		
+		Relationship relationship = new Relationship(relationshipEntity1, relationshipEntity2);
+		relationship.setName("Relationship");
+		
+		MockDiagramListener listener = new MockDiagramListener();
+		
+		diagramController.addListener(listener);
+
+		Assert.assertNull(listener.getDiagram());
+		Assert.assertNull(listener.getRelationship());
+		
+		diagramController.handleCreatedEvent(relationship);
+		
+		Assert.assertSame(relationship, listener.getRelationship());
+		Assert.assertSame(diagramController.getDiagram(), listener.getDiagram());
+	}
+	
 	private void addEntityToDiagram(DiagramController diagramController, 
 			Entity entity, double x, double y) throws Exception {
 		diagramController.createEntity();

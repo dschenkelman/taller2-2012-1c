@@ -81,4 +81,9 @@ public class Relationship {
 	public void setAttributes(AttributeCollection attributes) {
 		this.attributes = attributes;
 	}
+	
+	@Override
+	public String toString() {
+		return this.name != null ? this.name : this.id.toString();
+	}
 }

@@ -10,6 +10,7 @@ import javax.swing.tree.TreeModel;
 
 import models.Diagram;
 import models.Entity;
+import models.Relationship;
 
 import application.IShell;
 
@@ -67,5 +68,10 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	@Override
 	public void handleEntityAdded(Diagram diagram, Entity entity) {
 		this.currentDiagramNode.addEntity(entity, this.projectTree);
+	}
+
+	@Override
+	public void handleRelationshipAdded(Diagram diagram, Relationship relationship) {
+		this.currentDiagramNode.addRelationship(relationship, this.projectTree);
 	}
 }
