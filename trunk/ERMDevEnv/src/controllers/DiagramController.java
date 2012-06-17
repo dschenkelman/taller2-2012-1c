@@ -223,6 +223,9 @@ public class DiagramController extends BaseController
 		}
 		finally {
 			this.diagram.getRelationships().add(relationship);
+			for (IDiagramEventListener eventListener : this.listeners) {
+				eventListener.handleRelationshipAdded(this.diagram, relationship);
+			}
 			this.graph.getModel().endUpdate();
 		}
 	}

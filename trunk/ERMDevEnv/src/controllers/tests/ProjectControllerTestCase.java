@@ -9,6 +9,8 @@ import java.util.UUID;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import models.Entity;
+import models.Relationship;
+import models.RelationshipEntity;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -176,30 +178,56 @@ public class ProjectControllerTestCase {
 		
 		Entity entity = new Entity("Product");
 		controller.handleEntityAdded(this.diagramController.getDiagram(), entity);
-		
+
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
 		
-		boolean found = false;
-		
-		Enumeration children = root.children();
-		while (children.hasMoreElements()) {
-		  DefaultMutableTreeNode element = (DefaultMutableTreeNode)children.nextElement();
-		  if (String.class.isInstance(element.getUserObject())){
-			  String value = (String)element.getUserObject();
-			  if (value.equalsIgnoreCase("Entidades")){
-				  Assert.assertSame(entity, ((DefaultMutableTreeNode)element.getLastChild()).getUserObject());
-				  found = true;
-				  break;
-			  }
-		  }
-		}
-		
-		Assert.assertTrue(found);
+		this.assertObjectInNodeChild(root, "Entidades", entity);
 		
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);
 	}
 	
+	@Test
+	public void testShouldAddRelationshipToDiagramTreeNodeWhenRelationshipIsAddedToDiagram() throws Exception{
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		controller.createProject(projectName);
+		
+		Relationship relationship = new Relationship(new RelationshipEntity(new Entity("E1")), new RelationshipEntity(new Entity("E2")));
+		controller.handleRelationshipAdded(this.diagramController.getDiagram(), relationship);
+
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
+		
+		this.assertObjectInNodeChild(root, "Relaciones", relationship);
+		
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	private void assertObjectInNodeChild(DefaultMutableTreeNode node, String childName, Object object) {
+		boolean found = false;
+		
+		Enumeration children = node.children();
+		while (children.hasMoreElements()) {
+		  DefaultMutableTreeNode element = (DefaultMutableTreeNode)children.nextElement();
+		  if (String.class.isInstance(element.getUserObject())){
+			  String value = (String)element.getUserObject();
+			  if (value.equalsIgnoreCase(childName)){
+				  Enumeration grandChildren = element.children();
+				  while (grandChildren.hasMoreElements()) {
+					  element = (DefaultMutableTreeNode)grandChildren.nextElement();
+					  if (element.getUserObject() == object){
+						  found = true;
+					  }
+				  }
+			  }
+		  }
+		}
+		
+		Assert.assertTrue(found);
+	}
+
 	private void deleteFile(String name){
 		File file = new File(name);
 		file.delete();

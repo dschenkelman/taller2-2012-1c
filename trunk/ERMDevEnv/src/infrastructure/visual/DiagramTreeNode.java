@@ -39,8 +39,10 @@ public class DiagramTreeNode extends DefaultMutableTreeNode {
 		tree.nodesWereInserted(this.entitiesNode, new int[]{index});
 	}
 	
-	public void addRelationship(Relationship relationship){
+	public void addRelationship(Relationship relationship, DefaultTreeModel tree){
 		this.relationshipsNode.add(new DefaultMutableTreeNode(relationship));
+		int index = this.relationshipsNode.getChildCount() - 1;
+		tree.nodesWereInserted(this.relationshipsNode, new int[]{index});
 	}
 	
 	public void addHierarchy(Hierarchy hierarchy){
