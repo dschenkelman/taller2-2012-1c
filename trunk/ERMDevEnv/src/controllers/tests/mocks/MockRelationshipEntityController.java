@@ -10,7 +10,7 @@ import models.RelationshipEntity;
 import views.IRelationshipEntityView;
 import controllers.BaseController;
 import controllers.IRelationshipEntityController;
-import controllers.IRelationshipEntityEventListener;
+import controllers.listeners.IRelationshipEntityEventListener;
 
 public class MockRelationshipEntityController extends BaseController implements
 		IRelationshipEntityController {

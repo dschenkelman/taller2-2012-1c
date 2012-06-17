@@ -12,7 +12,7 @@ import models.RelationshipEntity;
 import models.StrongEntityCollection;
 
 import controllers.IRelationshipController;
-import controllers.IRelationshipEventListener;
+import controllers.listeners.IRelationshipEventListener;
 
 public class MockRelationshipController implements IRelationshipController{
 

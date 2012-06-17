@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import controllers.listeners.IRelationshipEntityEventListener;
+
 import models.Cardinality;
 import models.RelationshipEntity;
 import views.IRelationshipEntityView;

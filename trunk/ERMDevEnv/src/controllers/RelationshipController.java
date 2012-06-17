@@ -12,6 +12,7 @@ import controllers.factories.IAttributeControllerFactory;
 import controllers.factories.IRelationshipEntityControllerFactory;
 import controllers.factories.IStrongEntityControllerFactory;
 import controllers.factories.mock.MockRelationshipEntityControllerFactory;
+import controllers.listeners.IRelationshipEventListener;
 import controllers.tests.mocks.MockAttributeControllerFactory;
 import controllers.tests.mocks.MockProjectContext;
 import controllers.tests.mocks.MockStrongEntityControllerFactory;

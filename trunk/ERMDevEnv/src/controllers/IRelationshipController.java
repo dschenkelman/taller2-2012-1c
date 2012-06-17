@@ -3,6 +3,8 @@ package controllers;
 import java.util.List;
 import java.util.UUID;
 
+import controllers.listeners.IRelationshipEventListener;
+
 import views.IRelationshipView;
 
 import models.Attribute;

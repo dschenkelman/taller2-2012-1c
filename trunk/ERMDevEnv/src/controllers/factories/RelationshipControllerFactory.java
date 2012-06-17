@@ -13,8 +13,8 @@ import models.Relationship;
 import models.RelationshipEntity;
 import models.StrongEntityCollection;
 import controllers.IRelationshipController;
-import controllers.IRelationshipEventListener;
 import controllers.factories.mock.MockEntityControllerFactory;
+import controllers.listeners.IRelationshipEventListener;
 
 public class RelationshipControllerFactory implements
 		IRelationshipControllerFactory {

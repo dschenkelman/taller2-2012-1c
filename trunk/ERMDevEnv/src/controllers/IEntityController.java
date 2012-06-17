@@ -1,5 +1,6 @@
 package controllers;
 
+import controllers.listeners.IEntityEventListener;
 import views.IEntityView;
 
 public interface IEntityController {

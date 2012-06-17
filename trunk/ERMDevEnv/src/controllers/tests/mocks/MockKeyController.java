@@ -1,7 +1,7 @@
 package controllers.tests.mocks;
 
-import controllers.IIdGroupEventListener;
 import controllers.IKeysController;
+import controllers.listeners.IIdGroupEventListener;
 import models.IKey;
 import views.IKeysView;
 

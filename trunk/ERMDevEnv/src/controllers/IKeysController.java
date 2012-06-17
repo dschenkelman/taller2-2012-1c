@@ -1,5 +1,6 @@
 package controllers;
 
+import controllers.listeners.IIdGroupEventListener;
 import views.IKeysView;
 
 public interface IKeysController {

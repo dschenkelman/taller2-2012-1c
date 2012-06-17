@@ -1,7 +1,7 @@
 package controllers.tests.mocks;
 
 import models.Hierarchy;
-import controllers.IHierarchyEventListener;
+import controllers.listeners.IHierarchyEventListener;
 
 public class MockHierarchyEventListener implements IHierarchyEventListener{
 

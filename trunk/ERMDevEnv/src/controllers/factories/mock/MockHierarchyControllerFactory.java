@@ -4,8 +4,8 @@ import views.IHierarchyView;
 import models.Entity;
 import models.Hierarchy;
 import controllers.IHierarchyController;
-import controllers.IHierarchyEventListener;
 import controllers.factories.IHierarchyControllerFactory;
+import controllers.listeners.IHierarchyEventListener;
 
 public class MockHierarchyControllerFactory implements IHierarchyControllerFactory{
 

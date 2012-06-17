@@ -1,5 +1,6 @@
 package controllers;
 
+import controllers.listeners.IHierarchyEventListener;
 import models.Entity;
 import models.Hierarchy;
 import views.IHierarchyView;

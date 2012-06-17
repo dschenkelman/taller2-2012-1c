@@ -9,6 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import infrastructure.Func;
 import infrastructure.IterableExtensions;
 import models.Cardinality;
+import models.Diagram;
 import models.Entity;
 import models.Hierarchy;
 import models.Relationship;
@@ -26,6 +27,8 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEventObject;
 
 import controllers.DiagramController;
+import controllers.listeners.IDiagramEventListener;
+import controllers.tests.mocks.MockDiagramListener;
 import controllers.tests.mocks.MockDiagramView;
 import controllers.tests.mocks.MockDiagramXmlManager;
 import controllers.tests.mocks.MockEntityController;
@@ -544,6 +547,27 @@ public class DiagramControllerTestCase {
 		Object[] entity4HierarchyConnectors = diagramController.getGraph().getEdgesBetween(nodeCell, entity4Cell);
 		Assert.assertEquals(1, entity4HierarchyConnectors.length);
 		Assert.assertSame(entity4HierarchyConnectorCell, entity4HierarchyConnectors[0]);
+	}
+	
+	@Test
+	public void shouldRaiseEntityAddedEventWhenEntityIsAdded() throws Exception{
+		Entity entity = new Entity("Product");
+		
+		MockDiagramListener listener = new MockDiagramListener();
+		
+		DiagramController diagramController = this.createController();
+		diagramController.addListener(listener);
+		
+		diagramController.createEntity();
+		diagramController.handleCreatedEvent(entity);
+		
+		Assert.assertNull(listener.getDiagram());
+		Assert.assertNull(listener.getEntity());
+		
+		diagramController.addEntity(0, 0);
+		
+		Assert.assertSame(entity, listener.getEntity());
+		Assert.assertSame(diagramController.getDiagram(), listener.getDiagram());
 	}
 	
 	private void addEntityToDiagram(DiagramController diagramController, 
