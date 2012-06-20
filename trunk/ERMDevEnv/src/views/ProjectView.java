@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 public class ProjectView extends JPanel implements IProjectView {
 
@@ -70,6 +71,18 @@ public class ProjectView extends JPanel implements IProjectView {
 				}
 			}	
 		});
+		
+		this.tree.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				TreePath path = tree.getPathForLocation(e.getX(),e.getY());
+				if (e.getClickCount() == 2) {
+					projectController.changeElement(path);					
+				}
+			}
+		});
 	}
+	
+	
 
 }

@@ -30,7 +30,7 @@ public class EntityController extends BaseController implements IEntityControlle
         this.attributeControllerFactory = attributeControllerFactory;
         this.keysControllerFactory = keysControllerFactory;
         this.listeners = new ArrayList<IEntityEventListener>();
-        this.entityCollection = projectContext.getEntityCollection(this.pendingEntity);
+        this.entityCollection = projectContext.getAllEntities(this.pendingEntity);
         this.setEntityView(entityView);
     }
 

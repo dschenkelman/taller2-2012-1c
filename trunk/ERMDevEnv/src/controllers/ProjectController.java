@@ -9,6 +9,8 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import models.Diagram;
 import models.Entity;
@@ -75,5 +77,17 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	@Override
 	public void handleRelationshipAdded(Diagram diagram, Relationship relationship) {
 		this.currentDiagramNode.addRelationship(relationship, this.projectTree);
+	}
+
+	@Override
+	public void changeElement(TreePath treePath) {
+		this.projectContext.clear();
+		for (Object o : treePath.getPath()) {
+			if (o instanceof DiagramTreeNode) {
+				DiagramTreeNode node = (DiagramTreeNode) o;
+				Diagram diagram = (Diagram) node.getUserObject();
+				this.projectContext.addContextDiagram(diagram);
+			}
+		}
 	}
 }

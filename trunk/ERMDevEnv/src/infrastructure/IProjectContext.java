@@ -13,7 +13,7 @@ public interface IProjectContext {
 	String getDataDirectory();
     Iterable<IStrongEntity> getPossibleStrongEntities(List<IStrongEntity> strongEntitiesToExclude);
 	void clear();
-	Iterable<Entity> getAllEntities();
+	Iterable<Entity> getAllEntities(Entity entityToExclude);
 	Iterable<Entity> getContextEntities(Entity entityToExclude);
 	Iterable<Hierarchy> getAllHierarchies();
 	Iterable<Hierarchy> getContextHierarchies();
