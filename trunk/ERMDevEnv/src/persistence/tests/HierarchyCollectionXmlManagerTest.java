@@ -29,8 +29,6 @@ public class HierarchyCollectionXmlManagerTest {
     private static String TOTALATTRIBUTE = "total";
     private static String EXCLUSIVEATTRIBUTE = "exclusive";
     private static String IDATTRIBUTE = "id";
-    private static String TRUE = "true";
-    private static String FALSE = "false";
 
     private static String PATH = "HierarchyCollectionXmlManagerTest.xml";
 
@@ -38,14 +36,8 @@ public class HierarchyCollectionXmlManagerTest {
     public void testCreateElementOfHierarchyCollection() {
         HierarchyCollection hierarchyCollection = new HierarchyCollection();
         UUID generalEntityUUID = UUID.randomUUID();
-        UUID generalEntityUUID1 = UUID.randomUUID();
-        UUID generalEntityUUID2 = UUID.randomUUID();
-        UUID generalEntityUUID3 = UUID.randomUUID();
         Hierarchy hierarchy;
         hierarchy = hierarchyCollection.createHierarchy(generalEntityUUID, false, true);
-        UUID uuid2 = hierarchyCollection.createHierarchy(generalEntityUUID1, true, true).getId();
-        UUID uuid3 = hierarchyCollection.createHierarchy(generalEntityUUID2, false, false).getId();
-        UUID uuid4 = hierarchyCollection.createHierarchy(generalEntityUUID3, true, false).getId();
 
         UUID uuid = hierarchy.getId();
         UUID child1 = UUID.randomUUID();

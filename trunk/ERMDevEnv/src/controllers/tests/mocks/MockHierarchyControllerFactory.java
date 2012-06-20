@@ -1,6 +1,5 @@
 package controllers.tests.mocks;
 
-import models.Hierarchy;
 import controllers.IHierarchyController;
 import controllers.factories.IHierarchyControllerFactory;
 
