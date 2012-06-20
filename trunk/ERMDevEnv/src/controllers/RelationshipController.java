@@ -1,8 +1,10 @@
 package controllers;
 
 import infrastructure.IProjectContext;
+import infrastructure.IterableExtensions;
 import infrastructure.ProjectContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +31,7 @@ public class RelationshipController implements IRelationshipController {
 	
 	private Relationship pendingRelationship; 
 	private IRelationshipView view;
+	private List<IRelationshipEventListener> listeners;
 	
 	//controllers
 	private IProjectContext pContext;
@@ -56,19 +59,25 @@ public class RelationshipController implements IRelationshipController {
 		this.attributeControllerFactory = attributeControllerFactory;
 		this.strongEntityControllerFactory = strongEntityControllerFactory;
 		this.relationshipEntityControllerFactory = relationshipEntityControllerFactory;	
+		listeners = new ArrayList<IRelationshipEventListener> ();
+		
 	}
 
 	@Override
 	public void create() {
+		
+		
 		view.setController(this);
-		relEntController = relationshipEntityControllerFactory.create(pendingRelationship);
-		attController = this.attributeControllerFactory.create(new AttributeCollection());
+		relEntController = relationshipEntityControllerFactory
+				.create(IterableExtensions.getListOf(pendingRelationship.getRelationshipEntities()));
+		attController = this.attributeControllerFactory.create(pendingRelationship.getAttributes());
 		strongEntController = strongEntityControllerFactory.create(new StrongEntityCollection());
+		this.view.show();
 	}
 
 	@Override
 	public void addCreateListener(IRelationshipEventListener listener) {
-		// TODO Auto-generated method stub
+		listeners.add(listener);
 		
 	}
 
@@ -98,47 +107,25 @@ public class RelationshipController implements IRelationshipController {
 	}
 
 	@Override
-	public Iterable<Attribute> getAttributes() {
-		return attController.getAttributes();
+	public void add() {
+		 
+		AttributeCollection attributeCollection = this.pendingRelationship.getAttributes();
+	        for (Attribute attribute : this.attController.getAttributes()) {
+	            try {
+	                attributeCollection.addAttribute(attribute);
+	            } catch (Exception e) {
+	                //When editing an Relationship
+	                e.printStackTrace();
+	            }
+	        }
+	        
+	        //TODO:Checkear si tengo que setear en invisible la vista
+	        
+	        
+	        for (IRelationshipEventListener listener : listeners) 
+	        	listener.handleCreatedEvent(pendingRelationship);
+	      	    	
 	}
-
-	@Override
-	public List<RelationshipEntity> getRelationshipEntities() {
-		return relEntController.getRelationshipEntities();
-	}
-
-	@Override
-	public void addRelationshipEntity(RelationshipEntity relationshipEntity) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void addRelationshipEntity(UUID randomUUID, Cardinality cardinality,
-			String role) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void addRelationship() {
-		
-		
-	}
-
-	@Override
-	public StrongEntityCollection getStrongEntities() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getType() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	
 
 	
 }

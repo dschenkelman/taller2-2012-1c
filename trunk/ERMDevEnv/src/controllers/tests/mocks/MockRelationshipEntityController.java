@@ -31,8 +31,7 @@ public class MockRelationshipEntityController extends BaseController implements
 
 	@Override
 	public void add(UUID uuid, Cardinality card, String role) {
-		// TODO Auto-generated method stub
-
+		relationshipEntity.add(new RelationshipEntity (uuid,card,role));
 	}
 
 	@Override
