@@ -16,9 +16,6 @@ import controllers.EntityController;
 import controllers.IEntityController;
 import models.EntityType;
 
-/**
- * @author Gaston Daniel Festa
- */
 public class EntityView implements IEntityView {
     private IEntityController entityController;
     private IAttributeView attributeView;
@@ -43,7 +40,7 @@ public class EntityView implements IEntityView {
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Gaston Daniel Festa
+        // Generated using JFormDesigner Evaluation license - santiago storti
         frame1 = new JFrame();
         entityNameText = new JLabel();
         entityName = new JTextField();
@@ -58,8 +55,8 @@ public class EntityView implements IEntityView {
             frame1.setTitle("Entity Creation");
             Container frame1ContentPane = frame1.getContentPane();
             frame1ContentPane.setLayout(new FormLayout(
-                "56*(default, $lcgap), default",
-                "54*(default, $lgap), default"));
+                "74*(default, $lcgap), default",
+                "73*(default, $lgap), default"));
 
             //---- entityNameText ----
             entityNameText.setText("Name: ");
@@ -76,34 +73,26 @@ public class EntityView implements IEntityView {
             //======== panel1 ========
             {
 
-                // JFormDesigner evaluation mark
-                panel1.setBorder(new javax.swing.border.CompoundBorder(
-                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-                        "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
-                        javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-                        java.awt.Color.red), panel1.getBorder())); panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
-
-
                 GroupLayout panel1Layout = new GroupLayout(panel1);
                 panel1.setLayout(panel1Layout);
                 panel1Layout.setHorizontalGroup(
                     panel1Layout.createParallelGroup()
-                        .addGap(0, 1017, Short.MAX_VALUE)
+                        .addGap(0, 1745, Short.MAX_VALUE)
                 );
                 panel1Layout.setVerticalGroup(
                     panel1Layout.createParallelGroup()
-                        .addGap(0, 1061, Short.MAX_VALUE)
+                        .addGap(0, 1269, Short.MAX_VALUE)
                 );
             }
-            frame1ContentPane.add(panel1, CC.xywh(5, 11, 109, 97));
+            frame1ContentPane.add(panel1, CC.xywh(5, 11, 145, 133));
 
             //---- selectKeysButton ----
             selectKeysButton.setText("Select Keys");
-            frame1ContentPane.add(selectKeysButton, CC.xy(111, 109));
+            frame1ContentPane.add(selectKeysButton, CC.xy(145, 147));
 
             //---- createButton ----
             createButton.setText("Create");
-            frame1ContentPane.add(createButton, CC.xy(113, 109));
+            frame1ContentPane.add(createButton, CC.xy(149, 147));
             frame1.pack();
             frame1.setLocationRelativeTo(frame1.getOwner());
         }
@@ -126,7 +115,7 @@ public class EntityView implements IEntityView {
         this.attributeView = attributeView;
         frame1.remove(panel1);
         Container frame1ContentPane = frame1.getContentPane();
-        frame1ContentPane.add((Component) attributeView.getInternalFrame(), CC.xywh(5, 11, 109, 97));
+        frame1ContentPane.add((Component) attributeView.getInternalFrame(), CC.xywh(5, 11, 145, 133));
 
     }
 
@@ -161,7 +150,7 @@ public class EntityView implements IEntityView {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Gaston Daniel Festa
+    // Generated using JFormDesigner Evaluation license - santiago storti
     private JFrame frame1;
     private JLabel entityNameText;
     private JTextField entityName;
