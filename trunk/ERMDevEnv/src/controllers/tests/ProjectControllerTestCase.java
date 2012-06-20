@@ -1,11 +1,15 @@
 package controllers.tests;
 
 
+import infrastructure.visual.DiagramTreeNode;
+
 import java.io.File;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.UUID;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import models.Diagram;
 import models.Entity;
@@ -365,6 +369,36 @@ public class ProjectControllerTestCase {
 			
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);
+	}
+	
+	@Test
+	public void testShouldAddDiagramsInTreeNodeToProjectContext() {
+		Diagram diagram1 = new Diagram();
+		Diagram diagram2 = new Diagram();
+		Diagram diagram3 = new Diagram();
+		diagram1.setName("1");
+		diagram2.setName("2");
+		diagram3.setName("3");
+		DiagramTreeNode tree1 = new DiagramTreeNode(diagram1);
+		DiagramTreeNode tree2 = new DiagramTreeNode(diagram2);
+		DiagramTreeNode tree3 = new DiagramTreeNode(diagram3);
+		
+		DefaultMutableTreeNode child1 = new DefaultMutableTreeNode("dato1");
+		DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("dato2");
+		DefaultMutableTreeNode child4 = new DefaultMutableTreeNode("dato3");
+		
+		Object[] path = {tree1, child1, child2, child4, tree2, tree3};
+		
+		ProjectController controller = this.createController();
+		controller.changeElement(new TreePath(path));
+		
+		List<Diagram> diagrams = this.projectContext.getContextDiagrams();
+		
+		Assert.assertEquals(3, diagrams.size());
+		
+		Assert.assertSame(diagram1, diagrams.get(0));
+		Assert.assertSame(diagram2, diagrams.get(1));
+		Assert.assertSame(diagram3, diagrams.get(2));
 	}
 	
 	private DefaultMutableTreeNode getNodeChildWithObject(DefaultMutableTreeNode node, String childName, Object object) {	
