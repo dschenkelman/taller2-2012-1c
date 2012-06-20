@@ -22,9 +22,9 @@ public class AttributeController extends BaseController implements IAttributeCon
     }
 
     @Override
-    public Attribute addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression) {
-        String expressionClone = (attributeType == AttributeType.calculated || attributeType == AttributeType.copy) ? expression : null;
-        Attribute att = new Attribute(name, isKey, cardinality, new IdGroupCollection(), attributeType, expressionClone);
+    public Attribute addNewAttribute() {
+        String expressionClone = (attributeView.getAttributeType() == AttributeType.calculated || attributeView.getAttributeType() == AttributeType.copy) ? attributeView.getExpression() : null;
+        Attribute att = new Attribute(attributeView.getName(), attributeView.isKey(), attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
         this.attributes.add(att);
         return att;
     }
@@ -47,10 +47,10 @@ public class AttributeController extends BaseController implements IAttributeCon
     }
 
     @Override
-    public void addNewAttributeToAttribute(String nameText, boolean isKey, Cardinality cardinality, AttributeType attType, String expression, Attribute attributeSelected) {
+    public void addNewAttributeToAttribute(Attribute attributeSelected) {
         if (attributeSelected != null) {
-            String expressionClone = (attType == AttributeType.calculated || attType == AttributeType.copy) ? expression : null;
-            Attribute att = new Attribute(nameText, isKey, cardinality, new IdGroupCollection(), attType, expressionClone);
+            String expressionClone = (attributeView.getAttributeType() == AttributeType.calculated || attributeView.getAttributeType() == AttributeType.copy) ? attributeView.getExpression() : null;
+            Attribute att = new Attribute(attributeView.getName(), attributeView.isKey(), attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
             try {
                 AttributeCollection attributeCollection = attributeSelected.getAttributes();
                 if (attributeCollection == null) {
@@ -63,5 +63,16 @@ public class AttributeController extends BaseController implements IAttributeCon
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void editAttribute(Attribute attributeSelected) {
+        attributeSelected.setName(attributeView.getName());
+        attributeSelected.isKey(attributeView.isKey());
+        attributeSelected.setCardinality(attributeView.getCardinality());
+        attributeSelected.setType(attributeView.getAttributeType());
+        AttributeType attType = attributeView.getAttributeType();
+        if (attType == AttributeType.calculated || attType == AttributeType.copy)
+            attributeSelected.setExpression(attributeView.getExpression());
     }
 }

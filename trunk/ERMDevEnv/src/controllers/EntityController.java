@@ -73,7 +73,8 @@ public class EntityController extends BaseController implements IEntityControlle
         this.pendingEntity.setName(entityName);
         pendingEntity.setType(this.entityView.getEntityType());
 
-        AttributeCollection attributeCollection = this.pendingEntity.getAttributes();
+
+        AttributeCollection attributeCollection = new AttributeCollection();
         for (Attribute attribute : this.attributeController.getAttributes()) {
             try {
                 attributeCollection.addAttribute(attribute);
@@ -82,6 +83,8 @@ public class EntityController extends BaseController implements IEntityControlle
                 e.printStackTrace();
             }
         }
+
+        this.pendingEntity.setAttributes(attributeCollection);
 
         for (IEntityEventListener listener : this.listeners) {
             listener.handleCreatedEvent(pendingEntity);

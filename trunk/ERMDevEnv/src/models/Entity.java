@@ -61,6 +61,10 @@ public class Entity implements INameable, IStrongEntity {
         return this.attributes;
     }
 
+    public void setAttributes(AttributeCollection attributeCollection){
+        this.attributes = attributeCollection;
+    }
+
     public StrongEntityCollection getStrongEntities(){
         return this.strongEntityCollection;
     }

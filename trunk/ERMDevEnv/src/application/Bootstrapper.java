@@ -101,7 +101,7 @@ public class Bootstrapper {
 					.addComponent(IXmlManager.class, DiagramXmlManager.class)
 					.as(CACHE).addComponent(IXmlFileManager.class, XmlFileManager.class)
 					.as(CACHE).addComponent(IProjectContext.class, ProjectContext.class)
-					.as(CACHE).addComponent(IEntityControllerFactory.class, MockEntityControllerFactory.class)
+					.as(CACHE).addComponent(IEntityControllerFactory.class, EntityControllerFactory.class)
 					.as(CACHE).addComponent(IRelationshipControllerFactory.class, RelationshipControllerFactory.class)
 					.as(CACHE).addComponent(IHierarchyControllerFactory.class, HierarchyControllerFactory.class)
 					.addComponent(IHierarchyController.class, HierarchyController.class)

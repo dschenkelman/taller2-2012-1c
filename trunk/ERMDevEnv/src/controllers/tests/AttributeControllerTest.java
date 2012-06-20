@@ -26,7 +26,7 @@ public class AttributeControllerTest {
         mockProjectContext = new MockProjectContext();
         mockKeyControllerFactory = new MockKeyControllerFactory();
         mockKeyController = new MockKeyController();
-        attributeController = new AttributeController(mockProjectContext, new ArrayList<Attribute>(),mockAttributeView);
+        attributeController = new AttributeController(mockProjectContext, new ArrayList<Attribute>(), mockAttributeView);
     }
 
     @Test
@@ -37,18 +37,30 @@ public class AttributeControllerTest {
 
     @Test
     public void testAddAttribute() {
+        MockAttributeView mockAttributeView = new MockAttributeView();
+        mockAttributeView.setName("att");
+        try {
+            mockAttributeView.setCardinality(new Cardinality(1, 1));
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        mockAttributeView.setAttType(AttributeType.calculated);
+        mockAttributeView.setExpression("aaksda");
+        mockAttributeView.setIskey(false);
+
+        attributeController.setAttributeView(mockAttributeView);
         Assert.assertEquals(0, IterableExtensions.count(this.attributeController.getAttributes()));
         try {
-            this.attributeController.addNewAttribute("att", false, new Cardinality(1, 1), AttributeType.calculated, "aaksda");
+            this.attributeController.addNewAttribute();
         } catch (Exception e) {
             Assert.fail();
         }
         Assert.assertEquals(1, IterableExtensions.count(this.attributeController.getAttributes()));
 
         Attribute attribute = this.attributeController.getAttributes().iterator().next();
-        Assert.assertEquals("att",attribute.getName());
-        Assert.assertEquals(false,attribute.isKey());
-        Assert.assertEquals(AttributeType.calculated,attribute.getType());
+        Assert.assertEquals("att", attribute.getName());
+        Assert.assertEquals(false, attribute.isKey());
+        Assert.assertEquals(AttributeType.calculated, attribute.getType());
 
     }
 }

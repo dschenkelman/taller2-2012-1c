@@ -20,7 +20,7 @@ public class MockAttributeController implements IAttributeController {
     }
 
     @Override
-    public Attribute addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression) {
+    public Attribute addNewAttribute() {
         //To change body of implemented methods use File | Settings | File Templates.
         return null;
     }
@@ -40,7 +40,12 @@ public class MockAttributeController implements IAttributeController {
     }
 
     @Override
-    public void addNewAttributeToAttribute(String nameText, boolean isKey, Cardinality cardinality, AttributeType attType, String expression, Attribute attributeSelected) {
+    public void addNewAttributeToAttribute(Attribute attributeSelected) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void editAttribute(Attribute attributeSelected) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

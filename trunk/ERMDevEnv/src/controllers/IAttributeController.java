@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public interface IAttributeController{
 
-    public Attribute addNewAttribute(String name, boolean isKey, Cardinality cardinality, AttributeType attributeType, String expression);
+    public Attribute addNewAttribute();
 
     Iterable<Attribute> getAttributes();
 
@@ -17,5 +17,7 @@ public interface IAttributeController{
 
     public void setAttributeView(IAttributeView attributeView);
 
-    void addNewAttributeToAttribute(String nameText, boolean isKey, Cardinality cardinality , AttributeType attType, String expression, Attribute attributeSelected);
+    void addNewAttributeToAttribute(Attribute attributeSelected);
+
+    public void editAttribute(Attribute attributeSelected);
 }
