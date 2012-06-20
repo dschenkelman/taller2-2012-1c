@@ -11,6 +11,7 @@ import controllers.IAttributeController;
 import models.Attribute;
 import models.AttributeCollection;
 import models.AttributeType;
+import models.Cardinality;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +27,7 @@ public class AttributeView implements IAttributeView {
         attributeList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent listSelectionEvent) {
+                attributeSelected((Attribute) attributeList.getSelectedValue());
                 attributeSelected();
             }
         });
@@ -39,6 +41,18 @@ public class AttributeView implements IAttributeView {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 addAttributeToSelectedOne();
+            }
+        });
+        internalAttributesList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                attributeSelected((Attribute) internalAttributesList.getSelectedValue());
+            }
+        });
+        editAttributeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editAttribute();
             }
         });
     }
@@ -61,8 +75,34 @@ public class AttributeView implements IAttributeView {
         return panel1;
     }
 
+    @Override
+    public String getName() {
+        return name.getText();
+    }
+
+    @Override
+    public boolean isKey() {
+        //TODO
+        return false;
+    }
+
+    @Override
+    public Cardinality getCardinality() {
+        //TODO
+        return null;
+    }
+
+    @Override
+    public AttributeType getAttributeType() {
+        return AttributeType.valueOf((String) type.getItemAt(type.getSelectedIndex()));
+    }
+
+    @Override
+    public String getExpression() {
+        return this.expression.getText();
+    }
+
     private void attributeSelected() {
-        attributeSelected = (Attribute) attributeList.getSelectedValue();
         AttributeCollection attributeCollection = attributeSelected.getAttributes();
         if (attributeCollection != null) {
             DefaultListModel internalListModel = new DefaultListModel();
@@ -70,22 +110,20 @@ public class AttributeView implements IAttributeView {
                 internalListModel.addElement(attribute);
             }
             this.internalAttributesList.setModel(internalListModel);
-        }else {
+        } else {
             this.internalAttributesList.setModel(new DefaultListModel());
         }
     }
 
     private void addAttributeToSelectedOne() {
-        AttributeType attType = AttributeType.valueOf((String) type.getItemAt(type.getSelectedIndex()));
-        controller.addNewAttributeToAttribute(name.getText(), false, null, attType, expression.getText(), attributeSelected);
+        controller.addNewAttributeToAttribute(attributeSelected);
         cleanView();
         attributeSelected();
     }
 
     private void createAttribute() {
         if (!name.getText().equals("")) {
-            AttributeType type = AttributeType.valueOf((String) this.type.getItemAt(this.type.getSelectedIndex()));
-            Attribute attribute = this.controller.addNewAttribute(name.getText(), false, null, type, this.expression.getText());
+            Attribute attribute = this.controller.addNewAttribute();
             cleanView();
             defaultListModel.addElement(attribute);
         }
@@ -97,9 +135,25 @@ public class AttributeView implements IAttributeView {
         this.type.setSelectedIndex(0);
     }
 
+    private void attributeSelected(Attribute selectedValue) {
+        if (selectedValue != null) {
+            this.attributeSelected = selectedValue;
+            this.name.setText(attributeSelected.getName());
+            String expressionClone = (attributeSelected.getType() == AttributeType.calculated || attributeSelected.getType() == AttributeType.copy) ? attributeSelected.getExpression() : "";
+            this.expression.setText(expressionClone);
+            this.type.setSelectedItem(attributeSelected.getType().toString());
+        }
+
+    }
+
+    private void editAttribute() {
+        if (attributeSelected != null)
+            this.controller.editAttribute(attributeSelected);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Gaston Daniel Festa
+        // Generated using JFormDesigner Evaluation license - santiago storti
         panel1 = new JPanel();
         attributesText = new JLabel();
         scrollPane1 = new JScrollPane();
@@ -113,8 +167,9 @@ public class AttributeView implements IAttributeView {
         expressionText = new JLabel();
         scrollPane2 = new JScrollPane();
         expression = new JTextArea();
-        createAttributeButton = new JButton();
         addToAttibuteButton = new JButton();
+        createAttributeButton = new JButton();
+        editAttributeButton = new JButton();
 
         //======== panel1 ========
         {
@@ -171,19 +226,23 @@ public class AttributeView implements IAttributeView {
             }
             panel1.add(scrollPane2, CC.xywh(70, 7, 6, 6));
 
+            //---- addToAttibuteButton ----
+            addToAttibuteButton.setText("Add to selected attribute");
+            panel1.add(addToAttibuteButton, CC.xy(70, 21));
+
             //---- createAttributeButton ----
             createAttributeButton.setText("Create Attribute");
             panel1.add(createAttributeButton, CC.xy(66, 21));
 
-            //---- addToAttibuteButton ----
-            addToAttibuteButton.setText("Add to selected attribute");
-            panel1.add(addToAttibuteButton, CC.xy(70, 21));
+            //---- editAttributeButton ----
+            editAttributeButton.setText("Edit Selected");
+            panel1.add(editAttributeButton, CC.xy(72, 21));
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Gaston Daniel Festa
+    // Generated using JFormDesigner Evaluation license - santiago storti
     private JPanel panel1;
     private JLabel attributesText;
     private JScrollPane scrollPane1;
@@ -197,8 +256,9 @@ public class AttributeView implements IAttributeView {
     private JLabel expressionText;
     private JScrollPane scrollPane2;
     private JTextArea expression;
-    private JButton createAttributeButton;
     private JButton addToAttibuteButton;
+    private JButton createAttributeButton;
+    private JButton editAttributeButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     private IAttributeController controller;

@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.1.0.0.51" Java: "1.6.0_26" encoding: "UTF-8"
+JFDML JFormDesigner: "5.1.0.0.51" Java: "1.7.0_05" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -83,6 +83,13 @@ new FormModel {
 				"gridWidth": 6
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "addToAttibuteButton"
+				"text": "Add to selected attribute"
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 70
+				"gridY": 21
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "createAttributeButton"
 				"text": "Create Attribute"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
@@ -90,10 +97,10 @@ new FormModel {
 				"gridY": 21
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "addToAttibuteButton"
-				"text": "Add to selected attribute"
+				name: "editAttributeButton"
+				"text": "Edit Selected"
 			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 70
+				"gridX": 72
 				"gridY": 21
 			} )
 		}, new FormLayoutConstraints( null ) {

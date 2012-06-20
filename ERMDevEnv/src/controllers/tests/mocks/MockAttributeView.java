@@ -2,12 +2,20 @@ package controllers.tests.mocks;
 
 import controllers.IAttributeController;
 import models.Attribute;
+import models.AttributeType;
+import models.Cardinality;
 import views.IAttributeView;
 
 import java.util.List;
 
 public class MockAttributeView implements IAttributeView {
     private IAttributeController controller;
+    private String expression;
+    private String name;
+    private boolean iskey;
+    private Cardinality cardinality;
+    private AttributeType attType;
+
 
     @Override
     public void setController(IAttributeController attributeController) {
@@ -24,7 +32,52 @@ public class MockAttributeView implements IAttributeView {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
+    public String getName() {
+        return this.name;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isKey() {
+        return this.iskey;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Cardinality getCardinality() {
+        return this.cardinality;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public AttributeType getAttributeType() {
+        return this.attType;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String getExpression() {
+        return this.expression;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public IAttributeController getController() {
         return this.controller;
+    }
+
+    public void setAttType(AttributeType attType) {
+        this.attType = attType;
+    }
+
+    public void setCardinality(Cardinality cardinality) {
+        this.cardinality = cardinality;
+    }
+
+    public void setIskey(boolean iskey) {
+        this.iskey = iskey;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setExpression(String expression) {
+        this.expression = expression;
     }
 }

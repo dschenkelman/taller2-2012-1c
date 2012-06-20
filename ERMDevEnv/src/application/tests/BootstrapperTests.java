@@ -71,7 +71,7 @@ public class BootstrapperTests {
 		Assert.assertSame(DiagramXmlManager.class, this.container.getMappings().get(IXmlManager.class));
 		Assert.assertSame(XmlFileManager.class, this.container.getMappings().get(IXmlFileManager.class));
 		Assert.assertSame(ProjectContext.class, this.container.getMappings().get(IProjectContext.class));
-		Assert.assertSame(MockEntityControllerFactory.class, this.container.getMappings().get(IEntityControllerFactory.class));
+		Assert.assertSame(EntityControllerFactory.class, this.container.getMappings().get(IEntityControllerFactory.class));
 		Assert.assertSame(RelationshipControllerFactory.class, this.container.getMappings().get(IRelationshipControllerFactory.class));
 		Assert.assertSame(HierarchyControllerFactory.class, this.container.getMappings().get(IHierarchyControllerFactory.class));
 		Assert.assertSame(HierarchyController.class, this.container.getMappings().get(IHierarchyController.class));
