@@ -24,6 +24,7 @@ import controllers.IProjectController;
 import controllers.ProjectController;
 import controllers.factories.tests.mocks.MockDiagramControllerFactory;
 import controllers.tests.mocks.MockDiagramController;
+import controllers.tests.mocks.MockDiagramXmlManager;
 import controllers.tests.mocks.MockProjectContext;
 import controllers.tests.mocks.MockProjectView;
 import controllers.tests.mocks.MockShell;
@@ -40,6 +41,8 @@ public class ProjectControllerTestCase {
 	
 	private MockShell shell;
 	
+	private MockDiagramXmlManager diagramXmlManager;
+	
 	@Before
 	public void setUp() throws Exception {
 		this.projectContext = new MockProjectContext();
@@ -48,6 +51,7 @@ public class ProjectControllerTestCase {
 		this.diagramControllerFactory.setController(this.diagramController);
 		this.projectView = new MockProjectView();
 		this.shell = new MockShell();
+		this.diagramXmlManager = new MockDiagramXmlManager();
 	}
 	
 	@Test
