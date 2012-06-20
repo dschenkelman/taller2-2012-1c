@@ -103,22 +103,26 @@ public class AttributeView implements IAttributeView {
     }
 
     private void attributeSelected() {
-        AttributeCollection attributeCollection = attributeSelected.getAttributes();
-        if (attributeCollection != null) {
-            DefaultListModel internalListModel = new DefaultListModel();
-            for (Attribute attribute : attributeCollection) {
-                internalListModel.addElement(attribute);
+        if (attributeSelected != null) {
+            AttributeCollection attributeCollection = attributeSelected.getAttributes();
+            if (attributeCollection != null) {
+                DefaultListModel internalListModel = new DefaultListModel();
+                for (Attribute attribute : attributeCollection) {
+                    internalListModel.addElement(attribute);
+                }
+                this.internalAttributesList.setModel(internalListModel);
+            } else {
+                this.internalAttributesList.setModel(new DefaultListModel());
             }
-            this.internalAttributesList.setModel(internalListModel);
-        } else {
-            this.internalAttributesList.setModel(new DefaultListModel());
         }
     }
 
     private void addAttributeToSelectedOne() {
-        controller.addNewAttributeToAttribute(attributeSelected);
-        cleanView();
-        attributeSelected();
+        if (attributeSelected != null) {
+            controller.addNewAttributeToAttribute(attributeSelected);
+            cleanView();
+            attributeSelected();
+        }
     }
 
     private void createAttribute() {
@@ -133,6 +137,10 @@ public class AttributeView implements IAttributeView {
         this.name.setText("");
         this.expression.setText("");
         this.type.setSelectedIndex(0);
+        internalAttributesList.updateUI();
+        internalAttributesList.clearSelection();
+        attributeList.clearSelection();
+        attributeList.updateUI();
     }
 
     private void attributeSelected(Attribute selectedValue) {
@@ -147,8 +155,11 @@ public class AttributeView implements IAttributeView {
     }
 
     private void editAttribute() {
-        if (attributeSelected != null)
+        if (attributeSelected != null) {
             this.controller.editAttribute(attributeSelected);
+            cleanView();
+        }
+        attributeSelected = null;
     }
 
     private void initComponents() {
@@ -173,19 +184,6 @@ public class AttributeView implements IAttributeView {
 
         //======== panel1 ========
         {
-
-            // JFormDesigner evaluation mark
-            panel1.setBorder(new javax.swing.border.CompoundBorder(
-                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-                            "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
-                            javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-                            java.awt.Color.red), panel1.getBorder()));
-            panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-                public void propertyChange(java.beans.PropertyChangeEvent e) {
-                    if ("border".equals(e.getPropertyName())) throw new RuntimeException();
-                }
-            });
-
             panel1.setLayout(new FormLayout(
                     "22*(default, $lcgap), 11*(default), 2*($lcgap, default), 3*(default), 3*($lcgap, default), 16*(default)",
                     "20*(default, $lgap), default"));
