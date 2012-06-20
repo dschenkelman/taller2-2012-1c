@@ -1,5 +1,8 @@
 package application;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
@@ -63,9 +66,27 @@ public class Bootstrapper {
 				double cy = pe.getY() - ny / 2;
 				double a = size / 2;
 				Shape shape = new Ellipse2D.Double(cx - a, cy - a, size, size);
-
-				//canvas.fillShape(shape);
+				
 				canvas.getGraphics().draw(shape);
+
+				return new mxPoint(-nx / 2, -ny / 2);
+			}
+		});
+		mxMarkerRegistry.registerMarker("emptyRedCircle", new mxIMarker()
+		{
+			public mxPoint paintMarker(mxGraphics2DCanvas canvas,
+					mxCellState state, String type, mxPoint pe, double nx,
+					double ny, double size)
+			{
+				double cx = pe.getX() - nx / 2;
+				double cy = pe.getY() - ny / 2;
+				double a = size / 2;
+				Shape shape = new Ellipse2D.Double(cx - a, cy - a, size, size);
+				
+				Color originalColor = canvas.getGraphics().getColor();
+				canvas.getGraphics().setColor(Color.RED);
+				canvas.getGraphics().draw(shape);
+				canvas.getGraphics().setColor(originalColor);
 
 				return new mxPoint(-nx / 2, -ny / 2);
 			}

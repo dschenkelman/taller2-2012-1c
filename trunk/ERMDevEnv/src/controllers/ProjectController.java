@@ -5,6 +5,8 @@ import infrastructure.visual.DiagramTreeNode;
 
 import java.io.File;
 
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 

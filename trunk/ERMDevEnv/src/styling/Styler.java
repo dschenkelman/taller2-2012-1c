@@ -1,5 +1,6 @@
 package styling;
 
+import models.AttributeType;
 import models.EntityType;
 
 public class Styler {
@@ -24,6 +25,14 @@ public class Styler {
 
 	public static String getEdgeExitStyle(double exitX, double exitY) {
 		return String.format("exitX=%s;exitY=%s", exitX, exitY);
+	}
+	
+	public static String getAttributeConnectorStyle(AttributeType type, boolean isKey){
+		if (type == AttributeType.calculated){
+			return StyleConstants.CALCULATED_ATTRIBUTE_LINK_STYLE;
+		}
+		
+		return StyleConstants.ATTRIBUTE_LINK_STYLE;
 	}
 
 }
