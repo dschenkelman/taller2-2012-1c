@@ -9,6 +9,7 @@ import views.IRelationshipView;
 
 import models.Attribute;
 import models.Cardinality;
+import models.Relationship;
 import models.RelationshipEntity;
 import models.StrongEntityCollection;
 
@@ -24,17 +25,7 @@ public interface IRelationshipController {
 	void isComposition(boolean composition);
 	boolean isComposition();
 	
-	
-	Iterable<Attribute>  getAttributes();
-	List<RelationshipEntity> getRelationshipEntities();
-	void addRelationshipEntity(RelationshipEntity relationshipEntity);
-	void addRelationshipEntity(UUID randomUUID, Cardinality cardinality,
-			String role);
-	
-	
-	void addRelationship();
-	StrongEntityCollection getStrongEntities();
-	int getType();
+	void add();
 	void setRelationshipView(IRelationshipView view);
 	
 	

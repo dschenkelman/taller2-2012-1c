@@ -11,6 +11,7 @@ public class MockProjectContext implements IProjectContext {
 	private static String SubFolder = "Datos";
     private Iterable<Entity> entityCollection;
     private Iterable<INameable> attributes;
+    private List<Relationship> relationships;
 	private String name;
 
     @Override
@@ -32,8 +33,13 @@ public class MockProjectContext implements IProjectContext {
     }
 
 	public void setRelationshipCollection(List<Relationship> relationships) {
+		this.relationships= relationships;
 	}
 
+	public List<Relationship> getRelationshipCollection() {
+		return relationships;
+	}
+	
 	@Override
 	public String getName() {
 		return this.name;
@@ -51,4 +57,6 @@ public class MockProjectContext implements IProjectContext {
 		
 		return null;
 	}
+
+
 }

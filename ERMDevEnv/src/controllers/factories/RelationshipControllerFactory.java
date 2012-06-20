@@ -73,50 +73,7 @@ public class RelationshipControllerFactory implements
 				return null;
 			}
 
-			@Override
-			public List<Attribute> getAttributes() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public List<RelationshipEntity> getRelationshipEntities() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public void addRelationshipEntity(
-					RelationshipEntity relationshipEntity) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void addRelationshipEntity(UUID randomUUID,
-					Cardinality cardinality, String role) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void addRelationship() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public StrongEntityCollection getStrongEntities() {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public int getType() {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-
+			
 			@Override
 			public void isComposition(boolean composition) {
 				// TODO Auto-generated method stub
@@ -125,6 +82,12 @@ public class RelationshipControllerFactory implements
 
 			@Override
 			public void setRelationshipView(IRelationshipView view) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void add() {
 				// TODO Auto-generated method stub
 				
 			}

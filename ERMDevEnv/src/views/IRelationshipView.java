@@ -7,5 +7,8 @@ public interface IRelationshipView {
 	IRelationshipController getController();
 
 	void setController(IRelationshipController relationshipController);
+
+	void show();
+	void hide();
 	
 }

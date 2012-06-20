@@ -18,4 +18,16 @@ public class MockRelationshipView implements IRelationshipView {
 		relController = relationshipController;
 	}
 
+	@Override
+	public void show() {
+		visible = true;
+		
+	}
+
+	@Override
+	public void hide() {
+		visible = false;
+		
+	}
+
 }

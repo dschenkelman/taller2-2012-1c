@@ -1,6 +1,9 @@
 package controllers.factories.mock;
 
+import java.util.List;
+
 import models.Relationship;
+import models.RelationshipEntity;
 import controllers.IRelationshipEntityController;
 import controllers.factories.IRelationshipEntityControllerFactory;
 import controllers.tests.mocks.MockRelationshipController;
@@ -18,9 +21,12 @@ public class MockRelationshipEntityControllerFactory implements
 	}
 
 
+
 	@Override
-	public IRelationshipEntityController create(Relationship pendingRelationship) {
-		return null ;
+	public IRelationshipEntityController create(
+			List<RelationshipEntity> relationshipEntities) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
