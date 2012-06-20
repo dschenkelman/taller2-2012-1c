@@ -233,7 +233,7 @@ public class HierarchyView implements IHierarchyView{
 	private void checkCountSpecificEntities(int size) {
 		if (size == 1) {
 			btnParcial.doClick();
-			btnInclusive.doClick();
+			btnExclusive.doClick();
 			btnParcial.setEnabled(false);
 			btnTotal.setEnabled(false);
 			btnExclusive.setEnabled(false);
