@@ -49,8 +49,14 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		this.diagramController.getDiagram().setName(DefaultDiagramName);
 		this.diagramController.addListener(this);
 		
+		Diagram mainDiagram = this.diagramController.getDiagram();
+		
 		this.currentDiagramNode = new DiagramTreeNode(this.diagramController.getDiagram());
 		this.projectTree = new DefaultTreeModel(this.currentDiagramNode);
+		
+		this.projectContext.addContextDiagram(mainDiagram);
+		this.projectContext.addProjectDiagram(mainDiagram);
+		
 		this.shell.setRightContent(this.diagramController.getView());
 		this.shell.activateFullSize();
 	}
@@ -81,8 +87,14 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	@Override
 	public void handleSubDiagramCreated(Diagram diagram, String diagramName) {
 		IDiagramController childDiagramController = this.diagramControllerFactory.create();
-		childDiagramController.getDiagram().setName(diagramName);
-		DiagramTreeNode childDiagramNode = this.currentDiagramNode.addSubdiagram(childDiagramController.getDiagram());
+		Diagram childDiagram = childDiagramController.getDiagram();
+		
+		childDiagram.setName(diagramName);
+		
+		DiagramTreeNode childDiagramNode = this.currentDiagramNode.addSubdiagram(childDiagram);
+		
+		this.projectContext.addContextDiagram(childDiagram);
+		this.projectContext.addProjectDiagram(childDiagram);
 		
 		this.shell.setRightContent(childDiagramController.getView());
 		this.diagramController = childDiagramController;

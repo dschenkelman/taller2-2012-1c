@@ -4,6 +4,7 @@ import models.*;
 
 import infrastructure.IProjectContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,7 +14,16 @@ public class MockProjectContext implements IProjectContext {
     private Iterable<Entity> entityCollection;
     private Iterable<INameable> attributes;
     private List<Relationship> relationships;
+    
+    private List<Diagram> contextDiagrams;
+    private List<Diagram> globalDiagrams;
+    
 	private String name;
+	
+	public MockProjectContext(){
+		this.contextDiagrams = new ArrayList<Diagram>();
+		this.globalDiagrams = new ArrayList<Diagram>();
+	}
 
     @Override
     public Iterable<Entity> getAllEntities(Entity entityToExclude) {
@@ -56,51 +66,48 @@ public class MockProjectContext implements IProjectContext {
 
 	@Override
 	public void addContextDiagram(Diagram diagram) {
-		// TODO Auto-generated method stub
-		
+		this.contextDiagrams.add(diagram);
 	}
 
 	@Override
 	public void addProjectDiagram(Diagram diagram) {
-		// TODO Auto-generated method stub
-		
+		this.globalDiagrams.add(diagram);
 	}
 
 	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-		
+	public void clear() {		
 	}
 
 	@Override
 	public Iterable<Hierarchy> getAllHierarchies() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Iterable<Entity> getContextEntities(Entity entityToExclude) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Iterable<Hierarchy> getContextHierarchies() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Entity getEntity(UUID id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Hierarchy getHierarchy(UUID id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
-
+	
+	public List<Diagram> getContextDiagrams(){
+		return this.contextDiagrams;
+	}
+	
+	public List<Diagram> getGlobalDiagrams(){
+		return this.globalDiagrams;
+	}
 }

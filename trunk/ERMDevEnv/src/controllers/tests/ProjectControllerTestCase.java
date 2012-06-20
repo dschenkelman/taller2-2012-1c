@@ -3,7 +3,6 @@ package controllers.tests;
 
 import java.io.File;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.UUID;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -322,6 +321,47 @@ public class ProjectControllerTestCase {
 		
 		Assert.assertEquals(1, childController.getListeners().size());
 		Assert.assertSame(controller, childController.getListeners().get(0));
+			
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	@Test
+	public void testShouldAddDiagramToGlobalAndContextDiagramCollectionsWhenChildDiagramIsCreated(){
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		controller.createProject(projectName);
+		
+		Diagram subDiagram = new Diagram();
+		MockDiagramController childController = new MockDiagramController();
+		childController.setDiagram(subDiagram);
+		this.diagramControllerFactory.setController(childController);
+		
+		Assert.assertEquals(1, this.projectContext.getGlobalDiagrams().size());
+		Assert.assertEquals(1, this.projectContext.getContextDiagrams().size());
+		
+		controller.handleSubDiagramCreated(controller.getCurrentDiagramController().getDiagram(), "ChildDiagram");
+		
+		Assert.assertEquals(2, this.projectContext.getGlobalDiagrams().size());
+		Assert.assertEquals(2, this.projectContext.getContextDiagrams().size());
+			
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	@Test
+	public void testShouldAddDiagramToGlobalAndContextDiagramCollectionsWhenCreating(){
+		String projectName = UUID.randomUUID().toString();
+		
+		Assert.assertEquals(0, this.projectContext.getGlobalDiagrams().size());
+		Assert.assertEquals(0, this.projectContext.getContextDiagrams().size());
+		
+		ProjectController controller = this.createController();
+		controller.createProject(projectName);
+		
+		Assert.assertEquals(1, this.projectContext.getGlobalDiagrams().size());
+		Assert.assertEquals(1, this.projectContext.getContextDiagrams().size());
 			
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);
