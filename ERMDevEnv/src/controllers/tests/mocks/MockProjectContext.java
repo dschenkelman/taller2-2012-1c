@@ -15,7 +15,7 @@ public class MockProjectContext implements IProjectContext {
 	private String name;
 
     @Override
-    public Iterable<Entity> getEntityCollection(Entity entityToExclude) {
+    public Iterable<Entity> getAllEntities(Entity entityToExclude) {
         return this.entityCollection;
     }
 
@@ -55,6 +55,42 @@ public class MockProjectContext implements IProjectContext {
 			return this.name + "/" + SubFolder;
 		}
 		
+		return null;
+	}
+
+	@Override
+	public void addContextDiagram(Diagram diagram) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addProjectDiagram(Diagram diagram) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Iterable<Hierarchy> getAllHierarchies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Entity> getContextEntities(Entity entityToExclude) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Hierarchy> getContextHierarchies() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

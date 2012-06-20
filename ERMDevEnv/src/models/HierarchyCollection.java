@@ -4,9 +4,10 @@ import infrastructure.Func;
 import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.UUID;
 
-public class HierarchyCollection {
+public class HierarchyCollection implements Iterable<Hierarchy>{
 
     public HierarchyCollection() {
         this.hierarchies = new ArrayList<Hierarchy>();
@@ -93,5 +94,10 @@ public class HierarchyCollection {
 
 	public void add(Hierarchy hierarchy) {
 		this.hierarchies.add(hierarchy);
+	}
+
+	@Override
+	public Iterator<Hierarchy> iterator() {
+		return this.hierarchies.iterator();
 	}
 }
