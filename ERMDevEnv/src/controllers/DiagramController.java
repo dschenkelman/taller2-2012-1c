@@ -25,6 +25,7 @@ import styling.StyleConstants;
 import styling.Styler;
 
 import models.Attribute;
+import models.AttributeType;
 import models.Cardinality;
 import models.Diagram;
 import models.Entity;
@@ -304,7 +305,7 @@ public class DiagramController extends BaseController
 		String attributeConnectorId = ownerId.toString()+attribute.getName();
 		
 		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, attributeConnectorId, "", 
-				entityCell, attributeCell, StyleConstants.ATTRIBUTE_LINK_STYLE);
+				entityCell, attributeCell, Styler.getAttributeConnectorStyle(attribute.getType(), isKey));
 		
 		this.attributeConnectorCells.put(CellConstants.AttributeConnectorPrefix + attributeConnectorId, connectorCell);
 		

@@ -7,6 +7,8 @@ import java.util.Random;
 import controllers.factories.IEntityControllerFactory;
 import controllers.listeners.IEntityEventListener;
 import views.IEntityView;
+import models.AttributeType;
+import models.Cardinality;
 import models.Entity;
 import models.EntityType;
 import controllers.IEntityController;
@@ -48,7 +50,7 @@ public class MockEntityControllerFactory implements IEntityControllerFactory {
 					entity.getAttributes().addAttribute("Attribute2");
 					entity.getAttributes().addAttribute("Attribute3");
 					entity.getAttributes().addAttribute("Attribute4");
-					entity.getAttributes().addAttribute("Attribute5");
+					entity.getAttributes().addAttribute("Attribute5", false, new Cardinality(0, 1), null, AttributeType.calculated, "Attribute5");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

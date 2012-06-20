@@ -3,7 +3,8 @@ package styling;
 public class StyleConstants {
 	public static String ENTITY_STYLE = "";
 	public static String ATTRIBUTE_STYLE = "fontSize=9;strokeColor=white;fillColor=white;gradientColor=white;verticalAlign=top;align=center";
-	public static String ATTRIBUTE_LINK_STYLE = "endArrow=emptyCircle";
+	public static String ATTRIBUTE_LINK_STYLE = "endArrow=emptyCircle;endSize=10";
+	public static String CALCULATED_ATTRIBUTE_LINK_STYLE = "endArrow=emptyRedCircle;endSize=10";
 	public static String KEY_ATTRIBUTE_LINK_STYLE = "endArrow=oval";
 	public static String RELATIONSHIP_STYLE = "shape=rhombus;perimeter=rhombusPerimeter;portConstraint=eastwestsouthnorth;fillColor=#A7ABAB;strokeColor=#A7ABAB";
 	public static String RELATIONSHIP_CONNECTOR_STYLE = "endArrow=none;edgeStyle=elbowEdgeStyle;verticalAlign=bottom;align=left;strokeColor=#FF0000";
