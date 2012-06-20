@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import models.Diagram;
 import models.Entity;
@@ -68,13 +69,6 @@ public class ProjectContext implements IProjectContext {
     	
     }
     
-    @Override
-    public Iterable<IStrongEntity> getPossibleStrongEntities(
-            List<IStrongEntity> strongEntitiesToExclude) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-    
 	@Override
 	public String getName() {
 		return this.name;
@@ -106,5 +100,23 @@ public class ProjectContext implements IProjectContext {
 	@Override
 	public void clear() {
 		this.contextDiagram.clear();
+	}
+
+	@Override
+	public Entity getEntity(UUID id) {
+		for (Diagram diagram : this.projectDiagram)
+        	for (Entity item : diagram.getEntities())
+        		if (item.getId().equals(id))
+        			return item;
+		return null;
+	}
+
+	@Override
+	public Hierarchy getHierarchy(UUID id) {
+		for (Diagram diagram : this.projectDiagram)
+        	for (Hierarchy item : diagram.getHierarchies())
+        		if (item.getId().equals(id))
+        			return item;
+		return null;
 	}
 }

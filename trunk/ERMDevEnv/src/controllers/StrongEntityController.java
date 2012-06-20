@@ -21,7 +21,7 @@ public class StrongEntityController implements IStrongEntityController {
     public void setStrongEntityVIew(IStrongEntityView strongEntityView) {
         this.strongEntitiesView = strongEntityView;
         this.strongEntitiesView.setController(this);
-        this.strongEntitiesView.setPossibleStrongEntities(this.projectContext.getPossibleStrongEntities(this.strongEntities));
+//        this.strongEntitiesView.setPossibleStrongEntities(this.projectContext.getPossibleStrongEntities(this.strongEntities));
         this.strongEntitiesView.setStrongEntities(this.strongEntities);
     }
 
