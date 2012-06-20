@@ -3,7 +3,6 @@ package controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import controllers.factories.EntityControllerFactory;
 import controllers.factories.mock.MockEntityControllerFactory;
 import controllers.listeners.IHierarchyEventListener;
 import models.Entity;
