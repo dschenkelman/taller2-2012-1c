@@ -17,6 +17,7 @@ import controllers.listeners.IHierarchyEventListener;
 import controllers.listeners.IRelationshipEventListener;
 
 public interface IDiagramController extends IEntityEventListener, IRelationshipEventListener, IHierarchyEventListener{
+	void createSubDiagram(String diagramName);
 	void addListener(IDiagramEventListener iDiagramEventListener);
 	mxGraph getGraph();
 	Diagram getDiagram();

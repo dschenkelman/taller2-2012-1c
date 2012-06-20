@@ -1,6 +1,5 @@
 package views;
 
-import java.awt.Component;
 import java.awt.Point;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -12,6 +11,7 @@ import java.awt.event.MouseListener;
 import java.util.TooManyListenersException;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -30,6 +30,7 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 	private JButton btnRelationship;
 	private JButton btnHierarchy;
 	private JButton btnSave;
+	private JButton btnSubdiagram;
 
 	/**
 	 * Create the panel.
@@ -68,13 +69,16 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 		add(this.btnEntity, "2, 2");
 		
 		this.btnRelationship = new JButton("Relacion");
-		add(this.btnRelationship, "6, 2");
+		add(this.btnRelationship, "4, 2");
 		
 		this.btnHierarchy = new JButton("Jerarquia");
-		add(this.btnHierarchy, "8, 2");
+		add(this.btnHierarchy, "6, 2");
 		
 		this.btnSave = new JButton("Grabar");
-		add(this.btnSave, "10, 2");
+		add(this.btnSave, "8, 2");
+		
+		this.btnSubdiagram = new JButton("SubDiagrama");
+		add(this.btnSubdiagram, "10, 2");
 	}
 
 	@Override
@@ -138,6 +142,16 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 					diagramController.save();
 				} catch (ParserConfigurationException exception) {
 					exception.printStackTrace();
+				}
+			}
+		});
+		
+		this.btnSubdiagram.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String diagramName = JOptionPane.showInputDialog(null, "Ingrese el nombre del diagrama", "Nuevo Diagrama", JOptionPane.QUESTION_MESSAGE);
+				if (diagramName != null){
+					diagramController.createSubDiagram(diagramName);
 				}
 			}
 		});

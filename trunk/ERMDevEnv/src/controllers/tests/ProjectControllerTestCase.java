@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import models.Diagram;
 import models.Entity;
 import models.Relationship;
 import models.RelationshipEntity;
@@ -181,7 +182,7 @@ public class ProjectControllerTestCase {
 
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
 		
-		this.assertObjectInNodeChild(root, "Entidades", entity);
+		Assert.assertNotNull(this.getNodeChildWithObject(root, "Entidades", entity));
 		
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);
@@ -199,15 +200,134 @@ public class ProjectControllerTestCase {
 
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
 		
-		this.assertObjectInNodeChild(root, "Relaciones", relationship);
+		Assert.assertNotNull(this.getNodeChildWithObject(root, "Relaciones", relationship));
 		
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);
 	}
 	
-	private void assertObjectInNodeChild(DefaultMutableTreeNode node, String childName, Object object) {
-		boolean found = false;
+	@Test
+	public void testShouldAddDiagramToParentDiagramInTree(){
+		String projectName = UUID.randomUUID().toString();
 		
+		ProjectController controller = this.createController();
+		controller.createProject(projectName);
+		
+		Diagram subDiagram = new Diagram();
+		MockDiagramController childController = new MockDiagramController();
+		childController.setDiagram(subDiagram);
+		this.diagramControllerFactory.setController(childController);
+		
+		controller.handleSubDiagramCreated(controller.getCurrentDiagramController().getDiagram(), "ChildDiagram");
+		
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
+		
+		Assert.assertNotNull(this.getNodeChildWithObject(root, "Sub-Diagramas", subDiagram));
+		
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	@Test
+	public void testShouldSetControllerViewAsShellRightContentWhenCreatingSubDiagram(){
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+				
+		controller.createProject(projectName);
+		
+		Diagram subDiagram = new Diagram();
+		MockDiagramController childController = new MockDiagramController();
+		childController.setDiagram(subDiagram);
+		this.diagramControllerFactory.setController(childController);
+		
+		Assert.assertNotNull(this.shell.getRightContent());
+		Assert.assertSame(this.diagramController.getView(), this.shell.getRightContent());
+		
+		controller.handleSubDiagramCreated(controller.getCurrentDiagramController().getDiagram(), "ChildDiagram");
+		
+		Assert.assertEquals(subDiagram.getName(), "ChildDiagram");
+		Assert.assertNotNull(this.shell.getRightContent());
+		Assert.assertSame(childController.getView(), this.shell.getRightContent());
+		
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	@Test
+	public void testShouldChangeCurrentControllerToChildController(){
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+				
+		controller.createProject(projectName);
+		
+		Diagram subDiagram = new Diagram();
+		MockDiagramController childController = new MockDiagramController();
+		childController.setDiagram(subDiagram);
+		this.diagramControllerFactory.setController(childController);
+		
+		Assert.assertNotSame(childController, controller.getCurrentDiagramController());
+		
+		controller.handleSubDiagramCreated(controller.getCurrentDiagramController().getDiagram(), "ChildDiagram");
+		
+		Assert.assertSame(childController, controller.getCurrentDiagramController());
+		
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	@Test
+	public void testShouldChangeCurrentDiagramNodeWhenCreatingSubDiagram(){
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+				
+		controller.createProject(projectName);
+		
+		Diagram subDiagram = new Diagram();
+		MockDiagramController childController = new MockDiagramController();
+		childController.setDiagram(subDiagram);
+		this.diagramControllerFactory.setController(childController);
+		
+		controller.handleSubDiagramCreated(controller.getCurrentDiagramController().getDiagram(), "ChildDiagram");
+		
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
+		
+		DefaultMutableTreeNode subDiagramNode = this.getNodeChildWithObject(root, "Sub-Diagramas", subDiagram);
+		Assert.assertNotNull(subDiagramNode);
+		
+		Entity entity = new Entity("Product");
+		controller.handleEntityAdded(this.diagramController.getDiagram(), entity);
+
+		Assert.assertNotNull(this.getNodeChildWithObject(subDiagramNode, "Entidades", entity));
+		
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	@Test
+	public void testShouldAddListenerToChildController(){
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		controller.createProject(projectName);
+		
+		Diagram subDiagram = new Diagram();
+		MockDiagramController childController = new MockDiagramController();
+		childController.setDiagram(subDiagram);
+		this.diagramControllerFactory.setController(childController);
+		
+		controller.handleSubDiagramCreated(controller.getCurrentDiagramController().getDiagram(), "ChildDiagram");
+		
+		Assert.assertEquals(1, childController.getListeners().size());
+		Assert.assertSame(controller, childController.getListeners().get(0));
+			
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	private DefaultMutableTreeNode getNodeChildWithObject(DefaultMutableTreeNode node, String childName, Object object) {	
 		Enumeration children = node.children();
 		while (children.hasMoreElements()) {
 		  DefaultMutableTreeNode element = (DefaultMutableTreeNode)children.nextElement();
@@ -218,14 +338,14 @@ public class ProjectControllerTestCase {
 				  while (grandChildren.hasMoreElements()) {
 					  element = (DefaultMutableTreeNode)grandChildren.nextElement();
 					  if (element.getUserObject() == object){
-						  found = true;
+						  return element;
 					  }
 				  }
 			  }
 		  }
 		}
 		
-		Assert.assertTrue(found);
+		return null;
 	}
 
 	private void deleteFile(String name){

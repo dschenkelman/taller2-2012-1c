@@ -585,4 +585,16 @@ public class DiagramController extends BaseController
 	public void addListener(IDiagramEventListener listener) {
 		this.listeners.add(listener);
 	}
+
+	public void createSubDiagram(String diagramName) {
+		for (IDiagramEventListener listener : this.listeners) {
+			listener.handleSubDiagramCreated(this.diagram, diagramName);
+		}
+		
+		try {
+			this.save();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+	}
 }
