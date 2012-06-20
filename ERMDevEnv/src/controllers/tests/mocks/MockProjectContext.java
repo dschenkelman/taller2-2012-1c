@@ -5,6 +5,7 @@ import models.*;
 import infrastructure.IProjectContext;
 
 import java.util.List;
+import java.util.UUID;
 
 public class MockProjectContext implements IProjectContext {
 
@@ -17,11 +18,6 @@ public class MockProjectContext implements IProjectContext {
     @Override
     public Iterable<Entity> getAllEntities(Entity entityToExclude) {
         return this.entityCollection;
-    }
-
-    @Override
-    public Iterable<IStrongEntity> getPossibleStrongEntities(List<IStrongEntity> strongEntitiesToExclude) {
-        return null;
     }
 
     public void setEntityCollection(Iterable<Entity> entityCollection){
@@ -90,6 +86,18 @@ public class MockProjectContext implements IProjectContext {
 
 	@Override
 	public Iterable<Hierarchy> getContextHierarchies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Entity getEntity(UUID id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Hierarchy getHierarchy(UUID id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
