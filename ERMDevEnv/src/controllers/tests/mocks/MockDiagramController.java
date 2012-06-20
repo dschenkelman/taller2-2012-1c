@@ -122,4 +122,12 @@ public class MockDiagramController implements IDiagramController {
 	public List<IDiagramEventListener> getListeners() {
 		return this.listeners;
 	}
+
+	@Override
+	public void createSubDiagram(String diagramName) {
+	}
+	
+	public void setDiagram(Diagram diagram){
+		this.diagram = diagram;
+	}
 }

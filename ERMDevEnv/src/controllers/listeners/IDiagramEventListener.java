@@ -7,4 +7,5 @@ import models.Relationship;
 public interface IDiagramEventListener {
 	void handleEntityAdded(Diagram diagram, Entity entity);
 	void handleRelationshipAdded(Diagram diagram, Relationship relantionship);
+	void handleSubDiagramCreated(Diagram diagram, String diagramName);
 }

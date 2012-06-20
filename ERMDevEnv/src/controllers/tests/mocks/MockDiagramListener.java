@@ -10,6 +10,7 @@ public class MockDiagramListener implements IDiagramEventListener {
 	private Diagram diagram;
 	private Entity entity;
 	private Relationship relationship;
+	private String diagramName;
 	
 	@Override
 	public void handleEntityAdded(Diagram diagram, Entity entity) {
@@ -33,5 +34,15 @@ public class MockDiagramListener implements IDiagramEventListener {
 
 	public Relationship getRelationship() {
 		return this.relationship;
+	}
+
+	@Override
+	public void handleSubDiagramCreated(Diagram diagram, String diagramName) {
+		this.diagram = diagram;
+		this.diagramName = diagramName;
+	}
+
+	public String getDiagramName() {
+		return this.diagramName;
 	}
 }

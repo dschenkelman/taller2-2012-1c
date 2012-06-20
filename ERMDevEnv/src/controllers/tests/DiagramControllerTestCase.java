@@ -571,6 +571,59 @@ public class DiagramControllerTestCase {
 	}
 	
 	@Test
+	public void shouldRaiseSubdiagramCreatedWhenSubdiagramIsCreated() throws Exception{	
+		Document document = TestUtilities.createDocument();
+		this.xmlFileManager.setDocumentToCreate(document);
+		this.diagramXmlManager.setElementNameOfRoot("diagram");
+		
+		MockDiagramListener listener = new MockDiagramListener();
+		
+		DiagramController diagramController = this.createController();
+		diagramController.getDiagram().setName("Diagram");
+		diagramController.addListener(listener);
+			
+		Assert.assertNull(listener.getDiagram());
+		Assert.assertNull(listener.getDiagramName());
+		
+		diagramController.createSubDiagram("ChildDiagram");
+		
+		Assert.assertSame(diagramController.getDiagram(), listener.getDiagram());
+		Assert.assertEquals("ChildDiagram", listener.getDiagramName());
+	}
+	
+	@Test
+	public void shouldSaveDiagramWhenCreatingSubDiagram() throws Exception{	
+		this.projectContext.setName("projectName");
+		
+		Document document = TestUtilities.createDocument();
+		this.xmlFileManager.setDocumentToCreate(document);
+		this.diagramXmlManager.setElementNameOfRoot("diagram");
+		
+		DiagramController diagramController = this.createController();
+		diagramController.getDiagram().setName("Diagram");
+		
+		Assert.assertNull(this.xmlFileManager.getDocumentToSave());
+		Assert.assertNull(this.xmlFileManager.getPathToSave());
+		Assert.assertFalse(this.xmlFileManager.wasCreateDocumentCalled());
+		Assert.assertEquals(0, this.graphPersistenceService.getSaveCalls());
+		Assert.assertNull(this.graphPersistenceService.getGraphToSave());
+				
+		diagramController.createSubDiagram("ChildDiagram");
+		
+		Assert.assertTrue(this.xmlFileManager.wasCreateDocumentCalled());
+		Assert.assertNotNull(this.xmlFileManager.getDocumentToSave());
+		Assert.assertNotNull(this.xmlFileManager.getPathToSave());
+		Assert.assertEquals(1, this.graphPersistenceService.getSaveCalls());
+		Assert.assertSame(diagramController.getGraph(), this.graphPersistenceService.getGraphToSave());
+		Assert.assertEquals("projectName/Datos/Diagram-rep", this.graphPersistenceService.getSavePath());
+		
+		Assert.assertSame(diagramController.getDiagram(), this.diagramXmlManager.getDiagramRelatedToElement());
+		Assert.assertSame(document, this.xmlFileManager.getDocumentToSave());
+		Assert.assertEquals("diagram", ((Element)document.getFirstChild()).getTagName());
+		Assert.assertEquals("projectName/Datos/Diagram-comp", this.xmlFileManager.getPathToSave());
+	}
+	
+	@Test
 	public void shouldRaiseRelationshipAddedEventWhenRelationshipIsAdded() throws Exception{
 		Entity entity1 = new Entity("Entity1");
 		Entity entity2 = new Entity("Entity2");
