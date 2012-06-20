@@ -1,5 +1,7 @@
 package controllers.tests.mocks;
 
+import java.util.List;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -11,6 +13,7 @@ public class MockDiagramXmlManager implements IXmlManager<Diagram> {
 	private String rootName;
 	private Diagram diagram;
 	private Element element;
+	private List<Diagram> diagrams;
 
 	@Override
 	public Element getElementFromItem(Diagram item, Document document) {
@@ -20,12 +23,16 @@ public class MockDiagramXmlManager implements IXmlManager<Diagram> {
 
 	@Override
 	public Diagram getItemFromXmlElement(Element element) throws Exception {
-		Diagram diagram = new Diagram();
+		Diagram diagram = diagrams != null && diagrams.size() != 0 ? diagrams.remove(0) : new Diagram();
 		this.diagram = diagram;
 		this.element = element;
 		return diagram;
 	}
 
+	public void setDiagramsToReturn(List<Diagram> diagrams){
+		this.diagrams = diagrams;
+	}
+	
 	public void setElementNameOfRoot(String value) {
 		this.rootName = value;
 	}

@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.xml.parsers.ParserConfigurationException;
@@ -82,6 +84,7 @@ public class DiagramController extends BaseController
 	private IHierarchyControllerFactory hierarchyControllerFactory;
 	private IGraphPersistenceService graphPersistenceService;
 	private List<IDiagramEventListener> listeners;
+	private Pattern regex;
 	
 	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
 			IEntityControllerFactory entityControllerFactory,
@@ -113,6 +116,10 @@ public class DiagramController extends BaseController
 		this.diagramView.setController(this);
 		this.graphPersistenceService = graphPersistenceService;
 		this.listeners = new ArrayList<IDiagramEventListener>();
+		
+		this.regex = Pattern.compile("(?:" + CellConstants.EntityPrefix + "|" 
+				+ CellConstants.RelationshipPrefix + ")"
+				+ "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}).*");
 	}
 	
 	public IDiagramView getView(){
@@ -292,7 +299,7 @@ public class DiagramController extends BaseController
 			exitStyle = ";" + Styler.getEdgeExitStyle(exitX, exitY);
 		} 
 		
-		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, connectorId, displayValue, 
+		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.RelationshipConnectorPrefix + connectorId, displayValue, 
 				relationshipCell, entityCell, StyleConstants.RELATIONSHIP_CONNECTOR_STYLE + exitStyle);
 		
 		this.relationshipConnectorCells.put(CellConstants.RelationshipConnectorPrefix + connectorId, connectorCell);
@@ -304,7 +311,7 @@ public class DiagramController extends BaseController
 			Attribute attribute, mxCell attributeCell, boolean isKey) { 
 		String attributeConnectorId = ownerId.toString()+attribute.getName();
 		
-		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, attributeConnectorId, "", 
+		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.AttributeConnectorPrefix + attributeConnectorId, "", 
 				entityCell, attributeCell, Styler.getAttributeConnectorStyle(attribute.getType(), isKey));
 		
 		this.attributeConnectorCells.put(CellConstants.AttributeConnectorPrefix + attributeConnectorId, connectorCell);
@@ -314,7 +321,7 @@ public class DiagramController extends BaseController
 
 	private mxCell addAttributeToGraph(Attribute attribute, Object parent, UUID ownerId, double x, double y) {
 		String attributeId = ownerId.toString()+attribute.getName();
-		mxCell attributeCell = (mxCell) this.graph.insertVertex(parent, attributeId, 
+		mxCell attributeCell = (mxCell) this.graph.insertVertex(parent, CellConstants.AttributePrefix +  attributeId, 
 				attribute.getName(), x, y,
 				StyleConstants.ATTRIBUTE_WIDTH, StyleConstants.ATTRIBUTE_HEIGHT);
 		
@@ -324,7 +331,7 @@ public class DiagramController extends BaseController
 	}
 	
 	private mxCell addRelationshipToGraph(Relationship relationship, Object parent, double x, double y) {
-		mxCell relationshipCell = (mxCell) this.graph.insertVertex(parent, relationship.getId().toString(), 
+		mxCell relationshipCell = (mxCell) this.graph.insertVertex(parent, CellConstants.RelationshipPrefix + relationship.getId().toString(), 
 				relationship.getName(), x, y,
 				StyleConstants.RELATIONSHIP_WIDTH, StyleConstants.RELATIONSHIP_HEIGHT, StyleConstants.RELATIONSHIP_STYLE);
 		
@@ -334,7 +341,7 @@ public class DiagramController extends BaseController
 	}
 
 	private mxCell addEntityToGraph(Entity entity, Object parent, double x, double y) throws Exception {
-		mxCell entityCell = (mxCell) this.graph.insertVertex(parent, entity.getId().toString(), 
+		mxCell entityCell = (mxCell) this.graph.insertVertex(parent, CellConstants.EntityPrefix + entity.getId().toString(), 
 				entity.getName(), x, y,
 				StyleConstants.ENTITY_WIDTH, StyleConstants.ENTITY_HEIGHT, Styler.getFillColor(entity.getType()));
 		
@@ -478,6 +485,16 @@ public class DiagramController extends BaseController
 			}
 		}
 	}
+	
+	private String getElementUUID(String elementId){
+		Matcher matcher = this.regex.matcher(elementId);
+		boolean matchFound = matcher.find();
+		
+		if (matchFound) {
+	        return matcher.group(1);
+        }
+		return null;
+	}
 
 	public void handleDrop(Point end) {
 		if (this.dragStartPoint != null)
@@ -488,11 +505,15 @@ public class DiagramController extends BaseController
 			List<mxCell> attributesCellsToMove = new ArrayList<mxCell>();
 			
 			for (mxCell cell : this.selectedCells) {
+				String elementId = this.getElementUUID(cell.getId());
+				
 				for (String attributeKey : this.attributeCells.keySet()) {
-					if (attributeKey.startsWith(CellConstants.AttributePrefix + cell.getId()))
-					{
-						mxCell attributeCell = this.attributeCells.get(attributeKey);
-						attributesCellsToMove.add(attributeCell);
+					if (elementId != null) {
+				        if (attributeKey.startsWith(CellConstants.AttributePrefix + elementId))
+						{
+							mxCell attributeCell = this.attributeCells.get(attributeKey);
+							attributesCellsToMove.add(attributeCell);
+						}
 					}
 				}
 			}
@@ -555,7 +576,7 @@ public class DiagramController extends BaseController
 		mxCell childCell = this.getEntityCell(stringId);
 		
 		mxCell hierarchyConnectorCell = (mxCell) this.graph
-			.insertEdge(parent, null, "", childCell, hierarchyNode, StyleConstants.HIERARCHY_CHILD_CONNECTOR_STYLE);
+			.insertEdge(parent, CellConstants.HierarchyConnectorPrefix + hierarchyId.toString() + childId, "", childCell, hierarchyNode, StyleConstants.HIERARCHY_CHILD_CONNECTOR_STYLE);
 		
 		this.hierarchyConnectorCells.put(CellConstants.HierarchyConnectorPrefix + hierarchyId.toString() + childId, hierarchyConnectorCell);
 	}
@@ -565,9 +586,9 @@ public class DiagramController extends BaseController
 		mxCell parentCell = this.getEntityCell(parentId);
 		double x = parentCell.getGeometry().getCenterX();
 		double y = parentCell.getGeometry().getCenterY() + StyleConstants.ENTITY_HEIGHT / 2 + StyleConstants.HIERARCHY_DISTANCE_TO_PARENT;
-		mxCell hierarchyNode = (mxCell) this.graph.insertVertex(parent, null, "", x, y, 0, 0);
+		mxCell hierarchyNode = (mxCell) this.graph.insertVertex(parent, CellConstants.HierarchyNodePrefix + hierarchy.getId().toString(), "", x, y, 0, 0);
 		mxCell hierarchyConnectorCell = (mxCell) this.graph
-			.insertEdge(parent, null, hierarchy.getSummary(), hierarchyNode, parentCell, StyleConstants.HIERARCHY_PARENT_CONNECTOR_STYLE);
+			.insertEdge(parent, CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + parentId, hierarchy.getSummary(), hierarchyNode, parentCell, StyleConstants.HIERARCHY_PARENT_CONNECTOR_STYLE);
 		this.hierarchyNodeCells.put(CellConstants.HierarchyNodePrefix + hierarchy.getId().toString(), hierarchyNode);
 		this.hierarchyConnectorCells.put(CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + parentId, hierarchyConnectorCell);
 		
