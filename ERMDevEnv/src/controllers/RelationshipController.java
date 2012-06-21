@@ -12,19 +12,19 @@ import views.IRelationshipView;
 import views.mock.MockRelationshipView;
 import controllers.factories.IAttributeControllerFactory;
 import controllers.factories.IRelationshipEntityControllerFactory;
-import controllers.factories.IStrongEntityControllerFactory;
 import controllers.factories.mock.MockRelationshipEntityControllerFactory;
 import controllers.listeners.IRelationshipEventListener;
 import controllers.tests.mocks.MockAttributeControllerFactory;
 import controllers.tests.mocks.MockProjectContext;
-import controllers.tests.mocks.MockStrongEntityControllerFactory;
+
 
 import models.Attribute;
 import models.AttributeCollection;
 import models.Cardinality;
+import models.EntityType;
 import models.Relationship;
 import models.RelationshipEntity;
-import models.StrongEntityCollection;
+
 
 public class RelationshipController implements IRelationshipController {
 
@@ -37,12 +37,10 @@ public class RelationshipController implements IRelationshipController {
 	private IProjectContext pContext;
 	private IRelationshipEntityController relEntController;
 	private IAttributeController attController;
-	private IStrongEntityController strongEntController;
-	
+		
 	
 	//factories
 	private IAttributeControllerFactory attributeControllerFactory;
-	private IStrongEntityControllerFactory strongEntityControllerFactory;
 	private IRelationshipEntityControllerFactory relationshipEntityControllerFactory;
 
 	
@@ -50,14 +48,12 @@ public class RelationshipController implements IRelationshipController {
 			IProjectContext pContext,
 			Relationship relationship, IRelationshipView view,
 			IAttributeControllerFactory attributeControllerFactory,
-			IStrongEntityControllerFactory strongEntityControllerFactory,
 			IRelationshipEntityControllerFactory relationshipEntityControllerFactory) {
 		
 		pendingRelationship = relationship;
 		this.pContext = pContext;
 		this.view = view;
 		this.attributeControllerFactory = attributeControllerFactory;
-		this.strongEntityControllerFactory = strongEntityControllerFactory;
 		this.relationshipEntityControllerFactory = relationshipEntityControllerFactory;	
 		listeners = new ArrayList<IRelationshipEventListener> ();
 		
@@ -70,8 +66,10 @@ public class RelationshipController implements IRelationshipController {
 		view.setController(this);
 		relEntController = relationshipEntityControllerFactory
 				.create(IterableExtensions.getListOf(pendingRelationship.getRelationshipEntities()));
-		attController = this.attributeControllerFactory.create(pendingRelationship.getAttributes());
-		strongEntController = strongEntityControllerFactory.create(new StrongEntityCollection());
+		attController = this.attributeControllerFactory.create(
+				pendingRelationship.getAttributes());
+		
+
 		this.view.show();
 	}
 
@@ -106,26 +104,53 @@ public class RelationshipController implements IRelationshipController {
 		this.view = view;		
 	}
 
+	
 	@Override
-	public void add() {
-		 
-		AttributeCollection attributeCollection = this.pendingRelationship.getAttributes();
-	        for (Attribute attribute : this.attController.getAttributes()) {
-	            try {
-	                attributeCollection.addAttribute(attribute);
-	            } catch (Exception e) {
-	                //When editing an Relationship
-	                e.printStackTrace();
-	            }
-	        }
-	        
-	        //TODO:Checkear si tengo que setear en invisible la vista
-	        
-	        
-	        for (IRelationshipEventListener listener : listeners) 
-	        	listener.handleCreatedEvent(pendingRelationship);
+	public void add() throws Exception {
+		if (this.pendingRelationship.getName()==null || this.pendingRelationship.getName() =="")
+			throw new Exception ("The name field  is not completed");
+		
+		
+		if (this.relEntController.getRelationshipEntities().size()<2)
+			throw new Exception ();
+		this.pendingRelationship.setRelationshipEntities
+		(this.relEntController.getRelationshipEntities());
+		
+		checkComposition();
+				
+		addAttributes();
+		//TODO:Checkear si tengo que setear en invisible la vista
+	       	        
+	    for (IRelationshipEventListener listener : listeners) 
+	       	listener.handleCreatedEvent(pendingRelationship);
 	      	    	
 	}
 
+
+	private void checkComposition() throws Exception {
+		if (isComposition() == false) return;
+		
+		EntityType entityType = null;
+		for (RelationshipEntity ent : pendingRelationship.getRelationshipEntities() ) {
+			if (entityType == null)
+				entityType = this.pContext.getEntity(ent.getEntityId()).getType();
+			else if (entityType != this.pContext.getEntity(ent.getEntityId()).getType()) {
+				isComposition(false);
+				throw new Exception("All the entities should be the same type");
+			}
+		}
+	}
+
+	private void addAttributes () {
+		AttributeCollection attributeCollection = this.pendingRelationship.getAttributes();
+        for (Attribute attribute : this.attController.getAttributes()) {
+            try {
+                attributeCollection.addAttribute(attribute);
+            } catch (Exception e) {
+                //When editing an Relationship
+                e.printStackTrace();
+            }
+        }
+	}
 	
 }

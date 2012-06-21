@@ -14,11 +14,12 @@ import views.RelatinshipEntityView;
 public interface IRelationshipEntityController {
 
 	public void create();
-	public void add(UUID uuid,Cardinality card, String role);
-	public void modify(UUID uuid,Cardinality card, String role) throws Exception;
 	public void remove(UUID uuid) throws Exception;
 	public List<RelationshipEntity> getRelationshipEntities();
 	public void setRelationshipEntityView (IRelationshipEntityView view);
 	void addSuscriber(IRelationshipEntityEventListener listener);
+	void modify(UUID uuid, Cardinality card, String role, boolean isStrong)
+			throws Exception;
+	void add(UUID uuid, Cardinality card, String role, boolean isStrong);
 	
 }

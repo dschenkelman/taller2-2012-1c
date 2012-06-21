@@ -11,7 +11,7 @@ import models.Attribute;
 import models.Cardinality;
 import models.Relationship;
 import models.RelationshipEntity;
-import models.StrongEntityCollection;
+
 
 public interface IRelationshipController {
 	
@@ -25,7 +25,8 @@ public interface IRelationshipController {
 	void isComposition(boolean composition);
 	boolean isComposition();
 	
-	void add();
+	void add() throws Exception;
+
 	void setRelationshipView(IRelationshipView view);
 	
 	

@@ -85,6 +85,7 @@ public class RelationshipCollectionXmlManagerTestCase {
 		Element entityElement4 = (Element)entities2.item(1);
 		
 		Assert.assertEquals(entity3.getId().toString(), entityElement3.getAttribute("entityId"));
+		Assert.assertEquals(entityElement3.getAttribute("isStrongEntity"),"false");
 		Assert.assertEquals(entity4.getId().toString(), entityElement4.getAttribute("entityId"));
 	}
 	
@@ -99,13 +100,13 @@ public class RelationshipCollectionXmlManagerTestCase {
 		"</attributes>" +
 		"<entities>" +
 		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B8' minimumCardinality='0'" +
-		" maximumCardinality='1' role='Role1' />" +
+		" maximumCardinality='1' role='Role1' isStrongEntity='false'/>" +
 		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B7' minimumCardinality='0'" +
-		" maximumCardinality='*' role='Role2' />" +
+		" maximumCardinality='*' role='Role2' isStrongEntity='false'/>" +
 		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B6' minimumCardinality='*'" +
-		" maximumCardinality='*' role='Role3' />" +
+		" maximumCardinality='*' role='Role3' isStrongEntity='false'/>" +
 		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B5' minimumCardinality='2'" +
-		" maximumCardinality='7' role='Role4' />" +
+		" maximumCardinality='7' role='Role4' isStrongEntity='true'/>" +
 		"</entities>" +
 		"</relationship>" +
 		"<relationship id='01854049-A762-4392-9357-A213C4110221' " +
@@ -115,13 +116,13 @@ public class RelationshipCollectionXmlManagerTestCase {
 		"</attributes>" +
 		"<entities>" +
 		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B4' minimumCardinality='0'" +
-		" maximumCardinality='1' role='Role1' />" +
+		" maximumCardinality='1' role='Role1' isStrongEntity='false'/>" +
 		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B3' minimumCardinality='0'" +
-		" maximumCardinality='*' role='Role2' />" +
+		" maximumCardinality='*' role='Role2' isStrongEntity='false'/>" +
 		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B2' minimumCardinality='*'" +
-		" maximumCardinality='*' role='Role3' />" +
+		" maximumCardinality='*' role='Role3' isStrongEntity='true'/>" +
 		"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B1' minimumCardinality='2'" +
-		" maximumCardinality='7' role='Role4' />" +
+		" maximumCardinality='7' role='Role4' isStrongEntity='false'/>" +
 		"</entities>" +
 		"</relationship>" +
 		"</relationships>" +

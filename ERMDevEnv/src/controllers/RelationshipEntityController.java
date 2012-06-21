@@ -36,19 +36,20 @@ public class RelationshipEntityController extends BaseController implements
 	}
 
 	@Override
-	public void add(UUID uuid, Cardinality card, String role) {
-		RelationshipEntity relEntity = new RelationshipEntity(uuid, card, role);
+	public void add(UUID uuid, Cardinality card, String role, boolean isStrong) {
+		RelationshipEntity relEntity = new RelationshipEntity(uuid, card, role,isStrong);
 		this.listRelEnt.add(relEntity);
 		this.updateSuscribers(relEntity);
 	}
 
 	@Override
-	public void modify(UUID uuid, Cardinality card, String role)
+	public void modify(UUID uuid, Cardinality card, String role, boolean isStrong)
 			throws Exception {
 		RelationshipEntity aux = this.findRelationshipEntity(uuid);
 		try {
 			aux.setCardinality(card);
 			aux.setRole(role);
+			aux.setStrongEntity(isStrong);
 		} catch (NullPointerException e) {
 			throw new Exception("Error: Relationship-Entity with UUID " + uuid
 					+ " not found");

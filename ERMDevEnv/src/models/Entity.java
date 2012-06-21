@@ -8,7 +8,7 @@ public class Entity implements INameable, IStrongEntity {
     private UUID id;
     private EntityType type;
     private AttributeCollection attributes;
-    private StrongEntityCollection strongEntityCollection;
+    
 
     public Entity(String name) {
         this(name, UUID.randomUUID(), EntityType.None, new AttributeCollection());
@@ -32,7 +32,7 @@ public class Entity implements INameable, IStrongEntity {
         this.setType(type);
         this.id = id;
         this.attributes = attributes;
-        this.strongEntityCollection = new StrongEntityCollection();
+       
     }
 
     @Override
@@ -61,14 +61,11 @@ public class Entity implements INameable, IStrongEntity {
         return this.attributes;
     }
 
+
     public void setAttributes(AttributeCollection attributeCollection){
         this.attributes = attributeCollection;
     }
-
-    public StrongEntityCollection getStrongEntities(){
-        return this.strongEntityCollection;
-    }
-
+ 
     @Override
     public String toString()
     {

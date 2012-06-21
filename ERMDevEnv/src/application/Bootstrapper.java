@@ -106,7 +106,6 @@ public class Bootstrapper {
 					.as(CACHE).addComponent(IHierarchyControllerFactory.class, HierarchyControllerFactory.class)
 					.addComponent(IHierarchyController.class, HierarchyController.class)
 					.addComponent(IHierarchyView.class, HierarchyView.class)
-					.as(CACHE).addComponent(IStrongEntityControllerFactory.class, StrongEntityControllerFactory.class)
 					.as(CACHE).addComponent(IKeysControllerFactory.class, KeyControllerFactory.class)
 					.as(CACHE).addComponent(IGraphPersistenceService.class, GraphPersistenceService.class)
 					.as(CACHE).addComponent(IDiagramControllerFactory.class, DiagramControllerFactory.class)

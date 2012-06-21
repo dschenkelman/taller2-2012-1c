@@ -23,6 +23,7 @@ public class RelationshipEntityTestCase {
 		Assert.assertEquals(entity.getId(),relationshipEntity.getEntityId());
 		Assert.assertNull(relationshipEntity.getCardinality());
 		Assert.assertNull(relationshipEntity.getRole());
+		Assert.assertFalse(relationshipEntity.isStrongEntity());
 	}
 	
 	@Test

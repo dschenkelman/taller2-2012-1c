@@ -9,15 +9,11 @@ import java.util.UUID;
 import infrastructure.IProjectContext;
 
 import models.Cardinality;
-import models.Entity;
-import models.EntityCollection;
-import models.ModelCollection;
 import models.RelationshipEntity;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import views.IRelationshipEntityView;
 import views.mock.MockRelationshipEntityView;
 
 import controllers.IRelationshipEntityController;
@@ -55,14 +51,14 @@ public class RelationshipEntityTest {
 			Cardinality cardinality = new Cardinality(1, Double.MAX_VALUE);
 			UUID entityId = UUID.randomUUID();
 
-			controller.add(entityId, cardinality, role);
+			controller.add(entityId, cardinality, role,false);
 			assertEquals(1, controller.getRelationshipEntities().size());
 
 			String role2 = "ROLE2";
 			Cardinality cardinality2 = new Cardinality(3, 5);
 			UUID entityId2 = UUID.randomUUID();
 
-			controller.add(entityId2, cardinality2, role2);
+			controller.add(entityId2, cardinality2, role2,false);
 			assertEquals(2, controller.getRelationshipEntities().size());
 
 		} catch (Exception e) {
@@ -76,13 +72,13 @@ public class RelationshipEntityTest {
 			String role = "ROLE1";
 			Cardinality cardinality = new Cardinality(1, Double.MAX_VALUE);
 			UUID entityId = UUID.randomUUID();
-			controller.add(entityId, cardinality, role);
+			controller.add(entityId, cardinality, role,false);
 
 			String role2 = "ROLE2";
 			Cardinality cardinality2 = new Cardinality(3, 5);
 			UUID entityId2 = UUID.randomUUID();
 
-			controller.add(entityId2, cardinality2, role2);
+			controller.add(entityId2, cardinality2, role2,false);
 		} catch (Exception e) {
 			fail();
 		}
@@ -99,14 +95,14 @@ public class RelationshipEntityTest {
 			Cardinality cardinality = new Cardinality(1, Double.MAX_VALUE);
 			UUID entityId = UUID.randomUUID();
 
-			controller.add(entityId, cardinality, role);
+			controller.add(entityId, cardinality, role,false);
 			assertEquals(1, controller.getRelationshipEntities().size());
 
 			String role2 = "ROLE2";
 			Cardinality cardinality2 = new Cardinality(3, 5);
 			UUID entityId2 = UUID.randomUUID();
 
-			controller.add(entityId2, cardinality2, role2);
+			controller.add(entityId2, cardinality2, role2,false);
 			assertEquals(2, controller.getRelationshipEntities().size());
 
 			// Test remove method
@@ -130,7 +126,7 @@ public class RelationshipEntityTest {
 			Cardinality cardinality = new Cardinality(1, Double.MAX_VALUE);
 			UUID entityId = UUID.randomUUID();
 
-			controller.add(entityId, cardinality, role);
+			controller.add(entityId, cardinality, role,false);
 			assertEquals(1, controller.getRelationshipEntities().size());
 			
 			cardinality3 = new Cardinality(5, 5);
@@ -139,7 +135,7 @@ public class RelationshipEntityTest {
 		}
 		
 		// Test remove method
-		controller.modify(UUID.randomUUID(), cardinality3, role3);
+		controller.modify(UUID.randomUUID(), cardinality3, role3,false);
 	}
 
 	@Test
@@ -150,13 +146,13 @@ public class RelationshipEntityTest {
 			Cardinality cardinality = new Cardinality(1, Double.MAX_VALUE);
 			UUID entityId = UUID.randomUUID();
 
-			controller.add(entityId, cardinality, role);
+			controller.add(entityId, cardinality, role,false);
 			assertEquals(1, controller.getRelationshipEntities().size());
 
 			// Test remove method
 			String role3 = "ROLE-MODIFIED";
 			Cardinality cardinality3 = new Cardinality(5, 5);
-			controller.modify(entityId, cardinality3, role3);
+			controller.modify(entityId, cardinality3, role3,true);
 
 			Iterator<RelationshipEntity> ite = controller
 					.getRelationshipEntities().iterator();
@@ -164,6 +160,7 @@ public class RelationshipEntityTest {
 			assertEquals(rel.getEntityId(), entityId);
 			assertEquals(rel.getRole(), role3);
 			assertEquals(rel.getCardinality(), cardinality3);
+			assertTrue(rel.isStrongEntity());
 
 		} catch (Exception e) {
 			fail();

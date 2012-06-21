@@ -16,7 +16,7 @@ public class EntityTestCase
 		Assert.assertEquals("EntityName", entity.getName());
 		Assert.assertEquals(EntityType.None, entity.getType());
 		Assert.assertEquals(0, entity.getAttributes().count());
-		Assert.assertEquals(0, entity.getStrongEntities().count());
+		
 	}
 	
 	@Test

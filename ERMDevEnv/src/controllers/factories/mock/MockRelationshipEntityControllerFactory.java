@@ -20,13 +20,11 @@ public class MockRelationshipEntityControllerFactory implements
 		
 	}
 
-
-
 	@Override
 	public IRelationshipEntityController create(
 			List<RelationshipEntity> relationshipEntities) {
-		// TODO Auto-generated method stub
-		return null;
+			mockRelationshipEntityController.setRelationshipEntities(relationshipEntities);
+			return mockRelationshipEntityController;
 	}
 
 }
