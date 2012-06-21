@@ -4,7 +4,7 @@ import controllers.IEntityController;
 import models.EntityType;
 import views.IAttributeView;
 import views.IEntityView;
-import views.IStrongEntityView;
+
 
 public class MockEntityView implements IEntityView {
     private IEntityController controller;
