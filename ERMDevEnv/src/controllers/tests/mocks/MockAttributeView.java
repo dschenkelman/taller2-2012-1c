@@ -12,7 +12,6 @@ public class MockAttributeView implements IAttributeView {
     private IAttributeController controller;
     private String expression;
     private String name;
-    private boolean iskey;
     private Cardinality cardinality;
     private AttributeType attType;
 
@@ -35,11 +34,6 @@ public class MockAttributeView implements IAttributeView {
     @Override
     public String getName() {
         return this.name;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public boolean isKey() {
-        return this.iskey;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -67,10 +61,6 @@ public class MockAttributeView implements IAttributeView {
 
     public void setCardinality(Cardinality cardinality) {
         this.cardinality = cardinality;
-    }
-
-    public void setIskey(boolean iskey) {
-        this.iskey = iskey;
     }
 
     public void setName(String name) {

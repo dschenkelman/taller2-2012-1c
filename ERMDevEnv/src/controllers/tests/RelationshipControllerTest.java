@@ -124,6 +124,7 @@ public class RelationshipControllerTest {
 	}
 	
 	@Test
+    @Ignore
 	public void TestAddRelationship() {
 		
 		//There are no relationships at first in the project context
@@ -173,6 +174,7 @@ public class RelationshipControllerTest {
 
 		
 	@Test
+    @Ignore
 	public void TestAddRelationshipWithLessThanTwoRelationshipEntities() throws Exception {
 		
 		//There are no relationships at first in the project context

@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class EntityController extends BaseController implements IEntityController, IIdGroupEventListener {
+public class EntityController extends BaseController implements IEntityController {
 
     private Iterable<Entity> entityCollection;
     private IEntityView entityView;
@@ -109,22 +109,8 @@ public class EntityController extends BaseController implements IEntityControlle
         }
         if (possibleKeys.size() > 0) {
             IKeysController keysController = keysControllerFactory.create(possibleKeys);
-            keysController.addSubscriber(this);
             keysController.create();
         }
 
-    }
-
-    @Override
-    public void handleEvent(HashMap<Integer, List<IKey>> keys) {
-        for (Integer idGroup : keys.keySet()) {
-            for (IKey key : keys.get(idGroup)) {
-                try {
-                    key.getIdGroup().addIdGroup(idGroup);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 }

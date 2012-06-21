@@ -4,11 +4,14 @@ import controllers.listeners.IIdGroupEventListener;
 import views.IKeysView;
 
 public interface IKeysController {
-    public void addSubscriber(IIdGroupEventListener listener);
 
     public void create();
 
-    public void addKeys();
+    public void addIdGroupToKey();
 
-    void setKeyView(IKeysView keysView);
+    public void setKeyView(IKeysView keysView);
+
+    public void removeIdGroupFromKey();
+
+    void setToKey(boolean bool);
 }

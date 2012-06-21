@@ -42,11 +42,10 @@ public class AttributeControllerTest {
         try {
             mockAttributeView.setCardinality(new Cardinality(1, 1));
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         mockAttributeView.setAttType(AttributeType.calculated);
         mockAttributeView.setExpression("aaksda");
-        mockAttributeView.setIskey(false);
 
         attributeController.setAttributeView(mockAttributeView);
         Assert.assertEquals(0, IterableExtensions.count(this.attributeController.getAttributes()));

@@ -1,5 +1,6 @@
 package persistence;
 
+import models.IdGroup;
 import models.IdGroupCollection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -10,6 +11,7 @@ public class IdGroupCollectionXmlManager implements IXmlManager<IdGroupCollectio
     private static String IDGROUPSTAG = "idGroups";
     private static String IDGROUPTAG = "idGroup";
     private static String NUMBERATTRIBUTE = "number";
+    private static String ISKEYATTRIBUTE = "isKey";
 
     public IdGroupCollection getItemFromXmlElement(Element element) {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
@@ -17,7 +19,7 @@ public class IdGroupCollectionXmlManager implements IXmlManager<IdGroupCollectio
         for (int i = 0; i < idGroupList.getLength(); i++) {
             Element idGroupElement = (Element) idGroupList.item(i);
             try {
-                idGroupCollection.addIdGroup(Integer.parseInt(idGroupElement.getAttribute(NUMBERATTRIBUTE)));
+                idGroupCollection.addIdGroup(new IdGroup(Integer.parseInt(idGroupElement.getAttribute(NUMBERATTRIBUTE)),Boolean.parseBoolean(idGroupElement.getAttribute(ISKEYATTRIBUTE))));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -29,10 +31,11 @@ public class IdGroupCollectionXmlManager implements IXmlManager<IdGroupCollectio
 
         Element idGroupsElement = document.createElement(IDGROUPSTAG);
 
-        Iterable<Integer> idGroupList = idGroupCollection.getIdGroups();
-        for (Integer number : idGroupList) {
+        Iterable<IdGroup> idGroupList = idGroupCollection.getIdGroups();
+        for (IdGroup idGroup : idGroupList) {
             Element idGroupElement = document.createElement(IDGROUPTAG);
-            idGroupElement.setAttribute(NUMBERATTRIBUTE, number.toString());
+            idGroupElement.setAttribute(NUMBERATTRIBUTE, idGroup.getNumber().toString());
+            idGroupElement.setAttribute(ISKEYATTRIBUTE, idGroup.isKey().toString());
             idGroupsElement.appendChild(idGroupElement);
         }
 

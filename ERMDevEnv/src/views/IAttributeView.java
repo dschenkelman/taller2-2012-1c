@@ -17,8 +17,6 @@ public interface IAttributeView {
 
     public String getName();
 
-    public boolean isKey();
-
     public Cardinality getCardinality();
 
     public AttributeType getAttributeType();

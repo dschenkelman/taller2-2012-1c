@@ -1,6 +1,7 @@
 package persistence.tests;
 
 import junit.framework.Assert;
+import models.IdGroup;
 import models.IdGroupCollection;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -20,7 +21,7 @@ public class IdGroupCollectionManagerXmlTest {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
         for (int i = 0; i < 10; i++) {
             try {
-                idGroupCollection.addIdGroup(i);
+                idGroupCollection.addIdGroup(new IdGroup(i,false));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -52,7 +53,7 @@ public class IdGroupCollectionManagerXmlTest {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
         for (int i = 0; i < 10; i++) {
             try {
-                idGroupCollection.addIdGroup(i);
+                idGroupCollection.addIdGroup(new IdGroup(i,false));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -83,6 +84,7 @@ public class IdGroupCollectionManagerXmlTest {
         for (int i = 0; i < 10; i++) {
             try {
                 Assert.assertEquals(true, idGroupCollectionFromXml.exists(i));
+                Assert.assertFalse(idGroupCollectionFromXml.getIdGroup(i).isKey());
             } catch (Exception e) {
                 e.printStackTrace();
             }
