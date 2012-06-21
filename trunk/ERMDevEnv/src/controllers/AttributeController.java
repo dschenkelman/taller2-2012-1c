@@ -24,7 +24,7 @@ public class AttributeController extends BaseController implements IAttributeCon
     @Override
     public Attribute addNewAttribute() {
         String expressionClone = (attributeView.getAttributeType() == AttributeType.calculated || attributeView.getAttributeType() == AttributeType.copy) ? attributeView.getExpression() : null;
-        Attribute att = new Attribute(attributeView.getName(), attributeView.isKey(), attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
+        Attribute att = new Attribute(attributeView.getName(), false, attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
         this.attributes.add(att);
         return att;
     }
@@ -50,7 +50,7 @@ public class AttributeController extends BaseController implements IAttributeCon
     public void addNewAttributeToAttribute(Attribute attributeSelected) {
         if (attributeSelected != null) {
             String expressionClone = (attributeView.getAttributeType() == AttributeType.calculated || attributeView.getAttributeType() == AttributeType.copy) ? attributeView.getExpression() : null;
-            Attribute att = new Attribute(attributeView.getName(), attributeView.isKey(), attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
+            Attribute att = new Attribute(attributeView.getName(), false, attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
             try {
                 AttributeCollection attributeCollection = attributeSelected.getAttributes();
                 if (attributeCollection == null) {
@@ -68,7 +68,6 @@ public class AttributeController extends BaseController implements IAttributeCon
     @Override
     public void editAttribute(Attribute attributeSelected) {
         attributeSelected.setName(attributeView.getName());
-        attributeSelected.isKey(attributeView.isKey());
         attributeSelected.setCardinality(attributeView.getCardinality());
         attributeSelected.setType(attributeView.getAttributeType());
         AttributeType attType = attributeView.getAttributeType();

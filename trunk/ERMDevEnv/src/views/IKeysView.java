@@ -2,17 +2,25 @@ package views;
 
 import controllers.IKeysController;
 import models.IKey;
+import models.IdGroup;
 
 
 import java.util.HashMap;
 import java.util.List;
 
 public interface IKeysView {
-    void show();
+
+    void showView();
 
     void setController(IKeysController controller);
 
-    HashMap<Integer,List<IKey>> getKeys();
-
     public void setPossibleKeys(Iterable<IKey> keys);
+
+    public IdGroup getIdGroupSelected();
+
+    public IKey getKeySelectedToAdd();
+
+    public IKey getKeySelectedToRemove();
+
+    public Iterable<IKey> getKeysOfIdGroupSelected();
 }

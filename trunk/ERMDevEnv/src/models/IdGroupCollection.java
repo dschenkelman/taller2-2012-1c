@@ -9,48 +9,52 @@ public class IdGroupCollection {
 
 
     public IdGroupCollection() {
-        this.idGroups = new ArrayList<Integer>();
+        this.idGroups = new ArrayList<IdGroup>();
     }
 
-    public Iterable<Integer> getIdGroups(){
+    public Iterable<IdGroup> getIdGroups() {
         return this.idGroups;
     }
 
-    public Integer addIdGroup(Integer number) throws Exception {
-        if (!this.exists(number)) {
-            this.idGroups.add(number);
-            return number;
+    public IdGroup addIdGroup(IdGroup idGroup) throws Exception {
+        if (!this.exists(idGroup.getNumber())) {
+            this.idGroups.add(idGroup);
+            return idGroup;
         } else {
-            throw new Exception("Group's number: " + number + "already exists for this id");
+            throw new Exception("Group's number: " + idGroup.getNumber() + "already exists for this id");
         }
     }
 
-    public void removeIdGroup(Integer number) throws Exception {
+    public void removeIdGroup(IdGroup idGroup) throws Exception {
 
-        if (this.exists(number)) {
-            this.idGroups.remove(number);
+        if (this.exists(idGroup.getNumber())) {
+            this.idGroups.remove(idGroup);
         } else {
-            throw new Exception("Group's number: " + number + "do not exists");
+            throw new Exception("Group's number: " + idGroup.getNumber() + "do not exists");
         }
 
+    }
+
+    public IdGroup getIdGroup(Integer number){
+        return IterableExtensions.firstOrDefault(this.idGroups, new IntegerCmpFunc(), number);
     }
 
     public boolean exists(Integer idGroup) {
         return IterableExtensions.firstOrDefault(this.idGroups, new IntegerCmpFunc(), idGroup) != null;
     }
-    
-    public int count(){
+
+    public int count() {
         return this.idGroups.size();
     }
 
 
+    private ArrayList<IdGroup> idGroups;
 
-    private ArrayList<Integer> idGroups;
+    private class IntegerCmpFunc extends Func<IdGroup, Integer, Boolean> {
 
-    private class IntegerCmpFunc extends Func<Integer, Integer, Boolean> {
         @Override
-        public Boolean execute(Integer number, Integer n) {
-            return number.equals(n);
+        public Boolean execute(IdGroup idGroup, Integer idGroupNumber) {
+            return idGroup.getNumber().equals(idGroupNumber);
         }
     }
 
