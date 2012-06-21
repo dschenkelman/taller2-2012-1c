@@ -11,7 +11,7 @@ import models.Cardinality;
 import models.Entity;
 import models.Relationship;
 import models.RelationshipEntity;
-import models.StrongEntityCollection;
+
 import controllers.IRelationshipController;
 import controllers.factories.mock.MockEntityControllerFactory;
 import controllers.listeners.IRelationshipEventListener;

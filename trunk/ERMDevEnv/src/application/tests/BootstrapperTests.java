@@ -64,7 +64,7 @@ public class BootstrapperTests {
 		
 		bootstrapper.run();
 		
-		Assert.assertEquals(18, this.container.getMappings().size());
+		Assert.assertEquals(17, this.container.getMappings().size());
 		Assert.assertSame(this.container, this.container.getMappings().get(MutablePicoContainer.class));
 		Assert.assertSame(DiagramController.class, this.container.getMappings().get(IDiagramController.class));
 		Assert.assertSame(DiagramView.class, this.container.getMappings().get(IDiagramView.class));
@@ -76,7 +76,6 @@ public class BootstrapperTests {
 		Assert.assertSame(HierarchyControllerFactory.class, this.container.getMappings().get(IHierarchyControllerFactory.class));
 		Assert.assertSame(HierarchyController.class, this.container.getMappings().get(IHierarchyController.class));
 		Assert.assertSame(HierarchyView.class, this.container.getMappings().get(IHierarchyView.class));
-		Assert.assertSame(StrongEntityControllerFactory.class, this.container.getMappings().get(IStrongEntityControllerFactory.class));
 		Assert.assertSame(AttributeControllerFactory.class, this.container.getMappings().get(IAttributeControllerFactory.class));
 		Assert.assertSame(KeyControllerFactory.class, this.container.getMappings().get(IKeysControllerFactory.class));
 		Assert.assertSame(GraphPersistenceService.class, this.container.getMappings().get(IGraphPersistenceService.class));

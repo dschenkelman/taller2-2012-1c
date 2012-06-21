@@ -33,13 +33,13 @@ public class RelationshipXmlManagerTestCase {
 		Entity entity4 = new Entity("Entity4");
 		
 		RelationshipEntity relationshipEntity1 = new RelationshipEntity(entity1,
-				new Cardinality(0, 1), "Role1");
+				new Cardinality(0, 1), "Role1",true);
 		RelationshipEntity relationshipEntity2 = new RelationshipEntity(entity2,
 				new Cardinality(0, Double.POSITIVE_INFINITY), "Role2");
 		RelationshipEntity relationshipEntity3 = new RelationshipEntity(entity3,
 				new Cardinality(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY), "Role3");
 		RelationshipEntity relationshipEntity4 = new RelationshipEntity(entity4,
-				new Cardinality(2, 7), "Role4");
+				new Cardinality(2, 7), "Role4",true);
 		
 		Relationship relationship = new Relationship(relationshipEntity1, relationshipEntity2);
 		relationship.setName("RelationshipName");
@@ -78,6 +78,7 @@ public class RelationshipXmlManagerTestCase {
 		Assert.assertEquals("0", entityElement1.getAttribute("minimumCardinality"));
 		Assert.assertEquals("1", entityElement1.getAttribute("maximumCardinality"));
 		Assert.assertEquals("Role1", entityElement1.getAttribute("role"));
+		Assert.assertEquals("true", entityElement1.getAttribute("isStrongEntity"));
 		
 		Element entityElement2 = (Element)entities.item(1);
 		
@@ -86,6 +87,7 @@ public class RelationshipXmlManagerTestCase {
 		Assert.assertEquals("0", entityElement2.getAttribute("minimumCardinality"));
 		Assert.assertEquals("*", entityElement2.getAttribute("maximumCardinality"));
 		Assert.assertEquals("Role2", entityElement2.getAttribute("role"));
+		Assert.assertEquals("false", entityElement2.getAttribute("isStrongEntity"));
 		
 		Element entityElement3 = (Element)entities.item(2);
 		
@@ -94,6 +96,7 @@ public class RelationshipXmlManagerTestCase {
 		Assert.assertEquals("*", entityElement3.getAttribute("minimumCardinality"));
 		Assert.assertEquals("*", entityElement3.getAttribute("maximumCardinality"));
 		Assert.assertEquals("Role3", entityElement3.getAttribute("role"));
+		Assert.assertEquals("false", entityElement3.getAttribute("isStrongEntity"));
 		
 		Element entityElement4 = (Element)entities.item(3);
 		
@@ -102,6 +105,7 @@ public class RelationshipXmlManagerTestCase {
 		Assert.assertEquals("2", entityElement4.getAttribute("minimumCardinality"));
 		Assert.assertEquals("7", entityElement4.getAttribute("maximumCardinality"));
 		Assert.assertEquals("Role4", entityElement4.getAttribute("role"));
+		Assert.assertEquals("true", entityElement4.getAttribute("isStrongEntity"));
 	}
 	
 	@Test
@@ -114,13 +118,13 @@ public class RelationshipXmlManagerTestCase {
 				"</attributes>" +
 				"<entities>" +
 				"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B8' minimumCardinality='0'" +
-				" maximumCardinality='1' role='Role1' />" +
+				" maximumCardinality='1' role='Role1' isStrongEntity='true'/>" +
 				"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B7' minimumCardinality='0'" +
-				" maximumCardinality='*' role='Role2' />" +
+				" maximumCardinality='*' role='Role2' isStrongEntity='false'/>" +
 				"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B6' minimumCardinality='*'" +
-				" maximumCardinality='*' role='Role3' />" +
+				" maximumCardinality='*' role='Role3' isStrongEntity='false'/>" +
 				"<entity entityId='0E6A2A75-A645-4665-85C8-21179BF362B5' minimumCardinality='2'" +
-				" maximumCardinality='7' role='Role4' />" +
+				" maximumCardinality='7' role='Role4' isStrongEntity='true'/>" +
 				"</entities></relationship></relationships>";
 		
 		Document document = TestUtilities.loadXMLFromString(xml);
@@ -156,6 +160,8 @@ public class RelationshipXmlManagerTestCase {
 		Assert.assertEquals(1.0, relationshipEntity1.getCardinality().getMaximum());
 		Assert.assertEquals(0.0, relationshipEntity1.getCardinality().getMinimum());
 		Assert.assertEquals("Role1", relationshipEntity1.getRole());
+		Assert.assertTrue( relationshipEntity1.isStrongEntity());
+		
 		
 		RelationshipEntity relationshipEntity2 = IterableExtensions.firstOrDefault(relationshipEntities,
 				cmpFunc, "0E6A2A75-A645-4665-85C8-21179BF362B7");
@@ -164,6 +170,8 @@ public class RelationshipXmlManagerTestCase {
 		Assert.assertEquals(Double.POSITIVE_INFINITY, relationshipEntity2.getCardinality().getMaximum());
 		Assert.assertEquals(0.0, relationshipEntity2.getCardinality().getMinimum());
 		Assert.assertEquals("Role2", relationshipEntity2.getRole());
+		Assert.assertFalse( relationshipEntity2.isStrongEntity());
+		
 		
 		RelationshipEntity relationshipEntity3 = IterableExtensions.firstOrDefault(relationshipEntities,
 				cmpFunc, "0E6A2A75-A645-4665-85C8-21179BF362B6");
@@ -172,6 +180,7 @@ public class RelationshipXmlManagerTestCase {
 		Assert.assertEquals(Double.POSITIVE_INFINITY, relationshipEntity3.getCardinality().getMaximum());
 		Assert.assertEquals(Double.POSITIVE_INFINITY, relationshipEntity3.getCardinality().getMinimum());
 		Assert.assertEquals("Role3", relationshipEntity3.getRole());
+		Assert.assertFalse( relationshipEntity3.isStrongEntity());
 		
 		RelationshipEntity relationshipEntity4 = IterableExtensions.firstOrDefault(relationshipEntities,
 				cmpFunc, "0E6A2A75-A645-4665-85C8-21179BF362B5");
@@ -180,6 +189,7 @@ public class RelationshipXmlManagerTestCase {
 		Assert.assertEquals(7.0, relationshipEntity4.getCardinality().getMaximum());
 		Assert.assertEquals(2.0, relationshipEntity4.getCardinality().getMinimum());
 		Assert.assertEquals("Role4", relationshipEntity4.getRole());
+		Assert.assertTrue( relationshipEntity4.isStrongEntity());
 	}
 	
 	@Before

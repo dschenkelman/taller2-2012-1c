@@ -4,6 +4,8 @@ import infrastructure.StringExtensions;
 
 import java.util.UUID;
 
+import junit.framework.Assert;
+
 import models.AttributeCollection;
 import models.Cardinality;
 import models.Relationship;
@@ -99,6 +101,7 @@ public class RelationshipXmlManager implements IXmlManager<Relationship> {
 				entityElement.setAttribute("role", relationshipEntity.getRole());
 			}
 			
+			entityElement.setAttribute("isStrongEntity", Boolean.toString(relationshipEntity.isStrongEntity()));
 			
 			return entityElement;
 		}
@@ -108,21 +111,25 @@ public class RelationshipXmlManager implements IXmlManager<Relationship> {
 			String minimumCard = XmlExtensions.getStringOrNull(entityElement, "minimumCardinality");
 			String maximumCard = XmlExtensions.getStringOrNull(entityElement, "maximumCardinality");
 			String role = XmlExtensions.getStringOrNull(entityElement, "role");
+			boolean isStrongEntity = Boolean.parseBoolean(
+					XmlExtensions.getStringOrNull(entityElement,"isStrongEntity"));
 			double minimum;
 			double maximum;
 			if (minimumCard == null && maximumCard == null)
-				return new RelationshipEntity(id, null, role);
+				return new RelationshipEntity(id, null, role,isStrongEntity);
 			if (minimumCard == null) {
 				maximum = Cardinality.getCardinalityFromString(maximumCard);
-				return new RelationshipEntity(id, new Cardinality(0, maximum), role);
+				return new RelationshipEntity(id, new Cardinality(0, maximum), role,isStrongEntity);
 			}
 			if (maximumCard == null) {
 				minimum = Cardinality.getCardinalityFromString(minimumCard);
-				return new RelationshipEntity(id, new Cardinality(minimum, Double.POSITIVE_INFINITY), role);
+				return new RelationshipEntity(id, new Cardinality(minimum, Double.POSITIVE_INFINITY), 
+						role,isStrongEntity);
 			}
 			minimum = Cardinality.getCardinalityFromString(minimumCard);		
 			maximum = Cardinality.getCardinalityFromString(maximumCard);
-			return new RelationshipEntity(id, new Cardinality(minimum, maximum), role);
+			return new RelationshipEntity(id, new Cardinality(minimum, maximum), 
+					role,isStrongEntity);
 		}
 	}
 }

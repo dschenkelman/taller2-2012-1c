@@ -9,7 +9,7 @@ import views.IRelationshipView;
 import models.Attribute;
 import models.Cardinality;
 import models.RelationshipEntity;
-import models.StrongEntityCollection;
+
 
 import controllers.IRelationshipController;
 import controllers.listeners.IRelationshipEventListener;

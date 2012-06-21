@@ -18,7 +18,6 @@ public class EntityControllerTest {
 	private MockProjectContext mockProjectContext;
 	private MockEntityEventListener mockEntityCreatedListener;
 	private MockAttributeControllerFactory mockAttributeControllerFactory;
-	private MockStrongEntityControllerFactory mockStrongEntityControllerFactory;
 	private EntityController entityController;
 	private static final String ENTITY_NAME = "NAME";
 	private static final String ATT_NAME_1 = "ADSADS";
@@ -85,7 +84,7 @@ public class EntityControllerTest {
 		mockAttributeControllerFactory = new MockAttributeControllerFactory();
 		mockAttributeControllerFactory
 				.setAttributeController(mockAttributeController);
-		mockStrongEntityControllerFactory = new MockStrongEntityControllerFactory();
+		
 		entityController = new EntityController(mockProjectContext, new Entity(
 				""), mockEntityView, mockAttributeControllerFactory,
 				mockKeyControllerFactory);
@@ -172,7 +171,6 @@ public class EntityControllerTest {
 		mockAttributeControllerFactory = new MockAttributeControllerFactory();
 		mockAttributeControllerFactory
 				.setAttributeController(mockAttributeController);
-		mockStrongEntityControllerFactory = new MockStrongEntityControllerFactory();
 		mockKeyControllerFactory = new MockKeyControllerFactory();
 		mockKeyController = new MockKeyController();
 		entityController = new EntityController(mockProjectContext, new Entity(

@@ -8,16 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class MockProjectContext implements IProjectContext {
+import controllers.listeners.IRelationshipEventListener;
+
+
+
+public class MockProjectContext implements IProjectContext,IRelationshipEventListener {
 
 	private static String SubFolder = "Datos";
     private Iterable<Entity> entityCollection;
     private Iterable<INameable> attributes;
-    private List<Relationship> relationships;
-    
     private List<Diagram> contextDiagrams;
     private List<Diagram> globalDiagrams;
-    
+
+    private List<Relationship> relationships;
+
 	private String name;
 	
 	public MockProjectContext(){
@@ -64,6 +68,23 @@ public class MockProjectContext implements IProjectContext {
 		return null;
 	}
 
+
+	@Override
+	public void handleCreatedEvent(Relationship relationship) {
+		this.relationships.add(relationship);
+		
+	}
+
+	@Override
+	public Entity getEntity(UUID entityId) {
+		for (Entity entity : entityCollection) {
+			if (entity.getId() == entityId)
+				return entity;
+		}
+		return null;
+	}
+
+
 	@Override
 	public void addContextDiagram(Diagram diagram) {
 		this.contextDiagrams.add(diagram);
@@ -93,10 +114,7 @@ public class MockProjectContext implements IProjectContext {
 		return null;
 	}
 
-	@Override
-	public Entity getEntity(UUID id) {
-		return null;
-	}
+
 
 	@Override
 	public Hierarchy getHierarchy(UUID id) {

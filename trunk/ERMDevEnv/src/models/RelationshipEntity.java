@@ -6,6 +6,7 @@ public class RelationshipEntity {
 	private Cardinality cardinality;
 	private String role;
 	private UUID entityId;
+	private boolean isStrongEntity;
 	
 	
 	public RelationshipEntity(Entity entity) {
@@ -16,12 +17,32 @@ public class RelationshipEntity {
 			String role) {		
 		this(entity.getId(), cardinality, role);
 	}
+	
+	public RelationshipEntity(Entity entity, Cardinality cardinality,
+			String role, boolean isStrong) {
+		this(entity.getId(), cardinality, role,isStrong);
+	}
+	
 
 	public RelationshipEntity(UUID id, Cardinality cardinality, String role) {
 		super();
 		this.entityId = id;
 		this.cardinality = cardinality;
 		this.role = role;
+		isStrongEntity = false;
+	}
+	
+	public RelationshipEntity(UUID id, Cardinality cardinality, String role, boolean isStrong) {
+		this(id,cardinality,role);
+		isStrongEntity = isStrong;
+	}
+
+	public boolean isStrongEntity() {
+		return isStrongEntity;
+	}
+
+	public void setStrongEntity(boolean isStrongEntity) {
+		this.isStrongEntity = isStrongEntity;
 	}
 
 	public void setCardinality(Cardinality cardinality) {

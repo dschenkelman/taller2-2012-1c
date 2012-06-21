@@ -5,14 +5,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
 import models.Diagram;
 import models.Entity;
+import models.EntityCollection;
 import models.Hierarchy;
-import models.IStrongEntity;
+
+
 
 public class ProjectContext implements IProjectContext {
 
+	private EntityCollection entityCollection;
+	
 	private static String SubFolder = "Datos";
 	
 	private List<Diagram> projectDiagram;
@@ -87,6 +90,7 @@ public class ProjectContext implements IProjectContext {
 		return null;
 	}
 
+
 	@Override
 	public void addContextDiagram(Diagram diagram) {
 		this.contextDiagram.add(diagram);
@@ -119,4 +123,5 @@ public class ProjectContext implements IProjectContext {
         			return item;
 		return null;
 	}
+
 }

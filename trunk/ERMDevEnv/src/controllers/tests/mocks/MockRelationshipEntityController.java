@@ -18,9 +18,9 @@ public class MockRelationshipEntityController extends BaseController implements
 	private List<RelationshipEntity> relationshipEntity;
 	
 	
-	public MockRelationshipEntityController(IProjectContext projectContext, List<RelationshipEntity> relEnt) {
+	public MockRelationshipEntityController(IProjectContext projectContext) {
 		super(projectContext);
-		relationshipEntity = relEnt;
+		
 	}
 
 	@Override
@@ -30,12 +30,13 @@ public class MockRelationshipEntityController extends BaseController implements
 	}
 
 	@Override
-	public void add(UUID uuid, Cardinality card, String role) {
-		relationshipEntity.add(new RelationshipEntity (uuid,card,role));
+
+	public void add(UUID uuid, Cardinality card, String role,boolean isStrong) {
+		relationshipEntity.add(new RelationshipEntity (uuid,card,role,isStrong));
 	}
 
 	@Override
-	public void modify(UUID uuid, Cardinality card, String role)
+	public void modify(UUID uuid, Cardinality card, String role,boolean isStrong)
 			throws Exception {
 		// TODO Auto-generated method stub
 
@@ -51,6 +52,11 @@ public class MockRelationshipEntityController extends BaseController implements
 	public List<RelationshipEntity> getRelationshipEntities() {
 		return relationshipEntity;
 	}
+	
+	public void setRelationshipEntities(List<RelationshipEntity> list) {
+		relationshipEntity = list;
+	}
+
 
 	@Override
 	public void setRelationshipEntityView(IRelationshipEntityView view) {

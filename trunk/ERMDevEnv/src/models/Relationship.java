@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Relationship {
+public class Relationship implements INameable {
 
 	private List<RelationshipEntity> relationshipEntites;
 	private UUID id;
@@ -53,6 +53,11 @@ public class Relationship {
 	{
 		return this.relationshipEntites;
 	}
+	
+	public void setRelationshipEntities ( List<RelationshipEntity> relationshipEntites) {
+		this.relationshipEntites = relationshipEntites;
+	}
+	
 
 	public UUID getId() {
 		return this.id;

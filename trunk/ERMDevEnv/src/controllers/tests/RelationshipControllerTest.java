@@ -5,16 +5,14 @@ import static org.junit.Assert.*;
 import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import models.AttributeCollection;
-import models.Cardinality;
 import models.Entity;
 import models.EntityCollection;
+import models.EntityType;
 import models.Relationship;
 import models.RelationshipEntity;
 
@@ -23,18 +21,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import views.mock.MockRelationshipView;
-
-import controllers.AttributeController;
 import controllers.IRelationshipController;
-import controllers.IRelationshipEntityController;
 import controllers.RelationshipController;
 import controllers.factories.mock.MockRelationshipEntityControllerFactory;
 import controllers.tests.mocks.MockAttributeController;
 import controllers.tests.mocks.MockAttributeControllerFactory;
 import controllers.tests.mocks.MockProjectContext;
 import controllers.tests.mocks.MockRelationshipEntityController;
-import controllers.tests.mocks.MockStrongEntityController;
-import controllers.tests.mocks.MockStrongEntityControllerFactory;
+
 
 public class RelationshipControllerTest {
 
@@ -45,11 +39,9 @@ public class RelationshipControllerTest {
 	private List<Relationship> relationships;
 	private MockProjectContext pContext;
 	private MockAttributeControllerFactory mockAttributeControllerFactory;
-	private MockStrongEntityControllerFactory mockStrongEntityControllerFactory;
-	private MockStrongEntityController strongEntityController;
+	
 	private MockRelationshipEntityControllerFactory mockRelationshipEntityControllerFactory;
 	private MockRelationshipEntityController mockRelationshipEntityController;
-	private List<RelationshipEntity> relEnt;
 
 	@Before
 	public void setUp() throws Exception {
@@ -85,33 +77,38 @@ public class RelationshipControllerTest {
 		relationships = new ArrayList<Relationship> ();
 		// Set up the views
 		
+		
+		
 		// Controllers
-		relEnt = new ArrayList<RelationshipEntity>();
+
+		
+		
 		attController = new MockAttributeController();
-		strongEntityController = new MockStrongEntityController();
+		
 		pContext = new MockProjectContext();
 		pContext.setRelationshipCollection(relationships);
 		mockRelationshipEntityController = new MockRelationshipEntityController(
-				pContext, relEnt);
+				pContext);
 		
 		
 		//Initialize parameters
 		// Create the Factorories
 		mockAttributeControllerFactory = new MockAttributeControllerFactory();
-		mockStrongEntityControllerFactory = new MockStrongEntityControllerFactory();
+		
 		mockRelationshipEntityControllerFactory = new MockRelationshipEntityControllerFactory();
 	
 		// Set up the factories
 		mockAttributeControllerFactory	.setAttributeController(attController);
-		mockStrongEntityControllerFactory.setStrongEntityController(strongEntityController);
+		
 		mockRelationshipEntityControllerFactory.setRelationshipEntityController(mockRelationshipEntityController);
 		
 		view = new MockRelationshipView();
 		
-		relController = new RelationshipController(pContext, new Relationship(
-				UUID.randomUUID(),null, false), view,
+		relController = new RelationshipController(pContext, 
+				new Relationship(UUID.randomUUID(),null, false),
+				view,
 				mockAttributeControllerFactory,
-				mockStrongEntityControllerFactory,
+				
 				mockRelationshipEntityControllerFactory);
 	}
 
@@ -120,12 +117,6 @@ public class RelationshipControllerTest {
 	@Test
 	public void TestCreateRelationshipController() {
 						
-				
-		relController = new RelationshipController(pContext, new Relationship(
-				UUID.randomUUID(), null, false), view,
-				mockAttributeControllerFactory,
-				mockStrongEntityControllerFactory,
-				mockRelationshipEntityControllerFactory);
 		
 		//Test to create the controller
 		relController.create();
@@ -139,20 +130,26 @@ public class RelationshipControllerTest {
 		assertTrue (this.pContext.getRelationshipCollection().size()==0);
 		
 		relController.create();
-		assertTrue(0 == relEnt.size());
+		relController.addCreateListener(pContext);
+		assertTrue(0 == mockRelationshipEntityController.getRelationshipEntities().size());
 		UUID uuid1 = UUID.randomUUID();
 		UUID uuid2 = UUID.randomUUID();
 		
 		
-		mockRelationshipEntityController.add(uuid1, null, null);
-		assertTrue(1 == relEnt.size());
+		mockRelationshipEntityController.add(uuid1, null, null,false);
+		assertTrue(1 == mockRelationshipEntityController.getRelationshipEntities().size());
 
-		mockRelationshipEntityController.add(uuid2, null, null);
-		assertTrue(2 == relEnt.size());
+		mockRelationshipEntityController.add(uuid2, null, null,false);
+		assertTrue(2 == mockRelationshipEntityController.getRelationshipEntities().size());
 
 		try {
+			relController.add();
+			fail ("should throw Exception because there is no name");
+		}catch (Exception e) {}
+		
+		
+		try {
 			relController.setName("Relationship");
-			relController.isComposition(true);
 			relController.add();
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -164,49 +161,135 @@ public class RelationshipControllerTest {
 		Relationship aux =  pContext.getRelationshipCollection().iterator().next();
 		
 		assertEquals (aux.getName(),"Relationship");
+		assertTrue (aux.isComposition()==false);
 		assertTrue (IterableExtensions.count(aux.getRelationshipEntities()) == 2);
-		RelationshipEntity relEnt1 = aux.getRelationshipEntities().iterator().next();
-		RelationshipEntity relEnt2 = aux.getRelationshipEntities().iterator().next();
+		Iterator <RelationshipEntity> ite = aux.getRelationshipEntities().iterator();
+		RelationshipEntity relEnt1 = ite.next();
+		RelationshipEntity relEnt2 = ite.next();
 		assertTrue (relEnt1.getEntityId().equals(uuid1));
 		assertTrue (relEnt2.getEntityId().equals(uuid2));
 		
 	}
 
 		
-	@Test(expected = Exception.class)
+	@Test
 	public void TestAddRelationshipWithLessThanTwoRelationshipEntities() throws Exception {
 		
 		//There are no relationships at first in the project context
 		assertTrue (this.pContext.getRelationshipCollection().size()==0);
 		
 		relController.create();
+		relController.setName("Relationship");
 		try {
 			relController.add();
 			fail();
-		} catch (Exception e) {
-			//There shouldn't be any relationship since it cannot be added
-			assertTrue (this.pContext.getRelationshipCollection().size()==0);
+		}catch (Exception e) {
+			
 		}
 		
+		try {
+			mockRelationshipEntityController.add(UUID.randomUUID(), null, null,false);
+			relController.add();
+			fail();
+		} catch (Exception e) {
+			
+		}
 		
+		mockRelationshipEntityController.add(UUID.randomUUID(), null, null,false);
+		relController.add();
+		
+	
+			
 	}
 
 	
 	@Test
-	@Ignore
-	public void TestValidateToCreateRelationshipWithStrongEntities() {
-		/**
-		 * Test: 
-		 * 1- Validar que sea binaria 
-		 * 2- validar que se cumpla la cardinalidad 
-		 * 3- Validar que se bloquee el checkbox cuando no se puede crear
-		 * */
-		fail();
+	public void TestValidateComposeEntitiesOfSameTypes() throws Exception {
+					
+		relController.create();
+		
+		Entity entity1 = new Entity ("Entity1");
+		entity1.setType(EntityType.Domain);
+		Entity entity2 = new Entity ("Entity2");
+		entity2.setType(EntityType.Domain);
+		Entity entity3 = new Entity ("Entity3");
+		entity3.setType(EntityType.Domain);
+		
+		EntityCollection entCol = new EntityCollection ();
+		entCol.add(entity1);
+		entCol.add(entity2);
+		entCol.add(entity3);
+		
+		pContext.setEntityCollection(entCol);
+		mockRelationshipEntityController.add(entity1.getId(),null,null,false);
+		mockRelationshipEntityController.add(entity2.getId(),null,null,false);
+		mockRelationshipEntityController.add(entity3.getId(),null,null,false);
+		
+		
+		relController.setName("Relationship");
+		relController.isComposition(true);
+		try {
+			relController.add();
+		}catch (Exception e) {
+			e.printStackTrace();
+			fail ();
+		}
+		
+		assertTrue (relController.isComposition());
+		
 	}
+	
+	@Test
+	public void TestValidateComposeEntitiesOfDiferentTypes() throws Exception {
+					
+		relController.create();
+		
+		Entity entity1 = new Entity ("Entity1");
+		entity1.setType(EntityType.Domain);
+		Entity entity2 = new Entity ("Entity2");
+		entity2.setType(EntityType.Domain);
+		Entity entity3 = new Entity ("Entity3");
+		entity3.setType(EntityType.Historic);
+		
+		EntityCollection entCol = new EntityCollection ();
+		entCol.add(entity1);
+		entCol.add(entity2);
+		entCol.add(entity3);
+		
+		pContext.setEntityCollection(entCol);
+		mockRelationshipEntityController.add(entity1.getId(),null,null,false);
+		mockRelationshipEntityController.add(entity2.getId(),null,null,false);
+		mockRelationshipEntityController.add(entity3.getId(),null,null,false);
+		
+		
+		relController.setName("Relationship");
+		relController.isComposition(true);
+		
+		try {
+			relController.add();
+			fail("should throw Exception because there are entities with diferent types");
+		}catch (Exception e) {
+			assertFalse (relController.isComposition());
+		}
+			
+	}
+		
 
 	@Test
 	@Ignore
 	public void TestCreateRelationshipWithAttributes() {
+		fail();
+	}
+	
+	@Test
+	@Ignore
+	public void TestCreateBinaryRelationshipWithStrongEntities() {
+		fail();
+	}
+	
+	@Test
+	@Ignore
+	public void TestCreateRelationshipWithStrongEntities() {
 		fail();
 	}
 	
