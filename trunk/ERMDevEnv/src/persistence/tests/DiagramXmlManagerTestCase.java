@@ -30,7 +30,9 @@ public class DiagramXmlManagerTestCase {
 		HierarchyCollection hierarchies = new HierarchyCollection();
 		List<Diagram> subDiagrams = new ArrayList<Diagram>();
 		Diagram subDiagram1 = new Diagram();
+		subDiagram1.setName("Sub1");
 		Diagram subDiagram2 = new Diagram();
+		subDiagram2.setName("Sub2");
 		
 		entities.add("entity1");
 		entities.add("entity2");
@@ -79,7 +81,9 @@ public class DiagramXmlManagerTestCase {
 		
 		Assert.assertEquals(2, subDiagList.getLength());
 		Assert.assertEquals(subDiagram1.getId().toString(), ((Element) subDiagList.item(0)).getAttribute("id"));
+		Assert.assertEquals(subDiagram1.getName(), ((Element) subDiagList.item(0)).getAttribute("name"));
 		Assert.assertEquals(subDiagram2.getId().toString(), ((Element) subDiagList.item(1)).getAttribute("id"));
+		Assert.assertEquals(subDiagram2.getName(), ((Element) subDiagList.item(1)).getAttribute("name"));
 	}
 	
 	@Test
@@ -97,10 +101,10 @@ public class DiagramXmlManagerTestCase {
 				"generalEntityId='3F2504E0-4F89-11D3-9A0C-030CFFFFFFFF'>" +
 				"<specificEntities><entityId>" +
 				"3F2504E0-4F89-11D3-9A0C-030DFFFFFFFF</entityId>" +
-				"</specificEntities></hierarchy></hierarchies><diagrams>" +
-				"<diagram id='3F2504E0-4F89-11D3-9A0C-0301FFFFFFFF'/>" +
-				"<diagram id='3F2504E0-4F89-11D3-9A0C-0302FFFFFFFF'/>" +
-				"</diagrams></diagram>";
+				"</specificEntities></hierarchy></hierarchies><subDiagrams>" +
+				"<diagram id='3F2504E0-4F89-11D3-9A0C-0301FFFFFFFF' name='sub1'/>" +
+				"<diagram id='3F2504E0-4F89-11D3-9A0C-0302FFFFFFFF' name='sub2'/>" +
+				"</subDiagrams></diagram>";
 		
 		Document document = TestUtilities.loadXMLFromString(xml);
 		
@@ -129,9 +133,8 @@ public class DiagramXmlManagerTestCase {
 		Assert.assertTrue(diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")).isTotal());
 		Assert.assertEquals("3f2504e0-4f89-11d3-9a0c-030cffffffff", diagram.getHierarchies().getHierarchy(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFC")).getGeneralEntityId().toString());
 		
-		Assert.assertEquals(2, diagram.getSubDiagrams().size());
-		Assert.assertNotNull(diagram.getSubDiagram(UUID.fromString("3F2504E0-4F89-11D3-9A0C-0301FFFFFFFF")));
-		Assert.assertNotNull(diagram.getSubDiagram(UUID.fromString("3F2504E0-4F89-11D3-9A0C-0302FFFFFFFF")));
-		
+		Assert.assertEquals(2, diagram.getSubDiagramNames().size());
+		Assert.assertNotNull("Sub1", diagram.getSubDiagramNames().get(0));
+		Assert.assertNotNull("Sub2", diagram.getSubDiagramNames().get(1));
 	}
 }

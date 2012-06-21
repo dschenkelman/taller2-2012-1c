@@ -43,7 +43,6 @@ public class AttributeCollectionXmlManager implements IXmlManager<AttributeColle
             if (!attribute.getAttribute("type").isEmpty())
                 type = AttributeType.valueOf(attribute.getAttribute("type"));
 
-
             IdGroupCollection idGroup = null;
 
             if (attribute.getChildNodes().getLength() > 0) {

@@ -457,12 +457,12 @@ public class ProjectControllerTestCase {
 		Diagram level2_2_1 = new Diagram();
 		level2_2_1.setName("Principal-2-1");
 		
-		main.addSubDiagram(level1_1);
-		main.addSubDiagram(level1_2);
+		main.getSubDiagramNames().add("Principal-1");
+		main.getSubDiagramNames().add("Principal-2");
 		
-		level1_1.addSubDiagram(level2_1_1);
-		level1_1.addSubDiagram(level2_1_2);
-		level1_2.addSubDiagram(level2_2_1);
+		level1_1.getSubDiagramNames().add("Principal-1-1");
+		level1_1.getSubDiagramNames().add("Principal-1-2");
+		level1_2.getSubDiagramNames().add("Principal-2-1");
 		
 		diagrams.add(main);
 		diagrams.add(level1_1);
@@ -524,12 +524,12 @@ public class ProjectControllerTestCase {
 		Diagram level2_2_1 = new Diagram();
 		level2_2_1.setName("Principal-2-1");
 		
-		main.addSubDiagram(level1_1);
-		main.addSubDiagram(level1_2);
+		main.getSubDiagramNames().add("Principal-1");
+		main.getSubDiagramNames().add("Principal-2");
 		
-		level1_1.addSubDiagram(level2_1_1);
-		level1_1.addSubDiagram(level2_1_2);
-		level1_2.addSubDiagram(level2_2_1);
+		level1_1.getSubDiagramNames().add("Principal-1-1");
+		level1_1.getSubDiagramNames().add("Principal-1-2");
+		level1_2.getSubDiagramNames().add("Principal-2-1");
 		
 		diagrams.add(main);
 		diagrams.add(level1_1);

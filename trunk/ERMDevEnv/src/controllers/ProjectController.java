@@ -156,8 +156,8 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		
 		this.projectContext.addProjectDiagram(diagram);
 		
-		for (Diagram childDiagram : diagram.getSubDiagrams()) {
-			this.loadDiagram(childDiagram.getName(), currentTreeNode);
+		for (String childDiagramName : diagram.getSubDiagramNames()) {
+			this.loadDiagram(childDiagramName, currentTreeNode);
 		}
 	}
 }

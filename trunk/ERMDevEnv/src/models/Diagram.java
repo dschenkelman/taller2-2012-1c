@@ -18,6 +18,7 @@ public class Diagram implements Iterable<Diagram>{
 	private HierarchyCollection hierarchies;
 	private List<Diagram> subDiagrams;
 	private String name;
+	private List<String> subDiagramNames;
 	
 	public Diagram()
 	{
@@ -45,6 +46,7 @@ public class Diagram implements Iterable<Diagram>{
 			HierarchyCollection hierarchies, List<Diagram> subDiagram) 
 	{
 		this.id = id;
+		this.subDiagramNames = new ArrayList<String>();
 		this.setEntities(entities);
 		this.setRelationships(relationships);
 		this.setHierarchies(hierarchies);
@@ -173,5 +175,9 @@ public class Diagram implements Iterable<Diagram>{
 	@Override
 	public String toString() {
 		return this.getName();
+	}
+
+	public List<String> getSubDiagramNames() {
+		return this.subDiagramNames;
 	}
 }
