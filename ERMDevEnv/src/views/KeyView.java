@@ -38,7 +38,7 @@ public class KeyView extends JFrame implements IKeysView {
         initComponents();
         cleanView();
 
-        this.idGroupListModel = new DefaultListModel<IdGroup>();
+        this.idGroupListModel = new DefaultListModel();
         this.idGroupList.setModel(this.idGroupListModel);
         this.idGroupList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -149,9 +149,9 @@ public class KeyView extends JFrame implements IKeysView {
     }
 
     private void cleanView() {
-        this.currentKeysListModel = new DefaultListModel<IKey>();
+        this.currentKeysListModel = new DefaultListModel();
         this.currentKeysList.setModel(this.currentKeysListModel);
-        this.possibleKeysListModel = new DefaultListModel<IKey>();
+        this.possibleKeysListModel = new DefaultListModel();
         this.possibleKeysList.setModel(this.possibleKeysListModel);
         this.idGroupSelected = null;
         updateKeysList();

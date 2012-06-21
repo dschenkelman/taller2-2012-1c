@@ -98,11 +98,14 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 
 	@Override
 	public void handleSubDiagramCreated(Diagram diagram, String diagramName) {
+		Diagram parentDiagram = this.diagramController.getDiagram();
+		
 		IDiagramController childDiagramController = this.diagramControllerFactory.create();
 		Diagram childDiagram = childDiagramController.getDiagram();
 		
 		childDiagram.setName(diagramName);
 		
+		parentDiagram.addSubDiagram(childDiagram);
 		DiagramTreeNode childDiagramNode = this.currentDiagramNode.addSubdiagram(childDiagram);
 		
 		this.projectContext.addContextDiagram(childDiagram);
@@ -133,9 +136,10 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	}
 	
 	private void loadDiagram(String diagramName, DiagramTreeNode parentTreeNode) throws Exception{
-		Document document = this.xmlFileManager.read(this.projectContext.getDataDirectory() + "/" + diagramName);
+		Document document = this.xmlFileManager.read(this.projectContext.getDataDirectory() + "/" + diagramName + "-comp");
 		Element documentElement = document.getDocumentElement();
 		Diagram diagram = this.diagramXmlManager.getItemFromXmlElement(documentElement);
+		diagram.setName(diagramName);
 		
 		DiagramTreeNode currentTreeNode;
 		

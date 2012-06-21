@@ -364,6 +364,31 @@ public class ProjectControllerTestCase {
 	}
 	
 	@Test
+	public void testShouldAddDiagramAsSubDiagramOfOriginalWhenAddingNewDiagram(){
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		controller.createProject(projectName);
+		
+		Diagram parentDiagram = controller.getCurrentDiagramController().getDiagram();
+		
+		Diagram subDiagram = new Diagram();
+		MockDiagramController childController = new MockDiagramController();
+		childController.setDiagram(subDiagram);
+		this.diagramControllerFactory.setController(childController);
+		
+		Assert.assertEquals(0, parentDiagram.getSubDiagrams().size());
+		
+		controller.handleSubDiagramCreated(controller.getCurrentDiagramController().getDiagram(), "ChildDiagram");
+		
+		Assert.assertEquals(1, parentDiagram.getSubDiagrams().size());
+		Assert.assertSame(subDiagram, parentDiagram.getSubDiagrams().get(0));
+	
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+	
+	@Test
 	public void testShouldAddDiagramToGlobalAndContextDiagramCollectionsWhenCreating(){
 		String projectName = UUID.randomUUID().toString();
 		
@@ -453,12 +478,12 @@ public class ProjectControllerTestCase {
 		
 		Assert.assertEquals("projectName/Datos", this.projectContext.getDataDirectory());
 		
-		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal", this.xmlFileManager.getPathsRead().get(0));
-		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-1", this.xmlFileManager.getPathsRead().get(1));
-		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-1-1", this.xmlFileManager.getPathsRead().get(2));
-		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-1-2", this.xmlFileManager.getPathsRead().get(3));
-		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-2", this.xmlFileManager.getPathsRead().get(4));
-		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-2-1", this.xmlFileManager.getPathsRead().get(5));
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-comp", this.xmlFileManager.getPathsRead().get(0));
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-1-comp", this.xmlFileManager.getPathsRead().get(1));
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-1-1-comp", this.xmlFileManager.getPathsRead().get(2));
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-1-2-comp", this.xmlFileManager.getPathsRead().get(3));
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-2-comp", this.xmlFileManager.getPathsRead().get(4));
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-2-1-comp", this.xmlFileManager.getPathsRead().get(5));
 		
 		Assert.assertSame(this.diagramXmlManager.getElementsPassedAsParameter().get(0), this.xmlFileManager.getCreatedDocuments().get(0).getDocumentElement());
 		Assert.assertSame(this.diagramXmlManager.getElementsPassedAsParameter().get(1), this.xmlFileManager.getCreatedDocuments().get(1).getDocumentElement());
