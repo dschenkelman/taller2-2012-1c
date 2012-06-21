@@ -5,11 +5,15 @@ import infrastructure.visual.DiagramTreeNode;
 
 import java.io.File;
 
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import persistence.IXmlFileManager;
+import persistence.IXmlManager;
 
 import models.Diagram;
 import models.Entity;
@@ -32,13 +36,21 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	private IProjectView projectView;
 	private IShell shell;
 	private DiagramTreeNode currentDiagramNode;
+
+	private IXmlFileManager xmlFileManager;
+
+	private IXmlManager<Diagram> diagramXmlManager;
 	
-	public ProjectController(IProjectContext projectContext, IProjectView projectView, IShell shell, IDiagramControllerFactory diagramControllerFactory) {
+	public ProjectController(IProjectContext projectContext, IProjectView projectView, 
+			IShell shell, IDiagramControllerFactory diagramControllerFactory,
+			IXmlFileManager xmlFileManager, IXmlManager<Diagram> diagramXmlManager) {
 		this.projectContext = projectContext;
 		this.diagramControllerFactory = diagramControllerFactory;
 		this.shell = shell;
 		this.projectView = projectView;
 		this.projectView.setController(this);
+		this.xmlFileManager = xmlFileManager;
+		this.diagramXmlManager = diagramXmlManager;
 	}
 
 	public void createProject(String projectName) {
@@ -111,6 +123,37 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 				Diagram diagram = (Diagram) node.getUserObject();
 				this.projectContext.addContextDiagram(diagram);
 			}
+		}
+	}
+
+	@Override
+	public void openProject(String projectName) throws Exception {
+		this.projectContext.setName(projectName);
+		this.loadDiagram(DefaultDiagramName, null);
+	}
+	
+	private void loadDiagram(String diagramName, DiagramTreeNode parentTreeNode) throws Exception{
+		Document document = this.xmlFileManager.read(this.projectContext.getDataDirectory() + "/" + diagramName);
+		Element documentElement = document.getDocumentElement();
+		Diagram diagram = this.diagramXmlManager.getItemFromXmlElement(documentElement);
+		
+		DiagramTreeNode currentTreeNode;
+		
+		if (diagramName.equalsIgnoreCase(DefaultDiagramName)){
+			this.projectContext.addContextDiagram(diagram);
+			currentTreeNode = new DiagramTreeNode(diagram);
+			this.currentDiagramNode = currentTreeNode;
+			this.projectTree = new DefaultTreeModel(this.currentDiagramNode);
+		}
+		else
+		{
+			currentTreeNode = parentTreeNode.addSubdiagram(diagram);
+		}
+		
+		this.projectContext.addProjectDiagram(diagram);
+		
+		for (Diagram childDiagram : diagram.getSubDiagrams()) {
+			this.loadDiagram(childDiagram.getName(), currentTreeNode);
 		}
 	}
 }

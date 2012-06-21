@@ -460,8 +460,8 @@ public class DiagramControllerTestCase {
 		
 		controller.openDiagram(path);
 		
-		Assert.assertEquals(path, this.xmlFileManager.getPathRead());
-		Assert.assertSame(this.xmlFileManager.getCreatedDocument().getDocumentElement(), this.diagramXmlManager.getElementPassedAsParameter());
+		Assert.assertEquals(path, this.xmlFileManager.getPathsRead().get(0));
+		Assert.assertSame(this.xmlFileManager.getCreatedDocuments().get(0).getDocumentElement(), this.diagramXmlManager.getElementsPassedAsParameter().get(0));
 		Assert.assertSame(this.diagramXmlManager.getDiagramRelatedToElement(), controller.getDiagram());
 	}
 	

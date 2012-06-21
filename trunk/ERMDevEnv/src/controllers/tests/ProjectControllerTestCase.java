@@ -4,6 +4,7 @@ package controllers.tests;
 import infrastructure.visual.DiagramTreeNode;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +29,7 @@ import controllers.tests.mocks.MockDiagramXmlManager;
 import controllers.tests.mocks.MockProjectContext;
 import controllers.tests.mocks.MockProjectView;
 import controllers.tests.mocks.MockShell;
+import controllers.tests.mocks.MockXmlFileManager;
 
 public class ProjectControllerTestCase {
 
@@ -43,6 +45,8 @@ public class ProjectControllerTestCase {
 	
 	private MockDiagramXmlManager diagramXmlManager;
 	
+	private MockXmlFileManager xmlFileManager;
+	
 	@Before
 	public void setUp() throws Exception {
 		this.projectContext = new MockProjectContext();
@@ -52,6 +56,7 @@ public class ProjectControllerTestCase {
 		this.projectView = new MockProjectView();
 		this.shell = new MockShell();
 		this.diagramXmlManager = new MockDiagramXmlManager();
+		this.xmlFileManager = new MockXmlFileManager();
 	}
 	
 	@Test
@@ -405,6 +410,130 @@ public class ProjectControllerTestCase {
 		Assert.assertSame(diagram3, diagrams.get(2));
 	}
 	
+	@Test
+	public void testShouldGetDiagramsDiagramHierarchyAddToGlobalDiagramsAndMainToContextDiagram() throws Exception{
+		List<Diagram> diagrams = new ArrayList<Diagram>();
+		
+		Diagram main = new Diagram();
+		main.setName("Principal");
+		
+		Diagram level1_1 = new Diagram();
+		level1_1.setName("Principal-1");
+		
+		Diagram level1_2 = new Diagram();
+		level1_2.setName("Principal-2");
+		
+		Diagram level2_1_1= new Diagram();
+		level2_1_1.setName("Principal-1-1");
+		
+		Diagram level2_1_2 = new Diagram();
+		level2_1_2.setName("Principal-1-2");
+		
+		Diagram level2_2_1 = new Diagram();
+		level2_2_1.setName("Principal-2-1");
+		
+		main.addSubDiagram(level1_1);
+		main.addSubDiagram(level1_2);
+		
+		level1_1.addSubDiagram(level2_1_1);
+		level1_1.addSubDiagram(level2_1_2);
+		level1_2.addSubDiagram(level2_2_1);
+		
+		diagrams.add(main);
+		diagrams.add(level1_1);
+		diagrams.add(level2_1_1);
+		diagrams.add(level2_1_2);
+		diagrams.add(level1_2);
+		diagrams.add(level2_2_1);
+		
+		this.diagramXmlManager.setDiagramsToReturn(diagrams);
+		
+		ProjectController controller = this.createController();
+		controller.openProject("projectName");
+		
+		Assert.assertEquals("projectName/Datos", this.projectContext.getDataDirectory());
+		
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal", this.xmlFileManager.getPathsRead().get(0));
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-1", this.xmlFileManager.getPathsRead().get(1));
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-1-1", this.xmlFileManager.getPathsRead().get(2));
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-1-2", this.xmlFileManager.getPathsRead().get(3));
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-2", this.xmlFileManager.getPathsRead().get(4));
+		Assert.assertEquals(this.projectContext.getDataDirectory()+"/Principal-2-1", this.xmlFileManager.getPathsRead().get(5));
+		
+		Assert.assertSame(this.diagramXmlManager.getElementsPassedAsParameter().get(0), this.xmlFileManager.getCreatedDocuments().get(0).getDocumentElement());
+		Assert.assertSame(this.diagramXmlManager.getElementsPassedAsParameter().get(1), this.xmlFileManager.getCreatedDocuments().get(1).getDocumentElement());
+		Assert.assertSame(this.diagramXmlManager.getElementsPassedAsParameter().get(2), this.xmlFileManager.getCreatedDocuments().get(2).getDocumentElement());
+		Assert.assertSame(this.diagramXmlManager.getElementsPassedAsParameter().get(3), this.xmlFileManager.getCreatedDocuments().get(3).getDocumentElement());
+		Assert.assertSame(this.diagramXmlManager.getElementsPassedAsParameter().get(4), this.xmlFileManager.getCreatedDocuments().get(4).getDocumentElement());
+		Assert.assertSame(this.diagramXmlManager.getElementsPassedAsParameter().get(5), this.xmlFileManager.getCreatedDocuments().get(5).getDocumentElement());
+		
+		Assert.assertSame(main, this.projectContext.getGlobalDiagrams().get(0));
+		Assert.assertSame(level1_1, this.projectContext.getGlobalDiagrams().get(1));
+		Assert.assertSame(level2_1_1, this.projectContext.getGlobalDiagrams().get(2));
+		Assert.assertSame(level2_1_2, this.projectContext.getGlobalDiagrams().get(3));
+		Assert.assertSame(level1_2, this.projectContext.getGlobalDiagrams().get(4));
+		Assert.assertSame(level2_2_1, this.projectContext.getGlobalDiagrams().get(5));
+		
+		Assert.assertSame(main, this.projectContext.getContextDiagrams().get(0));
+	}
+	
+	@Test
+	public void testShouldAddSubDiagramsAndMainDiagramToTree() throws Exception{
+		List<Diagram> diagrams = new ArrayList<Diagram>();
+		
+		Diagram main = new Diagram();
+		main.setName("Principal");
+		
+		Diagram level1_1 = new Diagram();
+		level1_1.setName("Principal-1");
+		
+		Diagram level1_2 = new Diagram();
+		level1_2.setName("Principal-2");
+		
+		Diagram level2_1_1= new Diagram();
+		level2_1_1.setName("Principal-1-1");
+		
+		Diagram level2_1_2 = new Diagram();
+		level2_1_2.setName("Principal-1-2");
+		
+		Diagram level2_2_1 = new Diagram();
+		level2_2_1.setName("Principal-2-1");
+		
+		main.addSubDiagram(level1_1);
+		main.addSubDiagram(level1_2);
+		
+		level1_1.addSubDiagram(level2_1_1);
+		level1_1.addSubDiagram(level2_1_2);
+		level1_2.addSubDiagram(level2_2_1);
+		
+		diagrams.add(main);
+		diagrams.add(level1_1);
+		diagrams.add(level2_1_1);
+		diagrams.add(level2_1_2);
+		diagrams.add(level1_2);
+		diagrams.add(level2_2_1);
+		
+		this.diagramXmlManager.setDiagramsToReturn(diagrams);
+		
+		ProjectController controller = this.createController();
+		controller.openProject("projectName");
+		
+		DefaultMutableTreeNode root = ((DefaultMutableTreeNode)controller.getProjectTree().getRoot());
+		Assert.assertSame(main, root.getUserObject());
+		DefaultMutableTreeNode child1 = this.getNodeChildWithObject(root, "Sub-Diagramas", level1_1);
+		DefaultMutableTreeNode child2 = this.getNodeChildWithObject(root, "Sub-Diagramas", level1_2);
+		Assert.assertNotNull(child1);
+		Assert.assertNotNull(child2);
+		
+		DefaultMutableTreeNode child1_1 = this.getNodeChildWithObject(child1, "Sub-Diagramas", level2_1_1);
+		DefaultMutableTreeNode child1_2 = this.getNodeChildWithObject(child1, "Sub-Diagramas", level2_1_2);
+		DefaultMutableTreeNode child2_1 = this.getNodeChildWithObject(child2, "Sub-Diagramas", level2_2_1);
+		
+		Assert.assertNotNull(child1_1);
+		Assert.assertNotNull(child1_2);
+		Assert.assertNotNull(child2_1);
+	}
+	
 	private DefaultMutableTreeNode getNodeChildWithObject(DefaultMutableTreeNode node, String childName, Object object) {	
 		Enumeration children = node.children();
 		while (children.hasMoreElements()) {
@@ -437,6 +566,8 @@ public class ProjectControllerTestCase {
 	}
 	
 	private ProjectController createController(){
-		return new ProjectController(this.projectContext, this.projectView, this.shell, this.diagramControllerFactory);
+		return new ProjectController(this.projectContext, this.projectView, this.shell,
+				this.diagramControllerFactory, this.xmlFileManager, this.diagramXmlManager);
 	}
 }
+

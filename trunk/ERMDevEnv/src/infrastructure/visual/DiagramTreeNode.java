@@ -27,12 +27,29 @@ public class DiagramTreeNode extends DefaultMutableTreeNode {
 	private DefaultMutableTreeNode relationshipsNode;
 
 	private DefaultMutableTreeNode hierarchiesNode;
+
+	private Diagram diagram;
 	
-	public DiagramTreeNode(Object userObject) {
-		super(userObject);
+	public DiagramTreeNode(Diagram diagram) {
+		super(diagram);
+		this.diagram = diagram;
 		this.addChildFolders();
+		this.populateEntities();
+		this.populateRelationships();
 	}
 	
+	private void populateEntities() {
+		for (Entity entity : this.diagram.getEntities()) {
+			this.entitiesNode.add(new DefaultMutableTreeNode(entity));
+		}
+	}
+	
+	private void populateRelationships() {
+		for (Relationship relationship : this.diagram.getRelationships()) {
+			this.relationshipsNode.add(new DefaultMutableTreeNode(relationship));
+		}
+	}
+
 	public void addEntity(Entity entity, DefaultTreeModel tree){
 		this.entitiesNode.add(new DefaultMutableTreeNode(entity));
 		int index = this.entitiesNode.getChildCount() - 1;

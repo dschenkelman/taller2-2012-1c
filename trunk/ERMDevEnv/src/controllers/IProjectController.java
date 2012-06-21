@@ -7,6 +7,7 @@ import views.IProjectView;
 
 public interface IProjectController {
 	void createProject(String string);
+	void openProject(String string) throws Exception;
 	IDiagramController getCurrentDiagramController();
 	IProjectView getView();
 	TreeModel getProjectTree();
