@@ -21,9 +21,11 @@ public class AttributeCollectionXmlManager implements IXmlManager<AttributeColle
         if (attributesElem == null)
             return attCollection;
         for (int i = 0; i < attributesElem.getChildNodes().getLength(); i++) {
-
-
-            Element attribute = (Element) attributesElem.getChildNodes().item(i);
+        	Node node = attributesElem.getChildNodes().item(i);
+        	if (node == null || !(node instanceof Element)){
+        		continue;
+        	}
+        	Element attribute = (Element) attributesElem.getChildNodes().item(i);
 
             String name = attribute.getAttribute("name");
             boolean isKeyField = Boolean.valueOf(attribute.getAttribute("isKeyField"));

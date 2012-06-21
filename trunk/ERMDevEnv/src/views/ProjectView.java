@@ -72,6 +72,21 @@ public class ProjectView extends JPanel implements IProjectView {
 			}	
 		});
 		
+		this.btnOpen.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){
+				String name = JOptionPane.showInputDialog(null, "Ingrese el nombre del proyecto", "Abrir Proyecto", JOptionPane.QUESTION_MESSAGE);
+				if (name != null){
+					try {
+						projectController.openProject(name);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					tree.setModel(projectController.getProjectTree());
+				}
+			}	
+		});
+		
 		this.tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
