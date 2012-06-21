@@ -1,5 +1,8 @@
 package controllers.tests.mocks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.w3c.dom.Document;
 
 import persistence.IXmlFileManager;
@@ -9,16 +12,21 @@ public class MockXmlFileManager implements IXmlFileManager {
 
 	private Document documentToSave;
 	private String pathToSave;
-	private Document document;
+	private List<Document> documents;
 	private boolean createDocumentCalled;
-	private String pathToRead;
+	private List<String> pathsRead;
+	
+	public MockXmlFileManager(){
+		this.pathsRead = new ArrayList<String>();
+		this.documents = new ArrayList<Document>();
+	}
 
 	@Override
 	public Document read(String filePath) throws Exception {
 		Document document = TestUtilities.createDocument();
 		document.appendChild(document.createElement("root"));
-		this.document = document;
-		this.pathToRead = filePath;
+		this.documents.add(document);
+		this.pathsRead.add(filePath);
 		return document;
 	}
 
@@ -45,25 +53,25 @@ public class MockXmlFileManager implements IXmlFileManager {
 	}
 
 	public void setDocumentToCreate(Document document) {
-		this.document = document;
+		this.documents.add(document);
 	}
 
 	@Override
 	public Document createDocument() {
 		this.createDocumentCalled = true;
-		return this.document;
+		return this.documents.get(0);
 	}
 
 	public boolean wasCreateDocumentCalled() {
 		return this.createDocumentCalled;
 	}
 
-	public String getPathRead() {
-		return this.pathToRead;
+	public List<String> getPathsRead() {
+		return this.pathsRead;
 	}
 
-	public Document getCreatedDocument() {
-		return this.document;
+	public List<Document> getCreatedDocuments() {
+		return this.documents;
 	}
 
 }
