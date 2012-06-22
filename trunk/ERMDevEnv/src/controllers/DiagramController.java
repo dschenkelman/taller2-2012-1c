@@ -14,7 +14,6 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JFrame;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
@@ -27,7 +26,6 @@ import styling.StyleConstants;
 import styling.Styler;
 
 import models.Attribute;
-import models.AttributeType;
 import models.Cardinality;
 import models.Diagram;
 import models.Entity;
@@ -47,8 +45,6 @@ import controllers.factories.IEntityControllerFactory;
 import controllers.factories.IHierarchyControllerFactory;
 import controllers.factories.IRelationshipControllerFactory;
 import controllers.listeners.IDiagramEventListener;
-import controllers.tests.mocks.MockGraphPersistenceService;
-
 import views.IDiagramView;
 
 public class DiagramController extends BaseController 
@@ -445,6 +441,7 @@ public class DiagramController extends BaseController
 		this.xmlFileManager.write(document, this.getComponentFilePath());
 		
 		this.graphPersistenceService.save(this.getRepresentationFilePath(), this.graph);
+		
 	}
 
 	private String getRepresentationFilePath() {
@@ -616,6 +613,67 @@ public class DiagramController extends BaseController
 			this.save();
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void load(Diagram diagram) {
+		
+		this.diagram = diagram;
+		String fileName = this.getRepresentationFilePath();
+		this.graphPersistenceService.load(fileName, this.graph);
+		
+		Pattern regex1 = Pattern.compile("Entity");
+		Pattern regex2 = Pattern.compile("RelationshipConnector");
+		Pattern regex3 = Pattern.compile("Relationship");
+		Pattern regex4 = Pattern.compile("AttributeConnector");
+		Pattern regex5 = Pattern.compile("Attribute");
+		Pattern regex6 = Pattern.compile("HierarchyConnector");
+		Pattern regex7 = Pattern.compile("HierarchyNode");
+		for (Object o : this.graph.getChildCells(this.graph.getDefaultParent())) {
+			mxCell cell = (mxCell) o;
+			Matcher matcher = regex1.matcher(cell.getId());
+			boolean matchFound = matcher.find();
+			if (matchFound) {
+		        this.entityCells.put(cell.getId(), cell);
+		        continue;
+			}
+			matcher = regex2.matcher(cell.getId());
+			matchFound = matcher.find();
+			if (matchFound) {
+		        this.relationshipConnectorCells.put(cell.getId(), cell);
+		        continue;
+			}
+			matcher = regex3.matcher(cell.getId());
+			matchFound = matcher.find();
+			if (matchFound) {
+		        this.relationshipCells.put(cell.getId(), cell);
+		        continue;
+			}
+			matcher = regex4.matcher(cell.getId());
+			matchFound = matcher.find();
+			if (matchFound) {
+		        this.attributeConnectorCells.put(cell.getId(), cell);
+		        continue;
+			}
+			matcher = regex5.matcher(cell.getId());
+			matchFound = matcher.find();
+			if (matchFound) {
+		        this.attributeCells.put(cell.getId(), cell);
+		        continue;
+			}
+			matcher = regex6.matcher(cell.getId());
+			matchFound = matcher.find();
+			if (matchFound) {
+		        this.hierarchyConnectorCells.put(cell.getId(), cell);
+		        continue;
+			}
+			matcher = regex7.matcher(cell.getId());
+			matchFound = matcher.find();
+			if (matchFound) {
+		        this.hierarchyNodeCells.put(cell.getId(), cell);
+		        continue;
+			}
 		}
 	}
 }
