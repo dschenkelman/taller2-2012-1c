@@ -134,13 +134,10 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		this.projectContext.setName(projectName);
 		this.loadDiagram(DefaultDiagramName, null);
 		this.diagramController = this.diagramControllerFactory.create();
-		this.diagramController.getDiagram().setName(DefaultDiagramName);
-		this.diagramController.load(this.diagramController.getDiagram());
 		
 		Diagram mainDiagram = this.diagramController.getDiagram();
-		
-		this.projectContext.addContextDiagram(mainDiagram);
-		this.projectContext.addProjectDiagram(mainDiagram);
+		mainDiagram.setName(DefaultDiagramName);
+		this.diagramController.load(mainDiagram);
 		
 		this.shell.setRightContent(this.diagramController.getView());
 		this.shell.activateFullSize();
