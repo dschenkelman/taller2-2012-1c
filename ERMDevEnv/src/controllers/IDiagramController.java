@@ -33,4 +33,5 @@ public interface IDiagramController extends IEntityEventListener, IRelationshipE
 	IDiagramView getView();
 	void handleDrop(Point end);
 	void handleDragStart(Point start);
+	void load(Diagram diagram);
 }

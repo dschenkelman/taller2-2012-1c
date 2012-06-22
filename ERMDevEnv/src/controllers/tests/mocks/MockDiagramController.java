@@ -130,4 +130,10 @@ public class MockDiagramController implements IDiagramController {
 	public void setDiagram(Diagram diagram){
 		this.diagram = diagram;
 	}
+
+	@Override
+	public void load(Diagram diagram) {
+		// TODO Auto-generated method stub
+		
+	}
 }

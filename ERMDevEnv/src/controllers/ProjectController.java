@@ -133,6 +133,17 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	public void openProject(String projectName) throws Exception {
 		this.projectContext.setName(projectName);
 		this.loadDiagram(DefaultDiagramName, null);
+		this.diagramController = this.diagramControllerFactory.create();
+		this.diagramController.getDiagram().setName(DefaultDiagramName);
+		this.diagramController.load(this.diagramController.getDiagram());
+		
+		Diagram mainDiagram = this.diagramController.getDiagram();
+		
+		this.projectContext.addContextDiagram(mainDiagram);
+		this.projectContext.addProjectDiagram(mainDiagram);
+		
+		this.shell.setRightContent(this.diagramController.getView());
+		this.shell.activateFullSize();
 	}
 	
 	private void loadDiagram(String diagramName, DiagramTreeNode parentTreeNode) throws Exception{
