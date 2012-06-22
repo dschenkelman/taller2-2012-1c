@@ -1,8 +1,6 @@
 package infrastructure.tests;
 
 import java.util.HashSet;
-import java.util.List;
-
 import junit.framework.Assert;
 
 import models.Diagram;
@@ -13,8 +11,6 @@ import models.HierarchyCollection;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import controllers.HierarchyController;
 
 import infrastructure.ProjectContext;
 
