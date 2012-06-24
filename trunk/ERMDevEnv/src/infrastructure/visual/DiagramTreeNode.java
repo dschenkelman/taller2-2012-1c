@@ -15,10 +15,10 @@ public class DiagramTreeNode extends DefaultMutableTreeNode {
 	 */
 	private static final long serialVersionUID = -5605938989721186879L;
 	
-	private static String SubDiagramsNodeName = "Sub-Diagramas";
-	private static String EntitiesNodeName = "Entidades";
-	private static String RelationshipsNodeName = "Relaciones";
-	private static String HierarchiesNodeName = "Jerarquias";
+	private static String SubDiagramsNodeName = "Sub-Diagrams";
+	private static String EntitiesNodeName = "Entities";
+	private static String RelationshipsNodeName = "Relationships";
+	private static String HierarchiesNodeName = "Hierarchies";
 
 	private DefaultMutableTreeNode subdiagramsNode;
 
@@ -82,5 +82,4 @@ public class DiagramTreeNode extends DefaultMutableTreeNode {
 		this.add(this.hierarchiesNode);
 		this.add(this.subdiagramsNode);
 	}
-
 }
