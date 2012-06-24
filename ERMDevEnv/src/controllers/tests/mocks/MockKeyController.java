@@ -3,6 +3,7 @@ package controllers.tests.mocks;
 import controllers.IKeysController;
 import controllers.listeners.IIdGroupEventListener;
 import models.IKey;
+import models.IdGroup;
 import views.IKeysView;
 
 public class MockKeyController implements IKeysController {
@@ -32,6 +33,11 @@ public class MockKeyController implements IKeysController {
     @Override
     public boolean validIdGroupName(String name) {
         return false;
+    }
+
+    @Override
+    public void removeIdGroupFromAllIdGroups(IdGroup selectedValue) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void setKeys(Iterable<IKey> iKeys) {
