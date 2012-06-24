@@ -69,10 +69,4 @@ public class MockEntityControllerFactory implements IEntityControllerFactory {
 			}
 		};
 	}
-
-	@Override
-	public IEntityController create(Entity relationship) {
-		return null;
-	}
-
 }

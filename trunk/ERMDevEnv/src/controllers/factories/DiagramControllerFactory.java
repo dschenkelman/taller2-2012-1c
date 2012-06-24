@@ -2,7 +2,6 @@ package controllers.factories;
 
 import org.picocontainer.MutablePicoContainer;
 
-import application.tests.mocks.MockPicoContainer;
 import controllers.IDiagramController;
 
 public class DiagramControllerFactory implements IDiagramControllerFactory {

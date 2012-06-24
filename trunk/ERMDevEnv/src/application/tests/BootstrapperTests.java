@@ -64,7 +64,7 @@ public class BootstrapperTests {
 		
 		bootstrapper.run();
 		
-		Assert.assertEquals(17, this.container.getMappings().size());
+		Assert.assertEquals(19, this.container.getMappings().size());
 		Assert.assertSame(this.container, this.container.getMappings().get(MutablePicoContainer.class));
 		Assert.assertSame(DiagramController.class, this.container.getMappings().get(IDiagramController.class));
 		Assert.assertSame(DiagramView.class, this.container.getMappings().get(IDiagramView.class));

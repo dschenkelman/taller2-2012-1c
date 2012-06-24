@@ -1,12 +1,8 @@
 package controllers.factories;
 
-import java.util.List;
 import java.util.Random;
-import java.util.UUID;
-
 import views.IRelationshipView;
 
-import models.Attribute;
 import models.Cardinality;
 import models.Entity;
 import models.Relationship;
