@@ -8,6 +8,7 @@ import java.io.File;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -106,6 +107,12 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		childDiagram.setName(diagramName);
 		
 		parentDiagram.addSubDiagram(childDiagram);
+		try {
+			this.diagramController.save();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		
 		DiagramTreeNode childDiagramNode = this.currentDiagramNode.addSubdiagram(childDiagram);
 		
 		this.projectContext.addContextDiagram(childDiagram);
@@ -113,6 +120,13 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		
 		this.shell.setRightContent(childDiagramController.getView());
 		this.diagramController = childDiagramController;
+		
+		try {
+			this.diagramController.save();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		
 		this.diagramController.addListener(this);
 		this.currentDiagramNode = childDiagramNode;
 	}

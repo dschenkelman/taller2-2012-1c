@@ -25,6 +25,8 @@ public class MockDiagramController implements IDiagramController {
 	private MockDiagramView view;
 
 	private List<IDiagramEventListener> listeners;
+
+	private int saveCalls;
 	
 	public MockDiagramController(){
 		this.diagram = new Diagram();
@@ -90,7 +92,7 @@ public class MockDiagramController implements IDiagramController {
 
 	@Override
 	public void save() throws ParserConfigurationException {
-		
+		this.saveCalls++;
 	}
 
 	@Override
@@ -135,5 +137,9 @@ public class MockDiagramController implements IDiagramController {
 	public void load(Diagram diagram) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public int getSaveCalls(){
+		return this.saveCalls;
 	}
 }
