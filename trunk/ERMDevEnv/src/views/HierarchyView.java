@@ -7,8 +7,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -43,12 +43,13 @@ public class HierarchyView implements IHierarchyView{
 	private JRadioButton btnTotal;
 	private JRadioButton btnParcial;
 	private JRadioButton btnExclusive;
-	private JRadioButton btnInclusive;
+	private JRadioButton btnOverlap;
 	private JButton createHierarchy;
 	private JButton cancel;
 	
 	public HierarchyView()
 	{
+		this.availableEntities = new ArrayList<Entity>();
 		// frame
 		this.frame1 = new JFrame(HierarchyView.TITLE);
 		this.frame1.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -62,8 +63,8 @@ public class HierarchyView implements IHierarchyView{
 		this.comBoxGeneralEntity.addItem("None");
 		this.generalEntityLabel = new JLabel("Entidad General");
 		this.generalEntityLabel.setLabelFor(this.comBoxGeneralEntity);
-		container.add(this.generalEntityLabel, CC.xywh(2, 4, 40, 10));
-		container.add(this.comBoxGeneralEntity, CC.xywh(2, 14, 40, 10));
+		container.add(this.generalEntityLabel, CC.xywh(8, 4, 40, 10));
+		container.add(this.comBoxGeneralEntity, CC.xywh(8, 14, 40, 10));
 		
 		// specific entities
 		this.specificEntitiesLabel = new JLabel("Entidades Específicas");
@@ -72,30 +73,30 @@ public class HierarchyView implements IHierarchyView{
 		this.lstSpecificEntities = new JList(new DefaultListModel());
 		this.availableEntitiesLabel.setLabelFor(this.lstAvailableEntities);
 		this.specificEntitiesLabel.setLabelFor(this.lstSpecificEntities);
-		container.add(this.availableEntitiesLabel, CC.xywh(2, 30, 50, 10));
-		container.add(this.lstAvailableEntities, CC.xywh(2, 40, 50, 70));
-		container.add(this.specificEntitiesLabel, CC.xywh(80, 30, 50, 10));
-		container.add(this.lstSpecificEntities, CC.xywh(80, 40, 50, 70));
+		container.add(this.availableEntitiesLabel, CC.xywh(8, 30, 50, 10));
+		container.add(this.lstAvailableEntities, CC.xywh(8, 40, 50, 70));
+		container.add(this.specificEntitiesLabel, CC.xywh(86, 30, 50, 10));
+		container.add(this.lstSpecificEntities, CC.xywh(86, 40, 50, 70));
 		
 		// arrows
 		this.arrAddSpecificEntities = new BasicArrowButton(BasicArrowButton.EAST);
-		container.add(this.arrAddSpecificEntities, CC.xywh(62, 55, 8, 15));
+		container.add(this.arrAddSpecificEntities, CC.xywh(68, 55, 8, 15));
 		
 		this.arrRemoveSpecificEntities = new BasicArrowButton(BasicArrowButton.WEST);
-		container.add(this.arrRemoveSpecificEntities, CC.xywh(62, 75, 8, 15));
+		container.add(this.arrRemoveSpecificEntities, CC.xywh(68, 75, 8, 15));
 		
 		// Button group
 		this.btnTotal = new JRadioButton("Total");
-		container.add(this.btnTotal, CC.xywh(88, 8, 30, 10));
+		container.add(this.btnTotal, CC.xywh(64, 8, 30, 10));
 		
 		this.btnParcial = new JRadioButton("Parcial");
-		container.add(this.btnParcial, CC.xywh(88, 18, 30, 10));
+		container.add(this.btnParcial, CC.xywh(64, 18, 30, 10));
 		
 		this.btnExclusive = new JRadioButton("Exclusive");
-		container.add(this.btnExclusive, CC.xywh(58, 8, 30, 10));
+		container.add(this.btnExclusive, CC.xywh(94, 8, 30, 10));
 		
-		this.btnInclusive = new JRadioButton("Inclusive");
-		container.add(this.btnInclusive, CC.xywh(58, 18, 30, 10));
+		this.btnOverlap = new JRadioButton("Overlap");
+		container.add(this.btnOverlap, CC.xywh(94, 18, 30, 10));
 		
 		ButtonGroup group1 = new ButtonGroup();
 		ButtonGroup group2 = new ButtonGroup();
@@ -103,14 +104,14 @@ public class HierarchyView implements IHierarchyView{
 		group1.add(this.btnTotal);
 		group1.add(this.btnParcial);
 		group2.add(this.btnExclusive);
-		group2.add(this.btnInclusive);
+		group2.add(this.btnOverlap);
 		
 		// accept and cancel
 		this.createHierarchy = new JButton("Aceptar");
-		container.add(this.createHierarchy, CC.xywh(68, 120, 30, 10));
+		container.add(this.createHierarchy, CC.xywh(74, 120, 30, 10));
 		
 		this.cancel = new JButton("Cancelar");
-		container.add(this.cancel, CC.xywh(100, 120, 30, 10));
+		container.add(this.cancel, CC.xywh(106, 120, 30, 10));
 	}
 	
 	@Override
@@ -234,12 +235,12 @@ public class HierarchyView implements IHierarchyView{
 			btnParcial.setEnabled(false);
 			btnTotal.setEnabled(false);
 			btnExclusive.setEnabled(false);
-			btnInclusive.setEnabled(false);
+			btnOverlap.setEnabled(false);
 		}else {
 			btnParcial.setEnabled(true);
 			btnTotal.setEnabled(true);
 			btnExclusive.setEnabled(true);
-			btnInclusive.setEnabled(true);
+			btnOverlap.setEnabled(true);
 		}
 	}
 	
@@ -251,8 +252,8 @@ public class HierarchyView implements IHierarchyView{
 
 	@Override
 	public void update() {
-		this.availableEntities = (List<Entity>) this.hierarchyController.getAvailableEntities();
-		
+//		this.availableEntities = (Set<Entity>) this.hierarchyController.getAvailableEntities();
+		this.getAvailableEntities();
 		//specific entities
 		DefaultComboBoxModel combGeneralMdl = (DefaultComboBoxModel) this.comBoxGeneralEntity.getModel();
 		DefaultListModel lstAvailableMdl = (DefaultListModel) this.lstAvailableEntities.getModel();
@@ -274,7 +275,8 @@ public class HierarchyView implements IHierarchyView{
 
 	@Override
 	public void create() {
-		this.availableEntities = (List<Entity>) this.hierarchyController.getAvailableEntities();
+		this.getAvailableEntities();
+//		this.availableEntities = (Set<Entity>) this.hierarchyController.getAvailableEntities();
 		//general entity and available entities
 		DefaultListModel listModel = (DefaultListModel) this.lstAvailableEntities.getModel();
 		for (Entity entity : this.availableEntities)
@@ -282,6 +284,13 @@ public class HierarchyView implements IHierarchyView{
 			this.comBoxGeneralEntity.addItem(entity);
 			listModel.addElement(entity);
 		}
+	}
+	
+	private List<Entity> getAvailableEntities() {
+		for (Entity entity : this.hierarchyController.getAvailableEntities()) {
+			this.availableEntities.add(entity);
+		}
+		return null;
 	}
 
 }
