@@ -33,11 +33,22 @@ public class ProjectContext implements IProjectContext {
     	return this.getEntities(entityToExclude, this.projectDiagram);
     }
     
+    // returns all entities from active diagram and all of his parents
     @Override
     public Iterable<Entity> getContextEntities(Entity entityToExclude) {
        return this.getEntities(entityToExclude, this.contextDiagram);
     }
-     
+    
+    // returns all entities of active diagram
+    @Override
+	public Iterable<Entity> getContextEntities() {
+    	Set<Entity> entities = new HashSet<Entity>();
+    	int size = this.contextDiagram.size();
+    	for (Entity item : this.contextDiagram.get(size - 1).getEntities())
+       		entities.add(item);
+    	return entities;
+	}
+    
     @Override
     public Iterable<Hierarchy> getContextHierarchies() {
     	return this.getHierarchies(this.contextDiagram);
@@ -124,4 +135,8 @@ public class ProjectContext implements IProjectContext {
 		return null;
 	}
 
+	@Override
+	public Diagram getContextDiagram(String diagramName) {
+		return null;
+	}
 }

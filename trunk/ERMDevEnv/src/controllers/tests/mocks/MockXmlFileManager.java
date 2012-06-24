@@ -1,5 +1,6 @@
 package controllers.tests.mocks;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,9 @@ public class MockXmlFileManager implements IXmlFileManager {
 
 	@Override
 	public Document read(String filePath) throws Exception {
+		if (filePath.equals("lectura")) {
+			
+		}
 		Document document = TestUtilities.createDocument();
 		document.appendChild(document.createElement("root"));
 		this.documents.add(document);

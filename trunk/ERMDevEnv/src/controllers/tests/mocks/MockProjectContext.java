@@ -128,4 +128,16 @@ public class MockProjectContext implements IProjectContext,IRelationshipEventLis
 	public List<Diagram> getGlobalDiagrams(){
 		return this.globalDiagrams;
 	}
+
+	@Override
+	public Diagram getContextDiagram(String defaultDiagramName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Entity> getContextEntities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
