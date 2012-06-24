@@ -3,11 +3,17 @@ package views;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 
 import com.jgoodies.forms.factories.*;
 
 import com.jgoodies.forms.layout.*;
 import controllers.IAttributeController;
+import infrastructure.visual.AttributeTreeNode;
 import models.Attribute;
 import models.AttributeCollection;
 import models.AttributeType;
@@ -15,21 +21,51 @@ import models.Cardinality;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 
-public class
-        AttributeView implements IAttributeView {
+public class AttributeView implements IAttributeView {
+
+    private DefaultTreeModel attributeModel;
 
     public AttributeView() {
         initComponents();
-        defaultListModel = new DefaultListModel();
-        attributeList.setModel(defaultListModel);
+        attributeModel = new DefaultTreeModel(new DefaultMutableTreeNode("Attributes"));
+        attributes.setModel(attributeModel);
         this.attributeSelected = null;
-        attributeList.addListSelectionListener(new ListSelectionListener() {
+        attributes.addTreeSelectionListener(new TreeSelectionListener() {
             @Override
-            public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                attributeSelected((Attribute) attributeList.getSelectedValue());
-                attributeSelected();
+            public void valueChanged(TreeSelectionEvent e) {
+                if (attributes.getLastSelectedPathComponent() instanceof AttributeTreeNode) {
+                    Attribute attribute = ((AttributeTreeNode) attributes.getLastSelectedPathComponent()).getAttribute();
+                    attributeSelected(attribute);
+                }
+            }
+        });
+
+        attributes.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    if (attributes.getLastSelectedPathComponent() instanceof AttributeTreeNode) {
+                        AttributeTreeNode attributeTreeNode = (AttributeTreeNode) attributes.getLastSelectedPathComponent();
+                        Object parent = ((MutableTreeNode) attributes.getLastSelectedPathComponent()).getParent();
+                        if (parent instanceof AttributeTreeNode) {
+                            ((AttributeTreeNode) parent).removeOwnAttribute(attributeTreeNode.getAttribute());
+                        }
+                        attributeModel.removeNodeFromParent((MutableTreeNode) attributes.getLastSelectedPathComponent());
+                        cleanView();
+                    }
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
             }
         });
         createAttributeButton.addActionListener(new ActionListener() {
@@ -42,12 +78,6 @@ public class
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 addAttributeToSelectedOne();
-            }
-        });
-        internalAttributesList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                attributeSelected((Attribute) internalAttributesList.getSelectedValue());
             }
         });
         editAttributeButton.addActionListener(new ActionListener() {
@@ -69,7 +99,7 @@ public class
     public void setAttributes(List<Attribute> attributes) {
         this.attributeModelList = attributes;
         for (Attribute attribute : this.attributeModelList) {
-            defaultListModel.addElement(attribute);
+            ((DefaultMutableTreeNode) attributeModel.getRoot()).add(new AttributeTreeNode(attribute));
         }
     }
 
@@ -105,34 +135,21 @@ public class
         return this.expression.getText();
     }
 
-    private void attributeSelected() {
-        if (attributeSelected != null) {
-            AttributeCollection attributeCollection = attributeSelected.getAttributes();
-            if (attributeCollection != null) {
-                DefaultListModel internalListModel = new DefaultListModel();
-                for (Attribute attribute : attributeCollection) {
-                    internalListModel.addElement(attribute);
-                }
-                this.internalAttributesList.setModel(internalListModel);
-            } else {
-                this.internalAttributesList.setModel(new DefaultListModel());
-            }
-        }
-    }
-
     private void addAttributeToSelectedOne() {
         if (attributeSelected != null) {
-            controller.addNewAttributeToAttribute(attributeSelected);
-            cleanView();
-            attributeSelected();
+            Attribute attribute = controller.addNewAttributeToAttribute(attributeSelected);
+            if (attribute != null) {
+                ((AttributeTreeNode) attributes.getLastSelectedPathComponent()).add(new AttributeTreeNode(attribute));
+                cleanView();
+            }
         }
     }
 
     private void createAttribute() {
         Attribute attributeCreated = this.controller.addNewAttribute();
         if (attributeCreated != null) {
+            ((DefaultMutableTreeNode) attributeModel.getRoot()).add(new AttributeTreeNode(attributeCreated));
             cleanView();
-            defaultListModel.addElement(attributeCreated);
         }
     }
 
@@ -142,10 +159,7 @@ public class
         this.type.setSelectedIndex(0);
         this.maxCardinality.setText("");
         this.minCardinality.setText("");
-        internalAttributesList.updateUI();
-        internalAttributesList.clearSelection();
-        attributeList.clearSelection();
-        attributeList.updateUI();
+        attributes.updateUI();
     }
 
     private void attributeSelected(Attribute selectedValue) {
@@ -180,12 +194,10 @@ public class
         // Generated using JFormDesigner Evaluation license - santiago storti
         panel1 = new JPanel();
         attributesText = new JLabel();
-        scrollPane1 = new JScrollPane();
-        attributeList = new JList();
-        scrollPane3 = new JScrollPane();
-        internalAttributesList = new JList();
         nameText = new JLabel();
         name = new JTextField();
+        scrollPane1 = new JScrollPane();
+        attributes = new JTree();
         typeText = new JLabel();
         type = new JComboBox(AttributeType.attributesTypes);
         expressionText = new JLabel();
@@ -223,22 +235,16 @@ public class
             attributesText.setText("Attributes");
             panel1.add(attributesText, CC.xy(5, 1));
 
-            //======== scrollPane1 ========
-            {
-                scrollPane1.setViewportView(attributeList);
-            }
-            panel1.add(scrollPane1, CC.xywh(3, 3, 27, 23));
-
-            //======== scrollPane3 ========
-            {
-                scrollPane3.setViewportView(internalAttributesList);
-            }
-            panel1.add(scrollPane3, CC.xywh(31, 3, 29, 23));
-
             //---- nameText ----
             nameText.setText("Name");
             panel1.add(nameText, CC.xy(66, 3));
             panel1.add(name, CC.xywh(70, 3, 5, 1));
+
+            //======== scrollPane1 ========
+            {
+                scrollPane1.setViewportView(attributes);
+            }
+            panel1.add(scrollPane1, CC.xywh(5, 5, 58, 21));
 
             //---- typeText ----
             typeText.setText("Type");
@@ -288,12 +294,10 @@ public class
     // Generated using JFormDesigner Evaluation license - santiago storti
     private JPanel panel1;
     private JLabel attributesText;
-    private JScrollPane scrollPane1;
-    private JList attributeList;
-    private JScrollPane scrollPane3;
-    private JList internalAttributesList;
     private JLabel nameText;
     private JTextField name;
+    private JScrollPane scrollPane1;
+    private JTree attributes;
     private JLabel typeText;
     private JComboBox type;
     private JLabel expressionText;
@@ -310,7 +314,6 @@ public class
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     private IAttributeController controller;
-    private DefaultListModel defaultListModel;
     private List<Attribute> attributeModelList;
     private Attribute attributeSelected;
 }

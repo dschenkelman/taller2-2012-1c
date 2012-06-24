@@ -53,12 +53,13 @@ public class AttributeController extends BaseController implements IAttributeCon
     }
 
     @Override
-    public void addNewAttributeToAttribute(Attribute attributeSelected) {
+    public Attribute addNewAttributeToAttribute(Attribute attributeSelected) {
+        Attribute att = null;
         if (attributeSelected != null) {
             String attName = attributeView.getName();
             if (IterableExtensions.firstOrDefault(attributeSelected.getAttributes(), new FuncAttrCmp(), attName) == null) {
                 String expressionClone = (attributeView.getAttributeType() == AttributeType.calculated || attributeView.getAttributeType() == AttributeType.copy) ? attributeView.getExpression() : null;
-                Attribute att = new Attribute(attName, attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
+                att = new Attribute(attName, attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
                 try {
                     AttributeCollection attributeCollection = attributeSelected.getAttributes();
                     if (attributeCollection == null) {
@@ -72,6 +73,7 @@ public class AttributeController extends BaseController implements IAttributeCon
                 }
             }
         }
+        return att;
     }
 
     @Override

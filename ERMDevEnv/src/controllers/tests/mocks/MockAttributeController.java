@@ -15,7 +15,7 @@ public class MockAttributeController implements IAttributeController {
     private IAttributeView attributeView;
     private List<Attribute> attributes;
 
-    public MockAttributeController(){
+    public MockAttributeController() {
         this.attributes = new ArrayList<Attribute>();
     }
 
@@ -35,13 +35,13 @@ public class MockAttributeController implements IAttributeController {
         return this.attributeView;
     }
 
-    public void setAttributeView(IAttributeView attributeView){
+    public void setAttributeView(IAttributeView attributeView) {
         this.attributeView = attributeView;
     }
 
     @Override
-    public void addNewAttributeToAttribute(Attribute attributeSelected) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public Attribute addNewAttributeToAttribute(Attribute attributeSelected) {
+        return null;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class MockAttributeController implements IAttributeController {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void setAttributes(List<Attribute> attributes){
+    public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
     }
 }
