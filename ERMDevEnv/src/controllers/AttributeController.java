@@ -1,6 +1,8 @@
 package controllers;
 
+import infrastructure.Func;
 import infrastructure.IProjectContext;
+import infrastructure.IterableExtensions;
 import models.*;
 import views.IAttributeView;
 
@@ -23,10 +25,14 @@ public class AttributeController extends BaseController implements IAttributeCon
 
     @Override
     public Attribute addNewAttribute() {
-        String expressionClone = (attributeView.getAttributeType() == AttributeType.calculated || attributeView.getAttributeType() == AttributeType.copy) ? attributeView.getExpression() : null;
-        Attribute att = new Attribute(attributeView.getName(), false, attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
-        this.attributes.add(att);
-        return att;
+        String attName = attributeView.getName();
+        if (IterableExtensions.firstOrDefault(attributes, new FuncAttrCmp(), attName) == null && !attName.equals("")) {
+            String expressionClone = (attributeView.getAttributeType() == AttributeType.calculated || attributeView.getAttributeType() == AttributeType.copy) ? attributeView.getExpression() : null;
+            Attribute att = new Attribute(attributeView.getName(), attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
+            this.attributes.add(att);
+            return att;
+        }
+        return null;
     }
 
     @Override
@@ -49,18 +55,21 @@ public class AttributeController extends BaseController implements IAttributeCon
     @Override
     public void addNewAttributeToAttribute(Attribute attributeSelected) {
         if (attributeSelected != null) {
-            String expressionClone = (attributeView.getAttributeType() == AttributeType.calculated || attributeView.getAttributeType() == AttributeType.copy) ? attributeView.getExpression() : null;
-            Attribute att = new Attribute(attributeView.getName(), false, attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
-            try {
-                AttributeCollection attributeCollection = attributeSelected.getAttributes();
-                if (attributeCollection == null) {
-                    attributeCollection = new AttributeCollection();
-                    attributeSelected.setAttributes(attributeCollection);
-                }
-                attributeCollection.addAttribute(att);
+            String attName = attributeView.getName();
+            if (IterableExtensions.firstOrDefault(attributeSelected.getAttributes(), new FuncAttrCmp(), attName) == null) {
+                String expressionClone = (attributeView.getAttributeType() == AttributeType.calculated || attributeView.getAttributeType() == AttributeType.copy) ? attributeView.getExpression() : null;
+                Attribute att = new Attribute(attName, attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
+                try {
+                    AttributeCollection attributeCollection = attributeSelected.getAttributes();
+                    if (attributeCollection == null) {
+                        attributeCollection = new AttributeCollection();
+                        attributeSelected.setAttributes(attributeCollection);
+                    }
+                    attributeCollection.addAttribute(att);
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -73,5 +82,12 @@ public class AttributeController extends BaseController implements IAttributeCon
         AttributeType attType = attributeView.getAttributeType();
         if (attType == AttributeType.calculated || attType == AttributeType.copy)
             attributeSelected.setExpression(attributeView.getExpression());
+    }
+
+    private class FuncAttrCmp extends Func<Attribute, String, Boolean> {
+        @Override
+        public Boolean execute(Attribute attribute, String s) {
+            return attribute.getName().equals(s);
+        }
     }
 }

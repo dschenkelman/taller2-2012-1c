@@ -16,19 +16,7 @@ public class FieldTestCase
 		Attribute attribute = new Attribute("FieldName");
 		
 		Assert.assertEquals("FieldName", attribute.getName());
-		Assert.assertFalse(attribute.isKey());
 	}
-		
-	@Test
-	public void testCanMarkFieldAsKey()
-	{
-		Attribute attribute = new Attribute("FieldName");
-		
-		Assert.assertFalse(attribute.isKey());
-		attribute.isKey(true);
-		Assert.assertTrue(attribute.isKey());
-	}
-	
 	
 	@Before
 	public void setUp() throws Exception {

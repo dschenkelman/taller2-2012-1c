@@ -2,16 +2,16 @@
 <diagram>
   <attribute>
     <idGroups>
-      <idGroup number="0"/>
-      <idGroup number="1"/>
-      <idGroup number="2"/>
-      <idGroup number="3"/>
-      <idGroup number="4"/>
-      <idGroup number="5"/>
-      <idGroup number="6"/>
-      <idGroup number="7"/>
-      <idGroup number="8"/>
-      <idGroup number="9"/>
+      <idGroup name="0"/>
+      <idGroup name="1"/>
+      <idGroup name="2"/>
+      <idGroup name="3"/>
+      <idGroup name="4"/>
+      <idGroup name="5"/>
+      <idGroup name="6"/>
+      <idGroup name="7"/>
+      <idGroup name="8"/>
+      <idGroup name="9"/>
     </idGroups>
   </attribute>
 </diagram>

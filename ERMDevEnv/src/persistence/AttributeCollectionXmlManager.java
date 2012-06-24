@@ -28,7 +28,7 @@ public class AttributeCollectionXmlManager implements IXmlManager<AttributeColle
         	Element attribute = (Element) attributesElem.getChildNodes().item(i);
 
             String name = attribute.getAttribute("name");
-            boolean isKeyField = Boolean.valueOf(attribute.getAttribute("isKeyField"));
+            //boolean isKeyField = Boolean.valueOf(attribute.getAttribute("isKeyField"));
             Cardinality cardinality = null;
             if (!attribute.getAttribute("minimumCardinality").isEmpty() && !attribute.getAttribute("maximumCardinality").isEmpty()) {
                 cardinality = new Cardinality(Double.valueOf(attribute.getAttribute("minimumCardinality")),
@@ -67,7 +67,7 @@ public class AttributeCollectionXmlManager implements IXmlManager<AttributeColle
 
             UUID myID = UUID.fromString(attribute.getAttribute("id"));
 
-            attCollection.addAttribute(new Attribute(name, isKeyField, cardinality, idGroup, type, expression, attrCol, myID));
+            attCollection.addAttribute(new Attribute(name, cardinality, idGroup, type, expression, attrCol, myID));
 
         }
 
@@ -110,7 +110,7 @@ public class AttributeCollectionXmlManager implements IXmlManager<AttributeColle
             attributeElement.setAttribute("maximumCardinality", String.valueOf(attribute.getCardinality().getMaximum()));
         }
         attributeElement.setAttribute("id", attribute.getId().toString());
-        attributeElement.setAttribute("isKeyField", Boolean.toString(attribute.isKey()));
+       // attributeElement.setAttribute("isKeyField", Boolean.toString(attribute.isKey()));
         return attributeElement;
     }
 

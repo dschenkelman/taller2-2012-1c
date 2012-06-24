@@ -7,10 +7,7 @@ package views;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.*;
-import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -70,8 +67,11 @@ public class KeyView extends JFrame implements IKeysView {
         this.newIdGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                idGroupListModel.addElement(new IdGroup(getNextNumber().toString()));
-                cleanView();
+                String idGroupName = idGroupNameTextField.getText();
+                if (controller.validIdGroupName(idGroupName) && !inModel(idGroupName)) {
+                    idGroupListModel.addElement(new IdGroup(idGroupName));
+                    cleanView();
+                }
             }
         });
 
@@ -100,6 +100,17 @@ public class KeyView extends JFrame implements IKeysView {
         });
     }
 
+    private boolean inModel(String idGroupName) {
+        Integer modelSize = idGroupListModel.getSize();
+        for (int i = 0; i < modelSize; i++) {
+            IdGroup idGroup = (IdGroup) idGroupListModel.get(i);
+            if (idGroup.getName().equals(idGroupName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void showView() {
         this.setVisible(true);
@@ -113,7 +124,6 @@ public class KeyView extends JFrame implements IKeysView {
     @Override
     public void setPossibleKeys(Iterable<IKey> keys) {
         this.possibleKeys = keys;
-        //TODO agregar los idgroup existentes
     }
 
     @Override
@@ -132,13 +142,10 @@ public class KeyView extends JFrame implements IKeysView {
     }
 
     @Override
-    public Iterable<IKey> getKeysOfIdGroupSelected() {
-        List<IKey> iKeyList = new ArrayList<IKey>();
-        for (IKey key : this.possibleKeys) {
-            if (key.getIdGroup().exists(idGroupSelected.getName()))
-                iKeyList.add(key);
+    public void setExistIdGroup(Iterable<IdGroup> idGroupFromKeys) {
+        for (IdGroup idGroup : idGroupFromKeys) {
+            this.idGroupListModel.addElement(idGroup);
         }
-        return iKeyList;
     }
 
     private void updateKeysList() {
@@ -153,6 +160,7 @@ public class KeyView extends JFrame implements IKeysView {
         this.currentKeysList.setModel(this.currentKeysListModel);
         this.possibleKeysListModel = new DefaultListModel();
         this.possibleKeysList.setModel(this.possibleKeysListModel);
+        this.idGroupNameTextField.setText("");
         this.idGroupSelected = null;
         updateKeysList();
     }
@@ -179,10 +187,11 @@ public class KeyView extends JFrame implements IKeysView {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - santiago storti
+        idGroupNameTextField = new JTextField();
         label1 = new JLabel();
-        newIdGroupButton = new JButton();
         label2 = new JLabel();
         label3 = new JLabel();
+        newIdGroupButton = new JButton();
         scrollPane1 = new JScrollPane();
         idGroupList = new JList();
         scrollPane2 = new JScrollPane();
@@ -197,53 +206,54 @@ public class KeyView extends JFrame implements IKeysView {
         Container contentPane = getContentPane();
         contentPane.setLayout(new FormLayout(
                 "64*(default, $lcgap), default",
-                "56*(default, $lgap), default"));
+                "57*(default, $lgap), default"));
+        contentPane.add(idGroupNameTextField, CC.xywh(9, 3, 19, 5));
 
         //---- label1 ----
         label1.setText("Id Groups");
         contentPane.add(label1, CC.xy(5, 5));
 
-        //---- newIdGroupButton ----
-        newIdGroupButton.setText("New id group");
-        contentPane.add(newIdGroupButton, CC.xy(15, 5));
-
         //---- label2 ----
         label2.setText("Possible keys");
-        contentPane.add(label2, CC.xy(57, 5));
+        contentPane.add(label2, CC.xy(57, 7));
 
         //---- label3 ----
         label3.setText("Current keys");
-        contentPane.add(label3, CC.xy(111, 5));
+        contentPane.add(label3, CC.xy(111, 7));
+
+        //---- newIdGroupButton ----
+        newIdGroupButton.setText("New id group");
+        contentPane.add(newIdGroupButton, CC.xy(23, 9));
 
         //======== scrollPane1 ========
         {
             scrollPane1.setViewportView(idGroupList);
         }
-        contentPane.add(scrollPane1, CC.xywh(3, 9, 25, 102));
+        contentPane.add(scrollPane1, CC.xywh(3, 11, 25, 102));
 
         //======== scrollPane2 ========
         {
             scrollPane2.setViewportView(possibleKeysList);
         }
-        contentPane.add(scrollPane2, CC.xywh(35, 9, 41, 102));
+        contentPane.add(scrollPane2, CC.xywh(35, 11, 41, 102));
 
         //======== scrollPane3 ========
         {
             scrollPane3.setViewportView(currentKeysList);
         }
-        contentPane.add(scrollPane3, CC.xywh(87, 9, 41, 100));
+        contentPane.add(scrollPane3, CC.xywh(87, 11, 41, 100));
 
         //---- addKeyToIdGroupButton ----
         addKeyToIdGroupButton.setText("Add key to id group");
-        contentPane.add(addKeyToIdGroupButton, CC.xy(81, 11));
+        contentPane.add(addKeyToIdGroupButton, CC.xy(81, 13));
 
         //---- removeKeyFromIdGriupButton ----
         removeKeyFromIdGriupButton.setText("Remove key from id group");
-        contentPane.add(removeKeyFromIdGriupButton, CC.xy(81, 95));
+        contentPane.add(removeKeyFromIdGriupButton, CC.xy(81, 97));
 
         //---- finsihButton ----
         finsihButton.setText("Finish");
-        contentPane.add(finsihButton, CC.xy(123, 111));
+        contentPane.add(finsihButton, CC.xy(123, 113));
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -251,10 +261,11 @@ public class KeyView extends JFrame implements IKeysView {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - santiago storti
+    private JTextField idGroupNameTextField;
     private JLabel label1;
-    private JButton newIdGroupButton;
     private JLabel label2;
     private JLabel label3;
+    private JButton newIdGroupButton;
     private JScrollPane scrollPane1;
     private JList idGroupList;
     private JScrollPane scrollPane2;

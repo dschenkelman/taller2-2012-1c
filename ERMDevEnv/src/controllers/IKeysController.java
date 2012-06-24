@@ -12,4 +12,6 @@ public interface IKeysController {
     public void setKeyView(IKeysView keysView);
 
     public void removeIdGroupFromKey();
+
+    boolean validIdGroupName(String name);
 }

@@ -8,92 +8,91 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-public class AttributeCollection implements Iterable<Attribute>{
+public class AttributeCollection implements Iterable<Attribute> {
 
-	private List<Attribute> items;
+    private List<Attribute> items;
 
-	public AttributeCollection() {
-		super();
-		items = new ArrayList<Attribute>();
-	}
+    public AttributeCollection() {
+        super();
+        items = new ArrayList<Attribute>();
+    }
 
-	public Attribute createItemInstance(String name) {
-		return new Attribute(name);
-	}
+    public Attribute createItemInstance(String name) {
+        return new Attribute(name);
+    }
 
-	public static Attribute createItemInstance(String name, boolean isKeyField,
-			Cardinality cardinality, IdGroupCollection idGroup, AttributeType type, String expression) {
+    public static Attribute createItemInstance(String name, Cardinality cardinality, IdGroupCollection idGroup, AttributeType type, String expression) {
 
-		return new Attribute(name, isKeyField, cardinality, idGroup, type, expression);
-	}
+        return new Attribute(name, cardinality, idGroup, type, expression);
+    }
 
-	public static Attribute createItemInstance(String name, boolean isKeyField,
-			Cardinality cardinality, IdGroupCollection idGroup, AttributeType type, String expression, 
-			AttributeCollection attCol,UUID myID) {
+    public static Attribute createItemInstance(String name, Cardinality cardinality, IdGroupCollection idGroup, AttributeType type, String expression,
+                                               AttributeCollection attCol, UUID myID) {
 
-		return new  Attribute(name,  isKeyField,  cardinality,  idGroup, 
-				 type,  expression, attCol ,  myID);
-	}
+        return new Attribute(name, cardinality, idGroup,
+                type, expression, attCol, myID);
+    }
 
-	public int count() {
-		return IterableExtensions.count(this.items);
-	}
+    public int count() {
+        return IterableExtensions.count(this.items);
+    }
 
-	public Attribute getAttribute(String attributeName) {
-		return IterableExtensions.firstOrDefault(this.items,
-				new AttributeCmpFunc(), attributeName);
-	}
+    public Attribute getAttribute(String attributeName) {
+        return IterableExtensions.firstOrDefault(this.items,
+                new AttributeCmpFunc(), attributeName);
+    }
 
-	public void addAttribute(Attribute att) throws Exception {
+    public void addAttribute(Attribute att) throws Exception {
 
-		if (att == null)
-			throw new NullPointerException("Null Attribute was sent");
-		if (!existsAttribute(att.getName()))
-			items.add(att);
-		else
-			throw new Exception("Name " + att.getName()
-					+ " is used by another attribute");
-	}
+        if (att == null)
+            throw new NullPointerException("Null Attribute was sent");
+        if (!existsAttribute(att.getName()))
+            items.add(att);
+        else
+            throw new Exception("Name " + att.getName()
+                    + " is used by another attribute");
+    }
 
-	public void addAttribute(String attName) throws Exception {
-		this.addAttribute(this.createItemInstance(attName));
-	}
+    public void addAttribute(String attName) throws Exception {
+        this.addAttribute(this.createItemInstance(attName));
+    }
 
-	public void addAttribute(String name, boolean isKeyField,
-			Cardinality cardinality,IdGroupCollection idGroup, AttributeType type, String expression)
-			throws Exception {
-		
-		this.addAttribute(AttributeCollection.createItemInstance(name, isKeyField,
-				cardinality, idGroup, type,
-				expression));
-	}
+    public void addAttribute(String name, Cardinality cardinality, IdGroupCollection idGroup, AttributeType type, String expression)
+            throws Exception {
 
-	public void removeAttribute(String attributeName) throws Exception {
-		if (existsAttribute(attributeName)) {
-			this.items.remove(this.getAttribute(attributeName));
-		} else {
-			throw new Exception("Do not exists an attribute with name: "
-					+ attributeName);
-		}
-	}
+        this.addAttribute(AttributeCollection.createItemInstance(name,
+                cardinality, idGroup, type,
+                expression));
+    }
 
-	public boolean existsAttribute(String attributeName) {
-		return IterableExtensions.firstOrDefault(this.items,
-				new AttributeCmpFunc(), attributeName) != null;
-	}
+    public void removeAttribute(String attributeName) throws Exception {
+        if (existsAttribute(attributeName)) {
+            this.items.remove(this.getAttribute(attributeName));
+        } else {
+            throw new Exception("Do not exists an attribute with name: "
+                    + attributeName);
+        }
+    }
 
-	/** Private class used by IterableExtensions */
+    public boolean existsAttribute(String attributeName) {
+        return IterableExtensions.firstOrDefault(this.items,
+                new AttributeCmpFunc(), attributeName) != null;
+    }
 
-	private class AttributeCmpFunc extends Func<Attribute, String, Boolean> {
-		@Override
-		public Boolean execute(Attribute attribute, String name) {
-			return attribute.getName().equals(name);
-		}
+    /**
+     * Private class used by IterableExtensions
+     */
 
-	}
+    private class AttributeCmpFunc extends Func<Attribute, String, Boolean> {
+        @Override
+        public Boolean execute(Attribute attribute, String name) {
+            return attribute.getName().equals(name);
+        }
 
-	@Override
-	public Iterator<Attribute> iterator() {
-		return this.items.iterator();
-	}
+    }
+
+    @Override
+    public Iterator<Attribute> iterator() {
+        return this.items.iterator();
+    }
 }
