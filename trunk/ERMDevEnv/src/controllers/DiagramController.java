@@ -564,6 +564,9 @@ public class DiagramController extends BaseController
 		}
 		finally {
 			this.diagram.getHierarchies().add(hierarchy);
+			for (IDiagramEventListener listener : this.listeners) {
+				listener.handleHierarchyAdded(this.diagram, hierarchy);
+			}
 			this.graph.getModel().endUpdate();
 		}
 	}

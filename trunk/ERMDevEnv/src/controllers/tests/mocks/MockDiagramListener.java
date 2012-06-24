@@ -2,6 +2,7 @@ package controllers.tests.mocks;
 
 import models.Diagram;
 import models.Entity;
+import models.Hierarchy;
 import models.Relationship;
 import controllers.listeners.IDiagramEventListener;
 
@@ -11,6 +12,7 @@ public class MockDiagramListener implements IDiagramEventListener {
 	private Entity entity;
 	private Relationship relationship;
 	private String diagramName;
+	private Hierarchy hierarchy;
 	
 	@Override
 	public void handleEntityAdded(Diagram diagram, Entity entity) {
@@ -41,8 +43,18 @@ public class MockDiagramListener implements IDiagramEventListener {
 		this.diagram = diagram;
 		this.diagramName = diagramName;
 	}
+	
+	@Override
+	public void handleHierarchyAdded(Diagram diagram, Hierarchy hierarchy) {
+		this.diagram = diagram;
+		this.hierarchy = hierarchy;
+	}
 
 	public String getDiagramName() {
 		return this.diagramName;
+	}
+
+	public Hierarchy getHierarchy() {
+		return this.hierarchy;
 	}
 }

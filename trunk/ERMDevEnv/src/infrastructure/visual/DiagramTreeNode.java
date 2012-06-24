@@ -1,5 +1,7 @@
 package infrastructure.visual;
 
+import infrastructure.IProjectContext;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -62,8 +64,10 @@ public class DiagramTreeNode extends DefaultMutableTreeNode {
 		tree.nodesWereInserted(this.relationshipsNode, new int[]{index});
 	}
 	
-	public void addHierarchy(Hierarchy hierarchy){
-		this.hierarchiesNode.add(new DefaultMutableTreeNode(hierarchy));
+	public void addHierarchy(Hierarchy hierarchy, DefaultTreeModel tree, IProjectContext projectContext){
+		this.hierarchiesNode.add(new HierarchyTreeNode(projectContext, hierarchy));
+		int index = this.hierarchiesNode.getChildCount() - 1;
+		tree.nodesWereInserted(this.hierarchiesNode, new int[]{index});
 	}
 	
 	public DiagramTreeNode addSubdiagram(Diagram diagram){
