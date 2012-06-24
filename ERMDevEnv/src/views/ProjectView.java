@@ -46,10 +46,10 @@ public class ProjectView extends JPanel implements IProjectView {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),}));
 		
-		this.btnCreate = new JButton("Crear");
+		this.btnCreate = new JButton("Create");
 		this.add(this.btnCreate, "2, 2");
 		
-		this.btnOpen = new JButton("Abrir");
+		this.btnOpen = new JButton("Open");
 		this.add(this.btnOpen, "6, 2");
 		
 		this.tree = new JTree();
@@ -64,7 +64,7 @@ public class ProjectView extends JPanel implements IProjectView {
 		this.btnCreate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){
-				String name = JOptionPane.showInputDialog(null, "Ingrese el nombre del proyecto", "Nuevo Proyecto", JOptionPane.QUESTION_MESSAGE);
+				String name = JOptionPane.showInputDialog(null, "Provide the project's name", "New Project", JOptionPane.QUESTION_MESSAGE);
 				if (name != null){
 					projectController.createProject(name);
 					tree.setModel(projectController.getProjectTree());
@@ -75,7 +75,7 @@ public class ProjectView extends JPanel implements IProjectView {
 		this.btnOpen.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){
-				String name = JOptionPane.showInputDialog(null, "Ingrese el nombre del proyecto", "Abrir Proyecto", JOptionPane.QUESTION_MESSAGE);
+				String name = JOptionPane.showInputDialog(null, "Provide the project's name", "Open Project", JOptionPane.QUESTION_MESSAGE);
 				if (name != null){
 					try {
 						projectController.openProject(name);
@@ -97,7 +97,4 @@ public class ProjectView extends JPanel implements IProjectView {
 			}
 		});
 	}
-	
-	
-
 }

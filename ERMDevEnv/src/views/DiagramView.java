@@ -65,19 +65,19 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("default:grow"),}));
 		
-		this.btnEntity = new JButton("Entidad");
+		this.btnEntity = new JButton("Entity");
 		add(this.btnEntity, "2, 2");
 		
-		this.btnRelationship = new JButton("Relacion");
+		this.btnRelationship = new JButton("Relationship");
 		add(this.btnRelationship, "4, 2");
 		
-		this.btnHierarchy = new JButton("Jerarquia");
+		this.btnHierarchy = new JButton("Hierarchy");
 		add(this.btnHierarchy, "6, 2");
 		
-		this.btnSave = new JButton("Grabar");
+		this.btnSave = new JButton("Save");
 		add(this.btnSave, "8, 2");
 		
-		this.btnSubdiagram = new JButton("SubDiagrama");
+		this.btnSubdiagram = new JButton("Sub-Diagram");
 		add(this.btnSubdiagram, "10, 2");
 	}
 
@@ -149,7 +149,7 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 		this.btnSubdiagram.addMouseListener(new MouseAdapter(){
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String diagramName = JOptionPane.showInputDialog(null, "Ingrese el nombre del diagrama", "Nuevo Diagrama", JOptionPane.QUESTION_MESSAGE);
+				String diagramName = JOptionPane.showInputDialog(null, "Provide the diagram's name", "New Diagram", JOptionPane.QUESTION_MESSAGE);
 				if (diagramName != null){
 					diagramController.createSubDiagram(diagramName);
 				}
