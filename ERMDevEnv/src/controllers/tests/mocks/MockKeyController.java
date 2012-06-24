@@ -29,6 +29,11 @@ public class MockKeyController implements IKeysController {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
+    public boolean validIdGroupName(String name) {
+        return false;
+    }
+
     public void setKeys(Iterable<IKey> iKeys) {
         this.iKeys = iKeys;
     }

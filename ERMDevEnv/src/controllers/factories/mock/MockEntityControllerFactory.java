@@ -50,7 +50,7 @@ public class MockEntityControllerFactory implements IEntityControllerFactory {
 					entity.getAttributes().addAttribute("Attribute2");
 					entity.getAttributes().addAttribute("Attribute3");
 					entity.getAttributes().addAttribute("Attribute4");
-					entity.getAttributes().addAttribute("Attribute5", false, new Cardinality(0, 1), null, AttributeType.calculated, "Attribute5");
+					entity.getAttributes().addAttribute("Attribute5", new Cardinality(0, 1), null, AttributeType.calculated, "Attribute5");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
