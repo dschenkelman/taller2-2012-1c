@@ -36,7 +36,7 @@ public class AttributeControllerTest {
     }
 
     @Test
-    public void testAddAttribute() {
+    public void testAddNewAttribute() {
         MockAttributeView mockAttributeView = new MockAttributeView();
         mockAttributeView.setName("att");
         try {
@@ -48,18 +48,81 @@ public class AttributeControllerTest {
         mockAttributeView.setExpression("aaksda");
 
         attributeController.setAttributeView(mockAttributeView);
+
         Assert.assertEquals(0, IterableExtensions.count(this.attributeController.getAttributes()));
-        try {
-            this.attributeController.addNewAttribute();
-        } catch (Exception e) {
-            Assert.fail();
-        }
+
+        this.attributeController.addNewAttribute();
+
+        Assert.assertEquals(1, IterableExtensions.count(this.attributeController.getAttributes()));
+
+        this.attributeController.addNewAttribute();
+
         Assert.assertEquals(1, IterableExtensions.count(this.attributeController.getAttributes()));
 
         Attribute attribute = this.attributeController.getAttributes().iterator().next();
         Assert.assertEquals("att", attribute.getName());
-        Assert.assertEquals(false, attribute.isKey());
         Assert.assertEquals(AttributeType.calculated, attribute.getType());
+
+        mockAttributeView.setName("att2");
+
+        this.attributeController.addNewAttribute();
+
+        Assert.assertEquals(2, IterableExtensions.count(this.attributeController.getAttributes()));
+
+        mockAttributeView.setName("");
+
+        this.attributeController.addNewAttribute();
+
+        Assert.assertEquals(2, IterableExtensions.count(this.attributeController.getAttributes()));
+
+    }
+
+    @Test
+    public void testAddNewAttributeToAttribute() {
+        Attribute attribute = new Attribute("name");
+        MockAttributeView mockAttributeView = new MockAttributeView();
+        mockAttributeView.setName("att");
+        try {
+            mockAttributeView.setCardinality(new Cardinality(1, 1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mockAttributeView.setAttType(AttributeType.calculated);
+        mockAttributeView.setExpression("aaksda");
+        attributeController.setAttributeView(mockAttributeView);
+        attributeController.addNewAttributeToAttribute(attribute);
+
+        Assert.assertTrue(attribute.getAttributes().existsAttribute("att"));
+        Assert.assertEquals(1, IterableExtensions.count(attribute.getAttributes()));
+
+        attributeController.addNewAttributeToAttribute(attribute);
+        Assert.assertEquals(1, IterableExtensions.count(attribute.getAttributes()));
+
+
+    }
+
+    @Test
+    public void testEditAttribute() {
+        Attribute attribute = new Attribute("name");
+
+        MockAttributeView mockAttributeView = new MockAttributeView();
+        mockAttributeView.setName("att");
+        try {
+            mockAttributeView.setCardinality(new Cardinality(1, 1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mockAttributeView.setAttType(AttributeType.calculated);
+        mockAttributeView.setExpression("aaksda");
+        attributeController.setAttributeView(mockAttributeView);
+
+        attributeController.editAttribute(attribute);
+
+        Assert.assertEquals(attribute.getName(), "att");
+        Assert.assertEquals(attribute.getType(), AttributeType.calculated);
+        Assert.assertEquals(attribute.getExpression(), "aaksda");
+        Assert.assertEquals(attribute.getCardinality().getMinimum(), 1.0);
+        Assert.assertEquals(attribute.getCardinality().getMaximum(), 1.0);
 
     }
 }

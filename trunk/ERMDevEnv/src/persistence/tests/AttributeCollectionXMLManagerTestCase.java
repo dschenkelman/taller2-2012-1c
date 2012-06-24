@@ -38,9 +38,9 @@ public class AttributeCollectionXMLManagerTestCase {
         Attribute attribute1 = null;
         try {
             attCol.addAttribute("SimpleAttribute1");
-            attCol.addAttribute("SimpleAttribute2", true, new Cardinality(1, 10), new IdGroupCollection(),
+            attCol.addAttribute("SimpleAttribute2", new Cardinality(1, 10), new IdGroupCollection(),
                     AttributeType.characterization, null);
-            attribute1 = new Attribute("ComplexAttribute", true, new Cardinality(0, 10), new IdGroupCollection(),
+            attribute1 = new Attribute("ComplexAttribute", new Cardinality(0, 10), new IdGroupCollection(),
                     AttributeType.calculated, new String("expression1"));
 
             attCol1.addAttribute("SimpleAttribute3");
@@ -189,7 +189,6 @@ public class AttributeCollectionXMLManagerTestCase {
             Assert.assertFalse(att1.getIdGroup().exists(String.valueOf(i)));
         for (int i = 20; i < 30; i++)
             Assert.assertFalse(att1.getIdGroup().exists(String.valueOf(i)));
-        assertTrue(att1.isKey());
 
         //Valido el attributo 2
         assertEquals(att2.getName(), "ComplexAttribute");
@@ -205,7 +204,6 @@ public class AttributeCollectionXMLManagerTestCase {
         for (int i = 10; i < 20; i++)
             Assert.assertFalse(att2.getIdGroup().exists(String.valueOf(i)));
         assertEquals(att2.getExpression(), "expression1");
-        assertFalse(att2.isKey());
 
         assertTrue(att2.getAttributes().count() == 2);
         ite = att2.getAttributes().iterator();
@@ -219,7 +217,6 @@ public class AttributeCollectionXMLManagerTestCase {
             Assert.assertFalse(subAtt1.getIdGroup().exists(String.valueOf(i)));
         for (int i = 10; i < 20; i++)
             Assert.assertTrue(subAtt1.getIdGroup().exists(String.valueOf(i)));
-        assertFalse(subAtt1.isKey());
 
         assertEquals(subAtt2.getName(), "SimpleAttribute3");
         for (int i = 20; i < 30; i++)
@@ -227,12 +224,11 @@ public class AttributeCollectionXMLManagerTestCase {
         for (int i = 0; i < 10; i++)
             Assert.assertFalse(subAtt2.getIdGroup().exists(String.valueOf(i)));
         for (int i = 10; i < 20; i++)
-            Assert.assertFalse(subAtt2.getIdGroup().exists(String.valueOf(i)));        assertTrue(subAtt2.isKey());
+            Assert.assertFalse(subAtt2.getIdGroup().exists(String.valueOf(i)));
 
         //Valido el attributo 3
         assertEquals(att3.getName(), "SimpleAttribute4");
         assertEquals(att3.getId().toString(), "a835f4cc-c85d-4606-996a-93b89b36ae36");
-        assertTrue(att3.isKey());
 
     }
 }

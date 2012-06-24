@@ -1,7 +1,10 @@
 package controllers;
 
+import infrastructure.Func;
+import infrastructure.IterableExtensions;
 import models.IKey;
 import models.IdGroup;
+import models.IdGroupCollection;
 import views.IKeysView;
 
 import infrastructure.IProjectContext;
@@ -26,6 +29,7 @@ public class KeysController extends BaseController implements IKeysController {
     public void setKeyView(IKeysView keysView) {
         this.keysView = keysView;
         this.keysView.setPossibleKeys(this.possibleKeys);
+        this.keysView.setExistIdGroup(this.getIdGroupFromKeys());
         this.keysView.setController(this);
     }
 
@@ -46,6 +50,12 @@ public class KeysController extends BaseController implements IKeysController {
     }
 
     @Override
+    public boolean validIdGroupName(String name) {
+        return !name.equals("") && IterableExtensions.firstOrDefault(this.getIdGroupFromKeys(), new IdGroupCmp(), name) == null;
+
+    }
+
+    @Override
     public void addIdGroupToKey() {
         IdGroup idGroup = this.keysView.getIdGroupSelected();
         IKey key = this.keysView.getKeySelectedToAdd();
@@ -55,5 +65,30 @@ public class KeysController extends BaseController implements IKeysController {
             e.printStackTrace();
         }
     }
+
+    private Iterable<IdGroup> getIdGroupFromKeys() {
+        IdGroupCollection idGroupCollection = new IdGroupCollection();
+        for (IKey key : possibleKeys) {
+            for (IdGroup idGroup : key.getIdGroup().getIdGroups()) {
+                if (!idGroupCollection.exists(idGroup.getName())) {
+                    try {
+                        idGroupCollection.addIdGroup(idGroup);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return idGroupCollection.getIdGroups();
+    }
+
+    private class IdGroupCmp extends Func<IdGroup, String, Boolean> {
+
+        @Override
+        public Boolean execute(IdGroup idGroup, String name) {
+            return idGroup.getName().equals(name);
+        }
+    }
+
 
 }

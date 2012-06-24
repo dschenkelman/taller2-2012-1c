@@ -129,10 +129,10 @@ public class
     }
 
     private void createAttribute() {
-        if (!name.getText().equals("")) {
-            Attribute attribute = this.controller.addNewAttribute();
+        Attribute attributeCreated = this.controller.addNewAttribute();
+        if (attributeCreated != null) {
             cleanView();
-            defaultListModel.addElement(attribute);
+            defaultListModel.addElement(attributeCreated);
         }
     }
 

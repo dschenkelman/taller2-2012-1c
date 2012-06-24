@@ -22,5 +22,5 @@ public interface IKeysView {
 
     public IKey getKeySelectedToRemove();
 
-    public Iterable<IKey> getKeysOfIdGroupSelected();
+    void setExistIdGroup(Iterable<IdGroup> idGroupFromKeys);
 }

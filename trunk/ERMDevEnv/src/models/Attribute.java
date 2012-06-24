@@ -4,7 +4,6 @@ import java.util.UUID;
 
 public class Attribute implements INameable, IKey {
     private String name;
-    private boolean isKeyField;
     private Cardinality cardinality;
     private String expression;
     private AttributeType type;
@@ -17,14 +16,14 @@ public class Attribute implements INameable, IKey {
     public Attribute(String name) {
         this.setName(name);
         myID = UUID.randomUUID();
-        isKeyField = false;
+        this.idGroup = new IdGroupCollection();
+        this.attributes = new AttributeCollection();
     }
 
-    public Attribute(String name, boolean isKeyField, Cardinality cardinality, IdGroupCollection idGroup,
+    public Attribute(String name, Cardinality cardinality, IdGroupCollection idGroup,
                      AttributeType type, String expression) {
 
         this(name);
-        this.isKeyField = isKeyField;
         this.setCardinality(cardinality);
         this.idGroup = idGroup == null ? new IdGroupCollection() : idGroup;
         this.type = type;
@@ -33,9 +32,9 @@ public class Attribute implements INameable, IKey {
 
     }
 
-    public Attribute(String name, boolean isKeyField, Cardinality cardinality, IdGroupCollection idGroup,
+    public Attribute(String name, Cardinality cardinality, IdGroupCollection idGroup,
                      AttributeType type, String expression, AttributeCollection attCol, UUID myID) {
-        this(name, isKeyField, cardinality, idGroup, type, expression);
+        this(name, cardinality, idGroup, type, expression);
         this.attributes = attCol;
         if (myID != null) {
             this.myID = myID;
@@ -50,16 +49,6 @@ public class Attribute implements INameable, IKey {
     @Override
     public String getName() {
         return this.name;
-    }
-
-    @Override
-    public void isKey(boolean value) {
-        this.isKeyField = value;
-    }
-
-    @Override
-    public boolean isKey() {
-        return this.isKeyField;
     }
 
     public void setType(AttributeType type) {
