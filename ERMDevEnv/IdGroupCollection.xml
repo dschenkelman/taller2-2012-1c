@@ -2,16 +2,16 @@
 <diagram>
   <attribute>
     <idGroups>
-      <idGroup isKey="false" number="0"/>
-      <idGroup isKey="false" number="1"/>
-      <idGroup isKey="false" number="2"/>
-      <idGroup isKey="false" number="3"/>
-      <idGroup isKey="false" number="4"/>
-      <idGroup isKey="false" number="5"/>
-      <idGroup isKey="false" number="6"/>
-      <idGroup isKey="false" number="7"/>
-      <idGroup isKey="false" number="8"/>
-      <idGroup isKey="false" number="9"/>
+      <idGroup number="0"/>
+      <idGroup number="1"/>
+      <idGroup number="2"/>
+      <idGroup number="3"/>
+      <idGroup number="4"/>
+      <idGroup number="5"/>
+      <idGroup number="6"/>
+      <idGroup number="7"/>
+      <idGroup number="8"/>
+      <idGroup number="9"/>
     </idGroups>
   </attribute>
 </diagram>
