@@ -133,6 +133,8 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 
 	@Override
 	public void changeElement(TreePath treePath) {
+		if (treePath == null)
+			return;
 		this.projectContext.clear();
 		for (Object o : treePath.getPath()) {
 			if (o instanceof DiagramTreeNode) {
@@ -148,9 +150,10 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		this.projectContext.setName(projectName);
 		this.loadDiagram(DefaultDiagramName, null);
 		this.diagramController = this.diagramControllerFactory.create();
+		this.diagramController.getDiagram().setName(DefaultDiagramName);
+		this.diagramController.addListener(this);
 		
 		Diagram mainDiagram = this.diagramController.getDiagram();
-		mainDiagram.setName(DefaultDiagramName);
 		this.diagramController.load(mainDiagram);
 		
 		this.shell.setRightContent(this.diagramController.getView());
@@ -177,6 +180,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		}
 		
 		this.projectContext.addProjectDiagram(diagram);
+		this.projectContext.addContextDiagram(diagram);
 		
 		for (String childDiagramName : diagram.getSubDiagramNames()) {
 			this.loadDiagram(childDiagramName, currentTreeNode);
