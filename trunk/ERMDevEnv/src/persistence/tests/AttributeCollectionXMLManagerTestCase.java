@@ -106,16 +106,16 @@ public class AttributeCollectionXMLManagerTestCase {
                         "<attribute id=\"63fbe9a3-a337-431b-b18c-24c2fe45f438\" maximumCardinality=\"10.0\" minimumCardinality=\"1.0\" " +
                         "name=\"SimpleAttribute1\" type=\"characterization\" isKeyField=\"true\">" +
                             "<idGroups>\n" +
-                                "<idGroup number=\"0\"/>\n" +
-                                "<idGroup number=\"1\"/>\n" +
-                                "<idGroup number=\"2\"/>\n" +
-                                "<idGroup number=\"3\"/>\n" +
-                                "<idGroup number=\"4\"/>\n" +
-                                "<idGroup number=\"5\"/>\n" +
-                                "<idGroup number=\"6\"/>\n" +
-                                "<idGroup number=\"7\"/>\n" +
-                                "<idGroup number=\"8\"/>\n" +
-                                "<idGroup number=\"9\"/>\n" +
+                                "<idGroup name=\"0\"/>\n" +
+                                "<idGroup name=\"1\"/>\n" +
+                                "<idGroup name=\"2\"/>\n" +
+                                "<idGroup name=\"3\"/>\n" +
+                                "<idGroup name=\"4\"/>\n" +
+                                "<idGroup name=\"5\"/>\n" +
+                                "<idGroup name=\"6\"/>\n" +
+                                "<idGroup name=\"7\"/>\n" +
+                                "<idGroup name=\"8\"/>\n" +
+                                "<idGroup name=\"9\"/>\n" +
                             "</idGroups>" +
                         "</attribute>" +
                         "<attribute expression=\"expression1\" id=\"46f4c7c7-ab54-4afc-bfa8-87fa0f27c09b\" maximumCardinality=\"10.0\" " +
@@ -123,31 +123,31 @@ public class AttributeCollectionXMLManagerTestCase {
                             "<attributes>" +
                                 "<attribute id=\"a835f4cc-c85d-4606-996a-93b89b36ae34\" name=\"SimpleAttribute2\" isKeyField=\"false\">" +
                                     "<idGroups>\n" +
-                                        "<idGroup number=\"10\"/>\n" +
-                                        "<idGroup number=\"11\"/>\n" +
-                                        "<idGroup number=\"12\"/>\n" +
-                                        "<idGroup number=\"13\"/>\n" +
-                                        "<idGroup number=\"14\"/>\n" +
-                                        "<idGroup number=\"15\"/>\n" +
-                                        "<idGroup number=\"16\"/>\n" +
-                                        "<idGroup number=\"17\"/>\n" +
-                                        "<idGroup number=\"18\"/>\n" +
-                                        "<idGroup number=\"19\"/>\n" +
+                                        "<idGroup name=\"10\"/>\n" +
+                                        "<idGroup name=\"11\"/>\n" +
+                                        "<idGroup name=\"12\"/>\n" +
+                                        "<idGroup name=\"13\"/>\n" +
+                                        "<idGroup name=\"14\"/>\n" +
+                                        "<idGroup name=\"15\"/>\n" +
+                                        "<idGroup name=\"16\"/>\n" +
+                                        "<idGroup name=\"17\"/>\n" +
+                                        "<idGroup name=\"18\"/>\n" +
+                                        "<idGroup name=\"19\"/>\n" +
                                     "</idGroups>" +
                                 "</attribute>" +
                                 "<attribute id=\"a835f4cc-c85d-4606-996a-93b89b36ae35\" name=\"SimpleAttribute3\" isKeyField=\"true\"/>" +
                             "</attributes>" +
                             "<idGroups>\n" +
-                                "<idGroup number=\"20\"/>\n" +
-                                "<idGroup number=\"21\"/>\n" +
-                                "<idGroup number=\"22\"/>\n" +
-                                "<idGroup number=\"23\"/>\n" +
-                                "<idGroup number=\"24\"/>\n" +
-                                "<idGroup number=\"25\"/>\n" +
-                                "<idGroup number=\"26\"/>\n" +
-                                "<idGroup number=\"27\"/>\n" +
-                                "<idGroup number=\"28\"/>\n" +
-                                "<idGroup number=\"29\"/>\n" +
+                                "<idGroup name=\"20\"/>\n" +
+                                "<idGroup name=\"21\"/>\n" +
+                                "<idGroup name=\"22\"/>\n" +
+                                "<idGroup name=\"23\"/>\n" +
+                                "<idGroup name=\"24\"/>\n" +
+                                "<idGroup name=\"25\"/>\n" +
+                                "<idGroup name=\"26\"/>\n" +
+                                "<idGroup name=\"27\"/>\n" +
+                                "<idGroup name=\"28\"/>\n" +
+                                "<idGroup name=\"29\"/>\n" +
                             "</idGroups>" +
                         "</attribute>" +
                         "<attribute id=\"a835f4cc-c85d-4606-996a-93b89b36ae36\" name=\"SimpleAttribute4\" isKeyField=\"true\"/>" +
