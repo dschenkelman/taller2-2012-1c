@@ -137,6 +137,9 @@ public class ProjectContext implements IProjectContext {
 
 	@Override
 	public Diagram getContextDiagram(String diagramName) {
+		for (Diagram diagram : this.projectDiagram)
+			if (diagram.getName().equals(diagramName))
+				return diagram;
 		return null;
 	}
 }

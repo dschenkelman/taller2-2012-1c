@@ -131,9 +131,10 @@ public class MockProjectContext implements IProjectContext,IRelationshipEventLis
 	}
 
 	@Override
-	public Diagram getContextDiagram(String defaultDiagramName) {
-		// TODO Auto-generated method stub
-		return null;
+	public Diagram getContextDiagram(String diagramName) {
+		Diagram diagram = new Diagram();
+		diagram.setName(diagramName);
+		return diagram;
 	}
 
 	@Override
