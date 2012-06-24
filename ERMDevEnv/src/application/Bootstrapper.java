@@ -11,6 +11,8 @@ import javax.swing.text.html.parser.Entity;
 import controllers.factories.*;
 import controllers.factories.mock.MockEntityControllerFactory;
 import controllers.factories.mock.MockHierarchyControllerFactory;
+import infrastructure.FileSystemService;
+import infrastructure.IFileSystemService;
 import infrastructure.IProjectContext;
 import infrastructure.ProjectContext;
 
@@ -119,6 +121,7 @@ public class Bootstrapper {
 					.as(CACHE).addComponent(IDiagramControllerFactory.class, DiagramControllerFactory.class)
 					.addComponent(IProjectController.class, ProjectController.class)
 					.addComponent(IProjectView.class, ProjectView.class)
+					.as(CACHE).addComponent(IFileSystemService.class, FileSystemService.class)
 					.as(CACHE).addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class);
 	}
 

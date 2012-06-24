@@ -28,6 +28,7 @@ import controllers.ProjectController;
 import controllers.factories.tests.mocks.MockDiagramControllerFactory;
 import controllers.tests.mocks.MockDiagramController;
 import controllers.tests.mocks.MockDiagramXmlManager;
+import controllers.tests.mocks.MockFileSystemService;
 import controllers.tests.mocks.MockProjectContext;
 import controllers.tests.mocks.MockProjectView;
 import controllers.tests.mocks.MockShell;
@@ -49,6 +50,8 @@ public class ProjectControllerTestCase {
 	
 	private MockXmlFileManager xmlFileManager;
 	
+	private MockFileSystemService fileSystemService;
+	
 	@Before
 	public void setUp() throws Exception {
 		this.projectContext = new MockProjectContext();
@@ -59,6 +62,7 @@ public class ProjectControllerTestCase {
 		this.shell = new MockShell();
 		this.diagramXmlManager = new MockDiagramXmlManager();
 		this.xmlFileManager = new MockXmlFileManager();
+		this.fileSystemService = new MockFileSystemService();
 	}
 	
 	@Test
@@ -612,6 +616,13 @@ public class ProjectControllerTestCase {
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);
 	}
+	
+//	@Test
+//	public void testShouldNotOpenUnexistentProject() throws Exception {
+//		String projectName = UUID.randomUUID().toString();
+//		ProjectController controller = this.createController();
+//		Assert.assertFalse(controller.openProject(projectName));
+//	}
 
 	
 	private DefaultMutableTreeNode getNodeChildWithObject(DefaultMutableTreeNode node, String childName, Object object) {	
@@ -646,8 +657,9 @@ public class ProjectControllerTestCase {
 	}
 	
 	private ProjectController createController(){
-		return new ProjectController(this.projectContext, this.projectView, this.shell,
-				this.diagramControllerFactory, this.xmlFileManager, this.diagramXmlManager);
+		return new ProjectController(this.projectContext, this.projectView,
+				this.shell, this.diagramControllerFactory, this.xmlFileManager,
+				this.diagramXmlManager, this.fileSystemService);
 	}
 }
 

@@ -1,5 +1,6 @@
 package controllers;
 
+import infrastructure.IFileSystemService;
 import infrastructure.IProjectContext;
 import infrastructure.visual.DiagramTreeNode;
 
@@ -42,10 +43,13 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	private IXmlFileManager xmlFileManager;
 
 	private IXmlManager<Diagram> diagramXmlManager;
+
+	private IFileSystemService fileSystemService;
 	
 	public ProjectController(IProjectContext projectContext, IProjectView projectView, 
 			IShell shell, IDiagramControllerFactory diagramControllerFactory,
-			IXmlFileManager xmlFileManager, IXmlManager<Diagram> diagramXmlManager) {
+			IXmlFileManager xmlFileManager, IXmlManager<Diagram> diagramXmlManager, 
+			IFileSystemService fileSystemService) {
 		this.projectContext = projectContext;
 		this.diagramControllerFactory = diagramControllerFactory;
 		this.shell = shell;
@@ -53,6 +57,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		this.projectView.setController(this);
 		this.xmlFileManager = xmlFileManager;
 		this.diagramXmlManager = diagramXmlManager;
+		this.fileSystemService = fileSystemService;
 	}
 
 	public void createProject(String projectName) {
@@ -147,18 +152,20 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	}
 
 	@Override
-	public void openProject(String projectName) throws Exception {
+	public boolean openProject(String projectName) throws Exception {
 		this.projectContext.setName(projectName);
+		if (!this.fileSystemService.exists(this.projectContext.getDataDirectory(), DefaultDiagramName)) {
+			return false;
+		}
 		this.loadDiagram(DefaultDiagramName, null);
 		this.diagramController = this.diagramControllerFactory.create();
-		this.diagramController.getDiagram().setName(DefaultDiagramName);
 		this.diagramController.addListener(this);
 		
-		Diagram mainDiagram = this.diagramController.getDiagram();
-		this.diagramController.load(mainDiagram);
+		this.diagramController.load(this.projectContext.getContextDiagram(DefaultDiagramName));
 		
 		this.shell.setRightContent(this.diagramController.getView());
 		this.shell.activateFullSize();
+		return true;
 	}
 	
 	private void loadDiagram(String diagramName, DiagramTreeNode parentTreeNode) throws Exception{
@@ -181,7 +188,6 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		}
 		
 		this.projectContext.addProjectDiagram(diagram);
-		this.projectContext.addContextDiagram(diagram);
 		
 		for (String childDiagramName : diagram.getSubDiagramNames()) {
 			this.loadDiagram(childDiagramName, currentTreeNode);
