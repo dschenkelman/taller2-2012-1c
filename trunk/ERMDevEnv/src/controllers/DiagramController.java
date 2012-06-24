@@ -219,8 +219,8 @@ public class DiagramController extends BaseController
 				
 				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, relationship.getId(), attributeX, attributeY);
 				
-				boolean isKey = attribute.isKey();
-				this.addAttributeConnectorToGraph(parent, relationship.getId(), relationshipCell, attribute, attributeCell, isKey);
+				//boolean isKey = attribute.isKey();
+				this.addAttributeConnectorToGraph(parent, relationship.getId(), relationshipCell, attribute, attributeCell, false);
 				
 				currentAttributeAngle += partialAttributeAngle;
 			}
@@ -255,8 +255,8 @@ public class DiagramController extends BaseController
 				double attributeY = centerY + yDistance;
 				
 				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, this.pendingEntity.getId(), attributeX, attributeY);
-				boolean isKey = attribute.isKey();
-				this.addAttributeConnectorToGraph(parent, this.pendingEntity.getId(), entityCell, attribute, attributeCell, isKey);
+				//boolean isKey = attribute.isKey();
+				this.addAttributeConnectorToGraph(parent, this.pendingEntity.getId(), entityCell, attribute, attributeCell, false);
 				currentAngle += partialAngle;
 			}
 		}
