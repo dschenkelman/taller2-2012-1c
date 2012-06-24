@@ -17,30 +17,30 @@ public class IdGroupCollection {
     }
 
     public IdGroup addIdGroup(IdGroup idGroup) throws Exception {
-        if (!this.exists(idGroup.getNumber())) {
+        if (!this.exists(idGroup.getName())) {
             this.idGroups.add(idGroup);
             return idGroup;
         } else {
-            throw new Exception("Group's number: " + idGroup.getNumber() + "already exists for this id");
+            throw new Exception("Group's name : " + idGroup.getName() + "already exists for this id");
         }
     }
 
     public void removeIdGroup(IdGroup idGroup) throws Exception {
 
-        if (this.exists(idGroup.getNumber())) {
+        if (this.exists(idGroup.getName())) {
             this.idGroups.remove(idGroup);
         } else {
-            throw new Exception("Group's number: " + idGroup.getNumber() + "do not exists");
+            throw new Exception("Group's number: " + idGroup.getName() + "do not exists");
         }
 
     }
 
-    public IdGroup getIdGroup(Integer number){
-        return IterableExtensions.firstOrDefault(this.idGroups, new IntegerCmpFunc(), number);
+    public IdGroup getIdGroup(String name){
+        return IterableExtensions.firstOrDefault(this.idGroups, new IntegerCmpFunc(), name);
     }
 
-    public boolean exists(Integer idGroup) {
-        return IterableExtensions.firstOrDefault(this.idGroups, new IntegerCmpFunc(), idGroup) != null;
+    public boolean exists(String name) {
+        return IterableExtensions.firstOrDefault(this.idGroups, new IntegerCmpFunc(), name) != null;
     }
 
     public int count() {
@@ -50,11 +50,11 @@ public class IdGroupCollection {
 
     private ArrayList<IdGroup> idGroups;
 
-    private class IntegerCmpFunc extends Func<IdGroup, Integer, Boolean> {
+    private class IntegerCmpFunc extends Func<IdGroup, String, Boolean> {
 
         @Override
-        public Boolean execute(IdGroup idGroup, Integer idGroupNumber) {
-            return idGroup.getNumber().equals(idGroupNumber);
+        public Boolean execute(IdGroup idGroup, String idGroupNumber) {
+            return idGroup.getName().equals(idGroupNumber);
         }
     }
 
