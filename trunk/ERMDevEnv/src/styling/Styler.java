@@ -27,12 +27,24 @@ public class Styler {
 		return String.format("exitX=%s;exitY=%s", exitX, exitY);
 	}
 	
-	public static String getAttributeConnectorStyle(AttributeType type, boolean isKey){
+	public static String getAttributeConnectorStyle(AttributeType type, boolean isKey, boolean isComposite){
+		if (isComposite){
+			return StyleConstants.COMPOSED_ATTRIBUTE_LINK_STYLE;
+		}
+		
 		if (type == AttributeType.calculated){
 			return StyleConstants.CALCULATED_ATTRIBUTE_LINK_STYLE;
 		}
 		
 		return StyleConstants.ATTRIBUTE_LINK_STYLE;
+	}
+	
+	public static String getAttributeStyle(boolean isComposite){
+		if (isComposite){
+			return StyleConstants.COMPOSED_ATTRIBUTE_STYLE;
+		}
+		
+		return StyleConstants.ATTRIBUTE_STYLE;
 	}
 
 }

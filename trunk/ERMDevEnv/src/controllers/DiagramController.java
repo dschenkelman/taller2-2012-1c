@@ -26,6 +26,7 @@ import styling.StyleConstants;
 import styling.Styler;
 
 import models.Attribute;
+import models.AttributeCollection;
 import models.Cardinality;
 import models.Diagram;
 import models.Entity;
@@ -217,10 +218,10 @@ public class DiagramController extends BaseController
 				double attributeX = centerX + xDistance;
 				double attributeY = centerY + yDistance;
 				
-				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, relationship.getId(), attributeX, attributeY);
+				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, relationship.getId(), attributeX, attributeY, false);
 				
 				//boolean isKey = attribute.isKey();
-				this.addAttributeConnectorToGraph(parent, relationship.getId(), relationshipCell, attribute, attributeCell, false);
+				this.addAttributeConnectorToGraph(parent, relationship.getId(), relationshipCell, attribute, attributeCell, false, false);
 				
 				currentAttributeAngle += partialAttributeAngle;
 			}
@@ -240,25 +241,7 @@ public class DiagramController extends BaseController
 		Object parent = this.graph.getDefaultParent();
 		try {
 			mxCell entityCell = this.addEntityToGraph(this.pendingEntity, parent, x, y);
-			double centerX = entityCell.getGeometry().getCenterX();
-			double centerY = entityCell.getGeometry().getCenterY();
-			
-			int attributeCount = this.pendingEntity.getAttributes().count();
-			double partialAngle = (2 * Math.PI) / attributeCount != 0 ? attributeCount : 0;
-			double currentAngle = 0;
-			
-			for (Attribute attribute : this.pendingEntity.getAttributes()) {
-				double xDistance = Math.cos(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
-				double yDistance = Math.sin(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
-				
-				double attributeX = centerX + xDistance;
-				double attributeY = centerY + yDistance;
-				
-				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, this.pendingEntity.getId(), attributeX, attributeY);
-				//boolean isKey = attribute.isKey();
-				this.addAttributeConnectorToGraph(parent, this.pendingEntity.getId(), entityCell, attribute, attributeCell, false);
-				currentAngle += partialAngle;
-			}
+			this.addAttributesToElement(parent, entityCell, this.pendingEntity.getAttributes());
 		}
 		finally {
 			this.diagram.getEntities().add(this.pendingEntity);
@@ -269,6 +252,35 @@ public class DiagramController extends BaseController
 		}
 		
 		this.pendingEntity = null;
+	}
+
+	private void addAttributesToElement(Object parent, mxCell elementCell, AttributeCollection attributes) {
+		double centerX = elementCell.getGeometry().getCenterX();
+		double centerY = elementCell.getGeometry().getCenterY();
+		
+		int attributeCount = attributes.count();
+		double partialAngle = (2 * Math.PI) / attributeCount != 0 ? attributeCount : 0;
+		double currentAngle = 0;
+		
+		for (Attribute attribute : attributes) {
+			double xDistance = Math.cos(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
+			double yDistance = Math.sin(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
+			
+			double attributeX = centerX + xDistance;
+			double attributeY = centerY + yDistance;
+			
+			AttributeCollection childAttributes = attribute.getAttributes();
+			
+			boolean isComposite = childAttributes.count() != 0;
+			mxCell attributeCell = this.addAttributeToGraph(attribute, parent, this.pendingEntity.getId(), attributeX, attributeY, isComposite);
+			this.addAttributeConnectorToGraph(parent, this.pendingEntity.getId(), elementCell, attribute, attributeCell, false, isComposite);
+			
+			if (isComposite){
+				this.addAttributesToElement(parent, attributeCell, childAttributes);
+			}
+			
+			currentAngle += partialAngle;
+		}
 	}
 
 	private mxCell addRelationshipConnectorToGraph(Object parent, Relationship relationship, mxCell relationshipCell,
@@ -296,7 +308,7 @@ public class DiagramController extends BaseController
 		} 
 		
 		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.RelationshipConnectorPrefix + connectorId, displayValue, 
-				relationshipCell, entityCell, StyleConstants.RELATIONSHIP_CONNECTOR_STYLE + exitStyle);
+				relationshipCell, entityCell, StyleConstants.RELATIONSHIP_LINK_STYLE + exitStyle);
 		
 		this.relationshipConnectorCells.put(CellConstants.RelationshipConnectorPrefix + connectorId, connectorCell);
 		
@@ -304,22 +316,24 @@ public class DiagramController extends BaseController
 	}
 
 	private mxCell addAttributeConnectorToGraph(Object parent, UUID ownerId, mxCell entityCell,
-			Attribute attribute, mxCell attributeCell, boolean isKey) { 
+			Attribute attribute, mxCell attributeCell, boolean isKey, boolean isComposite) { 
 		String attributeConnectorId = ownerId.toString()+attribute.getName();
 		
 		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.AttributeConnectorPrefix + attributeConnectorId, "", 
-				entityCell, attributeCell, Styler.getAttributeConnectorStyle(attribute.getType(), isKey));
+				entityCell, attributeCell, Styler.getAttributeConnectorStyle(attribute.getType(), isKey, isComposite));
 		
 		this.attributeConnectorCells.put(CellConstants.AttributeConnectorPrefix + attributeConnectorId, connectorCell);
 		
 		return connectorCell;		
 	}
 
-	private mxCell addAttributeToGraph(Attribute attribute, Object parent, UUID ownerId, double x, double y) {
+	private mxCell addAttributeToGraph(Attribute attribute, Object parent, UUID ownerId, double x, double y, boolean isComposite) {
 		String attributeId = ownerId.toString()+attribute.getName();
 		mxCell attributeCell = (mxCell) this.graph.insertVertex(parent, CellConstants.AttributePrefix +  attributeId, 
 				attribute.getName(), x, y,
-				StyleConstants.ATTRIBUTE_WIDTH, StyleConstants.ATTRIBUTE_HEIGHT);
+				isComposite ? StyleConstants.COMPOSED_ATTRIBUTE_WIDTH : StyleConstants.ATTRIBUTE_WIDTH,
+				isComposite ? StyleConstants.COMPOSED_ATTRIBUTE_HEIGHT : StyleConstants.ATTRIBUTE_HEIGHT,
+				Styler.getAttributeStyle(isComposite));
 		
 		this.attributeCells.put(CellConstants.AttributePrefix + attributeId, attributeCell);
 
@@ -576,7 +590,7 @@ public class DiagramController extends BaseController
 		mxCell childCell = this.getEntityCell(stringId);
 		
 		mxCell hierarchyConnectorCell = (mxCell) this.graph
-			.insertEdge(parent, CellConstants.HierarchyConnectorPrefix + hierarchyId.toString() + childId, "", childCell, hierarchyNode, StyleConstants.HIERARCHY_CHILD_CONNECTOR_STYLE);
+			.insertEdge(parent, CellConstants.HierarchyConnectorPrefix + hierarchyId.toString() + childId, "", childCell, hierarchyNode, StyleConstants.HIERARCHY_CHILD_LINK_STYLE);
 		
 		this.hierarchyConnectorCells.put(CellConstants.HierarchyConnectorPrefix + hierarchyId.toString() + childId, hierarchyConnectorCell);
 	}
@@ -588,7 +602,7 @@ public class DiagramController extends BaseController
 		double y = parentCell.getGeometry().getCenterY() + StyleConstants.ENTITY_HEIGHT / 2 + StyleConstants.HIERARCHY_DISTANCE_TO_PARENT;
 		mxCell hierarchyNode = (mxCell) this.graph.insertVertex(parent, CellConstants.HierarchyNodePrefix + hierarchy.getId().toString(), "", x, y, 0, 0);
 		mxCell hierarchyConnectorCell = (mxCell) this.graph
-			.insertEdge(parent, CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + parentId, hierarchy.getSummary(), hierarchyNode, parentCell, StyleConstants.HIERARCHY_PARENT_CONNECTOR_STYLE);
+			.insertEdge(parent, CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + parentId, hierarchy.getSummary(), hierarchyNode, parentCell, StyleConstants.HIERARCHY_PARENT_LINK_STYLE);
 		this.hierarchyNodeCells.put(CellConstants.HierarchyNodePrefix + hierarchy.getId().toString(), hierarchyNode);
 		this.hierarchyConnectorCells.put(CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + parentId, hierarchyConnectorCell);
 		

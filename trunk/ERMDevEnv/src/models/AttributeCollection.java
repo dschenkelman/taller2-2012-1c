@@ -22,7 +22,6 @@ public class AttributeCollection implements Iterable<Attribute> {
     }
 
     public static Attribute createItemInstance(String name, Cardinality cardinality, IdGroupCollection idGroup, AttributeType type, String expression) {
-
         return new Attribute(name, cardinality, idGroup, type, expression);
     }
 
