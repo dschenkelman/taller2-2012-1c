@@ -7,15 +7,19 @@ package views;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.tree.MutableTreeNode;
 
 import com.jgoodies.forms.factories.*;
 
 import com.jgoodies.forms.layout.*;
 import controllers.IKeysController;
+import infrastructure.visual.AttributeTreeNode;
 import models.IKey;
 import models.IdGroup;
 import models.IdGroupCollection;
@@ -42,7 +46,27 @@ public class KeyView extends JFrame implements IKeysView {
             public void valueChanged(ListSelectionEvent e) {
                 cleanView();
                 idGroupSelected = (IdGroup) idGroupList.getSelectedValue();
-                refreshKeyListWithIdGroup(idGroupSelected);
+                if (idGroupSelected != null)
+                    refreshKeyListWithIdGroup(idGroupSelected);
+            }
+        });
+        this.idGroupList.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    controller.removeIdGroupFromAllIdGroups((IdGroup) idGroupList.getSelectedValue());
+                    idGroupListModel.removeElement(idGroupList.getSelectedValue());
+                    cleanView();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                //To change body of implemented methods use File | Settings | File Templates.
             }
         });
         this.currentKeysList.addListSelectionListener(new ListSelectionListener() {
@@ -162,6 +186,8 @@ public class KeyView extends JFrame implements IKeysView {
         this.possibleKeysList.setModel(this.possibleKeysListModel);
         this.idGroupNameTextField.setText("");
         this.idGroupSelected = null;
+        idGroupList.revalidate();
+        idGroupList.repaint();
         updateKeysList();
     }
 

@@ -1,6 +1,7 @@
 package controllers;
 
 import controllers.listeners.IIdGroupEventListener;
+import models.IdGroup;
 import views.IKeysView;
 
 public interface IKeysController {
@@ -14,4 +15,6 @@ public interface IKeysController {
     public void removeIdGroupFromKey();
 
     boolean validIdGroupName(String name);
+
+    void removeIdGroupFromAllIdGroups(IdGroup selectedValue);
 }

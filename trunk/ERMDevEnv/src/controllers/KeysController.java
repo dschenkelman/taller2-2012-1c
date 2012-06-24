@@ -56,6 +56,19 @@ public class KeysController extends BaseController implements IKeysController {
     }
 
     @Override
+    public void removeIdGroupFromAllIdGroups(IdGroup selectedValue) {
+        for (IKey iKey : possibleKeys) {
+            if (iKey.getIdGroup().exists(selectedValue.getName())) {
+                try {
+                    iKey.getIdGroup().removeIdGroup(selectedValue);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
     public void addIdGroupToKey() {
         IdGroup idGroup = this.keysView.getIdGroupSelected();
         IKey key = this.keysView.getKeySelectedToAdd();
