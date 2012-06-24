@@ -194,7 +194,7 @@ public class ProjectControllerTestCase {
 
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
 		
-		Assert.assertNotNull(this.getNodeChildWithObject(root, "Entidades", entity));
+		Assert.assertNotNull(this.getNodeChildWithObject(root, "Entities", entity));
 		
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);
@@ -212,7 +212,7 @@ public class ProjectControllerTestCase {
 
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
 		
-		Assert.assertNotNull(this.getNodeChildWithObject(root, "Relaciones", relationship));
+		Assert.assertNotNull(this.getNodeChildWithObject(root, "Relationships", relationship));
 		
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);
@@ -234,7 +234,7 @@ public class ProjectControllerTestCase {
 		
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
 		
-		Assert.assertNotNull(this.getNodeChildWithObject(root, "Sub-Diagramas", subDiagram));
+		Assert.assertNotNull(this.getNodeChildWithObject(root, "Sub-Diagrams", subDiagram));
 		
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);
@@ -306,13 +306,13 @@ public class ProjectControllerTestCase {
 		
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
 		
-		DefaultMutableTreeNode subDiagramNode = this.getNodeChildWithObject(root, "Sub-Diagramas", subDiagram);
+		DefaultMutableTreeNode subDiagramNode = this.getNodeChildWithObject(root, "Sub-Diagrams", subDiagram);
 		Assert.assertNotNull(subDiagramNode);
 		
 		Entity entity = new Entity("Product");
 		controller.handleEntityAdded(this.diagramController.getDiagram(), entity);
 
-		Assert.assertNotNull(this.getNodeChildWithObject(subDiagramNode, "Entidades", entity));
+		Assert.assertNotNull(this.getNodeChildWithObject(subDiagramNode, "Entities", entity));
 		
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);
@@ -545,18 +545,44 @@ public class ProjectControllerTestCase {
 		
 		DefaultMutableTreeNode root = ((DefaultMutableTreeNode)controller.getProjectTree().getRoot());
 		Assert.assertSame(main, root.getUserObject());
-		DefaultMutableTreeNode child1 = this.getNodeChildWithObject(root, "Sub-Diagramas", level1_1);
-		DefaultMutableTreeNode child2 = this.getNodeChildWithObject(root, "Sub-Diagramas", level1_2);
+		DefaultMutableTreeNode child1 = this.getNodeChildWithObject(root, "Sub-Diagrams", level1_1);
+		DefaultMutableTreeNode child2 = this.getNodeChildWithObject(root, "Sub-Diagrams", level1_2);
 		Assert.assertNotNull(child1);
 		Assert.assertNotNull(child2);
 		
-		DefaultMutableTreeNode child1_1 = this.getNodeChildWithObject(child1, "Sub-Diagramas", level2_1_1);
-		DefaultMutableTreeNode child1_2 = this.getNodeChildWithObject(child1, "Sub-Diagramas", level2_1_2);
-		DefaultMutableTreeNode child2_1 = this.getNodeChildWithObject(child2, "Sub-Diagramas", level2_2_1);
+		DefaultMutableTreeNode child1_1 = this.getNodeChildWithObject(child1, "Sub-Diagrams", level2_1_1);
+		DefaultMutableTreeNode child1_2 = this.getNodeChildWithObject(child1, "Sub-Diagrams", level2_1_2);
+		DefaultMutableTreeNode child2_1 = this.getNodeChildWithObject(child2, "Sub-Diagrams", level2_2_1);
 		
 		Assert.assertNotNull(child1_1);
 		Assert.assertNotNull(child1_2);
 		Assert.assertNotNull(child2_1);
+	}
+	
+	@Test
+	public void testShouldSaveChildDiagramWhenCreatingSubDiagram(){
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		controller.createProject(projectName);
+		
+		MockDiagramController parentController = (MockDiagramController) controller.getCurrentDiagramController();
+		
+		Diagram subDiagram = new Diagram();
+		MockDiagramController childController = new MockDiagramController();
+		childController.setDiagram(subDiagram);
+		this.diagramControllerFactory.setController(childController);
+		
+		Assert.assertEquals(0, childController.getSaveCalls());
+		Assert.assertEquals(0, parentController.getSaveCalls());
+		
+		controller.handleSubDiagramCreated(controller.getCurrentDiagramController().getDiagram(), "ChildDiagram");
+		
+		Assert.assertEquals(1, childController.getSaveCalls());
+		Assert.assertEquals(1, parentController.getSaveCalls());
+	
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
 	}
 	
 	private DefaultMutableTreeNode getNodeChildWithObject(DefaultMutableTreeNode node, String childName, Object object) {	
@@ -595,4 +621,5 @@ public class ProjectControllerTestCase {
 				this.diagramControllerFactory, this.xmlFileManager, this.diagramXmlManager);
 	}
 }
+
 
