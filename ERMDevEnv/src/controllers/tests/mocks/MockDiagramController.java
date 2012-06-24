@@ -30,10 +30,13 @@ public class MockDiagramController implements IDiagramController {
 
 	private Diagram loadedDiagram;
 	
+	private boolean called;
+	
 	public MockDiagramController(){
 		this.diagram = new Diagram();
 		this.view = new MockDiagramView();
 		this.listeners = new ArrayList<IDiagramEventListener>();
+		this.called = false;
 	}
 	
 	@Override
@@ -138,6 +141,7 @@ public class MockDiagramController implements IDiagramController {
 	@Override
 	public void load(Diagram diagram) {
 		this.loadedDiagram = diagram;
+		this.called = true;
 	}
 	
 	public int getSaveCalls(){
@@ -146,5 +150,9 @@ public class MockDiagramController implements IDiagramController {
 
 	public Diagram getLoadedDiagram() {
 		return loadedDiagram;
+	}
+
+	public boolean wasCalled() {
+		return this.called;
 	}
 }

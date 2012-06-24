@@ -621,7 +621,7 @@ public class DiagramController extends BaseController
 	
 	@Override
 	public void load(Diagram diagram) {
-		
+
 		this.diagram = diagram;
 		String fileName = this.getRepresentationFilePath();
 		this.graphPersistenceService.load(fileName, this.graph);

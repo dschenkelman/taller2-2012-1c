@@ -63,6 +63,7 @@ public class ProjectControllerTestCase {
 		this.diagramXmlManager = new MockDiagramXmlManager();
 		this.xmlFileManager = new MockXmlFileManager();
 		this.fileSystemService = new MockFileSystemService();
+		this.fileSystemService.setExistsReturnValue(true);
 	}
 	
 	@Test
@@ -621,12 +622,40 @@ public class ProjectControllerTestCase {
 		deleteFile(projectName);
 	}
 	
-//	@Test
-//	public void testShouldNotOpenUnexistentProject() throws Exception {
-//		String projectName = UUID.randomUUID().toString();
-//		ProjectController controller = this.createController();
-//		Assert.assertFalse(controller.openProject(projectName));
-//	}
+	@Test
+	public void testShouldNotOpenUnexistentProject() throws Exception {
+		this.fileSystemService.setExistsReturnValue(false);
+		
+		String projectName = UUID.randomUUID().toString();
+		ProjectController controller = this.createController();
+		Assert.assertFalse(controller.openProject(projectName));
+	}
+	
+	@Test
+	public void testShouldAddSelfAsListenerToDiagramWhenIsOpened() throws Exception{
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		
+		Assert.assertEquals(0, this.diagramController.getListeners().size());
+		
+		controller.openProject(projectName);
+		
+		Assert.assertEquals(1, this.diagramController.getListeners().size());
+		Assert.assertSame(controller, this.diagramController.getListeners().get(0));
+	}
+	
+	@Test
+	public void testShouldLoadADiagram() throws Exception{
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		
+		controller.openProject(projectName);
+		
+		Assert.assertTrue(this.diagramController.wasCalled());
+		Assert.assertEquals("Principal", this.diagramController.getLoadedDiagram().getName());
+	}
 
 	@Test
 	public void testShouldLoadDiagramIfItSelectedInTreeAndSaveOldOne() {
