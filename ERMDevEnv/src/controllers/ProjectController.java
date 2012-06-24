@@ -18,6 +18,7 @@ import persistence.IXmlManager;
 
 import models.Diagram;
 import models.Entity;
+import models.Hierarchy;
 import models.Relationship;
 
 import application.IShell;
@@ -185,5 +186,10 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		for (String childDiagramName : diagram.getSubDiagramNames()) {
 			this.loadDiagram(childDiagramName, currentTreeNode);
 		}
+	}
+
+	@Override
+	public void handleHierarchyAdded(Diagram diagram, Hierarchy hierarchy) {
+		this.currentDiagramNode.addHierarchy(hierarchy, this.projectTree, this.projectContext);
 	}
 }

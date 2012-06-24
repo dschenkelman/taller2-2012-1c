@@ -14,6 +14,7 @@ import javax.swing.tree.TreePath;
 
 import models.Diagram;
 import models.Entity;
+import models.Hierarchy;
 import models.Relationship;
 import models.RelationshipEntity;
 
@@ -21,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import controllers.DiagramController;
 import controllers.IProjectController;
 import controllers.ProjectController;
 import controllers.factories.tests.mocks.MockDiagramControllerFactory;
@@ -584,6 +586,33 @@ public class ProjectControllerTestCase {
 		deleteFile(projectName + "/Datos");
 		deleteFile(projectName);
 	}
+	
+	@Test
+	public void testShouldAddHierarchyToDiagramTreeNodeWhenHierarchyIsAddedToDiagram() throws Exception{
+		UUID parentId = UUID.randomUUID();
+		UUID child1Id = UUID.randomUUID();
+		UUID child2Id = UUID.randomUUID();
+		
+		Hierarchy hierarchy = new Hierarchy();
+		hierarchy.setGeneralEntityId(parentId);
+		hierarchy.addChildEntity(child1Id);
+		hierarchy.addChildEntity(child2Id);
+		
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		controller.createProject(projectName);
+		
+		controller.handleHierarchyAdded(this.diagramController.getDiagram(), hierarchy);
+
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)controller.getProjectTree().getRoot();
+		
+		Assert.assertNotNull(this.getNodeChildWithObject(root, "Hierarchies", hierarchy));
+		
+		deleteFile(projectName + "/Datos");
+		deleteFile(projectName);
+	}
+
 	
 	private DefaultMutableTreeNode getNodeChildWithObject(DefaultMutableTreeNode node, String childName, Object object) {	
 		Enumeration children = node.children();
