@@ -9,7 +9,7 @@ public interface IProjectContext {
 	String getName();
 	void setName(String name);
 	String getDataDirectory();
-	void clear();
+	void clearContextDiagrams();
 	Iterable<Entity> getAllEntities(Entity entityToExclude);
 	Iterable<Entity> getContextEntities(Entity entityToExclude);
 	Iterable<Entity> getContextEntities();

@@ -141,14 +141,29 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	public void changeElement(TreePath treePath) {
 		if (treePath == null)
 			return;
-		this.projectContext.clear();
+		this.projectContext.clearContextDiagrams();
+		Diagram diagramToLoad = null;
 		for (Object o : treePath.getPath()) {
 			if (o instanceof DiagramTreeNode) {
 				DiagramTreeNode node = (DiagramTreeNode) o;
 				Diagram diagram = (Diagram) node.getUserObject();
+				diagramToLoad = diagram;
 				this.projectContext.addContextDiagram(diagram);
 			}
 		}
+		
+		IDiagramController newController = this.diagramControllerFactory.create();
+		
+		try {
+			this.diagramController.save();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		
+		this.diagramController = newController;
+		this.diagramController.addListener(this);
+		this.diagramController.load(diagramToLoad);
+		this.shell.setRightContent(this.diagramController.getView());
 	}
 
 	@Override
