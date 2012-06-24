@@ -3,14 +3,12 @@ package controllers;
 import controllers.factories.IAttributeControllerFactory;
 import controllers.factories.IKeysControllerFactory;
 import controllers.listeners.IEntityEventListener;
-import controllers.listeners.IIdGroupEventListener;
 import models.*;
 import views.IEntityView;
 
 import infrastructure.IProjectContext;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,9 +22,9 @@ public class EntityController extends BaseController implements IEntityControlle
     private IAttributeControllerFactory attributeControllerFactory;
     private IAttributeController attributeController;
 
-    public EntityController(IProjectContext projectContext, Entity entity, IEntityView entityView, IAttributeControllerFactory attributeControllerFactory, IKeysControllerFactory keysControllerFactory) {
+    public EntityController(IProjectContext projectContext, IEntityView entityView, IAttributeControllerFactory attributeControllerFactory, IKeysControllerFactory keysControllerFactory) {
         super(projectContext);
-        this.pendingEntity = entity;
+        this.pendingEntity = new Entity("");
         this.attributeControllerFactory = attributeControllerFactory;
         this.keysControllerFactory = keysControllerFactory;
         this.listeners = new ArrayList<IEntityEventListener>();

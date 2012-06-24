@@ -46,8 +46,7 @@ public class EntityControllerTest {
 		entityCollection.add(ENTITY_NAME, EntityType.Domain);
 
 		this.mockProjectContext.setEntityCollection(entityCollection);
-		entityController = new EntityController(mockProjectContext, new Entity(
-				""), mockEntityView, mockAttributeControllerFactory,
+		entityController = new EntityController(mockProjectContext, mockEntityView, mockAttributeControllerFactory,
 				mockKeyControllerFactory);
 		entityController.create();
 
@@ -85,8 +84,8 @@ public class EntityControllerTest {
 		mockAttributeControllerFactory
 				.setAttributeController(mockAttributeController);
 		
-		entityController = new EntityController(mockProjectContext, new Entity(
-				""), mockEntityView, mockAttributeControllerFactory,
+		entityController = new EntityController(mockProjectContext, 
+				mockEntityView, mockAttributeControllerFactory,
 				mockKeyControllerFactory);
 		this.entityController.addSubscriber(this.mockEntityCreatedListener);
 		entityController.create();
@@ -110,8 +109,8 @@ public class EntityControllerTest {
 
 	@Test
 	public void TestSelectKeys() {
-		entityController = new EntityController(mockProjectContext, new Entity(
-				""), new MockEntityView(), mockAttributeControllerFactory,
+		entityController = new EntityController(mockProjectContext, 
+				new MockEntityView(), mockAttributeControllerFactory,
 				mockKeyControllerFactory);
 		entityController.create();
 
@@ -140,8 +139,8 @@ public class EntityControllerTest {
 				.setAttributeController(mockAttributeController);
 		mockKeyControllerFactory = new MockKeyControllerFactory();
 		mockKeyController = new MockKeyController();
-		entityController = new EntityController(mockProjectContext, new Entity(
-				""), mockEntityView, mockAttributeControllerFactory,
+		entityController = new EntityController(mockProjectContext, 
+				mockEntityView, mockAttributeControllerFactory,
 				mockKeyControllerFactory);
 
 		mockAttributeControllerFactory

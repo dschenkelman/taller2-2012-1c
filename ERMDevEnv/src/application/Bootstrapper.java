@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
+import javax.swing.text.html.parser.Entity;
+
 import controllers.factories.*;
 import controllers.factories.mock.MockEntityControllerFactory;
 import controllers.factories.mock.MockHierarchyControllerFactory;
@@ -29,14 +31,18 @@ import persistence.IXmlFileManager;
 import persistence.IXmlManager;
 import persistence.XmlFileManager;
 import views.DiagramView;
+import views.EntityView;
 import views.HierarchyView;
 import views.IDiagramView;
+import views.IEntityView;
 import views.IHierarchyView;
 import views.IProjectView;
 import views.ProjectView;
 import controllers.DiagramController;
+import controllers.EntityController;
 import controllers.HierarchyController;
 import controllers.IDiagramController;
+import controllers.IEntityController;
 import controllers.IHierarchyController;
 import controllers.IProjectController;
 import controllers.ProjectController;
@@ -102,6 +108,8 @@ public class Bootstrapper {
 					.as(CACHE).addComponent(IXmlFileManager.class, XmlFileManager.class)
 					.as(CACHE).addComponent(IProjectContext.class, ProjectContext.class)
 					.as(CACHE).addComponent(IEntityControllerFactory.class, EntityControllerFactory.class)
+					.addComponent(IEntityController.class, EntityController.class)
+					.addComponent(IEntityView.class, EntityView.class)
 					.as(CACHE).addComponent(IRelationshipControllerFactory.class, RelationshipControllerFactory.class)
 					.as(CACHE).addComponent(IHierarchyControllerFactory.class, HierarchyControllerFactory.class)
 					.addComponent(IHierarchyController.class, HierarchyController.class)
