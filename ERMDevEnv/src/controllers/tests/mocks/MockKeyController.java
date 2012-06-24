@@ -29,11 +29,6 @@ public class MockKeyController implements IKeysController {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public void setToKey(boolean bool) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public void setKeys(Iterable<IKey> iKeys) {
         this.iKeys = iKeys;
     }

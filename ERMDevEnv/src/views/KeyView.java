@@ -70,7 +70,7 @@ public class KeyView extends JFrame implements IKeysView {
         this.newIdGroupButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                idGroupListModel.addElement(new IdGroup(getNextNumber(), false));
+                idGroupListModel.addElement(new IdGroup(getNextNumber().toString()));
                 cleanView();
             }
         });
@@ -135,7 +135,7 @@ public class KeyView extends JFrame implements IKeysView {
     public Iterable<IKey> getKeysOfIdGroupSelected() {
         List<IKey> iKeyList = new ArrayList<IKey>();
         for (IKey key : this.possibleKeys) {
-            if (key.getIdGroup().exists(idGroupSelected.getNumber()))
+            if (key.getIdGroup().exists(idGroupSelected.getName()))
                 iKeyList.add(key);
         }
         return iKeyList;
@@ -158,7 +158,7 @@ public class KeyView extends JFrame implements IKeysView {
     }
 
     private void refreshKeyListWithIdGroup(IdGroup idGroupSelected) {
-        Integer id = idGroupSelected.getNumber();
+        String id = idGroupSelected.getName();
         for (IKey key : this.possibleKeys) {
             IdGroupCollection idGroupCollection = key.getIdGroup();
             if (idGroupCollection.exists(id)) {

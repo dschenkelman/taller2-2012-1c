@@ -21,7 +21,7 @@ public class IdGroupCollectionManagerXmlTest {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
         for (int i = 0; i < 10; i++) {
             try {
-                idGroupCollection.addIdGroup(new IdGroup(i,false));
+                idGroupCollection.addIdGroup(new IdGroup(String.valueOf(i)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -53,7 +53,7 @@ public class IdGroupCollectionManagerXmlTest {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
         for (int i = 0; i < 10; i++) {
             try {
-                idGroupCollection.addIdGroup(new IdGroup(i,false));
+                idGroupCollection.addIdGroup(new IdGroup(String.valueOf(i)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -83,8 +83,7 @@ public class IdGroupCollectionManagerXmlTest {
 
         for (int i = 0; i < 10; i++) {
             try {
-                Assert.assertEquals(true, idGroupCollectionFromXml.exists(i));
-                Assert.assertFalse(idGroupCollectionFromXml.getIdGroup(i).isKey());
+                Assert.assertEquals(true, idGroupCollectionFromXml.exists(String.valueOf(i)));
             } catch (Exception e) {
                 e.printStackTrace();
             }

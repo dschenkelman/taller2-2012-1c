@@ -10,8 +10,7 @@ public class IdGroupCollectionXmlManager implements IXmlManager<IdGroupCollectio
 
     private static String IDGROUPSTAG = "idGroups";
     private static String IDGROUPTAG = "idGroup";
-    private static String NUMBERATTRIBUTE = "number";
-    private static String ISKEYATTRIBUTE = "isKey";
+    private static String NAMEATTRIBUTE = "number";
 
     public IdGroupCollection getItemFromXmlElement(Element element) {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
@@ -19,7 +18,7 @@ public class IdGroupCollectionXmlManager implements IXmlManager<IdGroupCollectio
         for (int i = 0; i < idGroupList.getLength(); i++) {
             Element idGroupElement = (Element) idGroupList.item(i);
             try {
-                idGroupCollection.addIdGroup(new IdGroup(Integer.parseInt(idGroupElement.getAttribute(NUMBERATTRIBUTE)),Boolean.parseBoolean(idGroupElement.getAttribute(ISKEYATTRIBUTE))));
+                idGroupCollection.addIdGroup(new IdGroup(idGroupElement.getAttribute(NAMEATTRIBUTE)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -34,8 +33,7 @@ public class IdGroupCollectionXmlManager implements IXmlManager<IdGroupCollectio
         Iterable<IdGroup> idGroupList = idGroupCollection.getIdGroups();
         for (IdGroup idGroup : idGroupList) {
             Element idGroupElement = document.createElement(IDGROUPTAG);
-            idGroupElement.setAttribute(NUMBERATTRIBUTE, idGroup.getNumber().toString());
-            idGroupElement.setAttribute(ISKEYATTRIBUTE, idGroup.isKey().toString());
+            idGroupElement.setAttribute(NAMEATTRIBUTE, idGroup.getName());
             idGroupsElement.appendChild(idGroupElement);
         }
 

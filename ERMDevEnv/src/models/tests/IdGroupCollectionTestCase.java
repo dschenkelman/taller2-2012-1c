@@ -10,7 +10,7 @@ public class IdGroupCollectionTestCase {
     @Test
     public void testExists(){
         IdGroupCollection idGroupCollection = new IdGroupCollection();
-        Assert.assertEquals(false, idGroupCollection.exists(0));
+        Assert.assertEquals(false, idGroupCollection.exists(String.valueOf(0)));
     }
 
     @Test
@@ -18,11 +18,11 @@ public class IdGroupCollectionTestCase {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
 
         try {
-            idGroupCollection.addIdGroup(new IdGroup(0,false));
+            idGroupCollection.addIdGroup(new IdGroup(String.valueOf(0)));
         } catch (Exception e) {
             Assert.fail();
         }
-        Assert.assertEquals(true, idGroupCollection.exists(0));
+        Assert.assertEquals(true, idGroupCollection.exists(String.valueOf(0)));
     }
 
     @Test
@@ -30,14 +30,14 @@ public class IdGroupCollectionTestCase {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
 
         try {
-            idGroupCollection.addIdGroup(new IdGroup(0, false));
+            idGroupCollection.addIdGroup(new IdGroup(String.valueOf(0)));
         } catch (Exception e) {
             Assert.fail();
         }
         Assert.assertEquals(1, idGroupCollection.count());
 
         try {
-            idGroupCollection.addIdGroup(new IdGroup(1,false));
+            idGroupCollection.addIdGroup(new IdGroup(String.valueOf(1)));
         } catch (Exception e) {
             Assert.fail();
         }
@@ -49,27 +49,27 @@ public class IdGroupCollectionTestCase {
     public void testAddIdGroupCollectionAddFail() throws Exception {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
         try {
-            idGroupCollection.addIdGroup(new IdGroup(0,false));
+            idGroupCollection.addIdGroup(new IdGroup(String.valueOf(0)));
         } catch (Exception e) {
             Assert.fail();
         }
-        idGroupCollection.addIdGroup(new IdGroup(0,false));
+        idGroupCollection.addIdGroup(new IdGroup(String.valueOf(0)));
     }
 
     @Test
     public void testRemove() {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
 
-        IdGroup idGroup = new IdGroup(0,false);
+        IdGroup idGroup = new IdGroup(String.valueOf(0));
         try {
             idGroupCollection.addIdGroup(idGroup);
         } catch (Exception e) {
             Assert.fail();
         }
-        Assert.assertEquals(true, idGroupCollection.exists(0));
+        Assert.assertEquals(true, idGroupCollection.exists(String.valueOf(0)));
         try {
             idGroupCollection.removeIdGroup(idGroup);
-            Assert.assertEquals(false, idGroupCollection.exists(0));
+            Assert.assertEquals(false, idGroupCollection.exists(String.valueOf(0)));
         } catch (Exception e) {
             Assert.fail();
         }
@@ -79,7 +79,7 @@ public class IdGroupCollectionTestCase {
     public void testRemoveFail() throws Exception {
 
         IdGroupCollection idGroupCollection = new IdGroupCollection();
-        idGroupCollection.removeIdGroup(new IdGroup(0,false));
+        idGroupCollection.removeIdGroup(new IdGroup(String.valueOf(0)));
     }
 
 }

@@ -184,11 +184,11 @@ public class AttributeCollectionXMLManagerTestCase {
         assertTrue(att1.getType() == AttributeType.characterization);
         assertTrue(att1.getIdGroup() != null);
         for (int i = 0; i < 10; i++)
-            Assert.assertTrue(att1.getIdGroup().exists(i));
+            Assert.assertTrue(att1.getIdGroup().exists(String.valueOf(i)));
         for (int i = 10; i < 20; i++)
-            Assert.assertFalse(att1.getIdGroup().exists(i));
+            Assert.assertFalse(att1.getIdGroup().exists(String.valueOf(i)));
         for (int i = 20; i < 30; i++)
-            Assert.assertFalse(att1.getIdGroup().exists(i));
+            Assert.assertFalse(att1.getIdGroup().exists(String.valueOf(i)));
         assertTrue(att1.isKey());
 
         //Valido el attributo 2
@@ -199,11 +199,11 @@ public class AttributeCollectionXMLManagerTestCase {
         assertTrue(att2.getType() == AttributeType.calculated);
         assertTrue(att2.getIdGroup() != null);
         for (int i = 20; i < 30; i++)
-            Assert.assertTrue(att2.getIdGroup().exists(i));
+            Assert.assertTrue(att2.getIdGroup().exists(String.valueOf(i)));
         for (int i = 0; i < 10; i++)
-            Assert.assertFalse(att2.getIdGroup().exists(i));
+            Assert.assertFalse(att2.getIdGroup().exists(String.valueOf(i)));
         for (int i = 10; i < 20; i++)
-            Assert.assertFalse(att2.getIdGroup().exists(i));
+            Assert.assertFalse(att2.getIdGroup().exists(String.valueOf(i)));
         assertEquals(att2.getExpression(), "expression1");
         assertFalse(att2.isKey());
 
@@ -214,20 +214,20 @@ public class AttributeCollectionXMLManagerTestCase {
         assertEquals(subAtt1.getName(), "SimpleAttribute2");
         assertTrue(subAtt1.getIdGroup() != null);
         for (int i = 20; i < 30; i++)
-            Assert.assertFalse(subAtt1.getIdGroup().exists(i));
+            Assert.assertFalse(subAtt1.getIdGroup().exists(String.valueOf(i)));
         for (int i = 0; i < 10; i++)
-            Assert.assertFalse(subAtt1.getIdGroup().exists(i));
+            Assert.assertFalse(subAtt1.getIdGroup().exists(String.valueOf(i)));
         for (int i = 10; i < 20; i++)
-            Assert.assertTrue(subAtt1.getIdGroup().exists(i));
+            Assert.assertTrue(subAtt1.getIdGroup().exists(String.valueOf(i)));
         assertFalse(subAtt1.isKey());
 
         assertEquals(subAtt2.getName(), "SimpleAttribute3");
         for (int i = 20; i < 30; i++)
-            Assert.assertFalse(subAtt2.getIdGroup().exists(i));
+            Assert.assertFalse(subAtt2.getIdGroup().exists(String.valueOf(i)));
         for (int i = 0; i < 10; i++)
-            Assert.assertFalse(subAtt2.getIdGroup().exists(i));
+            Assert.assertFalse(subAtt2.getIdGroup().exists(String.valueOf(i)));
         for (int i = 10; i < 20; i++)
-            Assert.assertFalse(subAtt2.getIdGroup().exists(i));        assertTrue(subAtt2.isKey());
+            Assert.assertFalse(subAtt2.getIdGroup().exists(String.valueOf(i)));        assertTrue(subAtt2.isKey());
 
         //Valido el attributo 3
         assertEquals(att3.getName(), "SimpleAttribute4");

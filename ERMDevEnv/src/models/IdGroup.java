@@ -1,32 +1,22 @@
 package models;
 
 public class IdGroup {
-    Integer number;
-    Boolean isKey;
+    String name;
 
-    public IdGroup(Integer number, Boolean key) {
-        this.number = number;
-        this.isKey = key;
+    public IdGroup(String name) {
+        this.name = name;
     }
 
-    public Boolean isKey() {
-        return isKey;
+    public String getName() {
+        return name;
     }
 
-    public void isKey(Boolean isKey) {
-        this.isKey = isKey;
-    }
-
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
-        return "Id Group: " + this.number;
+        return "Id Group: " + this.name;
     }
 }

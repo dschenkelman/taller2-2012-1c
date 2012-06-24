@@ -38,9 +38,6 @@ public class KeysController extends BaseController implements IKeysController {
     public void removeIdGroupFromKey() {
         IdGroup idGroup = this.keysView.getIdGroupSelected();
         IKey key = this.keysView.getKeySelectedToRemove();
-        if (idGroup.isKey()) {
-            key.isKey(false);
-        }
         try {
             key.getIdGroup().removeIdGroup(idGroup);
         } catch (Exception e) {
@@ -52,21 +49,11 @@ public class KeysController extends BaseController implements IKeysController {
     public void addIdGroupToKey() {
         IdGroup idGroup = this.keysView.getIdGroupSelected();
         IKey key = this.keysView.getKeySelectedToAdd();
-        key.isKey(idGroup.isKey());
         try {
             key.getIdGroup().addIdGroup(idGroup);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public void setToKey(boolean bool) {
-        Iterable<IKey> keys = keysView.getKeysOfIdGroupSelected();
-        for (IKey key : keys) {
-            key.isKey(bool);
-        }
-    }
-
 
 }
