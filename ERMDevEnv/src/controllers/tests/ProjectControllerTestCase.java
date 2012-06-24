@@ -430,6 +430,7 @@ public class ProjectControllerTestCase {
 		Object[] path = {tree1, child1, child2, child4, tree2, tree3};
 		
 		ProjectController controller = this.createController();
+		controller.createProject("projectName");
 		controller.changeElement(new TreePath(path));
 		
 		List<Diagram> diagrams = this.projectContext.getContextDiagrams();
@@ -439,6 +440,9 @@ public class ProjectControllerTestCase {
 		Assert.assertSame(diagram1, diagrams.get(0));
 		Assert.assertSame(diagram2, diagrams.get(1));
 		Assert.assertSame(diagram3, diagrams.get(2));
+		
+		deleteFile("projectName/Datos");
+		deleteFile("projectName");
 	}
 	
 	@Test
@@ -624,6 +628,91 @@ public class ProjectControllerTestCase {
 //		Assert.assertFalse(controller.openProject(projectName));
 //	}
 
+	@Test
+	public void testShouldLoadDiagramIfItSelectedInTreeAndSaveOldOne() {
+		Diagram diagram1 = new Diagram();
+		Diagram diagram2 = new Diagram();
+		Diagram diagram3 = new Diagram();
+		diagram1.setName("1");
+		diagram2.setName("2");
+		diagram3.setName("3");
+		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1);
+		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2);
+		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3);
+		
+		DefaultMutableTreeNode diagramChild1 = new DefaultMutableTreeNode("dato1");
+		DefaultMutableTreeNode diagramChild2 = new DefaultMutableTreeNode("dato2");
+		
+		Object[] path = {diagramNode1, diagramChild1, diagramNode2, diagramChild2, diagramNode3};
+		
+		MockDiagramController newController = new MockDiagramController();
+		
+		ProjectController controller = this.createController();
+		controller.createProject("projectName");
+		
+		Assert.assertEquals(0, this.diagramController.getSaveCalls());
+		Assert.assertNull(newController.getLoadedDiagram());
+		Assert.assertEquals(1, this.diagramController.getListeners().size());
+		Assert.assertSame(controller, this.diagramController.getListeners().get(0));
+		Assert.assertEquals(0, newController.getListeners().size());
+		
+		this.diagramControllerFactory.setController(newController);
+		controller.changeElement(new TreePath(path));
+		
+		Assert.assertEquals(1, newController.getListeners().size());
+		Assert.assertSame(controller, newController.getListeners().get(0));
+		Assert.assertEquals(1, this.diagramController.getSaveCalls());
+		Assert.assertSame(diagram3, newController.getLoadedDiagram());
+		
+		Assert.assertSame(newController.getView(), this.shell.getRightContent());
+		
+		deleteFile("projectName/Datos");
+		deleteFile("projectName");
+	}
+	
+	@Test
+	public void testShouldLoadFirstDiagramDiagramParentWhenSelectingChildSelectedInTreeAndSaveOldOne() {
+		Diagram diagram1 = new Diagram();
+		Diagram diagram2 = new Diagram();
+		Diagram diagram3 = new Diagram();
+		diagram1.setName("1");
+		diagram2.setName("2");
+		diagram3.setName("3");
+		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1);
+		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2);
+		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3);
+		
+		DefaultMutableTreeNode diagramChild1 = new DefaultMutableTreeNode("dato1");
+		DefaultMutableTreeNode diagramChild2 = new DefaultMutableTreeNode("dato2");
+		DefaultMutableTreeNode diagramChild3 = new DefaultMutableTreeNode("dato3");
+		DefaultMutableTreeNode diagramChild4 = new DefaultMutableTreeNode("dato4");
+		
+		Object[] path = {diagramNode1, diagramChild1, diagramNode2, diagramChild2, diagramNode3, diagramChild3, diagramChild4};
+		
+		MockDiagramController newController = new MockDiagramController();
+		
+		ProjectController controller = this.createController();
+		controller.createProject("projectName");
+		
+		Assert.assertEquals(0, this.diagramController.getSaveCalls());
+		Assert.assertNull(newController.getLoadedDiagram());
+		Assert.assertEquals(1, this.diagramController.getListeners().size());
+		Assert.assertSame(controller, this.diagramController.getListeners().get(0));
+		Assert.assertEquals(0, newController.getListeners().size());
+		
+		this.diagramControllerFactory.setController(newController);
+		controller.changeElement(new TreePath(path));
+		
+		Assert.assertEquals(1, newController.getListeners().size());
+		Assert.assertSame(controller, newController.getListeners().get(0));
+		Assert.assertEquals(1, this.diagramController.getSaveCalls());
+		Assert.assertSame(diagram3, newController.getLoadedDiagram());
+		
+		Assert.assertSame(newController.getView(), this.shell.getRightContent());
+		
+		deleteFile("projectName/Datos");
+		deleteFile("projectName");
+	}
 	
 	private DefaultMutableTreeNode getNodeChildWithObject(DefaultMutableTreeNode node, String childName, Object object) {	
 		Enumeration children = node.children();

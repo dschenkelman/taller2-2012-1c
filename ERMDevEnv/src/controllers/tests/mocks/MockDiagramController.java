@@ -27,6 +27,8 @@ public class MockDiagramController implements IDiagramController {
 	private List<IDiagramEventListener> listeners;
 
 	private int saveCalls;
+
+	private Diagram loadedDiagram;
 	
 	public MockDiagramController(){
 		this.diagram = new Diagram();
@@ -135,11 +137,14 @@ public class MockDiagramController implements IDiagramController {
 
 	@Override
 	public void load(Diagram diagram) {
-		// TODO Auto-generated method stub
-		
+		this.loadedDiagram = diagram;
 	}
 	
 	public int getSaveCalls(){
 		return this.saveCalls;
+	}
+
+	public Diagram getLoadedDiagram() {
+		return loadedDiagram;
 	}
 }

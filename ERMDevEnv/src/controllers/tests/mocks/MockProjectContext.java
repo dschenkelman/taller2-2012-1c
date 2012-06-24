@@ -96,7 +96,8 @@ public class MockProjectContext implements IProjectContext,IRelationshipEventLis
 	}
 
 	@Override
-	public void clear() {		
+	public void clearContextDiagrams() {		
+		this.contextDiagrams.clear();
 	}
 
 	@Override

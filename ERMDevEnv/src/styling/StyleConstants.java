@@ -2,6 +2,7 @@ package styling;
 
 public class StyleConstants {
 	public static String ENTITY_STYLE = "";
+	public static String COMPOSED_ATTRIBUTE_STYLE = "shape=ellipse;perimeter=ellipsePerimeter;";
 	public static String ATTRIBUTE_STYLE = "fontSize=9;strokeColor=white;fillColor=white;gradientColor=white;verticalAlign=top;align=center";
 	public static String ATTRIBUTE_LINK_STYLE = "endArrow=emptyCircle;endSize=10";
 	public static String CALCULATED_ATTRIBUTE_LINK_STYLE = "endArrow=emptyRedCircle;endSize=10";
