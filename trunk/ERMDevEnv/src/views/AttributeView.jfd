@@ -15,28 +15,6 @@ new FormModel {
 				"gridX": 5
 				"gridY": 1
 			} )
-			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "scrollPane1"
-				add( new FormComponent( "javax.swing.JList" ) {
-					name: "attributeList"
-				} )
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 3
-				"gridY": 3
-				"gridWidth": 27
-				"gridHeight": 23
-			} )
-			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "scrollPane3"
-				add( new FormComponent( "javax.swing.JList" ) {
-					name: "internalAttributesList"
-				} )
-			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
-				"gridX": 31
-				"gridY": 3
-				"gridWidth": 29
-				"gridHeight": 23
-			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "nameText"
 				"text": "Name"
@@ -50,6 +28,17 @@ new FormModel {
 				"gridX": 70
 				"gridY": 3
 				"gridWidth": 5
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTree" ) {
+					name: "attributes"
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 5
+				"gridY": 5
+				"gridWidth": 58
+				"gridHeight": 21
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "typeText"

@@ -17,7 +17,7 @@ public interface IAttributeController{
 
     public void setAttributeView(IAttributeView attributeView);
 
-    void addNewAttributeToAttribute(Attribute attributeSelected);
+    Attribute addNewAttributeToAttribute(Attribute attributeSelected);
 
     public void editAttribute(Attribute attributeSelected);
 }
