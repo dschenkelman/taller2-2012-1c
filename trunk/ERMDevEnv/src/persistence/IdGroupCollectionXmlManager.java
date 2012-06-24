@@ -10,7 +10,7 @@ public class IdGroupCollectionXmlManager implements IXmlManager<IdGroupCollectio
 
     private static String IDGROUPSTAG = "idGroups";
     private static String IDGROUPTAG = "idGroup";
-    private static String NAMEATTRIBUTE = "number";
+    private static String NAMEATTRIBUTE = "name";
 
     public IdGroupCollection getItemFromXmlElement(Element element) {
         IdGroupCollection idGroupCollection = new IdGroupCollection();
