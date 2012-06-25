@@ -98,6 +98,9 @@ public class AttributeControllerTest {
         attributeController.addNewAttributeToAttribute(attribute);
         Assert.assertEquals(1, IterableExtensions.count(attribute.getAttributes()));
 
+        mockAttributeView.setName("");
+        attributeController.addNewAttributeToAttribute(attribute);
+        Assert.assertEquals(1, IterableExtensions.count(attribute.getAttributes()));
 
     }
 
@@ -123,6 +126,27 @@ public class AttributeControllerTest {
         Assert.assertEquals(attribute.getExpression(), "aaksda");
         Assert.assertEquals(attribute.getCardinality().getMinimum(), 1.0);
         Assert.assertEquals(attribute.getCardinality().getMaximum(), 1.0);
+
+        mockAttributeView.setName("");
+
+        attributeController.editAttribute(attribute);
+        Assert.assertEquals(attribute.getName(), "att");
+    }
+
+    @Test
+    public void testRemoveAttribute() {
+        List<Attribute> attributes = new ArrayList<Attribute>();
+        Attribute a1 = new Attribute("a1");
+        Attribute a2 = new Attribute("a2");
+        attributes.add(a1);
+        attributes.add(a2);
+        attributeController = new AttributeController(mockProjectContext, attributes, mockAttributeView);
+
+        attributeController.removeAttribute(a1);
+        Assert.assertFalse(attributes.contains(a1));
+
+        attributeController.removeAttribute(a2);
+        Assert.assertFalse(attributes.contains(a2));
 
     }
 }
