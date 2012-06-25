@@ -49,6 +49,11 @@ public class MockAttributeController implements IAttributeController {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    @Override
+    public void removeAttribute(Attribute attribute) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
     }

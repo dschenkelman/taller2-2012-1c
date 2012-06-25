@@ -40,6 +40,8 @@ public class AttributeView implements IAttributeView {
                 if (attributes.getLastSelectedPathComponent() instanceof AttributeTreeNode) {
                     Attribute attribute = ((AttributeTreeNode) attributes.getLastSelectedPathComponent()).getAttribute();
                     attributeSelected(attribute);
+                } else {
+                    attributeSelected = null;
                 }
             }
         });
@@ -57,6 +59,8 @@ public class AttributeView implements IAttributeView {
                         Object parent = ((MutableTreeNode) attributes.getLastSelectedPathComponent()).getParent();
                         if (parent instanceof AttributeTreeNode) {
                             ((AttributeTreeNode) parent).removeOwnAttribute(attributeTreeNode.getAttribute());
+                        } else {
+                            controller.removeAttribute(attributeTreeNode.getAttribute());
                         }
                         attributeModel.removeNodeFromParent((MutableTreeNode) attributes.getLastSelectedPathComponent());
                         cleanView();
@@ -115,7 +119,7 @@ public class AttributeView implements IAttributeView {
 
     @Override
     public Cardinality getCardinality() {
-        if (!minCardinality.getText().equals("") && !maxCardinality.equals("")) {
+        if (!minCardinality.getText().equals("") && !maxCardinality.getText().equals("")) {
             try {
                 return new Cardinality(Double.valueOf(minCardinality.getText()), Double.valueOf(minCardinality.getText()));
             } catch (Exception e) {
@@ -159,7 +163,10 @@ public class AttributeView implements IAttributeView {
         this.type.setSelectedIndex(0);
         this.maxCardinality.setText("");
         this.minCardinality.setText("");
+        attributes.revalidate();
+        attributes.repaint();
         attributes.updateUI();
+        attributes.clearSelection();
     }
 
     private void attributeSelected(Attribute selectedValue) {

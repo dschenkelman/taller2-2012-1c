@@ -11,13 +11,15 @@ public interface IAttributeController{
 
     public Attribute addNewAttribute();
 
-    Iterable<Attribute> getAttributes();
+    public Iterable<Attribute> getAttributes();
 
-    IAttributeView getAttributeView();
+    public IAttributeView getAttributeView();
 
     public void setAttributeView(IAttributeView attributeView);
 
-    Attribute addNewAttributeToAttribute(Attribute attributeSelected);
+    public Attribute addNewAttributeToAttribute(Attribute attributeSelected);
 
     public void editAttribute(Attribute attributeSelected);
+
+    public void removeAttribute(Attribute attribute);
 }

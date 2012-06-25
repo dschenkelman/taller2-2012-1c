@@ -57,7 +57,7 @@ public class AttributeController extends BaseController implements IAttributeCon
         Attribute att = null;
         if (attributeSelected != null) {
             String attName = attributeView.getName();
-            if (IterableExtensions.firstOrDefault(attributeSelected.getAttributes(), new FuncAttrCmp(), attName) == null) {
+            if (!attName.equals("") && IterableExtensions.firstOrDefault(attributeSelected.getAttributes(), new FuncAttrCmp(), attName) == null) {
                 String expressionClone = (attributeView.getAttributeType() == AttributeType.calculated || attributeView.getAttributeType() == AttributeType.copy) ? attributeView.getExpression() : null;
                 att = new Attribute(attName, attributeView.getCardinality(), new IdGroupCollection(), attributeView.getAttributeType(), expressionClone);
                 try {
@@ -78,12 +78,21 @@ public class AttributeController extends BaseController implements IAttributeCon
 
     @Override
     public void editAttribute(Attribute attributeSelected) {
-        attributeSelected.setName(attributeView.getName());
-        attributeSelected.setCardinality(attributeView.getCardinality());
-        attributeSelected.setType(attributeView.getAttributeType());
-        AttributeType attType = attributeView.getAttributeType();
-        if (attType == AttributeType.calculated || attType == AttributeType.copy)
-            attributeSelected.setExpression(attributeView.getExpression());
+        String attName = attributeView.getName();
+        if (!attName.equals("")) {
+            attributeSelected.setName(attributeView.getName());
+            attributeSelected.setCardinality(attributeView.getCardinality());
+            attributeSelected.setType(attributeView.getAttributeType());
+            AttributeType attType = attributeView.getAttributeType();
+            if (attType == AttributeType.calculated || attType == AttributeType.copy)
+                attributeSelected.setExpression(attributeView.getExpression());
+        }
+    }
+
+    @Override
+    public void removeAttribute(Attribute attribute) {
+        if (this.attributes.contains(attribute))
+            this.attributes.remove(attribute);
     }
 
     private class FuncAttrCmp extends Func<Attribute, String, Boolean> {
