@@ -5,6 +5,9 @@ import java.awt.Point;
 import javax.xml.parsers.ParserConfigurationException;
 
 import models.Diagram;
+import models.Entity;
+import models.Hierarchy;
+import models.Relationship;
 
 import views.IDiagramView;
 
@@ -34,4 +37,7 @@ public interface IDiagramController extends IEntityEventListener, IRelationshipE
 	void handleDrop(Point end);
 	void handleDragStart(Point start);
 	void load(Diagram diagram);
+	void updateEntity(Entity entity);
+	void updateRelationship(Relationship relationship);
+	void updateHierarchy(Hierarchy hierarchy);
 }

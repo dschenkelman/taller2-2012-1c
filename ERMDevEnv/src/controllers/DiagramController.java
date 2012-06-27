@@ -693,4 +693,22 @@ public class DiagramController extends BaseController
 			}
 		}
 	}
+
+	@Override
+	public void updateEntity(Entity entity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateHierarchy(Hierarchy hierarchy) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateRelationship(Relationship relationship) {
+		// TODO Auto-generated method stub
+		
+	}
 }

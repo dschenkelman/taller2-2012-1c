@@ -164,6 +164,21 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		this.diagramController.addListener(this);
 		this.diagramController.load(diagramToLoad);
 		this.shell.setRightContent(this.diagramController.getView());
+		
+		Object o = treePath.getLastPathComponent();
+		
+		if (o instanceof Entity) {
+			this.diagramController.updateEntity((Entity) o);
+			return;	
+		}
+		if (o instanceof Relationship) {
+			this.diagramController.updateRelationship((Relationship) o);
+			return;
+		}
+		if (o instanceof Hierarchy) {
+			this.diagramController.updateHierarchy((Hierarchy) o);
+			return;
+		}
 	}
 
 	@Override
