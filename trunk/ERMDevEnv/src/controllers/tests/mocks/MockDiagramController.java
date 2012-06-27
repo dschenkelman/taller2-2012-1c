@@ -31,12 +31,27 @@ public class MockDiagramController implements IDiagramController {
 	private Diagram loadedDiagram;
 	
 	private boolean called;
+
+	private boolean relationshipCalled;
+
+	private boolean hierarchyCalled;
+
+	private boolean entityCalled;
+
+	private Relationship updatedRelationship;
+
+	private Entity updatedEntity;
+
+	private Hierarchy updatedHierarchy;
 	
 	public MockDiagramController(){
 		this.diagram = new Diagram();
 		this.view = new MockDiagramView();
 		this.listeners = new ArrayList<IDiagramEventListener>();
 		this.called = false;
+		this.relationshipCalled = false;
+		this.hierarchyCalled = false;
+		this.entityCalled = false;
 	}
 	
 	@Override
@@ -154,5 +169,47 @@ public class MockDiagramController implements IDiagramController {
 
 	public boolean wasCalled() {
 		return this.called;
+	}
+
+	@Override
+	public void updateEntity(Entity entity) {
+		this.entityCalled = true;
+		this.updatedEntity = entity;
+	}
+
+	@Override
+	public void updateHierarchy(Hierarchy hierarchy) {
+		this.hierarchyCalled = true;
+		this.updatedHierarchy = hierarchy;
+	}
+
+	@Override
+	public void updateRelationship(Relationship relationship) {
+		this.relationshipCalled = true;
+		this.updatedRelationship = relationship;
+	}
+
+	public boolean updateEntityWasCalled() {
+		return this.entityCalled;
+	}
+
+	public boolean updateRelationshipWasCalled() {
+		return this.relationshipCalled;
+	}
+
+	public boolean updateHierarchyWasCalled() {
+		return this.hierarchyCalled;
+	}
+
+	public Relationship getUpdatedRelationship() {
+		return this.updatedRelationship;
+	}
+
+	public Entity getUpdatedEntity() {
+		return this.updatedEntity;
+	}
+
+	public Hierarchy getUpdatedHierarchy() {
+		return this.updatedHierarchy;
 	}
 }

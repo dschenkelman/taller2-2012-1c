@@ -743,6 +743,86 @@ public class ProjectControllerTestCase {
 		deleteFile("projectName");
 	}
 	
+	@Test
+	public void testShouldNotUpdateRelationshipNorEntityneitherHierarchyWhenSelectDiagramInTreeNode() {
+		Diagram diagram1 = new Diagram();
+		Diagram diagram2 = new Diagram();
+		Diagram diagram3 = new Diagram();
+		diagram1.setName("1");
+		diagram2.setName("2");
+		diagram3.setName("3");
+		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1);
+		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2);
+		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3);
+		
+		DefaultMutableTreeNode diagramChild1 = new DefaultMutableTreeNode("dato1");
+		DefaultMutableTreeNode diagramChild2 = new DefaultMutableTreeNode("dato2");
+		DefaultMutableTreeNode diagramChild3 = new DefaultMutableTreeNode("dato3");
+		DefaultMutableTreeNode diagramChild4 = new DefaultMutableTreeNode("dato4");
+		
+		Object[] path = {diagramNode1, diagramChild1, diagramNode2, diagramChild2, diagramChild3, diagramChild4, diagramNode3};
+
+		MockDiagramController newController = new MockDiagramController();
+		
+		ProjectController controller = this.createController();
+		controller.createProject("projectName");		
+		
+		this.diagramControllerFactory.setController(newController);
+		controller.changeElement(new TreePath(path));
+		
+		Assert.assertFalse(newController.updateEntityWasCalled());
+		Assert.assertFalse(newController.updateRelationshipWasCalled());
+		Assert.assertFalse(newController.updateHierarchyWasCalled());
+		
+		deleteFile("projectName/Datos");
+		deleteFile("projectName");
+	}
+	
+	@Test
+	public void testShould() throws Exception{
+		Diagram diagram1 = new Diagram();
+		Diagram diagram2 = new Diagram();
+		Diagram diagram3 = new Diagram();
+		diagram1.setName("1");
+		diagram2.setName("2");
+		diagram3.setName("3");
+		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1);
+		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2);
+		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3);
+		Entity entity1 = new Entity("entity1");
+		Entity entity2 = new Entity("entity2");
+		Relationship relationship = new Relationship(new RelationshipEntity(entity1), new RelationshipEntity(entity2));
+		Hierarchy hierarchy = new Hierarchy();
+
+		MockDiagramController newController = new MockDiagramController();
+		
+		ProjectController controller = this.createController();
+		controller.createProject("projectName");		
+		
+		this.diagramControllerFactory.setController(newController);
+		
+		Object[] path1 = {diagramNode1, entity1, diagramNode2, entity2, hierarchy, diagramNode3, relationship};
+		controller.changeElement(new TreePath(path1));
+		
+		Assert.assertTrue(newController.updateRelationshipWasCalled());
+		Assert.assertEquals(relationship, newController.getUpdatedRelationship());
+		
+		Object[] path2 = {diagramNode1, entity1, diagramNode2, hierarchy, diagramNode3, relationship, entity2};
+		controller.changeElement(new TreePath(path2));
+		
+		Assert.assertTrue(newController.updateEntityWasCalled());
+		Assert.assertEquals(entity2, newController.getUpdatedEntity());
+		
+		Object[] path3 = {diagramNode1, entity1, diagramNode2, diagramNode3, relationship, entity2, hierarchy};
+		controller.changeElement(new TreePath(path3));
+		
+		Assert.assertTrue(newController.updateHierarchyWasCalled());
+		Assert.assertEquals(hierarchy, newController.getUpdatedHierarchy());
+		
+		deleteFile("projectName/Datos");
+		deleteFile("projectName");
+	}
+	
 	private DefaultMutableTreeNode getNodeChildWithObject(DefaultMutableTreeNode node, String childName, Object object) {	
 		Enumeration children = node.children();
 		while (children.hasMoreElements()) {
