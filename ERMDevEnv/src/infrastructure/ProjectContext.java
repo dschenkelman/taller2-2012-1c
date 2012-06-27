@@ -13,8 +13,6 @@ import models.Hierarchy;
 
 
 public class ProjectContext implements IProjectContext {
-
-	private EntityCollection entityCollection;
 	
 	private static String SubFolder = "Datos";
 	
@@ -29,58 +27,58 @@ public class ProjectContext implements IProjectContext {
     }
 
     @Override
+    public Iterable<Entity> getAllEntities() {
+    	return this.getAllEntities(null);
+    }
+    
+    @Override
     public Iterable<Entity> getAllEntities(Entity entityToExclude) {
     	return this.getEntities(entityToExclude, this.projectDiagram);
     }
     
-    // returns all entities from active diagram and all of his parents
+    /** 
+     * Returns all entities from active diagram and all of his parents
+     */
     @Override
-    public Iterable<Entity> getContextEntities(Entity entityToExclude) {
+    public Iterable<Entity> getFamilyEntities() {
+       return this.getEntities(null, this.contextDiagram);
+    }
+    
+    /** 
+     * Returns all entities from active diagram and all of his parents
+     */
+    @Override
+    public Iterable<Entity> getFamilyEntities(Entity entityToExclude) {
        return this.getEntities(entityToExclude, this.contextDiagram);
     }
     
-    // returns all entities of active diagram
+    /**
+     * Returns all entities of active diagram
+     */
     @Override
-	public Iterable<Entity> getContextEntities() {
-    	Set<Entity> entities = new HashSet<Entity>();
-    	int size = this.contextDiagram.size();
-    	for (Entity item : this.contextDiagram.get(size - 1).getEntities())
-       		entities.add(item);
-    	return entities;
+    public Iterable<Entity> getContextEntities() {
+    	return this.getEntities(null, null);
 	}
     
+    /**
+     * Returns all hierarchies from active diagram and all of his parents
+     */
+    @Override
+    public Iterable<Hierarchy> getFamilyHierarchies() {
+    	return this.getHierarchies(this.contextDiagram);
+    }
+    
+    /**
+     * Returns all hierarchies of active diagram
+     */
     @Override
     public Iterable<Hierarchy> getContextHierarchies() {
-    	return this.getHierarchies(this.contextDiagram);
+    	return this.getHierarchies(null);
     }
     
     @Override
     public Iterable<Hierarchy> getAllHierarchies() {
     	return this.getHierarchies(this.projectDiagram);
-    }
-    
-    private Iterable<Entity> getEntities(Entity entityToExclude, List<Diagram> diagrams) {
-    	Set<Entity> entities = new HashSet<Entity>();
-        for (Diagram diagram : diagrams) {
-        	if (entityToExclude == null) {
-        		for (Entity item : diagram.getEntities())
-           			entities.add(item);
-        		continue;
-        	}
-        	for (Entity item : diagram.getEntities())
-        		if (!entityToExclude.getName().equals(item.getName()))
-        			entities.add(item);
-        }
-        return entities;
-    }
-    
-    private Iterable<Hierarchy> getHierarchies(List<Diagram> diagrams) {
-    	Set<Hierarchy> hierarchies = new HashSet<Hierarchy>();
-    	for (Diagram diagram : diagrams)
-        	for (Hierarchy item : diagram.getHierarchies())
-        		hierarchies.add(item);
-        return hierarchies;
-    	
     }
     
 	@Override
@@ -142,4 +140,44 @@ public class ProjectContext implements IProjectContext {
 				return diagram;
 		return null;
 	}
+	
+	private Iterable<Entity> getEntities(Entity entityToExclude, List<Diagram> diagrams) {
+    	Set<Entity> entities = new HashSet<Entity>();
+    	if (diagrams == null) {
+    		if (this.contextDiagram.isEmpty())
+    			return entities;
+    		int size = this.contextDiagram.size();
+    		for (Entity item : this.contextDiagram.get(size - 1).getEntities())
+    			entities.add(item);
+    	}else {
+	        for (Diagram diagram : diagrams) {
+	        	if (entityToExclude == null) {
+	        		for (Entity item : diagram.getEntities())
+	           			entities.add(item);
+	        		continue;
+	        	}
+	        	for (Entity item : diagram.getEntities())
+	        		if (!entityToExclude.getName().equals(item.getName()))
+	        			entities.add(item);
+	        }
+    	}
+        return entities;
+    }
+    
+    private Iterable<Hierarchy> getHierarchies(List<Diagram> diagrams) {
+    	Set<Hierarchy> hierarchies = new HashSet<Hierarchy>();
+    	if (diagrams == null) {
+    		if (this.contextDiagram.isEmpty())
+    			return hierarchies;
+    		int size = this.contextDiagram.size();
+    		for (Hierarchy item : this.contextDiagram.get(size - 1).getHierarchies())
+        		hierarchies.add(item);
+    	}else {
+	    	for (Diagram diagram : diagrams)
+	        	for (Hierarchy item : diagram.getHierarchies())
+	        		hierarchies.add(item);
+    	}
+        return hierarchies;
+    	
+    }
 }

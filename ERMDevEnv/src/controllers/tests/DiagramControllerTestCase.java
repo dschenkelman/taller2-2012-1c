@@ -747,6 +747,32 @@ public class DiagramControllerTestCase {
 		Assert.assertEquals(StyleConstants.ATTRIBUTE_LINK_STYLE, level2And3ConnectorCell.getStyle());
 	}
 	
+	@Test
+	public void testShouldCallToLoadWithCorrectDiagramName() {
+		Diagram diagram = new Diagram();
+		diagram.setName("diagram1");
+		
+		DiagramController controller = this.createController();
+		
+		controller.load(diagram);
+		
+		Assert.assertEquals(this.projectContext.getDataDirectory() + "/" + diagram.getName() + "-rep", this.graphPersistenceService.getDiagramName());
+	}
+	
+	@Test
+	public void testShouldSaveCorrectlyCellsFromMxGraphInDiagramController() {
+		Diagram diagram = new Diagram();
+		diagram.setName("diagram1");
+		
+		DiagramController controller = this.createController();
+		
+		controller.load(diagram);
+		Assert.assertEquals(2, controller.getGraph().getChildCells(controller.getGraph().getDefaultParent()).length);
+		
+		Assert.assertNotNull(controller.getHierarchyNodeCell("1"));
+		Assert.assertNotNull(controller.getEntityCell("1"));
+	}
+	
 	private void addEntityToDiagram(DiagramController diagramController, 
 			Entity entity, double x, double y) throws Exception {
 		diagramController.createEntity();

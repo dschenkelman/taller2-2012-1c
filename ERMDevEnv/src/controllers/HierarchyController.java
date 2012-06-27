@@ -117,7 +117,7 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 
 	@Override
 	public Iterable<Entity> getAvailableEntities() {
-		return this.projectContext.getAllEntities(null);
+		return this.projectContext.getContextEntities();
 	}
 
 	@Override

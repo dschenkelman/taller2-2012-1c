@@ -10,14 +10,18 @@ public interface IProjectContext {
 	void setName(String name);
 	String getDataDirectory();
 	void clearContextDiagrams();
+	Iterable<Entity> getAllEntities();
 	Iterable<Entity> getAllEntities(Entity entityToExclude);
-	Iterable<Entity> getContextEntities(Entity entityToExclude);
+	Iterable<Entity> getFamilyEntities();
+	Iterable<Entity> getFamilyEntities(Entity entityToExclude);
 	Iterable<Entity> getContextEntities();
 	Iterable<Hierarchy> getAllHierarchies();
+	Iterable<Hierarchy> getFamilyHierarchies();
 	Iterable<Hierarchy> getContextHierarchies();
 	void addContextDiagram(Diagram diagram);
 	void addProjectDiagram(Diagram diagram);
 	Hierarchy getHierarchy(UUID id);
 	Entity getEntity(UUID entityId);
 	Diagram getContextDiagram(String defaultDiagramName);
+	
 }
