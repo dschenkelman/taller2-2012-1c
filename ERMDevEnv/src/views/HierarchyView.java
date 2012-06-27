@@ -252,7 +252,6 @@ public class HierarchyView implements IHierarchyView{
 
 	@Override
 	public void update() {
-//		this.availableEntities = (Set<Entity>) this.hierarchyController.getAvailableEntities();
 		this.getAvailableEntities();
 		//specific entities
 		DefaultComboBoxModel combGeneralMdl = (DefaultComboBoxModel) this.comBoxGeneralEntity.getModel();
@@ -276,7 +275,6 @@ public class HierarchyView implements IHierarchyView{
 	@Override
 	public void create() {
 		this.getAvailableEntities();
-//		this.availableEntities = (Set<Entity>) this.hierarchyController.getAvailableEntities();
 		//general entity and available entities
 		DefaultListModel listModel = (DefaultListModel) this.lstAvailableEntities.getModel();
 		for (Entity entity : this.availableEntities)
