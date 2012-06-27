@@ -106,11 +106,6 @@ public class MockProjectContext implements IProjectContext,IRelationshipEventLis
 	}
 
 	@Override
-	public Iterable<Entity> getContextEntities(Entity entityToExclude) {
-		return null;
-	}
-
-	@Override
 	public Iterable<Hierarchy> getContextHierarchies() {
 		return null;
 	}
@@ -139,6 +134,30 @@ public class MockProjectContext implements IProjectContext,IRelationshipEventLis
 
 	@Override
 	public Iterable<Entity> getContextEntities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Entity> getAllEntities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Entity> getFamilyEntities(Entity entityToExclude) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Hierarchy> getFamilyHierarchies() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Entity> getFamilyEntities() {
 		// TODO Auto-generated method stub
 		return null;
 	}
