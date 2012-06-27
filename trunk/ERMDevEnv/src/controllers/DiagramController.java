@@ -37,6 +37,7 @@ import models.RelationshipEntity;
 import jgraph.extensions.CustomGraph;
 
 import com.mxgraph.model.mxCell;
+import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
@@ -697,13 +698,20 @@ public class DiagramController extends BaseController
 	@Override
 	public void updateEntity(Entity entity) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void updateHierarchy(Hierarchy hierarchy) {
-		// TODO Auto-generated method stub
+		IHierarchyController hierarchyController = this.hierarchyControllerFactory.create();
+		hierarchyController.addSuscriber(this);
+		hierarchyController.create(hierarchy);
 		
+		String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString();
+		String keyNode = CellConstants.HierarchyNodePrefix + hierarchy.getId().toString();
+		mxIGraphModel model = this.graph.getModel();
+		
+		model.remove(this.hierarchyConnectorCells.remove(keyConnector));
+		model.remove(this.hierarchyNodeCells.remove(keyNode));
 	}
 
 	@Override
