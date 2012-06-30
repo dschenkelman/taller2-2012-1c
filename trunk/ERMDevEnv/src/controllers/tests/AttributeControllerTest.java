@@ -106,6 +106,13 @@ public class AttributeControllerTest {
 
     @Test
     public void testEditAttribute() {
+        List<Attribute> attributes = new ArrayList<Attribute>();
+        Attribute a1 = new Attribute("a1");
+        Attribute a2 = new Attribute("a2");
+        attributes.add(a1);
+        attributes.add(a2);
+        attributeController = new AttributeController(mockProjectContext, attributes, mockAttributeView);
+
         Attribute attribute = new Attribute("name");
 
         MockAttributeView mockAttributeView = new MockAttributeView();
@@ -119,6 +126,7 @@ public class AttributeControllerTest {
         mockAttributeView.setExpression("aaksda");
         attributeController.setAttributeView(mockAttributeView);
 
+
         attributeController.editAttribute(attribute);
 
         Assert.assertEquals(attribute.getName(), "att");
@@ -128,9 +136,11 @@ public class AttributeControllerTest {
         Assert.assertEquals(attribute.getCardinality().getMaximum(), 1.0);
 
         mockAttributeView.setName("");
-
         attributeController.editAttribute(attribute);
         Assert.assertEquals(attribute.getName(), "att");
+
+        mockAttributeView.setName("a1");
+        Assert.assertFalse(attributeController.editAttribute(attribute));
     }
 
     @Test
