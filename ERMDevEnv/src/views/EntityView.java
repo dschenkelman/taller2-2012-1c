@@ -7,6 +7,8 @@ package views;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.*;
 
 import application.Bootstrapper;
@@ -102,7 +104,16 @@ public class EntityView implements IEntityView {
     private void createEntity() {
         if (entityController.addEntity()) {
             this.frame1.setVisible(false);
+        }else{
+            showWrongEntityNameDialog();
         }
+    }
+
+    private void showWrongEntityNameDialog() {
+        if(entityName.getText().equals("")){
+            JOptionPane.showMessageDialog(null,"An entity must have a name, please complete it.", "Invalid Entity Name", JOptionPane.QUESTION_MESSAGE);
+        } else
+            JOptionPane.showMessageDialog(null, this.entityName.getText() + " already exists as an entity name on this project, please change it.", "Invalid Entity Name", JOptionPane.QUESTION_MESSAGE);
     }
 
     @Override

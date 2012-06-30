@@ -19,7 +19,7 @@ public interface IAttributeController{
 
     public Attribute addNewAttributeToAttribute(Attribute attributeSelected);
 
-    public void editAttribute(Attribute attributeSelected);
+    public boolean editAttribute(Attribute attributeSelected);
 
     public void removeAttribute(Attribute attribute);
 }

@@ -2,13 +2,9 @@ package controllers.tests.mocks;
 
 import controllers.IAttributeController;
 import models.Attribute;
-import models.AttributeType;
-import models.Cardinality;
-import models.IKey;
 import views.IAttributeView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MockAttributeController implements IAttributeController {
@@ -45,8 +41,8 @@ public class MockAttributeController implements IAttributeController {
     }
 
     @Override
-    public void editAttribute(Attribute attributeSelected) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public boolean editAttribute(Attribute attributeSelected) {
+        return false;
     }
 
     @Override

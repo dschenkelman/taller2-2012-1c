@@ -19,10 +19,7 @@ import models.AttributeCollection;
 import models.AttributeType;
 import models.Cardinality;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.List;
 
 public class AttributeView implements IAttributeView {
@@ -90,7 +87,13 @@ public class AttributeView implements IAttributeView {
                 editAttribute();
             }
         });
-
+        this.type.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                expression.setEditable((getAttributeType() != AttributeType.characterization));
+            }
+        });
+        expression.setEditable((getAttributeType() != AttributeType.characterization));
         cleanView();
     }
 
@@ -145,7 +148,8 @@ public class AttributeView implements IAttributeView {
             if (attribute != null) {
                 ((AttributeTreeNode) attributes.getLastSelectedPathComponent()).add(new AttributeTreeNode(attribute));
                 cleanView();
-            }
+            } else
+                showWrongAttributeDialog();
         }
     }
 
@@ -154,7 +158,8 @@ public class AttributeView implements IAttributeView {
         if (attributeCreated != null) {
             ((DefaultMutableTreeNode) attributeModel.getRoot()).add(new AttributeTreeNode(attributeCreated));
             cleanView();
-        }
+        } else
+            showWrongAttributeDialog();
     }
 
     private void cleanView() {
@@ -190,10 +195,16 @@ public class AttributeView implements IAttributeView {
 
     private void editAttribute() {
         if (attributeSelected != null) {
-            this.controller.editAttribute(attributeSelected);
-            cleanView();
+            if (this.controller.editAttribute(attributeSelected)) {
+                attributeSelected = null;
+                cleanView();
+            } else
+                showWrongAttributeDialog();
         }
-        attributeSelected = null;
+    }
+
+    private void showWrongAttributeDialog() {
+        JOptionPane.showMessageDialog(null, "There is an attribute on the same level with name, please change it.");
     }
 
     private void initComponents() {

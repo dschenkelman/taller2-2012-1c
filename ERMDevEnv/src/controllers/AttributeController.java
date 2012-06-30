@@ -6,11 +6,7 @@ import infrastructure.IterableExtensions;
 import models.*;
 import views.IAttributeView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import controllers.factories.IKeysControllerFactory;
 
 public class AttributeController extends BaseController implements IAttributeController {
 
@@ -77,16 +73,18 @@ public class AttributeController extends BaseController implements IAttributeCon
     }
 
     @Override
-    public void editAttribute(Attribute attributeSelected) {
+    public boolean editAttribute(Attribute attributeSelected) {
         String attName = attributeView.getName();
-        if (!attName.equals("")) {
+        if (!attName.equals("") && IterableExtensions.firstOrDefault(this.attributes, new FuncAttrCmp(), attName) == null) {
             attributeSelected.setName(attributeView.getName());
             attributeSelected.setCardinality(attributeView.getCardinality());
             attributeSelected.setType(attributeView.getAttributeType());
             AttributeType attType = attributeView.getAttributeType();
             if (attType == AttributeType.calculated || attType == AttributeType.copy)
                 attributeSelected.setExpression(attributeView.getExpression());
+            return true;
         }
+        return false;
     }
 
     @Override
