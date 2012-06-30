@@ -3,6 +3,7 @@ package controllers.factories;
 import java.util.Random;
 import views.IRelationshipView;
 
+import models.Attribute;
 import models.Cardinality;
 import models.Entity;
 import models.Relationship;
@@ -38,6 +39,9 @@ public class RelationshipControllerFactory implements
 					
 					relationship.getAttributes().addAttribute("Attribute1");
 					relationship.getAttributes().addAttribute("Attribute2");
+					Attribute attribute2 = relationship.getAttributes().getAttribute("Attribute2");
+					attribute2.getAttributes().addAttribute("Attribute3");
+					attribute2.getAttributes().addAttribute("Attribute4");
 					this.listener.handleCreatedEvent(relationship);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block

@@ -697,7 +697,7 @@ public class DiagramControllerTestCase {
 	}
 	
 	@Test
-	public void testShouldCreateCompositeAttributeCells() throws Exception
+	public void testShouldCreateCompositeAttributeCellsForEntity() throws Exception
 	{
 		Entity entity = new Entity("Product");
 		
@@ -725,6 +725,65 @@ public class DiagramControllerTestCase {
 		
 		mxCell level1And2ConnectorCell = diagramController.getAttributeConnectorCell(entity.getId().toString()+level2.getName());
 		mxCell level2And3ConnectorCell = diagramController.getAttributeConnectorCell(entity.getId().toString()+level3.getName());
+		
+		Assert.assertEquals("Level1", diagramController.getGraph().getLabel(level1Cell));
+		Assert.assertEquals(StyleConstants.COMPOSED_ATTRIBUTE_STYLE, level1Cell.getStyle());
+		
+		Assert.assertEquals("Level2", diagramController.getGraph().getLabel(level2Cell));
+		Assert.assertEquals(StyleConstants.COMPOSED_ATTRIBUTE_STYLE, level2Cell.getStyle());
+		
+		Assert.assertEquals("Level3", diagramController.getGraph().getLabel(level3Cell));
+		Assert.assertEquals(StyleConstants.ATTRIBUTE_STYLE, level3Cell.getStyle());
+		
+		Object[] level1To2Connectors = diagramController.getGraph().getEdgesBetween(level1Cell, level2Cell);
+		Object[] level2To3Connectors = diagramController.getGraph().getEdgesBetween(level2Cell, level3Cell);
+
+		Assert.assertEquals(1, level1To2Connectors.length);
+		Assert.assertSame(level1And2ConnectorCell, level1To2Connectors[0]);
+		Assert.assertEquals(StyleConstants.COMPOSED_ATTRIBUTE_LINK_STYLE, level1And2ConnectorCell.getStyle());
+		
+		Assert.assertEquals(1, level2To3Connectors.length);
+		Assert.assertSame(level2And3ConnectorCell, level2To3Connectors[0]);
+		Assert.assertEquals(StyleConstants.ATTRIBUTE_LINK_STYLE, level2And3ConnectorCell.getStyle());
+	}
+	
+	@Test
+	public void testShouldCreateCompositeAttributeCellsForRelationship() throws Exception
+	{
+		Entity entity1 = new Entity("Entity1");
+		
+		Entity entity2 = new Entity("Entity2");
+		
+		DiagramController diagramController = this.createController();
+		
+		this.addEntityToDiagram(diagramController, entity1, 20, 30);
+		this.addEntityToDiagram(diagramController, entity2, 60, 30);
+		
+		RelationshipEntity relationshipEntity1 = 
+			new RelationshipEntity(entity1, new Cardinality(0, 1), "Role1");
+		RelationshipEntity relationshipEntity2 = 
+			new RelationshipEntity(entity2, new Cardinality(0, Double.POSITIVE_INFINITY), "");
+		
+		Relationship relationship = new Relationship(relationshipEntity1, relationshipEntity2);
+		relationship.setName("Relationship");
+		
+		relationship.getAttributes().addAttribute("Level1", new Cardinality(0, 1), new IdGroupCollection(), AttributeType.characterization, null);
+		Attribute level1 = relationship.getAttributes().getAttribute("Level1");
+		
+		level1.getAttributes().addAttribute("Level2", new Cardinality(0, 1), new IdGroupCollection(), AttributeType.characterization, null);
+		Attribute level2 = level1.getAttributes().getAttribute("Level2");
+		
+		level2.getAttributes().addAttribute("Level3", new Cardinality(0, 1), new IdGroupCollection(), AttributeType.characterization, null);
+		Attribute level3 = level2.getAttributes().getAttribute("Level3");
+		
+		diagramController.handleCreatedEvent(relationship);
+		
+		mxCell level1Cell = diagramController.getAttributeCell(relationship.getId().toString()+level1.getName());
+		mxCell level2Cell = diagramController.getAttributeCell(relationship.getId().toString()+level2.getName());
+		mxCell level3Cell = diagramController.getAttributeCell(relationship.getId().toString()+level3.getName());
+		
+		mxCell level1And2ConnectorCell = diagramController.getAttributeConnectorCell(relationship.getId().toString()+level2.getName());
+		mxCell level2And3ConnectorCell = diagramController.getAttributeConnectorCell(relationship.getId().toString()+level3.getName());
 		
 		Assert.assertEquals("Level1", diagramController.getGraph().getLabel(level1Cell));
 		Assert.assertEquals(StyleConstants.COMPOSED_ATTRIBUTE_STYLE, level1Cell.getStyle());

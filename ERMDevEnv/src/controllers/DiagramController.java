@@ -192,9 +192,7 @@ public class DiagramController extends BaseController
 				}
 			}
 			
-			double partialAttributeAngle = attributeCount != 0 ? (2 * Math.PI) / attributeCount : 0;
 			double partialRelationshipEntitiesAngle = relationshipEntitiesCount != 0 ? (2 * Math.PI) / relationshipEntitiesCount : 0;
-			double currentAttributeAngle = 0;
 			double currentRelationshipEntitiesAngle = 0;
 			
 			for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
@@ -212,20 +210,7 @@ public class DiagramController extends BaseController
 				this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity, xExit, yExit, useExit);				
 			}
 			
-			for (Attribute attribute : relationship.getAttributes()) {
-				double xDistance = Math.cos(currentAttributeAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
-				double yDistance = Math.sin(currentAttributeAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
-				
-				double attributeX = centerX + xDistance;
-				double attributeY = centerY + yDistance;
-				
-				mxCell attributeCell = this.addAttributeToGraph(attribute, parent, relationship.getId(), attributeX, attributeY, false);
-				
-				//boolean isKey = attribute.isKey();
-				this.addAttributeConnectorToGraph(parent, relationship.getId(), relationshipCell, attribute, attributeCell, false, false);
-				
-				currentAttributeAngle += partialAttributeAngle;
-			}
+			this.addAttributesToElement(parent, relationshipCell, relationship.getAttributes(), relationship.getId());
 		}
 		finally {
 			this.diagram.getRelationships().add(relationship);
@@ -242,7 +227,7 @@ public class DiagramController extends BaseController
 		Object parent = this.graph.getDefaultParent();
 		try {
 			mxCell entityCell = this.addEntityToGraph(this.pendingEntity, parent, x, y);
-			this.addAttributesToElement(parent, entityCell, this.pendingEntity.getAttributes());
+			this.addAttributesToElement(parent, entityCell, this.pendingEntity.getAttributes(), this.pendingEntity.getId());
 		}
 		finally {
 			this.diagram.getEntities().add(this.pendingEntity);
@@ -255,7 +240,7 @@ public class DiagramController extends BaseController
 		this.pendingEntity = null;
 	}
 
-	private void addAttributesToElement(Object parent, mxCell elementCell, AttributeCollection attributes) {
+	private void addAttributesToElement(Object parent, mxCell elementCell, AttributeCollection attributes, UUID elementId) {
 		double centerX = elementCell.getGeometry().getCenterX();
 		double centerY = elementCell.getGeometry().getCenterY();
 		
@@ -273,11 +258,11 @@ public class DiagramController extends BaseController
 			AttributeCollection childAttributes = attribute.getAttributes();
 			
 			boolean isComposite = childAttributes.count() != 0;
-			mxCell attributeCell = this.addAttributeToGraph(attribute, parent, this.pendingEntity.getId(), attributeX, attributeY, isComposite);
-			this.addAttributeConnectorToGraph(parent, this.pendingEntity.getId(), elementCell, attribute, attributeCell, false, isComposite);
+			mxCell attributeCell = this.addAttributeToGraph(attribute, parent, elementId, attributeX, attributeY, isComposite);
+			this.addAttributeConnectorToGraph(parent, elementId, elementCell, attribute, attributeCell, false, isComposite);
 			
 			if (isComposite){
-				this.addAttributesToElement(parent, attributeCell, childAttributes);
+				this.addAttributesToElement(parent, attributeCell, childAttributes, elementId);
 			}
 			
 			currentAngle += partialAngle;
