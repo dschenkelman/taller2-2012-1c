@@ -4,8 +4,9 @@ import infrastructure.Func;
 import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class IdGroupCollection {
+public class IdGroupCollection implements Iterable<IdGroup> {
 
 
     public IdGroupCollection() {
@@ -57,6 +58,11 @@ public class IdGroupCollection {
             return idGroup.getName().equals(idGroupNumber);
         }
     }
+
+	@Override
+	public Iterator<IdGroup> iterator() {
+		return this.idGroups.iterator();
+	}
 
 
 }

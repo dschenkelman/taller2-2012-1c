@@ -12,6 +12,8 @@ import models.AttributeType;
 import models.Cardinality;
 import models.Entity;
 import models.EntityType;
+import models.IdGroup;
+import models.IdGroupCollection;
 import controllers.IEntityController;
 
 public class MockEntityControllerFactory implements IEntityControllerFactory {
@@ -47,8 +49,13 @@ public class MockEntityControllerFactory implements IEntityControllerFactory {
 				entity.setType(types[value]);
 				MockEntityControllerFactory.Entities.add(entity);
 				try {
-					entity.getAttributes().addAttribute("Attribute1");
-					entity.getAttributes().addAttribute("Attribute2");
+					IdGroupCollection groupCollection1 = new IdGroupCollection();
+					groupCollection1.addIdGroup(new IdGroup("1"));
+					entity.getAttributes().addAttribute("Attribute1", new Cardinality(0, 1), groupCollection1, AttributeType.copy, null);
+					
+					IdGroupCollection groupCollection2 = new IdGroupCollection();
+					groupCollection2.addIdGroup(new IdGroup("2"));
+					entity.getAttributes().addAttribute("Attribute2", new Cardinality(0, 1), groupCollection2, AttributeType.calculated, "expression");
 					entity.getAttributes().addAttribute("Attribute3");
 					
 					entity.getAttributes().addAttribute("Attribute4");
