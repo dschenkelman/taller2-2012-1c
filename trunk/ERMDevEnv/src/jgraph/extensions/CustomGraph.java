@@ -12,6 +12,7 @@ public class CustomGraph extends mxGraph
 		this.cellsCloneable = false;
 		this.cellsDeletable = true;
 		this.cellsDisconnectable = false;
+		this.autoSizeCells = true;
 	}
 	
 	@Override

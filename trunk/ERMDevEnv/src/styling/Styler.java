@@ -33,7 +33,15 @@ public class Styler {
 		}
 		
 		if (type == AttributeType.calculated){
+			if (isKey){
+				return StyleConstants.CALCULATED_KEY_ATTRIBUTE_LINK_STYLE;
+			}
+			
 			return StyleConstants.CALCULATED_ATTRIBUTE_LINK_STYLE;
+		}
+		
+		if (isKey){
+			return StyleConstants.KEY_ATTRIBUTE_LINK_STYLE;
 		}
 		
 		return StyleConstants.ATTRIBUTE_LINK_STYLE;

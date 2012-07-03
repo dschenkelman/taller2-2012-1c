@@ -31,6 +31,8 @@ import models.Cardinality;
 import models.Diagram;
 import models.Entity;
 import models.Hierarchy;
+import models.IdGroup;
+import models.IdGroupCollection;
 import models.Relationship;
 import models.RelationshipEntity;
 
@@ -245,8 +247,10 @@ public class DiagramController extends BaseController
 		double centerY = elementCell.getGeometry().getCenterY();
 		
 		int attributeCount = attributes.count();
-		double partialAngle = (2 * Math.PI) / attributeCount != 0 ? attributeCount : 0;
+		double partialAngle = attributeCount != 0 ? (2 * Math.PI) / attributeCount : 0;
 		double currentAngle = 0;
+		
+		Map<String, List<Attribute>> attributesByIdGroup = this.getAttributesByIdGroup(attributes);
 		
 		for (Attribute attribute : attributes) {
 			double xDistance = Math.cos(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
@@ -258,8 +262,9 @@ public class DiagramController extends BaseController
 			AttributeCollection childAttributes = attribute.getAttributes();
 			
 			boolean isComposite = childAttributes.count() != 0;
+			boolean isKey = this.isKeyOnItsOwn(attributesByIdGroup, attribute);
 			mxCell attributeCell = this.addAttributeToGraph(attribute, parent, elementId, attributeX, attributeY, isComposite);
-			this.addAttributeConnectorToGraph(parent, elementId, elementCell, attribute, attributeCell, false, isComposite);
+			this.addAttributeConnectorToGraph(parent, elementId, elementCell, attribute, attributeCell, isKey, isComposite);
 			
 			if (isComposite){
 				this.addAttributesToElement(parent, attributeCell, childAttributes, elementId);
@@ -267,6 +272,40 @@ public class DiagramController extends BaseController
 			
 			currentAngle += partialAngle;
 		}
+	}
+
+	private boolean isKeyOnItsOwn(
+			Map<String, List<Attribute>> attributesByIdGroup,
+			Attribute attribute) {
+		for (List<Attribute> attributeCollection : attributesByIdGroup.values()) {
+			if (attributeCollection.size() == 1 && attributeCollection.contains(attribute)){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	private Map<String, List<Attribute>> getAttributesByIdGroup(
+			AttributeCollection attributes) {
+		Map<String, List<Attribute>> attributesByKey = new HashMap<String, List<Attribute>>();
+		
+		for (Attribute attribute : attributes) {
+			for (IdGroup idGroup : attribute.getIdGroup()) {
+				List<Attribute> attributesForKey;
+				if (!attributesByKey.containsKey(idGroup.getName())){
+					attributesForKey = new ArrayList<Attribute>();
+					attributesByKey.put(idGroup.getName(), attributesForKey);
+				}
+				else{
+					attributesForKey = attributesByKey.get(idGroup.getName());
+				}
+				
+				attributesForKey.add(attribute);
+			}
+		}
+		
+		return attributesByKey;
 	}
 
 	private mxCell addRelationshipConnectorToGraph(Object parent, Relationship relationship, mxCell relationshipCell,
@@ -309,7 +348,7 @@ public class DiagramController extends BaseController
 				entityCell, attributeCell, Styler.getAttributeConnectorStyle(attribute.getType(), isKey, isComposite));
 		
 		this.attributeConnectorCells.put(CellConstants.AttributeConnectorPrefix + attributeConnectorId, connectorCell);
-		
+				
 		return connectorCell;		
 	}
 
@@ -322,6 +361,9 @@ public class DiagramController extends BaseController
 				Styler.getAttributeStyle(isComposite));
 		
 		this.attributeCells.put(CellConstants.AttributePrefix + attributeId, attributeCell);
+		
+		
+		this.graph.updateCellSize(attributeCell);	
 
 		return attributeCell;
 	}
@@ -339,7 +381,7 @@ public class DiagramController extends BaseController
 	private mxCell addEntityToGraph(Entity entity, Object parent, double x, double y) throws Exception {
 		mxCell entityCell = (mxCell) this.graph.insertVertex(parent, CellConstants.EntityPrefix + entity.getId().toString(), 
 				entity.getName(), x, y,
-				StyleConstants.ENTITY_WIDTH, StyleConstants.ENTITY_HEIGHT, Styler.getFillColor(entity.getType()));
+				StyleConstants.ENTITY_WIDTH, StyleConstants.ENTITY_HEIGHT, Styler.getFillColor(entity.getType()) + ";" + StyleConstants.ENTITY_STYLE);
 		
 		this.entityCells.put(CellConstants.EntityPrefix + entity.getId().toString(), entityCell);
 

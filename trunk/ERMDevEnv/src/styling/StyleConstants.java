@@ -1,13 +1,14 @@
 package styling;
 
 public class StyleConstants {
-	public static final String COMPOSED_ATTRIBUTE_LINK_STYLE = "endArrow=none;verticalAlign=bottom;align=left;";
-	public static String ENTITY_STYLE = "";
-	public static String COMPOSED_ATTRIBUTE_STYLE = "fontSize=9;shape=ellipse;perimeter=ellipsePerimeter;align=center;verticalAlign=middle;";
-	public static String ATTRIBUTE_STYLE = "fontSize=9;strokeColor=white;fillColor=white;gradientColor=white;verticalAlign=top;align=center";
-	public static String ATTRIBUTE_LINK_STYLE = "endArrow=emptyCircle;endSize=10";
-	public static String CALCULATED_ATTRIBUTE_LINK_STYLE = "endArrow=emptyRedCircle;endSize=10";
-	public static String KEY_ATTRIBUTE_LINK_STYLE = "endArrow=oval";
+	public static final String COMPOSED_ATTRIBUTE_LINK_STYLE = "endArrow=none;verticalAlign=bottom;align=left;strokeColor=black";
+	public static String ENTITY_STYLE = "strokeColor=black";
+	public static String COMPOSED_ATTRIBUTE_STYLE = "fontSize=9;shape=ellipse;fillColor=white;perimeter=ellipsePerimeter;align=center;verticalAlign=middle;strokeColor=black";
+	public static String ATTRIBUTE_STYLE = "fontSize=9;strokeColor=none;fillColor=none;gradientColor=none;verticalAlign=middle;align=center;spacingBottom=0;spacingTop=0;spacing=0";
+	public static String ATTRIBUTE_LINK_STYLE = "endArrow=emptyCircle;endSize=10;strokeColor=black";
+	public static String CALCULATED_ATTRIBUTE_LINK_STYLE = "endArrow=emptyRedCircle;endSize=10;strokeColor=black";
+	public static String KEY_ATTRIBUTE_LINK_STYLE = "endArrow=oval;endSize=10;strokeColor=black";
+	public static String CALCULATED_KEY_ATTRIBUTE_LINK_STYLE = "endArrow=filledRedCircle;endSize=10;strokeColor=black";
 	public static String RELATIONSHIP_STYLE = "shape=rhombus;perimeter=rhombusPerimeter;portConstraint=eastwestsouthnorth;fillColor=#A7ABAB;strokeColor=#A7ABAB";
 	public static String RELATIONSHIP_LINK_STYLE = "endArrow=none;edgeStyle=elbowEdgeStyle;verticalAlign=bottom;align=left;strokeColor=#FF0000";
 	public static String HIERARCHY_PARENT_LINK_STYLE = "endArrow=block;edgeStyle=orthogonalEdgeStyle;verticalAlign=bottom;align=left;verticalAlign=bottom;align=left;";
@@ -20,7 +21,7 @@ public class StyleConstants {
 	public static double ENTITY_WIDTH = 80;
 	public static double ENTITY_HEIGHT = 30;
 	public static double ATTRIBUTE_WIDTH = 0;
-	public static double ATTRIBUTE_HEIGHT = 0;
+	public static double ATTRIBUTE_HEIGHT = 12;
 	public static double COMPOSED_ATTRIBUTE_WIDTH = 60;
 	public static double COMPOSED_ATTRIBUTE_HEIGHT = 20;
 	public static double RELATIONSHIP_HEIGHT = 60;

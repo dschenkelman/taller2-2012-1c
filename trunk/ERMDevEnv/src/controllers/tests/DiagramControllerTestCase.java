@@ -15,6 +15,7 @@ import models.Cardinality;
 import models.Diagram;
 import models.Entity;
 import models.Hierarchy;
+import models.IdGroup;
 import models.IdGroupCollection;
 import models.Relationship;
 import models.RelationshipEntity;
@@ -406,7 +407,7 @@ public class DiagramControllerTestCase {
 		diagramController.handleCreatedEvent(relationship);
 		
 		mxCell entity1Cell = diagramController.getEntityCell(entity1.getId().toString());
-		mxCell entity2Cell = diagramController.getEntityCell(entity1.getId().toString());
+		mxCell entity2Cell = diagramController.getEntityCell(entity2.getId().toString());
 		mxCell relationshipCell = diagramController.getRelationshipCell(relationship.getId().toString());
 		
 		mxEventObject eventObject = new mxEventObject("name");
@@ -807,6 +808,50 @@ public class DiagramControllerTestCase {
 	}
 	
 	@Test
+	public void testShouldUseKeyAttributeStyleForAttributesWhichAreKeysOnTheirOwn() throws Exception
+	{
+		Entity entity = new Entity("Entity");
+		
+		IdGroupCollection collection1 = new IdGroupCollection();
+		collection1.addIdGroup(new IdGroup("1"));
+		
+		IdGroupCollection collection2 = new IdGroupCollection();
+		collection2.addIdGroup(new IdGroup("2"));
+		collection2.addIdGroup(new IdGroup("3"));
+		
+		IdGroupCollection collection3 = new IdGroupCollection();
+		collection3.addIdGroup(new IdGroup("4"));
+		
+		IdGroupCollection collection4 = new IdGroupCollection();
+		collection4.addIdGroup(new IdGroup("2"));
+		
+		IdGroupCollection collection5 = new IdGroupCollection();
+		collection5.addIdGroup(new IdGroup("3"));
+		
+		entity.getAttributes().addAttribute("Attribute1", new Cardinality(0, 1), collection1, AttributeType.copy, null);
+		entity.getAttributes().addAttribute("Attribute2", new Cardinality(0, 1), collection2, AttributeType.copy, null);
+		entity.getAttributes().addAttribute("Attribute3", new Cardinality(0, 1), collection3, AttributeType.calculated, "expression");
+		entity.getAttributes().addAttribute("Attribute4", new Cardinality(0, 1), collection4, AttributeType.copy, null);
+		entity.getAttributes().addAttribute("Attribute5", new Cardinality(0, 1), collection5, AttributeType.copy, null);
+		
+		DiagramController diagramController = this.createController();
+		
+		this.addEntityToDiagram(diagramController, entity, 10, 20);
+		
+		mxCell attribute1ConnectorCell = diagramController.getAttributeConnectorCell(entity.getId()+"Attribute1");
+		mxCell attribute2ConnectorCell = diagramController.getAttributeConnectorCell(entity.getId()+"Attribute2");
+		mxCell attribute3ConnectorCell = diagramController.getAttributeConnectorCell(entity.getId()+"Attribute3");
+		mxCell attribute4ConnectorCell = diagramController.getAttributeConnectorCell(entity.getId()+"Attribute4");
+		mxCell attribute5ConnectorCell = diagramController.getAttributeConnectorCell(entity.getId()+"Attribute5");
+		
+		Assert.assertTrue(attribute1ConnectorCell.getStyle().contains(StyleConstants.KEY_ATTRIBUTE_LINK_STYLE));
+		Assert.assertTrue(attribute2ConnectorCell.getStyle().contains(StyleConstants.ATTRIBUTE_LINK_STYLE));
+		Assert.assertTrue(attribute3ConnectorCell.getStyle().contains(StyleConstants.CALCULATED_KEY_ATTRIBUTE_LINK_STYLE));
+		Assert.assertTrue(attribute4ConnectorCell.getStyle().contains(StyleConstants.ATTRIBUTE_LINK_STYLE));
+		Assert.assertTrue(attribute5ConnectorCell.getStyle().contains(StyleConstants.ATTRIBUTE_LINK_STYLE));
+	}
+	
+	@Test
 	public void testShouldCallToLoadWithCorrectDiagramName() {
 		Diagram diagram = new Diagram();
 		diagram.setName("diagram1");
@@ -846,3 +891,4 @@ public class DiagramControllerTestCase {
 	}
 
 }
+
