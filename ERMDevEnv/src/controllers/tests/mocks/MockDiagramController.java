@@ -212,4 +212,10 @@ public class MockDiagramController implements IDiagramController {
 	public Hierarchy getUpdatedHierarchy() {
 		return this.updatedHierarchy;
 	}
+
+	@Override
+	public mxCell getIdGroupConnectorCell(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

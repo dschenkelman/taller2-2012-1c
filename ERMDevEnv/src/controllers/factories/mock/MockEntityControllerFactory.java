@@ -55,8 +55,16 @@ public class MockEntityControllerFactory implements IEntityControllerFactory {
 					
 					IdGroupCollection groupCollection2 = new IdGroupCollection();
 					groupCollection2.addIdGroup(new IdGroup("2"));
+					groupCollection2.addIdGroup(new IdGroup("3"));
+					
+					IdGroupCollection groupCollection3 = new IdGroupCollection();
+					groupCollection3.addIdGroup(new IdGroup("2"));
+					
+					IdGroupCollection groupCollection4 = new IdGroupCollection();
+					groupCollection4.addIdGroup(new IdGroup("3"));
+					
 					entity.getAttributes().addAttribute("Attribute2", new Cardinality(0, 1), groupCollection2, AttributeType.calculated, "expression");
-					entity.getAttributes().addAttribute("Attribute3");
+					entity.getAttributes().addAttribute("Attribute3", new Cardinality(0, 1), groupCollection3, AttributeType.characterization, null);
 					
 					entity.getAttributes().addAttribute("Attribute4");
 					Attribute attribute4 = entity.getAttributes().getAttribute("Attribute4");
@@ -66,7 +74,9 @@ public class MockEntityControllerFactory implements IEntityControllerFactory {
 					attribute6.getAttributes().addAttribute("Attribute8");
 					attribute6.getAttributes().addAttribute("Attribute9");
 					
-					entity.getAttributes().addAttribute("Attribute5", new Cardinality(0, 1), null, AttributeType.calculated, "Attribute5");
+					entity.getAttributes().addAttribute("Attribute5", new Cardinality(0, 1), groupCollection3, AttributeType.calculated, "Attribute5");
+					
+					entity.getAttributes().addAttribute("Attribute10", new Cardinality(0, 1), groupCollection4, AttributeType.copy, null);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
