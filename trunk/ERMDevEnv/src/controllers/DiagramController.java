@@ -55,13 +55,14 @@ public class DiagramController extends BaseController
 	implements IDiagramController, mxIEventListener{
 
 	private static class CellConstants{
-		public static String EntityPrefix = "Entity";
-		public static String RelationshipPrefix = "Relationship";
-		public static String AttributePrefix = "Attribute";
-		public static String AttributeConnectorPrefix = "AttributeConnector";
-		public static String RelationshipConnectorPrefix = "RelationshipConnector";
-		public static String HierarchyNodePrefix = "HierarchyNode";
-		public static String HierarchyConnectorPrefix = "HierarchyConnector";
+		public static final String IdGroupConnectorPrefix = "IdGroupConnector";
+		public static final String EntityPrefix = "Entity";
+		public static final String RelationshipPrefix = "Relationship";
+		public static final String AttributePrefix = "Attribute";
+		public static final String AttributeConnectorPrefix = "AttributeConnector";
+		public static final String RelationshipConnectorPrefix = "RelationshipConnector";
+		public static final String HierarchyNodePrefix = "HierarchyNode";
+		public static final String HierarchyConnectorPrefix = "HierarchyConnector";
 	}
 	
 	private CustomGraph graph;
@@ -72,6 +73,7 @@ public class DiagramController extends BaseController
 	private Map<String, mxCell> relationshipConnectorCells;
 	private Map<String, mxCell> hierarchyNodeCells;
 	private Map<String, mxCell> hierarchyConnectorCells;
+	private Map<String, mxCell> idGroupConnectorCells;
 	private IEntityControllerFactory entityControllerFactory;
 	private Entity pendingEntity;
 	private IRelationshipControllerFactory relationshipControllerFactory;
@@ -110,6 +112,7 @@ public class DiagramController extends BaseController
 		this.relationshipConnectorCells = new HashMap<String, mxCell>();
 		this.hierarchyConnectorCells = new HashMap<String, mxCell>();
 		this.hierarchyNodeCells = new HashMap<String, mxCell>();
+		this.idGroupConnectorCells = new HashMap<String, mxCell>();
 		this.xmlFileManager = xmlFileManager;
 		this.diagramXmlManager = diagramXmlManager;
 		this.diagramView = diagramView;
@@ -163,11 +166,6 @@ public class DiagramController extends BaseController
 		try{
 			Object parent = this.graph.getDefaultParent();
 			mxCell relationshipCell = this.addRelationshipToGraph(relationship, parent, x, y);
-			
-			double centerX = relationshipCell.getGeometry().getCenterX();
-			double centerY = relationshipCell.getGeometry().getCenterY();
-			
-			int attributeCount = relationship.getAttributes().count();
 			
 			Map<UUID, Integer> entityCount = new HashMap<UUID, Integer>();
 			
@@ -271,6 +269,33 @@ public class DiagramController extends BaseController
 			}
 			
 			currentAngle += partialAngle;
+		}
+		
+		this.addIdGroupConnectorsToElement(parent, elementId, attributesByIdGroup);
+	}
+
+	private void addIdGroupConnectorsToElement(Object parent, UUID elementId,
+			Map<String, List<Attribute>> attributesByIdGroup) {
+		for (String key : attributesByIdGroup.keySet()) {
+			List<Attribute> attributes = attributesByIdGroup.get(key);
+			
+			mxCell lastIdGroupConnectorCell = null;
+			
+			for (int i = 1; i < attributes.size(); i++) {
+				Attribute currentAttribute = attributes.get(i - 1);
+				Attribute nextAttribute = attributes.get(i);
+				
+				mxCell currentAttributeCell = this.getAttributeConnectorCell(elementId.toString() + currentAttribute.getName());
+				mxCell nextAttributeCell = this.getAttributeConnectorCell(elementId.toString() + nextAttribute.getName());
+				
+				String idGroupConnectorId = elementId.toString() + "_" + currentAttribute.getName() + "_" + nextAttribute.getName() + "_" + key;
+				
+				lastIdGroupConnectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.IdGroupConnectorPrefix + idGroupConnectorId, "", 
+						i == 1 ? currentAttributeCell : lastIdGroupConnectorCell, nextAttributeCell, 
+								i == 1 ? StyleConstants.FIRST_ID_GROUP_CONNECTOR_STYLE : StyleConstants.NON_FIRST_ID_GROUP_CONNECTOR_STYLE);
+				
+				this.idGroupConnectorCells.put(CellConstants.IdGroupConnectorPrefix + idGroupConnectorId, lastIdGroupConnectorCell);
+			}
 		}
 	}
 
@@ -643,6 +668,11 @@ public class DiagramController extends BaseController
 
 	public mxCell getHierarchyConnectorCell(String id) {
 		return this.hierarchyConnectorCells.get(CellConstants.HierarchyConnectorPrefix + id);
+	}
+	
+	@Override
+	public mxCell getIdGroupConnectorCell(String id) {
+		return this.idGroupConnectorCells.get(CellConstants.IdGroupConnectorPrefix + id);
 	}
 
 	public void addListener(IDiagramEventListener listener) {
