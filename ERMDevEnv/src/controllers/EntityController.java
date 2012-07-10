@@ -115,8 +115,9 @@ public class EntityController extends BaseController implements IEntityControlle
             possibleKeys.add(attribute);
         }
         if (possibleKeys.size() > 0) {
-            IKeysController keysController = keysControllerFactory.create(possibleKeys);
-            keysController.create();
+        	IKeysController keysController = keysControllerFactory.create();
+        	keysController.setPossibleKeys(possibleKeys);
+        	keysController.create();
         }
 
     }

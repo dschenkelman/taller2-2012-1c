@@ -40,7 +40,9 @@ import views.IAttributeView;
 import views.IDiagramView;
 import views.IEntityView;
 import views.IHierarchyView;
+import views.IKeysView;
 import views.IProjectView;
+import views.KeyView;
 import views.ProjectView;
 import controllers.AttributeController;
 import controllers.DiagramController;
@@ -50,7 +52,9 @@ import controllers.IAttributeController;
 import controllers.IDiagramController;
 import controllers.IEntityController;
 import controllers.IHierarchyController;
+import controllers.IKeysController;
 import controllers.IProjectController;
+import controllers.KeysController;
 import controllers.ProjectController;
 
 public class Bootstrapper {
@@ -121,6 +125,8 @@ public class Bootstrapper {
 					.addComponent(IHierarchyController.class, HierarchyController.class)
 					.addComponent(IHierarchyView.class, HierarchyView.class)
 					.as(CACHE).addComponent(IKeysControllerFactory.class, KeyControllerFactory.class)
+					.addComponent(IKeysController.class, KeysController.class)
+					.addComponent(IKeysView.class, KeyView.class)
 					.as(CACHE).addComponent(IGraphPersistenceService.class, GraphPersistenceService.class)
 					.as(CACHE).addComponent(IDiagramControllerFactory.class, DiagramControllerFactory.class)
 					.addComponent(IProjectController.class, ProjectController.class)

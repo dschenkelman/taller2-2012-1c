@@ -19,12 +19,17 @@ public class KeysController extends BaseController implements IKeysController {
     private IKeysView keysView;
     private Iterable<IKey> possibleKeys;
 
-    public KeysController(IProjectContext projectContext, IKeysView keysView, Iterable<IKey> possibleKeys) {
+    public KeysController(IProjectContext projectContext, IKeysView keysView) {
         super(projectContext);
-        this.possibleKeys = possibleKeys;
+        this.possibleKeys = new ArrayList<IKey>();
         setKeyView(keysView);
     }
 
+    @Override
+    public void setPossibleKeys(Iterable<IKey> possibleKeys) {
+    	this.possibleKeys = possibleKeys;
+    }
+    
     @Override
     public void setKeyView(IKeysView keysView) {
         this.keysView = keysView;
