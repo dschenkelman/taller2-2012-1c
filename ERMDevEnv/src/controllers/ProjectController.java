@@ -3,9 +3,11 @@ package controllers;
 import infrastructure.IFileSystemService;
 import infrastructure.IProjectContext;
 import infrastructure.visual.DiagramTreeNode;
+import infrastructure.visual.HierarchyTreeNode;
 
 import java.io.File;
 
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -165,7 +167,9 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		this.diagramController.load(diagramToLoad);
 		this.shell.setRightContent(this.diagramController.getView());
 		
-		Object o = treePath.getLastPathComponent();
+		
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) treePath.getLastPathComponent();
+		Object o = node.getUserObject();
 		
 		if (o instanceof Entity) {
 			this.diagramController.updateEntity((Entity) o);
@@ -175,7 +179,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 			this.diagramController.updateRelationship((Relationship) o);
 			return;
 		}
-		if (o instanceof Hierarchy) {
+		if (o instanceof HierarchyTreeNode) {
 			this.diagramController.updateHierarchy((Hierarchy) o);
 			return;
 		}

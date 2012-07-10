@@ -11,6 +11,7 @@ public class MockEntityView implements IEntityView {
     public boolean addViewWasCall = false;
     private boolean showViewWasCall = false;
     private String name;
+	private IAttributeView attributeView;
 
     @Override
     public void setController(IEntityController entityController) {
@@ -24,12 +25,13 @@ public class MockEntityView implements IEntityView {
 
     @Override
     public void addAttributeView(IAttributeView attributeView) {
-        this.addViewWasCall = true;
+        this.attributeView = attributeView;
+    	this.addViewWasCall = true;
     }
 
     @Override
     public IAttributeView getAttributeView() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return this.attributeView;
     }
 
     @Override

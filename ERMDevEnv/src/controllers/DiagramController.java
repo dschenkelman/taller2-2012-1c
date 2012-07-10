@@ -758,6 +758,7 @@ public class DiagramController extends BaseController
 		entityController.addSubscriber(this);
 		entityController.create(entity);
 		
+		String key = CellConstants.EntityPrefix + entity.getId().toString();
 		
 	}
 
