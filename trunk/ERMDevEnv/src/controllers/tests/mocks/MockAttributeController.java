@@ -3,6 +3,7 @@ package controllers.tests.mocks;
 import controllers.IAttributeController;
 import models.Attribute;
 import models.AttributeCollection;
+import views.AttributeView;
 import views.IAttributeView;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class MockAttributeController implements IAttributeController {
 
     public MockAttributeController() {
         this.attributes = new ArrayList<Attribute>();
+        this.attributeView = new AttributeView();
     }
 
     @Override

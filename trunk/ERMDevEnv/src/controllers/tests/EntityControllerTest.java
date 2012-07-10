@@ -139,13 +139,15 @@ public class EntityControllerTest {
 		
 		
 		entityController.create(entity);
+		
+		Assert.assertTrue(this.mockAttributeControllerFactory.wasCalled());
+		
+		List<Attribute> attributes = (List<Attribute>) this.mockAttributeController.getAttributes();
+		
+		Assert.assertEquals(collection.getAttributes(), attributes);
+		
 		Assert.assertTrue(this.mockEntityView.addViewWasCall);
 		Assert.assertTrue(this.mockEntityView.isVisible());
-	}
-	
-	@Test
-	public void testShouldAddAttributeView() {
-		
 	}
 
 	@Before
