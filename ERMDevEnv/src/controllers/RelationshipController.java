@@ -66,9 +66,8 @@ public class RelationshipController implements IRelationshipController {
 		view.setController(this);
 		relEntController = relationshipEntityControllerFactory
 				.create(IterableExtensions.getListOf(pendingRelationship.getRelationshipEntities()));
-		attController = this.attributeControllerFactory.create(
-				pendingRelationship.getAttributes());
-		
+		attController = this.attributeControllerFactory.create();
+		attController.setAttributes(this.pendingRelationship.getAttributes().getAttributes());
 
 		this.view.show();
 	}

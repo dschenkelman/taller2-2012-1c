@@ -35,7 +35,16 @@ public class EntityController extends BaseController implements IEntityControlle
 
     @Override
     public void create() {
-        attributeController = this.attributeControllerFactory.create(this.pendingEntity.getAttributes());
+        this.attributeController = this.attributeControllerFactory.create();
+        this.entityView.addAttributeView(attributeController.getAttributeView());
+        this.entityView.showView();
+    }
+    
+    @Override
+    public void create(Entity entity) {
+    	this.pendingEntity = entity;
+        this.attributeController = this.attributeControllerFactory.create();
+        this.attributeController.setAttributes(this.pendingEntity.getAttributes().getAttributes());
         this.entityView.addAttributeView(attributeController.getAttributeView());
         this.entityView.showView();
     }

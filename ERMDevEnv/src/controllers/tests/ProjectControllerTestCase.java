@@ -744,7 +744,7 @@ public class ProjectControllerTestCase {
 	}
 	
 	@Test
-	public void testShouldNotUpdateRelationshipNorEntityneitherHierarchyWhenSelectDiagramInTreeNode() {
+	public void testShouldNotUpdateRelationshipNorEntityNeitherHierarchyWhenSelectDiagramInTreeNode() {
 		Diagram diagram1 = new Diagram();
 		Diagram diagram2 = new Diagram();
 		Diagram diagram3 = new Diagram();
@@ -779,7 +779,7 @@ public class ProjectControllerTestCase {
 	}
 	
 	@Test
-	public void testShould() throws Exception{
+	public void testShouldUpdateElementsSelectedInTreeNode() throws Exception{
 		Diagram diagram1 = new Diagram();
 		Diagram diagram2 = new Diagram();
 		Diagram diagram3 = new Diagram();

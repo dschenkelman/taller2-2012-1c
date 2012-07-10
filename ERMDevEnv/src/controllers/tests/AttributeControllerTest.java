@@ -26,7 +26,7 @@ public class AttributeControllerTest {
         mockProjectContext = new MockProjectContext();
         mockKeyControllerFactory = new MockKeyControllerFactory();
         mockKeyController = new MockKeyController();
-        attributeController = new AttributeController(mockProjectContext, new ArrayList<Attribute>(), mockAttributeView);
+        attributeController = new AttributeController(mockProjectContext, mockAttributeView);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class AttributeControllerTest {
         Assert.assertEquals(2, IterableExtensions.count(this.attributeController.getAttributes()));
 
     }
-
+    
     @Test
     public void testAddNewAttributeToAttribute() {
         Attribute attribute = new Attribute("name");
@@ -111,8 +111,8 @@ public class AttributeControllerTest {
         Attribute a2 = new Attribute("a2");
         attributes.add(a1);
         attributes.add(a2);
-        attributeController = new AttributeController(mockProjectContext, attributes, mockAttributeView);
-
+        this.attributeController.setAttributes(attributes);
+        
         Attribute attribute = new Attribute("name");
 
         MockAttributeView mockAttributeView = new MockAttributeView();
@@ -150,8 +150,8 @@ public class AttributeControllerTest {
         Attribute a2 = new Attribute("a2");
         attributes.add(a1);
         attributes.add(a2);
-        attributeController = new AttributeController(mockProjectContext, attributes, mockAttributeView);
-
+        this.attributeController.setAttributes(attributes);
+        
         attributeController.removeAttribute(a1);
         Assert.assertFalse(attributes.contains(a1));
 

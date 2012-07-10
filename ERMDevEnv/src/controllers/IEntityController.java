@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Entity;
 import controllers.listeners.IEntityEventListener;
 import views.IEntityView;
 
@@ -16,4 +17,6 @@ public interface IEntityController {
     void setEntityView(IEntityView entityView);
 
     void selectKeys();
+
+	void create(Entity entity);
 }

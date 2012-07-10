@@ -1,6 +1,9 @@
 package controllers;
 
+import java.util.List;
+
 import models.Attribute;
+import models.AttributeCollection;
 import models.AttributeType;
 import models.Cardinality;
 import views.IAttributeView;
@@ -22,4 +25,6 @@ public interface IAttributeController{
     public boolean editAttribute(Attribute attributeSelected);
 
     public void removeAttribute(Attribute attribute);
+
+	void setAttributes(List<Attribute> attributes);
 }

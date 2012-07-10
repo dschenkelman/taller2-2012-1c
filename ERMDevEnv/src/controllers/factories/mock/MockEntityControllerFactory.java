@@ -93,6 +93,12 @@ public class MockEntityControllerFactory implements IEntityControllerFactory {
 			public boolean addEntity() {
 				return true;
 			}
+
+			@Override
+			public void create(Entity entity) {
+				// TODO Auto-generated method stub
+				
+			}
 		};
 	}
 }

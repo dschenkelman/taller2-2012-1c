@@ -32,17 +32,21 @@ import persistence.IGraphPersistenceService;
 import persistence.IXmlFileManager;
 import persistence.IXmlManager;
 import persistence.XmlFileManager;
+import views.AttributeView;
 import views.DiagramView;
 import views.EntityView;
 import views.HierarchyView;
+import views.IAttributeView;
 import views.IDiagramView;
 import views.IEntityView;
 import views.IHierarchyView;
 import views.IProjectView;
 import views.ProjectView;
+import controllers.AttributeController;
 import controllers.DiagramController;
 import controllers.EntityController;
 import controllers.HierarchyController;
+import controllers.IAttributeController;
 import controllers.IDiagramController;
 import controllers.IEntityController;
 import controllers.IHierarchyController;
@@ -122,7 +126,9 @@ public class Bootstrapper {
 					.addComponent(IProjectController.class, ProjectController.class)
 					.addComponent(IProjectView.class, ProjectView.class)
 					.as(CACHE).addComponent(IFileSystemService.class, FileSystemService.class)
-					.as(CACHE).addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class);
+					.as(CACHE).addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class)
+					.addComponent(IAttributeController.class, AttributeController.class)
+					.addComponent(IAttributeView.class, AttributeView.class);
 	}
 
 	public MutablePicoContainer createContainer() {
