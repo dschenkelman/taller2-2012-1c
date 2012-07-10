@@ -4,5 +4,5 @@ import controllers.IAttributeController;
 import models.AttributeCollection;
 
 public interface IAttributeControllerFactory {
-    public IAttributeController create(AttributeCollection possibleAttributes);
+    public IAttributeController create();
 }

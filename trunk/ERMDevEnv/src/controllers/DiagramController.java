@@ -754,7 +754,11 @@ public class DiagramController extends BaseController
 
 	@Override
 	public void updateEntity(Entity entity) {
-		// TODO Auto-generated method stub
+		IEntityController entityController = this.entityControllerFactory.create();
+		entityController.addSubscriber(this);
+		entityController.create(entity);
+		
+		
 	}
 
 	@Override

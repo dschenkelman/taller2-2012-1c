@@ -6,6 +6,7 @@ import infrastructure.IterableExtensions;
 import models.*;
 import views.IAttributeView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AttributeController extends BaseController implements IAttributeController {
@@ -13,9 +14,9 @@ public class AttributeController extends BaseController implements IAttributeCon
     private IAttributeView attributeView;
     private List<Attribute> attributes;
 
-    public AttributeController(IProjectContext projectContext, List<Attribute> attributes, IAttributeView attributeView) {
+    public AttributeController(IProjectContext projectContext, IAttributeView attributeView) {
         super(projectContext);
-        this.attributes = attributes;
+        this.attributes = new ArrayList<Attribute>();
         this.setAttributeView(attributeView);
     }
 
@@ -34,6 +35,11 @@ public class AttributeController extends BaseController implements IAttributeCon
     @Override
     public Iterable<Attribute> getAttributes() {
         return attributes;
+    }
+    
+    @Override
+    public void setAttributes(List<Attribute> attributes) {
+    	this.attributes = attributes;
     }
 
     @Override

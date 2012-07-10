@@ -3,6 +3,8 @@ package controllers.tests.mocks;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Entity;
+
 import views.IEntityView;
 import controllers.IEntityController;
 import controllers.listeners.IEntityEventListener;
@@ -54,6 +56,12 @@ public class MockEntityController implements IEntityController{
 
 	public List<IEntityEventListener> getListeners() {
 		return this.listeners;
+	}
+
+	@Override
+	public void create(Entity entity) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

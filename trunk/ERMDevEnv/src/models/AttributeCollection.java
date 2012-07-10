@@ -89,6 +89,10 @@ public class AttributeCollection implements Iterable<Attribute> {
         }
 
     }
+    
+    public List<Attribute> getAttributes() {
+    	return this.items;
+    }
 
     @Override
     public Iterator<Attribute> iterator() {

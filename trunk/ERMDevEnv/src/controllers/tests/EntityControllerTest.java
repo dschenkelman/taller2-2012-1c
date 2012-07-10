@@ -127,6 +127,27 @@ public class EntityControllerTest {
 		Assert.assertEquals(mockKeyController.getKeys(), list);
 		Assert.assertTrue(mockKeyControllerFactory.createCalled());
 	}
+	
+	
+	@Test
+	public void TestShouldCallEverithingWellWhenUpdateAnEntity() throws Exception {
+		Entity entity = new Entity("Entity1");
+		AttributeCollection collection = new AttributeCollection();
+		collection.addAttribute("att1");
+		collection.addAttribute("att2");
+		collection.addAttribute("att3");
+		entity.setAttributes(collection);
+		
+		
+		entityController.create(entity);
+		Assert.assertTrue(this.mockEntityView.addViewWasCall);
+		Assert.assertTrue(this.mockEntityView.isVisible());
+	}
+	
+	@Test
+	public void testShouldAddAttributeView() {
+		
+	}
 
 	@Before
 	public void setUp() throws Exception {

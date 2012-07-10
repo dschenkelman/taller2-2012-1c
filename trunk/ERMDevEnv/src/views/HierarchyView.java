@@ -55,8 +55,8 @@ public class HierarchyView implements IHierarchyView{
 		this.frame1.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		Container container = frame1.getContentPane();
 		container.setLayout(new FormLayout(
-                "100*(default, $lcgap), default",
-                "100*(default, $lgap), default"));
+                "70*(default, $lcgap), default",
+                "68*(default, $lgap), default"));
 		
 		// general entity
 		this.comBoxGeneralEntity = new JComboBox();
@@ -108,10 +108,10 @@ public class HierarchyView implements IHierarchyView{
 		
 		// accept and cancel
 		this.createHierarchy = new JButton("Aceptar");
-		container.add(this.createHierarchy, CC.xywh(74, 120, 30, 10));
+		container.add(this.createHierarchy, CC.xywh(106, 120, 30, 10));
 		
 		this.cancel = new JButton("Cancelar");
-		container.add(this.cancel, CC.xywh(106, 120, 30, 10));
+		container.add(this.cancel, CC.xywh(74, 120, 30, 10));
 	}
 	
 	@Override
@@ -252,6 +252,9 @@ public class HierarchyView implements IHierarchyView{
 
 	@Override
 	public void update() {
+		this.cancel.setVisible(false);
+		this.frame1.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
 		this.getAvailableEntities();
 		//specific entities
 		DefaultComboBoxModel combGeneralMdl = (DefaultComboBoxModel) this.comBoxGeneralEntity.getModel();
