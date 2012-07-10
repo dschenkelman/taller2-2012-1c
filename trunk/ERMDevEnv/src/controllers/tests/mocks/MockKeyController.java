@@ -1,14 +1,13 @@
 package controllers.tests.mocks;
 
 import controllers.IKeysController;
-import controllers.listeners.IIdGroupEventListener;
 import models.IKey;
 import models.IdGroup;
 import views.IKeysView;
 
 public class MockKeyController implements IKeysController {
-    private Iterable<IKey> iKeys;
     private boolean createdCall = false;
+	private Iterable<IKey> possibleKeys;
 
     @Override
     public void create() {
@@ -41,13 +40,17 @@ public class MockKeyController implements IKeysController {
     }
 
     public void setKeys(Iterable<IKey> iKeys) {
-        this.iKeys = iKeys;
     }
 
     public Iterable<IKey> getKeys() {
-        return this.iKeys;
+        return this.possibleKeys;
     }
     public boolean createdCalled(){
         return this.createdCall;
     }
+
+	@Override
+	public void setPossibleKeys(Iterable<IKey> possibleKeys) {
+		this.possibleKeys = possibleKeys;
+	}
 }

@@ -1,6 +1,5 @@
 package controllers.tests;
 
-import controllers.IKeysController;
 import controllers.KeysController;
 import controllers.tests.mocks.MockKeyView;
 import infrastructure.ProjectContext;
@@ -29,7 +28,7 @@ public class KeyControllerTest {
         mockKeyView.setIdGroupSelected(idGroup);
         mockKeyView.setKeySelectedToAdd(key);
         mockKeyView.setKeySelectedToRemove(key);
-        keysController = new KeysController(new ProjectContext(), mockKeyView, new ArrayList<IKey>());
+        keysController = new KeysController(new ProjectContext(), mockKeyView);
     }
 
     @Test
@@ -61,7 +60,8 @@ public class KeyControllerTest {
         iKeyList.add(att1);
         iKeyList.add(att2);
 
-        keysController = new KeysController(new ProjectContext(), mockKeyView, iKeyList);
+        keysController = new KeysController(new ProjectContext(), mockKeyView);
+        this.keysController.setPossibleKeys(iKeyList);
         Assert.assertFalse(keysController.validIdGroupName(""));
         Assert.assertFalse(keysController.validIdGroupName("id1"));
         Assert.assertFalse(keysController.validIdGroupName("id2"));

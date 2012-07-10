@@ -2,9 +2,6 @@ package controllers.tests.mocks;
 
 import controllers.IKeysController;
 import controllers.factories.IKeysControllerFactory;
-import models.IKey;
-
-import java.util.List;
 
 public class MockKeyControllerFactory implements IKeysControllerFactory {
 
@@ -12,9 +9,9 @@ public class MockKeyControllerFactory implements IKeysControllerFactory {
     private MockKeyController keyController;
 
     @Override
-    public IKeysController create(List<IKey> objects) {
+    public IKeysController create() {
         this.createCalled = true;
-        this.keyController.setKeys(objects);
+//        this.keyController.setKeys(objects);
         return this.keyController;
     }
 
