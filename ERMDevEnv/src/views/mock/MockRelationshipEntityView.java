@@ -1,5 +1,7 @@
 package views.mock;
 
+import java.util.List;
+
 import controllers.IRelationshipEntityController;
 import controllers.RelationshipEntityController;
 import views.IRelationshipEntityView;
@@ -7,7 +9,7 @@ import views.IRelationshipEntityView;
 public class MockRelationshipEntityView implements IRelationshipEntityView{
 
 	public boolean visible;
-	public RelationshipEntityController controller;
+	public IRelationshipEntityController controller;
 	
 	public MockRelationshipEntityView () {
 		visible = false;
@@ -21,7 +23,7 @@ public class MockRelationshipEntityView implements IRelationshipEntityView{
 
 	@Override
 	public void setController(
-			RelationshipEntityController relationshipEntityController) {
+			IRelationshipEntityController relationshipEntityController) {
 		controller = relationshipEntityController;
 		
 	}
@@ -34,6 +36,14 @@ public class MockRelationshipEntityView implements IRelationshipEntityView{
 	@Override
 	public void hide() {
 		visible = false;
+	}
+
+	
+
+	@Override
+	public List<Object[]> getModelList() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

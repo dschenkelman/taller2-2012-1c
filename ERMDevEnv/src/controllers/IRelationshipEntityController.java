@@ -6,10 +6,11 @@ import java.util.UUID;
 import controllers.listeners.IRelationshipEntityEventListener;
 
 import models.Cardinality;
+import models.Entity;
 import models.RelationshipEntity;
 
 import views.IRelationshipEntityView;
-import views.RelatinshipEntityView;
+
 
 public interface IRelationshipEntityController {
 
@@ -21,5 +22,8 @@ public interface IRelationshipEntityController {
 	void modify(UUID uuid, Cardinality card, String role, boolean isStrong)
 			throws Exception;
 	void add(UUID uuid, Cardinality card, String role, boolean isStrong);
+	List<Object[]> getListForModel();
+	public Iterable<Entity> getEntities();
+	public boolean entitiesAreSameType();
 	
 }

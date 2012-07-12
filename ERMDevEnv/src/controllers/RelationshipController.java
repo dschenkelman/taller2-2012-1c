@@ -89,8 +89,11 @@ public class RelationshipController implements IRelationshipController {
 	}
 
 	@Override
-	public void isComposition(boolean composition) {
-		 pendingRelationship.isComposition(composition);
+	public void isComposition(boolean composition) throws Exception {
+		if (relEntController.entitiesAreSameType()) 
+			pendingRelationship.isComposition(composition);
+		else 
+			throw new Exception ("All entities should be the same type to make a composition");
 	}
 	
 	@Override

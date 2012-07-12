@@ -2,7 +2,9 @@ package views.mock;
 
 import controllers.IRelationshipController;
 import controllers.RelationshipController;
+import views.IAttributeView;
 import views.IRelationshipView;
+import views.RelationshipEntityViewImpl;
 
 public class MockRelationshipView implements IRelationshipView {
 
@@ -27,6 +29,18 @@ public class MockRelationshipView implements IRelationshipView {
 	@Override
 	public void hide() {
 		visible = false;
+		
+	}
+
+	@Override
+	public void addRelationshipEntityView(RelationshipEntityViewImpl relEntView) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addAttributeView(IAttributeView attview) {
+		// TODO Auto-generated method stub
 		
 	}
 

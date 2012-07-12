@@ -12,7 +12,7 @@ public class Cardinality {
 
 	public void setMinimum(double min) throws Exception {
 		if (this.maximum < min) {
-			throw new Exception();
+			throw new Exception("Minimum Cardinality should be lower than Maximum Cardinality");
 		}
 
 		this.minimum = min;

@@ -115,6 +115,10 @@ public class AttributeView implements IAttributeView {
         return panel1;
     }
 
+    public JPanel getFrame() {
+        return panel1;
+    }
+    
     @Override
     public String getName() {
         return name.getText();
