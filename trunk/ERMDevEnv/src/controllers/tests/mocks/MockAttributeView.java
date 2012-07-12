@@ -8,6 +8,8 @@ import views.IAttributeView;
 
 import java.util.List;
 
+import javax.swing.JPanel;
+
 public class MockAttributeView implements IAttributeView {
     private IAttributeController controller;
     private String expression;
@@ -70,4 +72,10 @@ public class MockAttributeView implements IAttributeView {
     public void setExpression(String expression) {
         this.expression = expression;
     }
+
+	@Override
+	public JPanel getFrame() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

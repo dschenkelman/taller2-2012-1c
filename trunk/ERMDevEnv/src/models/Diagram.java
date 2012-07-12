@@ -14,7 +14,10 @@ public class Diagram implements Iterable<Diagram>{
 	
 	private UUID id;
 	private EntityCollection entities;
+	@Deprecated
 	private List<Relationship> relationships;
+	
+		
 	private HierarchyCollection hierarchies;
 	private List<Diagram> subDiagrams;
 	private String name;
@@ -61,10 +64,13 @@ public class Diagram implements Iterable<Diagram>{
 		return entities;
 	}
 
+	
+	@Deprecated
 	public List<Relationship> getRelationships() {
 		return relationships;
 	}
 	
+	@Deprecated
 	public void setRelationships(List<Relationship> relationships)
 	{
 		this.relationships = relationships;

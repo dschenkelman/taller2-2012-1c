@@ -1,6 +1,7 @@
 package controllers;
 
 import infrastructure.IProjectContext;
+import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,6 +11,7 @@ import java.util.UUID;
 import controllers.listeners.IRelationshipEntityEventListener;
 
 import models.Cardinality;
+import models.Entity;
 import models.RelationshipEntity;
 import views.IRelationshipEntityView;
 
@@ -37,14 +39,15 @@ public class RelationshipEntityController extends BaseController implements
 
 	@Override
 	public void add(UUID uuid, Cardinality card, String role, boolean isStrong) {
-		RelationshipEntity relEntity = new RelationshipEntity(uuid, card, role,isStrong);
+		RelationshipEntity relEntity = new RelationshipEntity(uuid, card, role,
+				isStrong);
 		this.listRelEnt.add(relEntity);
 		this.updateSuscribers(relEntity);
 	}
 
 	@Override
-	public void modify(UUID uuid, Cardinality card, String role, boolean isStrong)
-			throws Exception {
+	public void modify(UUID uuid, Cardinality card, String role,
+			boolean isStrong) throws Exception {
 		RelationshipEntity aux = this.findRelationshipEntity(uuid);
 		try {
 			aux.setCardinality(card);
@@ -56,6 +59,43 @@ public class RelationshipEntityController extends BaseController implements
 		}
 
 		this.updateSuscribers(aux);
+	}
+
+	@Override
+	public List<Object[]> getListForModel() {
+
+		List<Object[]> list = new ArrayList<Object[]>();
+		for (RelationshipEntity relEnt : listRelEnt) {
+			Entity ent = findEntity(relEnt.getEntityId());
+			
+			if (ent != null) {
+				String minCard =  (relEnt.getCardinality()!=null) ?Double.toString(relEnt.getCardinality().getMinimum()):""; 
+				String maxCard =  (relEnt.getCardinality()!=null) ?Double.toString(relEnt.getCardinality().getMaximum()):"";
+				String role = (relEnt.getRole()!= null) ? relEnt.getRole():"";
+							
+				Object[] obj = new Object[] {
+					ent,
+					minCard,
+					maxCard,
+					role, 
+					relEnt.isStrongEntity() 
+				};
+
+				list.add(obj);
+			}
+		}
+		
+		return list;
+	}
+			
+	
+	
+
+	private Entity findEntity(UUID id) {
+		for (Entity ent : projectContext.getAllEntities()) {
+			if (ent.getId().equals(id)) return ent;
+		}
+		return null;
 	}
 
 	@Override
@@ -99,6 +139,23 @@ public class RelationshipEntityController extends BaseController implements
 	protected void updateSuscribers(RelationshipEntity relationshipEntity) {
 		for (IRelationshipEntityEventListener listener : listeners)
 			listener.handleCreatedEvent(relationshipEntity);
+	}
+
+	@Override
+	public Iterable<Entity> getEntities() {
+		return projectContext.getAllEntities();
+	}
+
+	@Override
+	public boolean entitiesAreSameType() {
+		List<Object []> list = relationshipEntityView.getModelList();
+		for (int i = 1 ; i < list.size(); i++ ){
+			Entity ent1 = (Entity) list.get(i-1)[0];
+			Entity ent2 = (Entity ) list.get(i)[0];
+			if (ent1.getType() != ent2.getType()) 
+				return false;
+		}
+		return true;
 	}
 
 }

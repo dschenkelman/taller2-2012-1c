@@ -54,6 +54,10 @@ public class Relationship implements INameable {
 		return this.relationshipEntites;
 	}
 	
+	public int count() {
+		return relationshipEntites.size();
+	}
+	
 	public void setRelationshipEntities ( List<RelationshipEntity> relationshipEntites) {
 		this.relationshipEntites = relationshipEntites;
 	}

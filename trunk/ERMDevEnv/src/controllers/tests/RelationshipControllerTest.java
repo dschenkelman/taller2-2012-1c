@@ -275,7 +275,13 @@ public class RelationshipControllerTest {
 		}
 			
 	}
-		
+	
+	@Test (expected=Exception.class)
+	@Ignore
+	public void TestThrowExceptionAfterCallingIsComposition () {
+		fail ();
+	}
+	
 
 	@Test
 	@Ignore

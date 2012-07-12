@@ -7,12 +7,12 @@ import models.AttributeCollection;
 import org.junit.Before;
 import org.junit.Test;
 
-public class AttributeCollectionTestCase {
+public class AttributeCollectionTestCase{
 
 	private Attribute att1;
 	private Attribute att2;
 	private Attribute att3;
-	
+		
 	@Before
 	public void setUp () {
 		att1 = new Attribute ("Attribute1");

@@ -7,6 +7,8 @@ import models.Cardinality;
 
 import java.util.List;
 
+import javax.swing.JPanel;
+
 public interface IAttributeView {
 
     public void setController(IAttributeController attributeController);
@@ -22,4 +24,6 @@ public interface IAttributeView {
     public AttributeType getAttributeType();
 
     public String getExpression();
+
+	public JPanel getFrame();
 }

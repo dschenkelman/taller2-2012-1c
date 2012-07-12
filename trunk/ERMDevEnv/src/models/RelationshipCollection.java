@@ -22,6 +22,9 @@ public class RelationshipCollection{
 	public void add(Relationship relationship) throws Exception {
 		if (relationship.getName().equals("")) 
 			throw new Exception("Relationships should have a name");
+		if (relationship.count() < 2) 
+			throw new Exception ("Relationships should have at least Entities"); 
+		
 		for (Relationship aux : relationships) {
 			if (aux.getName().equals(relationship.getName()))
 				throw new Exception ("Relationships should not have repeated names");

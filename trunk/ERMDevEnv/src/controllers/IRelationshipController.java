@@ -22,7 +22,7 @@ public interface IRelationshipController {
 	String getName();
 	
 	
-	void isComposition(boolean composition);
+	void isComposition(boolean composition) throws Exception;
 	boolean isComposition();
 	
 	void add() throws Exception;

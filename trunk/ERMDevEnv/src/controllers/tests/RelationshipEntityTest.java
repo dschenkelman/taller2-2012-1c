@@ -12,6 +12,7 @@ import models.Cardinality;
 import models.RelationshipEntity;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import views.mock.MockRelationshipEntityView;
@@ -165,5 +166,11 @@ public class RelationshipEntityTest {
 		} catch (Exception e) {
 			fail();
 		}
+	}
+	
+	@Test
+	@Ignore
+	public void TestReturnAllEntitiesAreSame () {
+		fail ();
 	}
 }
