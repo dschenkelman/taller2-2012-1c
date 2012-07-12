@@ -110,38 +110,25 @@ public class RelationshipController implements IRelationshipController {
 	@Override
 	public void add() throws Exception {
 		if (this.pendingRelationship.getName()==null || this.pendingRelationship.getName() =="")
-			throw new Exception ("The name field  is not completed");
+			throw new Exception ("The field \"name\"  is not completed");
 		
 		
 		if (this.relEntController.getRelationshipEntities().size()<2)
-			throw new Exception ();
-		this.pendingRelationship.setRelationshipEntities
-		(this.relEntController.getRelationshipEntities());
+			throw new Exception ("There should be at least two entities in a relationship");
 		
-		checkComposition();
-				
+		this.pendingRelationship.setRelationshipEntities(this.relEntController
+				.getRelationshipEntities());
+		
 		addAttributes();
-		//TODO:Checkear si tengo que setear en invisible la vista
-	       	        
+			       	        
 	    for (IRelationshipEventListener listener : listeners) 
 	       	listener.handleCreatedEvent(pendingRelationship);
-	      	    	
-	}
+	  
+	    view.hide();		
+	  }
 
 
-	private void checkComposition() throws Exception {
-		if (isComposition() == false) return;
-		
-		EntityType entityType = null;
-		for (RelationshipEntity ent : pendingRelationship.getRelationshipEntities() ) {
-			if (entityType == null)
-				entityType = this.pContext.getEntity(ent.getEntityId()).getType();
-			else if (entityType != this.pContext.getEntity(ent.getEntityId()).getType()) {
-				isComposition(false);
-				throw new Exception("All the entities should be the same type");
-			}
-		}
-	}
+
 
 	private void addAttributes () {
 		AttributeCollection attributeCollection = this.pendingRelationship.getAttributes();

@@ -7,12 +7,14 @@ import models.RelationshipEntity;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
 public class RelationshipEntityTestCase {
 
 	@Test
+	@Ignore
 	public void testCreatingLeavesCardinalitiesAndRoleAsNull()
 	{
 		Entity entity = new Entity("TestName");
@@ -27,7 +29,7 @@ public class RelationshipEntityTestCase {
 	}
 	
 	@Test
-	public void testCreatingAnCompleteRelationshipEntity() throws Exception
+	public void testCreatingACompleteRelationshipEntity() throws Exception
 	{
 		Entity entity = new Entity("TestName");
 		

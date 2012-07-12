@@ -115,38 +115,26 @@ public class RelationshipEntityViewImpl extends RelationshipEntityViewAbstract i
 		return tableModel.getModelList();
 	}
 	
-	private void updateController() {
-		List <RelationshipEntity> list = controller.getRelationshipEntities();
-		list.clear();
-		for (int i =0 ; i < tableModel.getRowCount();i++) {
-			Object [] row = tableModel.getModelList().get(i);
-			if (row[0] instanceof Entity) {
-				try {
-					UUID id = ((Entity)row[0]).getId();
-					double minCard = (row[1].toString().equals(""))?0:Double.valueOf(row[1].toString());
-					double maxCard = (row[2].toString().equals(""))?0:Double.valueOf(row[2].toString());
-					String role = (row[3].toString().equals(""))?"":row[3].toString();
-					boolean strong = (Boolean)row[4];
-					RelationshipEntity rel = new RelationshipEntity (id,new Cardinality (minCard,maxCard),role,strong);
-					list.add(rel);
-				}catch (NumberFormatException e) {
-					e.printStackTrace();
-					showErrorDialog(e.getMessage());
-					tableModel.getModelList().get(i)[1] = "0";
-					tableModel.getModelList().get(i)[2] = "0";
-				}catch (Exception e) {
-					e.printStackTrace();
-					showErrorDialog(e.getMessage());
-					tableModel.getModelList().get(i)[2] = tableModel.getModelList().get(i)[1];
-				}
-			}
-			System.out.println ("----------------------Modelo-----------------------");
-			for (RelationshipEntity r : list) {
-				System.out.println (r.getEntityId()+","+r.getCardinality().getMinimum()+","+r.getCardinality().getMaximum()+","+r.getRole()+","+r.isStrongEntity());
-			}
-		}
-	}
 
+	private void updateController() {
+		try {
+			controller.updateModel(tableModel.getModelList());
+		
+		}catch (Exception e) {
+			e.printStackTrace();
+			showErrorDialog(e.getMessage());
+			tableModel.setModel(controller.getListForModel());
+		}
+	
+		System.out.println ("----------------------Modelo-----------------------");
+		
+		List<RelationshipEntity> list = controller.getRelationshipEntities();
+		for (RelationshipEntity r : list) {
+				
+			System.out.println (r.getEntityId()+","+r.getCardinality().getMinimum()+","+r.getCardinality().getMaximum()+","+r.getRole()+","+r.isStrongEntity());
+		}
+		
+	}
 	
 	private void showErrorDialog (String msg) {
 		JFrame frame = new JFrame ();
@@ -165,6 +153,7 @@ public class RelationshipEntityViewImpl extends RelationshipEntityViewAbstract i
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			addRow(tableModel.getNewRow());
+			//updateController();
 		}
 		
 	}
@@ -182,6 +171,7 @@ public class RelationshipEntityViewImpl extends RelationshipEntityViewAbstract i
 						RelationshipEntity.getRowCount());
 			}
 			tableModel.fireTableRowsUpdated(0, RelationshipEntity.getRowCount());
+			updateController();
 			System.out.println("Remove");
 			tableModel.printModel();
 		}

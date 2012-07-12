@@ -25,5 +25,6 @@ public interface IRelationshipEntityController {
 	List<Object[]> getListForModel();
 	public Iterable<Entity> getEntities();
 	public boolean entitiesAreSameType();
+	void updateModel(List<Object[]> list) throws Exception;
 	
 }

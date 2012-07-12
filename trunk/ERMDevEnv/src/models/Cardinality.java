@@ -24,7 +24,7 @@ public class Cardinality {
 
 	public void setMaximum(double max) throws Exception {
 		if (max < this.minimum) {
-			throw new Exception();
+			throw new Exception("Maximum Cardinality should be greater than Minimum Cardinality");
 		}
 
 		this.maximum = max;

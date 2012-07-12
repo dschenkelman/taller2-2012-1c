@@ -28,12 +28,14 @@ public abstract class RelationshipViewAbstract extends JFrame {
 		separator1 = compFactory.createSeparator("");
 		tabbedPane3 = new JTabbedPane();
 		panelAttributes = new JPanel();
-		panelEntities = new JPanel();
+		
+		panelEntities = relEntView;
+		
 		Title = new JLabel();
 		checkBox1 = new JCheckBox();
 		button1 = new JButton();
 
-		setUpCompontenents (relEntView, attView); 
+		//setUpCompontenents (relEntView, attView); 
 		
 		//======== this ========
 		setTitle("Relationship Editor");
@@ -46,45 +48,46 @@ public abstract class RelationshipViewAbstract extends JFrame {
 		{
 
 			//======== panelAttributes ========
-			{
-
-				// JFormDesigner evaluation mark
-				panelAttributes.setBorder(new javax.swing.border.CompoundBorder(
-					new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-						"JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
-						javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-						java.awt.Color.red), panelAttributes.getBorder())); panelAttributes.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
-
-
-				GroupLayout panelAttributesLayout = new GroupLayout(panelAttributes);
-				panelAttributes.setLayout(panelAttributesLayout);
-				panelAttributesLayout.setHorizontalGroup(
-					panelAttributesLayout.createParallelGroup()
-						.addGap(0, 538, Short.MAX_VALUE)
-				);
-				panelAttributesLayout.setVerticalGroup(
-					panelAttributesLayout.createParallelGroup()
-						.addGap(0, 315, Short.MAX_VALUE)
-				);
-			}
+//			{
+//
+//				// JFormDesigner evaluation mark
+//				panelAttributes.setBorder(new javax.swing.border.CompoundBorder(
+//					new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
+//						"JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
+//						javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
+//						java.awt.Color.red), panelAttributes.getBorder())); 
+//				panelAttributes.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+//
+//
+//				GroupLayout panelAttributesLayout = new GroupLayout(panelAttributes);
+//				panelAttributes.setLayout(panelAttributesLayout);
+//				panelAttributesLayout.setHorizontalGroup(
+//					panelAttributesLayout.createParallelGroup()
+//						.addGap(0, 538, Short.MAX_VALUE)
+//				);
+//				panelAttributesLayout.setVerticalGroup(
+//					panelAttributesLayout.createParallelGroup()
+//						.addGap(0, 315, Short.MAX_VALUE)
+//				);
+//			}
 			tabbedPane3.addTab("Attributes", panelAttributes);
-
+			tabbedPane3.setSize(800, 500);
 
 			//======== panelEntities ========
-			{
-
-				GroupLayout panelEntitiesLayout = new GroupLayout(panelEntities);
-				panelEntities.setLayout(panelEntitiesLayout);
-				panelEntitiesLayout.setHorizontalGroup(
-					panelEntitiesLayout.createParallelGroup()
-						.addGap(0, 538, Short.MAX_VALUE)
-				);
-				panelEntitiesLayout.setVerticalGroup(
-					panelEntitiesLayout.createParallelGroup()
-						.addGap(0, 315, Short.MAX_VALUE)
-				);
-			}
-			tabbedPane3.addTab("Entities", panelEntities);
+//			{
+//
+//				GroupLayout panelEntitiesLayout = new GroupLayout(panelEntities);
+//				panelEntities.setLayout(panelEntitiesLayout);
+//				panelEntitiesLayout.setHorizontalGroup(
+//					panelEntitiesLayout.createParallelGroup()
+//						.addGap(0, 538, Short.MAX_VALUE)
+//				);
+//				panelEntitiesLayout.setVerticalGroup(
+//					panelEntitiesLayout.createParallelGroup()
+//						.addGap(0, 315, Short.MAX_VALUE)
+//				);
+//			}
+//			tabbedPane3.addTab("Entities", panelEntities);
 
 		}
 
