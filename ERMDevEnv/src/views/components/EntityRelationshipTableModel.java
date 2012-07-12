@@ -165,7 +165,15 @@ public class EntityRelationshipTableModel extends AbstractTableModel {
 	}
 
 	public void setModel(List<Object[]> relationshipEntities) {
+		int cantCol = getRowCount ();
+		while (getRowCount () > 0) {
+			this.removeRow(getRowCount () -1);
+			this.fireTableRowsDeleted(0,getRowCount());
+		}
+		
 		addItems(relationshipEntities);
+		this.fireTableRowsInserted(0, relationshipEntities.size());
+		
 	}
 
 	public List<Object[]> getModelList() {

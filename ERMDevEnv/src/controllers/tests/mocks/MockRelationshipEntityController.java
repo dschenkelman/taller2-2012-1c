@@ -94,10 +94,9 @@ public class MockRelationshipEntityController extends BaseController implements
 		
 		try {
 			relationshipEntity.add(new RelationshipEntity(ent1,new Cardinality(0, 5),"role1"));
-			relationshipEntity.add(new RelationshipEntity(ent2));
+			relationshipEntity.add(new RelationshipEntity(ent2,new Cardinality(0, Double.POSITIVE_INFINITY),"role2"));
 			relationshipEntity.add(new RelationshipEntity(ent3));
 			RelationshipEntity rel1 = new RelationshipEntity(ent4);
-			rel1.setStrongEntity(true);
 			relationshipEntity.add(rel1);
 			relationshipEntity.add(new RelationshipEntity(ent5));
 			relationshipEntity.add(new RelationshipEntity(ent6));
@@ -129,8 +128,8 @@ public class MockRelationshipEntityController extends BaseController implements
 		for (RelationshipEntity relEnt : relationshipEntity) {
 				Entity ent  = findEntity(relEnt.getEntityId()); 			
 								
-				String minCard =  (relEnt.getCardinality()!=null) ?Double.toString(relEnt.getCardinality().getMinimum()):"0"; 
-				String maxCard =  (relEnt.getCardinality()!=null) ?Double.toString(relEnt.getCardinality().getMaximum()):"0";
+				String minCard =  (relEnt.getCardinality()!=null) ?Cardinality.getStringForCardinality(relEnt.getCardinality().getMinimum()):"0"; 
+				String maxCard =  (relEnt.getCardinality()!=null) ?Cardinality.getStringForCardinality(relEnt.getCardinality().getMaximum()):"0";
 				String role = (relEnt.getRole()!= null) ? relEnt.getRole():"";
 							
 				Object[] obj = new Object[] {
@@ -156,6 +155,69 @@ public class MockRelationshipEntityController extends BaseController implements
 	public boolean entitiesAreSameType() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void updateModel (List<Object[]> list) throws Exception {
+		List <RelationshipEntity> listAux = new ArrayList<RelationshipEntity> ();
+		
+		for (int i =0 ; i < list.size();i++) {
+			Object [] row = list.get(i);
+			if (row[0] instanceof Entity) {
+					UUID id = ((Entity)row[0]).getId();
+					double minCard = (row[1].toString().equals(""))?0:Cardinality.getCardinalityFromString(row[1].toString());
+					double maxCard = (row[2].toString().equals(""))?0:Cardinality.getCardinalityFromString(row[2].toString());
+					
+					String role = (row[3].toString().equals(""))?"":row[3].toString();
+					boolean strong = (Boolean)row[4];
+					RelationshipEntity rel = new RelationshipEntity (id,new Cardinality (minCard,maxCard),role,strong);
+					listAux.add(rel);
+			}
+		}
+		
+		validateModel (listAux);
+		
+		relationshipEntity = listAux;
+	}
+
+	private boolean areThereAnyStrongEntities (List<RelationshipEntity> list) {
+		
+		for (RelationshipEntity rel : list) {
+			if (rel.isStrongEntity()) return true;
+		}
+		
+		return false;
+	}
+	
+	private int getHowManyStrongEntitiesAre(List<RelationshipEntity> list) {
+		int counter = 0;
+		for (RelationshipEntity rel : list) {
+			if (rel.isStrongEntity()) counter++;
+		}
+		return counter;
+	}
+	
+	private boolean validateWeakEntityCardinality(List<RelationshipEntity> list) {
+		for (RelationshipEntity rel : list) {
+			if (rel.isStrongEntity() == false) {
+				if (rel.getCardinality().getMaximum()==1 && rel.getCardinality().getMinimum() ==1 )
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	private void validateModel(List<RelationshipEntity> list) throws Exception{
+		//Validate Strong Entities 
+		if (areThereAnyStrongEntities(list)) {
+			if (  list.size() != 2)
+				throw new Exception ("There should be only two entities in a strong relationship");
+			if ( getHowManyStrongEntitiesAre ( list) != 1) 
+				throw new Exception ("The use of more than one strong entity per relationship is not permitted");
+			if ( !validateWeakEntityCardinality (list)) 
+				throw new Exception ("The entity that is weak entity should have 1..1 cardinality");
+		}
+		
 	}
 
 }

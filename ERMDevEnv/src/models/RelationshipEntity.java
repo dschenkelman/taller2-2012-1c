@@ -10,7 +10,12 @@ public class RelationshipEntity {
 	
 	
 	public RelationshipEntity(Entity entity) {
-		this(entity.getId(), null, null);
+		super();
+		this.entityId = entity.getId();
+		try {
+			cardinality = new Cardinality(0, 0);
+		}catch (Exception e) {}
+		role = new String ("");
 	}
 
 	public RelationshipEntity(Entity entity, Cardinality cardinality,
