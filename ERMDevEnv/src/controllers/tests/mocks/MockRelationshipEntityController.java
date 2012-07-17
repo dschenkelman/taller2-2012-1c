@@ -22,6 +22,15 @@ public class MockRelationshipEntityController extends BaseController implements
 	
 	private List<RelationshipEntity> relationshipEntity;
 	private EntityCollection entCol;	
+	public boolean isAreAllSame() {
+		return areAllSame;
+	}
+
+	public void setAreAllSame(boolean areAllSame) {
+		this.areAllSame = areAllSame;
+	}
+
+	private boolean areAllSame;
 	
 	public MockRelationshipEntityController(IProjectContext projectContext) {
 		super(projectContext);
@@ -153,8 +162,7 @@ public class MockRelationshipEntityController extends BaseController implements
 
 	@Override
 	public boolean entitiesAreSameType() {
-		// TODO Auto-generated method stub
-		return false;
+		return areAllSame;
 	}
 
 	@Override
