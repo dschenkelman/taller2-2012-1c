@@ -73,16 +73,6 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 		this.textFieldName.addActionListener(new MyLabelNameListener());
 		this.button1.addActionListener(new ActionAdd());
 
-		// this.panelAttributes.add(attView.getFrame());
-		// tabbedPane3.remove(0);
-		// tabbedPane3.addTab("Ficha uno", null, relEntView, "Primer panel");
-		// this.panelEntities.add (relEntView);
-		// panelEntities.show();
-		// getContentPane().add( tabbedPane3 );
-		// this.panelEntities = relEntView;
-		// this.panelAttributes.show();
-		// this.panelAttributes.show();
-
 	}
 
 	@Override

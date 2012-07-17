@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import models.Attribute;
 import models.AttributeCollection;
 import models.Entity;
 import models.EntityCollection;
@@ -24,6 +25,7 @@ import views.mock.MockRelationshipView;
 import controllers.IRelationshipController;
 import controllers.RelationshipController;
 import controllers.factories.mock.MockRelationshipEntityControllerFactory;
+import controllers.listeners.IRelationshipEventListener;
 import controllers.tests.mocks.MockAttributeController;
 import controllers.tests.mocks.MockAttributeControllerFactory;
 import controllers.tests.mocks.MockProjectContext;
@@ -75,6 +77,9 @@ public class RelationshipControllerTest {
 		entCollection.add(entity3);
 		entCollection.add(entity4);
 		relationships = new ArrayList<Relationship> ();
+		
+
+		
 		// Set up the views
 		
 		
@@ -108,8 +113,10 @@ public class RelationshipControllerTest {
 				new Relationship(UUID.randomUUID(),null, false),
 				view,
 				mockAttributeControllerFactory,
-				
 				mockRelationshipEntityControllerFactory);
+		
+		mockAttributeControllerFactory = new MockAttributeControllerFactory();
+		mockAttributeControllerFactory.setAttributeController(attController);
 	}
 
 
@@ -124,8 +131,7 @@ public class RelationshipControllerTest {
 	}
 	
 	@Test
-    @Ignore
-	public void TestAddRelationship() {
+    public void TestAddRelationship()  {
 		
 		//There are no relationships at first in the project context
 		assertTrue (this.pContext.getRelationshipCollection().size()==0);
@@ -143,19 +149,14 @@ public class RelationshipControllerTest {
 		mockRelationshipEntityController.add(uuid2, null, null,false);
 		assertTrue(2 == mockRelationshipEntityController.getRelationshipEntities().size());
 
+		relController.setName("Relationship");
 		try {
 			relController.add();
-			fail ("should throw Exception because there is no name");
-		}catch (Exception e) {}
-		
-		
-		try {
-			relController.setName("Relationship");
-			relController.add();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			fail ();
+			fail();
 		}
+		
 		
 		//The relationship should be added to the project context
 		assertTrue (this.pContext.getRelationshipCollection().size()==1);
@@ -174,8 +175,7 @@ public class RelationshipControllerTest {
 
 		
 	@Test
-    @Ignore
-	public void TestAddRelationshipWithLessThanTwoRelationshipEntities() throws Exception {
+    public void TestAddRelationshipWithLessThanTwoRelationshipEntities() throws Exception {
 		
 		//There are no relationships at first in the project context
 		assertTrue (this.pContext.getRelationshipCollection().size()==0);
@@ -199,9 +199,7 @@ public class RelationshipControllerTest {
 		
 		mockRelationshipEntityController.add(UUID.randomUUID(), null, null,false);
 		relController.add();
-		
-	
-			
+				
 	}
 
 	
@@ -221,7 +219,7 @@ public class RelationshipControllerTest {
 		entCol.add(entity1);
 		entCol.add(entity2);
 		entCol.add(entity3);
-		
+		mockRelationshipEntityController.setAreAllSame(true);
 		pContext.setEntityCollection(entCol);
 		mockRelationshipEntityController.add(entity1.getId(),null,null,false);
 		mockRelationshipEntityController.add(entity2.getId(),null,null,false);
@@ -241,7 +239,7 @@ public class RelationshipControllerTest {
 		
 	}
 	
-	@Test
+	@Test (expected=Exception.class)
 	public void TestValidateComposeEntitiesOfDiferentTypes() throws Exception {
 					
 		relController.create();
@@ -262,43 +260,49 @@ public class RelationshipControllerTest {
 		mockRelationshipEntityController.add(entity1.getId(),null,null,false);
 		mockRelationshipEntityController.add(entity2.getId(),null,null,false);
 		mockRelationshipEntityController.add(entity3.getId(),null,null,false);
-		
+		mockRelationshipEntityController.setAreAllSame(false);
 		
 		relController.setName("Relationship");
+		
 		relController.isComposition(true);
 		
-		try {
-			relController.add();
-			fail("should throw Exception because there are entities with diferent types");
-		}catch (Exception e) {
-			assertFalse (relController.isComposition());
-		}
+		
 			
-	}
-	
-	@Test (expected=Exception.class)
-	@Ignore
-	public void TestThrowExceptionAfterCallingIsComposition () {
-		fail ();
 	}
 	
 
 	@Test
-	@Ignore
 	public void TestCreateRelationshipWithAttributes() {
-		fail();
+		relController.create();
+		List<Attribute> list = new ArrayList<Attribute>();
+		list.add(new Attribute("ATT_NAME_1"));
+		list.add(new Attribute("ATT_NAME_2"));
+		list.add(new Attribute("ATT_NAME_3"));
+		list.add(new Attribute("ATT_NAME_4"));
+		attController.setAttributes(list);
+		Entity entity1 = new Entity ("Entity1");
+		entity1.setType(EntityType.Domain);
+		Entity entity2 = new Entity ("Entity2");
+		entity2.setType(EntityType.Domain);
+		
+		mockRelationshipEntityController.add(entity1.getId(),null,null,false);
+		mockRelationshipEntityController.add(entity2.getId(),null,null,false);
+		relController.setName("Relationship");
+		
+		relController.addCreateListener(pContext);
+		try {
+			relController.add();
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("it shouldn't fail to create this relationship");
+		}
+		
+		//The relationship should be added to the project context
+		assertTrue (this.pContext.getRelationshipCollection().size()==1);
+		Relationship aux =  pContext.getRelationshipCollection().iterator().next();
+		assertTrue(aux.getAttributes().count()==4);
+		
 	}
 	
-	@Test
-	@Ignore
-	public void TestCreateBinaryRelationshipWithStrongEntities() {
-		fail();
-	}
-	
-	@Test
-	@Ignore
-	public void TestCreateRelationshipWithStrongEntities() {
-		fail();
-	}
 	
 }

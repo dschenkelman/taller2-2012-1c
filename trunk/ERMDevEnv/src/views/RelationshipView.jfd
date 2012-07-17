@@ -4,11 +4,14 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {par l {seq t {space :::p, comp separator1::::579:x}, seq l {par t {comp button1:::p:89:p, par l {seq {space :p:172:p, comp labelName:::p:45:p, space u:::p, par l {comp textFieldName:::p:138:p, comp Title::l:p::p}}, seq l {space :p:239:p, comp checkBox1:::p::p}, seq l {space :p:30:p, comp tabbedPane3:::p:543:p}}}, space :0:16:x}}, space :::p}}"
-			"$verticalGroup": "par l {seq {comp Title:::p:27:p, space :p:18:p, par b {comp labelName::b:p::p, comp textFieldName::b:p::p}, space :p:26:p, comp checkBox1:::p::p, space s:::p, comp separator1:::p::p, space s:::p, comp tabbedPane3:::p:343:p, space ::20:x, comp button1:::p::p, space :::p}}"
+			"$horizontalGroup": "par l {seq {par l {seq t {space :::p, comp separator1::::734:x}, seq l {par t {comp button1:::p:89:p, par l {seq l {space :p:339:p, comp checkBox1:::p::p}, seq l {space :p:30:p, comp tabbedPane3:::p:685:p}}}, space :0:29:x}, seq l {space :p:248:p, comp labelName:::p:45:p, space s:::p, par l {seq {comp Title:::p::p, space :0:329:x}, seq {comp textFieldName:::p:138:p, space ::295:x}}}}, space :::p}}"
+			"$verticalGroup": "par l {seq {comp Title:::p:27:p, space :p:18:p, par b {comp textFieldName::b:p::p, comp labelName::b:p::p}, space :p:26:p, comp checkBox1:::p::p, space s:::p, comp separator1:::p::p, space :p:18:p, comp tabbedPane3:::::x, space u:::p, comp button1:::p::p, space :p:18:p}}"
 		} ) {
 			name: "this"
 			"title": "Relationship Editor"
+			auxiliary() {
+				"JavaCodeGenerator.variableModifiers": 4
+			}
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "labelName"
 				"text": "Name:"
@@ -22,20 +25,20 @@ new FormModel {
 			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
 				name: "tabbedPane3"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {space :0:538:x}"
-					"$verticalGroup": "par l {space :0:315:x}"
-				} ) {
-					name: "panelAttributes"
-				}, new FormLayoutConstraints( null ) {
-					"title": "Attributes"
-				} )
-				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-					"$horizontalGroup": "par l {space :0:538:x}"
-					"$verticalGroup": "par l {space :0:315:x}"
+					"$horizontalGroup": "par l {space :0:680:x}"
+					"$verticalGroup": "par l {space :0:337:x}"
 				} ) {
 					name: "panelEntities"
 				}, new FormLayoutConstraints( null ) {
 					"title": "Entities"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+					"$horizontalGroup": "par l {space :0:680:x}"
+					"$verticalGroup": "par l {space :0:337:x}"
+				} ) {
+					name: "panelAttributes"
+				}, new FormLayoutConstraints( null ) {
+					"title": "Attributes"
 				} )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -52,7 +55,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 10, 15 )
-			"size": new java.awt.Dimension( 615, 585 )
+			"size": new java.awt.Dimension( 760, 605 )
 		} )
 	}
 }
