@@ -67,8 +67,6 @@ public class RelationshipController implements IRelationshipController {
 		relEntController.setRelatinshipEntities(IterableExtensions.getListOf(pendingRelationship.getRelationshipEntities()));
 		attController = this.attributeControllerFactory.create();
 		attController.setAttributes(this.pendingRelationship.getAttributes().getAttributes());
-		if (this.view.getAttributeView() == null)
-			System.out.println("attribute view null");
 		attController.setAttributeView(this.view.getAttributeView());
 		this.relEntController.setRelationshipEntityView(this.view.getRelationshipEntityView());
 		
