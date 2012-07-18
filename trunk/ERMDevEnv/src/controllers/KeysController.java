@@ -28,6 +28,8 @@ public class KeysController extends BaseController implements IKeysController {
     @Override
     public void setPossibleKeys(Iterable<IKey> possibleKeys) {
     	this.possibleKeys = possibleKeys;
+        this.keysView.setPossibleKeys(this.possibleKeys);
+        this.keysView.setExistIdGroup(this.getIdGroupFromKeys());
     }
     
     @Override
