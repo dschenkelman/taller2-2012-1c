@@ -1,7 +1,6 @@
 package infrastructure.visual;
 
 import infrastructure.IProjectContext;
-
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -31,13 +30,17 @@ public class DiagramTreeNode extends DefaultMutableTreeNode {
 	private DefaultMutableTreeNode hierarchiesNode;
 
 	private Diagram diagram;
+
+	private IProjectContext projectContext;
 	
-	public DiagramTreeNode(Diagram diagram) {
+	public DiagramTreeNode(Diagram diagram, IProjectContext projectContext) {
 		super(diagram);
+		this.projectContext = projectContext;
 		this.diagram = diagram;
 		this.addChildFolders();
 		this.populateEntities();
 		this.populateRelationships();
+		this.populateHierarchies();
 	}
 	
 	private void populateEntities() {
@@ -49,6 +52,12 @@ public class DiagramTreeNode extends DefaultMutableTreeNode {
 	private void populateRelationships() {
 		for (Relationship relationship : this.diagram.getRelationships()) {
 			this.relationshipsNode.add(new DefaultMutableTreeNode(relationship));
+		}
+	}
+	
+	private void populateHierarchies() {
+		for (Hierarchy hierarchy : this.diagram.getHierarchies()) {
+			this.hierarchiesNode.add(new HierarchyTreeNode(this.projectContext, hierarchy));
 		}
 	}
 
@@ -64,14 +73,14 @@ public class DiagramTreeNode extends DefaultMutableTreeNode {
 		tree.nodesWereInserted(this.relationshipsNode, new int[]{index});
 	}
 	
-	public void addHierarchy(Hierarchy hierarchy, DefaultTreeModel tree, IProjectContext projectContext){
-		this.hierarchiesNode.add(new HierarchyTreeNode(projectContext, hierarchy));
+	public void addHierarchy(Hierarchy hierarchy, DefaultTreeModel tree){
+		this.hierarchiesNode.add(new HierarchyTreeNode(this.projectContext, hierarchy));
 		int index = this.hierarchiesNode.getChildCount() - 1;
 		tree.nodesWereInserted(this.hierarchiesNode, new int[]{index});
 	}
 	
 	public DiagramTreeNode addSubdiagram(Diagram diagram){
-		DiagramTreeNode diagramNode = new DiagramTreeNode(diagram);
+		DiagramTreeNode diagramNode = new DiagramTreeNode(diagram, this.projectContext);
 		this.subdiagramsNode.add(diagramNode);
 		return diagramNode;
 	}
