@@ -1,17 +1,15 @@
 package persistence;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import models.Relationship;
+import models.RelationshipCollection;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-public class RelationshipCollectionXmlManager implements IXmlManager<List<Relationship>> {
+public class RelationshipCollectionXmlManager implements IXmlManager<RelationshipCollection> {
 
-	public Element getElementFromItem(List<Relationship> collection,
+	public Element getElementFromItem(RelationshipCollection collection,
 			Document document) {
 		Element element = document.createElement("relationships");
 		
@@ -22,8 +20,8 @@ public class RelationshipCollectionXmlManager implements IXmlManager<List<Relati
 		return element;
 	}
 
-	public List<Relationship> getItemFromXmlElement(Element relationshipsElement) throws Exception {
-		List<Relationship> relationships = new ArrayList<Relationship>();
+	public RelationshipCollection getItemFromXmlElement(Element relationshipsElement) throws Exception {
+		RelationshipCollection relationships = new RelationshipCollection();
 		
 		if (relationshipsElement == null)
 			return relationships;
@@ -36,5 +34,4 @@ public class RelationshipCollectionXmlManager implements IXmlManager<List<Relati
 		
 		return relationships;
 	}
-
 }

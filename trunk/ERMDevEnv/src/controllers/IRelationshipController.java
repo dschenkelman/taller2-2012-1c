@@ -28,6 +28,7 @@ public interface IRelationshipController {
 	void add() throws Exception;
 
 	void setRelationshipView(IRelationshipView view);
+	void create(Relationship relationship);
 	
 	
 	

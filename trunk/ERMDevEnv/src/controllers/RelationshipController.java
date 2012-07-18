@@ -45,12 +45,11 @@ public class RelationshipController implements IRelationshipController {
 
 	
 	public RelationshipController(
-			IProjectContext pContext,
-			Relationship relationship, IRelationshipView view,
+			IProjectContext pContext, IRelationshipView view,
 			IAttributeControllerFactory attributeControllerFactory,
 			IRelationshipEntityControllerFactory relationshipEntityControllerFactory) {
 		
-		pendingRelationship = relationship;
+		pendingRelationship = new Relationship();
 		this.pContext = pContext;
 		this.view = view;
 		this.attributeControllerFactory = attributeControllerFactory;
@@ -64,11 +63,16 @@ public class RelationshipController implements IRelationshipController {
 		
 		
 		view.setController(this);
-		relEntController = relationshipEntityControllerFactory
-				.create(IterableExtensions.getListOf(pendingRelationship.getRelationshipEntities()));
+		relEntController = relationshipEntityControllerFactory.create();
+		relEntController.setRelatinshipEntities(IterableExtensions.getListOf(pendingRelationship.getRelationshipEntities()));
 		attController = this.attributeControllerFactory.create();
 		attController.setAttributes(this.pendingRelationship.getAttributes().getAttributes());
-
+		if (this.view.getAttributeView() == null)
+			System.out.println("attribute view null");
+		attController.setAttributeView(this.view.getAttributeView());
+		this.relEntController.setRelationshipEntityView(this.view.getRelationshipEntityView());
+		
+		
 		this.view.show();
 	}
 
@@ -140,6 +144,22 @@ public class RelationshipController implements IRelationshipController {
                 e.printStackTrace();
             }
         }
+	}
+
+	@Override
+	public void create(Relationship relationship) {
+		this.pendingRelationship = relationship;
+		view.setController(this);
+		relEntController = relationshipEntityControllerFactory.create();
+		relEntController.setRelatinshipEntities(IterableExtensions.getListOf(pendingRelationship.getRelationshipEntities()));
+		attController = this.attributeControllerFactory.create();
+		attController.setAttributes(this.pendingRelationship.getAttributes().getAttributes());
+		if (this.view.getAttributeView() == null)
+			System.out.println("attribute view null");
+		attController.setAttributeView(this.view.getAttributeView());
+		this.relEntController.setRelationshipEntityView(this.view.getRelationshipEntityView());
+		
+		this.view.show();
 	}
 	
 }

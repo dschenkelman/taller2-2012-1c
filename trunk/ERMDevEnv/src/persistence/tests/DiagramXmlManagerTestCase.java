@@ -11,6 +11,7 @@ import models.EntityCollection;
 import models.Hierarchy;
 import models.HierarchyCollection;
 import models.Relationship;
+import models.RelationshipCollection;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -26,7 +27,7 @@ public class DiagramXmlManagerTestCase {
 	public void testShouldGenerateAXmlFromDiagram() throws Exception
 	{
 		EntityCollection entities = new EntityCollection();
-		List<Relationship> relationships = new ArrayList<Relationship>();
+		RelationshipCollection relationships = new RelationshipCollection();
 		HierarchyCollection hierarchies = new HierarchyCollection();
 		List<Diagram> subDiagrams = new ArrayList<Diagram>();
 		Diagram subDiagram1 = new Diagram();
@@ -122,7 +123,7 @@ public class DiagramXmlManagerTestCase {
 		Assert.assertEquals("3f2504e0-4f89-11d3-9a0c-030cffffffff", diagram.getEntities().get("entity1").getId().toString());
 		Assert.assertEquals("3f2504e0-4f89-11d3-9a0c-030dffffffff", diagram.getEntities().get("entity2").getId().toString());
 		
-		Assert.assertEquals(1, diagram.getRelationships().size());
+		Assert.assertEquals(1, diagram.getRelationships().count());
 		Assert.assertNotNull(diagram.getRelationship(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFA")));
 		Assert.assertEquals("relation1",diagram.getRelationship(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFA")).getName());
 		Assert.assertTrue(diagram.getRelationship(UUID.fromString("3F2504E0-4F89-11D3-9A0C-030CFFFFFFFA")).isComposition());

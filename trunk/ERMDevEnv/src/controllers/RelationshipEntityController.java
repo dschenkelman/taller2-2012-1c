@@ -1,19 +1,17 @@
 package controllers;
 
 import infrastructure.IProjectContext;
-import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import controllers.listeners.IRelationshipEntityEventListener;
-
 import models.Cardinality;
 import models.Entity;
 import models.RelationshipEntity;
 import views.IRelationshipEntityView;
+import controllers.listeners.IRelationshipEntityEventListener;
 
 public class RelationshipEntityController extends BaseController implements
 		IRelationshipEntityController {
@@ -23,11 +21,10 @@ public class RelationshipEntityController extends BaseController implements
 	private List<IRelationshipEntityEventListener> listeners;
 
 	public RelationshipEntityController(IProjectContext projectContext,
-			List<RelationshipEntity> RElist,
 			IRelationshipEntityView relationshipEntityView) {
 		super(projectContext);
 		listeners = new ArrayList<IRelationshipEntityEventListener>();
-		this.listRelEnt = RElist;
+		this.listRelEnt = new ArrayList<RelationshipEntity>();
 		this.setRelationshipEntityView(relationshipEntityView);
 
 	}
@@ -220,6 +217,12 @@ public class RelationshipEntityController extends BaseController implements
 				throw new Exception ("The weak entity should have 1..1 cardinality");
 		}
 		
+	}
+
+	@Override
+	public void setRelatinshipEntities(
+			List<RelationshipEntity> relationshipEntities) {
+		this.listRelEnt = relationshipEntities;
 	}
 	
 }

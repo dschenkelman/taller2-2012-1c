@@ -64,7 +64,7 @@ public class BootstrapperTests {
 		
 		bootstrapper.run();
 		
-		Assert.assertEquals(24, this.container.getMappings().size());
+		Assert.assertEquals(29, this.container.getMappings().size());
 		Assert.assertSame(this.container, this.container.getMappings().get(MutablePicoContainer.class));
 		Assert.assertSame(DiagramController.class, this.container.getMappings().get(IDiagramController.class));
 		Assert.assertSame(DiagramView.class, this.container.getMappings().get(IDiagramView.class));
@@ -73,6 +73,7 @@ public class BootstrapperTests {
 		Assert.assertSame(ProjectContext.class, this.container.getMappings().get(IProjectContext.class));
 		Assert.assertSame(EntityControllerFactory.class, this.container.getMappings().get(IEntityControllerFactory.class));
 		Assert.assertSame(RelationshipControllerFactory.class, this.container.getMappings().get(IRelationshipControllerFactory.class));
+		Assert.assertSame(RelationshipEntityControllerFactory.class, this.container.getMappings().get(IRelationshipEntityControllerFactory.class));
 		Assert.assertSame(HierarchyControllerFactory.class, this.container.getMappings().get(IHierarchyControllerFactory.class));
 		Assert.assertSame(HierarchyController.class, this.container.getMappings().get(IHierarchyController.class));
 		Assert.assertSame(HierarchyView.class, this.container.getMappings().get(IHierarchyView.class));

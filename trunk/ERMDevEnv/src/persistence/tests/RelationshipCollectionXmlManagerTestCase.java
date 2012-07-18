@@ -4,10 +4,12 @@ import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import models.Cardinality;
 import models.Entity;
 import models.Relationship;
+import models.RelationshipCollection;
 import models.RelationshipEntity;
 
 import org.junit.Assert;
@@ -27,22 +29,26 @@ public class RelationshipCollectionXmlManagerTestCase {
 		RelationshipCollectionXmlManager xmlManager = new RelationshipCollectionXmlManager();
 		Document document = TestUtilities.createDocument();
 		
-		List<Relationship> collection = new ArrayList<Relationship>();
+		RelationshipCollection collection = new RelationshipCollection();
 		
 		Entity entity1 = new Entity("Entity1");
 		Entity entity2 = new Entity("Entity2");
 		Entity entity3 = new Entity("Entity3");
 		Entity entity4 = new Entity("Entity4");
 		
-		collection.add(new Relationship(
+		Relationship rel1 = new Relationship(
 				new RelationshipEntity(entity1, new Cardinality(0, Double.POSITIVE_INFINITY), ""), 
-				new RelationshipEntity(entity2, new Cardinality(1, 3), ""))
-		);
+				new RelationshipEntity(entity2, new Cardinality(1, 3), ""));
 		
-		collection.add(new Relationship(
+		Relationship rel2 = new Relationship(
 				new RelationshipEntity(entity3, new Cardinality(5, Double.POSITIVE_INFINITY), ""), 
-				new RelationshipEntity(entity4, new Cardinality(2, 3), ""))
-		);
+				new RelationshipEntity(entity4, new Cardinality(2, 3), ""));
+		
+		rel1.setName("relationship1");
+		rel2.setName("relationship2");
+		collection.add(rel1);
+		
+		collection.add(rel2);
 		
 		Element element = xmlManager.getElementFromItem(collection, document);
 		
@@ -94,7 +100,7 @@ public class RelationshipCollectionXmlManagerTestCase {
 		String xml = "<diagram>" +
 		"<relationships>" +
 		"<relationship id='01854049-A762-4392-9357-A213C4110220' " +
-		"name='Relationship' composition='true'>" +
+		"name='Relationship1' composition='true'>" +
 		"<attributes>" +
 		"<attribute name='nombre' id='0E688A75-A645-4665-85C8-21179BF362B8'/>" +
 		"</attributes>" +
@@ -110,7 +116,7 @@ public class RelationshipCollectionXmlManagerTestCase {
 		"</entities>" +
 		"</relationship>" +
 		"<relationship id='01854049-A762-4392-9357-A213C4110221' " +
-		"name='Relationship' composition='true'>" +
+		"name='Relationship2' composition='true'>" +
 		"<attributes>" +
 		"<attribute name='nombre' id='0E688A75-A645-4665-85C8-21179BF362B8'/>" +
 		"</attributes>" +
@@ -134,12 +140,12 @@ public class RelationshipCollectionXmlManagerTestCase {
 		
 		RelationshipCollectionXmlManager xmlManager = new RelationshipCollectionXmlManager();
 		
-		List<Relationship> relationships = xmlManager.getItemFromXmlElement(relationshipsElement);
+		RelationshipCollection relationships = xmlManager.getItemFromXmlElement(relationshipsElement);
 		
-		Assert.assertEquals(2, relationships.size());
+		Assert.assertEquals(2, relationships.count());
 		
-		Relationship relationship1 = relationships.get(0);
-		Relationship relationship2 = relationships.get(1);
+		Relationship relationship1 = relationships.get(UUID.fromString("01854049-A762-4392-9357-A213C4110220"));
+		Relationship relationship2 = relationships.get(UUID.fromString("01854049-A762-4392-9357-A213C4110221"));
 		
 		Assert.assertEquals(4, IterableExtensions.count(relationship1.getRelationshipEntities()));
 		Assert.assertEquals(4, IterableExtensions.count(relationship2.getRelationshipEntities()));

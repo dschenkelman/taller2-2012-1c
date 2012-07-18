@@ -14,11 +14,6 @@ public class MockRelationshipControllerFactory
 		return this.controller;
 	}
 
-	@Override
-	public IRelationshipController create(Relationship relationship) {
-		return null;
-	}
-
 	public void setController(IRelationshipController controller) {
 		this.controller = controller;
 	}

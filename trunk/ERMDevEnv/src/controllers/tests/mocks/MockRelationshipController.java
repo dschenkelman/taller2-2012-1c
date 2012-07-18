@@ -8,6 +8,7 @@ import views.IRelationshipView;
 
 import models.Attribute;
 import models.Cardinality;
+import models.Relationship;
 import models.RelationshipEntity;
 
 
@@ -76,6 +77,12 @@ public class MockRelationshipController implements IRelationshipController{
 
 	@Override
 	public void add() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void create(Relationship relationship) {
 		// TODO Auto-generated method stub
 		
 	}

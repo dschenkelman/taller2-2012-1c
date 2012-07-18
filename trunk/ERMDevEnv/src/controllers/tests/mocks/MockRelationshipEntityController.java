@@ -1,7 +1,6 @@
 package controllers.tests.mocks;
 
 import infrastructure.IProjectContext;
-import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,6 @@ import models.Cardinality;
 import models.Entity;
 import models.EntityCollection;
 import models.RelationshipEntity;
-import models.tests.EntityCollectionTestCase;
 import views.IRelationshipEntityView;
 import controllers.BaseController;
 import controllers.IRelationshipEntityController;
@@ -226,6 +224,12 @@ public class MockRelationshipEntityController extends BaseController implements
 				throw new Exception ("The entity that is weak entity should have 1..1 cardinality");
 		}
 		
+	}
+
+	@Override
+	public void setRelatinshipEntities(
+			List<RelationshipEntity> relationshipEntities) {
+		this.relationshipEntity = relationshipEntities;
 	}
 
 }

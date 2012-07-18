@@ -5,8 +5,8 @@ import infrastructure.Func;
 import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -14,8 +14,7 @@ public class Diagram implements Iterable<Diagram>{
 	
 	private UUID id;
 	private EntityCollection entities;
-	@Deprecated
-	private List<Relationship> relationships;
+	private RelationshipCollection relationships;
 	
 		
 	private HierarchyCollection hierarchies;
@@ -26,18 +25,18 @@ public class Diagram implements Iterable<Diagram>{
 	public Diagram()
 	{
 		this(UUID.randomUUID(), new EntityCollection(), 
-				new ArrayList<Relationship>(), new HierarchyCollection(), 
+				new RelationshipCollection(), new HierarchyCollection(), 
 				new ArrayList<Diagram>());
 	}
 
 	public Diagram(UUID id)
 	{
-		this(id, new EntityCollection(), new ArrayList<Relationship>(), 
+		this(id, new EntityCollection(), new RelationshipCollection(), 
 				new HierarchyCollection(), new ArrayList<Diagram>());
 	}
 	
 	public Diagram(EntityCollection entities,
-			List<Relationship> relationships,
+			RelationshipCollection relationships,
 			HierarchyCollection hierarchies, List<Diagram> subDiagrams)
 	{
 		this(UUID.randomUUID(), entities, relationships, hierarchies, 
@@ -45,7 +44,7 @@ public class Diagram implements Iterable<Diagram>{
 	}
 	
 	public Diagram(UUID id, EntityCollection entities,
-			List<Relationship> relationships,
+			RelationshipCollection relationships,
 			HierarchyCollection hierarchies, List<Diagram> subDiagram) 
 	{
 		this.id = id;
@@ -65,13 +64,11 @@ public class Diagram implements Iterable<Diagram>{
 	}
 
 	
-	@Deprecated
-	public List<Relationship> getRelationships() {
+	public RelationshipCollection getRelationships() {
 		return relationships;
 	}
 	
-	@Deprecated
-	public void setRelationships(List<Relationship> relationships)
+	public void setRelationships(RelationshipCollection relationships)
 	{
 		this.relationships = relationships;
 	}
@@ -97,14 +94,12 @@ public class Diagram implements Iterable<Diagram>{
 	}
 	
 	public Relationship getRelationship(UUID relationshipId) {
-		return IterableExtensions.firstOrDefault(this.relationships, 
-				new RelationshipsCompFunc(), relationshipId); 
+		return this.relationships.get(relationshipId);
 	}
 
 
 	public boolean existsRelationship(UUID id) {
-		return IterableExtensions.firstOrDefault(this.relationships,
-				new RelationshipsCompFunc(), id) != null;
+		return (this.relationships.get(id) != null);
 	}
 
 	public void removeRelationship(UUID id) throws Exception {
@@ -144,16 +139,16 @@ public class Diagram implements Iterable<Diagram>{
 		}
 	}
 	
-	private class RelationshipsCompFunc extends 
-	Func<Relationship, UUID, Boolean>
-	{
-		@Override
-		public Boolean execute(Relationship relationship, UUID id) 
-		{
-			return relationship.getId().equals(id);
-		}
-		
-	}
+//	private class RelationshipsCompFunc extends 
+//	Func<Relationship, UUID, Boolean>
+//	{
+//		@Override
+//		public Boolean execute(Relationship relationship, UUID id) 
+//		{
+//			return relationship.getId().equals(id);
+//		}
+//		
+//	}
 				
 	private class SubDiagramsCompFunc extends
 	Func<Diagram, UUID, Boolean>
