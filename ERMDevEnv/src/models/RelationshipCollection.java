@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-public class RelationshipCollection{
+public class RelationshipCollection extends ModelCollection<Relationship>{
 
 	protected List<Relationship> relationships;
 
@@ -20,10 +20,8 @@ public class RelationshipCollection{
 
 	
 	public void add(Relationship relationship) throws Exception {
-		if (relationship.getName().equals("")) 
+		if (relationship.getName() == null || relationship.getName().equals("")) 
 			throw new Exception("Relationships should have a name");
-		if (relationship.count() < 2) 
-			throw new Exception ("Relationships should have at least Entities"); 
 		
 		for (Relationship aux : relationships) {
 			if (aux.getName().equals(relationship.getName()))
@@ -40,7 +38,7 @@ public class RelationshipCollection{
 	
 	public Relationship get (UUID id) {
 		for (Relationship rel : relationships) 
-			if (rel.getId()==id ) return rel;
+			if (rel.getId().equals(id)) return rel;
 		return null;
 	}
 	
@@ -49,11 +47,11 @@ public class RelationshipCollection{
 		relationships.remove(relationship);
 	}
 
-	public void remove(String relationshipName) {
-		for (Relationship rel : relationships ) {
-			if (rel.getName().equals(relationshipName) )relationships.remove(rel);
-		}
-	}
+//	public void remove(String relationshipName) {
+//		for (Relationship rel : relationships ) {
+//			if (rel.getName().equals(relationshipName) )relationships.remove(rel);
+//		}
+//	}
 	
 	public void remove (UUID relationshipID) {
 		for (Relationship rel : relationships ) {
@@ -71,6 +69,13 @@ public class RelationshipCollection{
 	
 	public void setRelationships (List<Relationship> relationships) {
 		this.relationships = relationships;
+	}
+
+	@Override
+	protected Relationship createItemInstance(String itemName) {
+		Relationship relationship = new Relationship();
+		relationship.setName(itemName);
+		return relationship;
 	}
 	
 }

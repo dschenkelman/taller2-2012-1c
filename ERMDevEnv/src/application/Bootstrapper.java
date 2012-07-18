@@ -42,8 +42,12 @@ import views.IEntityView;
 import views.IHierarchyView;
 import views.IKeysView;
 import views.IProjectView;
+import views.IRelationshipEntityView;
+import views.IRelationshipView;
 import views.KeyView;
 import views.ProjectView;
+import views.RelationshipEntityViewImpl;
+import views.RelationshipViewImpl;
 import controllers.AttributeController;
 import controllers.DiagramController;
 import controllers.EntityController;
@@ -54,8 +58,12 @@ import controllers.IEntityController;
 import controllers.IHierarchyController;
 import controllers.IKeysController;
 import controllers.IProjectController;
+import controllers.IRelationshipController;
+import controllers.IRelationshipEntityController;
 import controllers.KeysController;
 import controllers.ProjectController;
+import controllers.RelationshipController;
+import controllers.RelationshipEntityController;
 
 public class Bootstrapper {
 
@@ -121,6 +129,11 @@ public class Bootstrapper {
 					.addComponent(IEntityController.class, EntityController.class)
 					.addComponent(IEntityView.class, EntityView.class)
 					.as(CACHE).addComponent(IRelationshipControllerFactory.class, RelationshipControllerFactory.class)
+					.addComponent(IRelationshipController.class, RelationshipController.class)
+					.addComponent(IRelationshipView.class, RelationshipViewImpl.class)
+					.as(CACHE).addComponent(IRelationshipEntityControllerFactory.class, RelationshipEntityControllerFactory.class)
+					.addComponent(IRelationshipEntityController.class, RelationshipEntityController.class)
+					.addComponent(IRelationshipEntityView.class, RelationshipEntityViewImpl.class)
 					.as(CACHE).addComponent(IHierarchyControllerFactory.class, HierarchyControllerFactory.class)
 					.addComponent(IHierarchyController.class, HierarchyController.class)
 					.addComponent(IHierarchyView.class, HierarchyView.class)

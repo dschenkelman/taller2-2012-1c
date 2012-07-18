@@ -157,7 +157,7 @@ public class DiagramController extends BaseController
 	}
 
 	@Override
-	public void handleCreatedEvent(Relationship relationship) {
+	public void handleCreatedEvent(Relationship relationship) throws Exception {
 		double[] coordinates = this.getRelationshipNodeCoordinates(relationship.getRelationshipEntities());
 		double x = coordinates[0];
 		double y = coordinates[1];
@@ -759,7 +759,6 @@ public class DiagramController extends BaseController
 		entityController.create(entity);
 		
 		String key = CellConstants.EntityPrefix + entity.getId().toString();
-		
 	}
 
 	@Override
@@ -778,7 +777,17 @@ public class DiagramController extends BaseController
 
 	@Override
 	public void updateRelationship(Relationship relationship) {
-		// TODO Auto-generated method stub
+		IRelationshipController relationshipController = this.relationshipControllerFactory.create();
+		relationshipController.addCreateListener(this);
+		relationshipController.create(relationship);
+		
+		String keyConnector = CellConstants.RelationshipConnectorPrefix + relationship.getId().toString();
+		String keyNode = CellConstants.RelationshipPrefix + relationship.getId().toString();
+		mxIGraphModel model = this.graph.getModel();
+		
+		model.remove(this.relationshipConnectorCells.remove(keyConnector));
+		model.remove(this.relationshipCells.remove(keyNode));
+		
 		
 	}
 }

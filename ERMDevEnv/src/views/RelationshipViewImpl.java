@@ -4,9 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.beans.PropertyChangeListener;
 
-import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -27,10 +25,10 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 	RelationshipEntityViewImpl relEntView;
 	IAttributeView attView;
 
-	RelationshipViewImpl(RelationshipEntityViewImpl relEntView,
-			AttributeView attView) {
+	public RelationshipViewImpl(IRelationshipEntityView relEntView,
+			IAttributeView attView) {
 		super(relEntView, attView);
-		setUpCompontenents(relEntView, attView);
+		setUpCompontenents((RelationshipEntityViewImpl) relEntView, (AttributeView) attView);
 	}
 
 	public static void main(String args[]) {
@@ -72,7 +70,8 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 		checkBox1.addItemListener(new CheckListener());
 		this.textFieldName.addActionListener(new MyLabelNameListener());
 		this.button1.addActionListener(new ActionAdd());
-
+		this.attView = attView;
+		this.relEntView = relEntView;
 	}
 
 	@Override
@@ -134,6 +133,16 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 		public void actionPerformed(ActionEvent e) {
 			relController.setName(textFieldName.getText());
 		}
+	}
+
+	@Override
+	public IAttributeView getAttributeView() {
+		return this.attView;
+	}
+
+	@Override
+	public IRelationshipEntityView getRelationshipEntityView() {
+		return this.relEntView;
 	}
 
 }

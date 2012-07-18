@@ -11,6 +11,7 @@ import models.Diagram;
 import models.EntityCollection;
 import models.HierarchyCollection;
 import models.Relationship;
+import models.RelationshipCollection;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,7 +24,7 @@ public class DiagramTestCase {
 	{
 		Diagram diagram = new Diagram();
 		Assert.assertEquals(0, diagram.getEntities().count());
-		Assert.assertEquals(0, diagram.getRelationships().size());
+		Assert.assertEquals(0, diagram.getRelationships().count());
 		Assert.assertEquals(0, diagram.getHierarchies().count());
 		Assert.assertEquals(0, diagram.getSubDiagrams().size());
 	}
@@ -32,11 +33,11 @@ public class DiagramTestCase {
 	public void testCreateAnCompleteDiagram()
 	{
 		Diagram diagram = new Diagram(new EntityCollection(), 
-				new ArrayList<Relationship>(), new HierarchyCollection(), 
+				new RelationshipCollection(), new HierarchyCollection(), 
 				new ArrayList<Diagram>());
 		
 		Assert.assertEquals(0, diagram.getEntities().count());
-		Assert.assertEquals(0, diagram.getRelationships().size());			
+		Assert.assertEquals(0, diagram.getRelationships().count());			
 		Assert.assertEquals(0, diagram.getHierarchies().count()); 			
 		Assert.assertEquals(0, diagram.getEntities().count());
 		Assert.assertNotNull(diagram.getSubDiagrams());
@@ -52,18 +53,18 @@ public class DiagramTestCase {
 	}
 	
 	@Test
-	public void testAddingAnRelationshipCanBeRetrived()
+	public void testAddingAnRelationshipCanBeRetrived() throws Exception
 	{
 		Diagram diagram = new Diagram();
 		
 		UUID uid1 = UUID.randomUUID();
 		diagram.getRelationships().add(new Relationship(uid1, "TestName", false));
-		Assert.assertEquals(1, diagram.getRelationships().size());
+		Assert.assertEquals(1, diagram.getRelationships().count());
 		Assert.assertEquals("TestName", diagram.getRelationship(uid1).getName());
 	}
 	
 	@Test
-	public void testAddingTwoRelationshipsCanBeRetrived()
+	public void testAddingTwoRelationshipsCanBeRetrived() throws Exception
 	{
 		Diagram diagram = new Diagram();
 		
@@ -71,13 +72,13 @@ public class DiagramTestCase {
 		UUID uid2 = UUID.randomUUID();
 		diagram.getRelationships().add(new Relationship(uid1, "TestName", false));
 		diagram.getRelationships().add(new Relationship(uid2, "TestName1", false));
-		Assert.assertEquals(2, diagram.getRelationships().size());
+		Assert.assertEquals(2, diagram.getRelationships().count());
 		Assert.assertEquals("TestName", diagram.getRelationship(uid1).getName());
 		Assert.assertEquals("TestName1", diagram.getRelationship(uid2).getName());
 	}
 	
 	@Test
-	public void testDelettingOneRelationshipAndANonExistentRelationship()
+	public void testDelettingOneRelationshipAndANonExistentRelationship() throws Exception
 	{
 		Diagram diagram = new Diagram();
 		

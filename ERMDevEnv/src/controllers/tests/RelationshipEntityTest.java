@@ -31,8 +31,8 @@ public class RelationshipEntityTest {
 	public void setUp() {
 		projectContext = new MockProjectContext();
 		mockRelationshipEntityView = new MockRelationshipEntityView();
-		controller = new RelationshipEntityController(projectContext,
-				new ArrayList<RelationshipEntity>(), mockRelationshipEntityView);
+		controller = new RelationshipEntityController(projectContext
+				, mockRelationshipEntityView);
 	}
 
 	@Test

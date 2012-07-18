@@ -12,9 +12,13 @@ public class Relationship implements INameable {
 	private String name;
 	private AttributeCollection attributes;
 	
+	public Relationship() {
+		this(UUID.randomUUID(), "", false);
+	}
+	
 	public Relationship(RelationshipEntity entity1, RelationshipEntity entity2) throws Exception 
 	{
-		this(UUID.randomUUID(), null, false);
+		this(UUID.randomUUID(), "", false);
 		if (!this.addRelationshipEntity(entity1) || !this.addRelationshipEntity(entity2))
 		{
 			throw new Exception();

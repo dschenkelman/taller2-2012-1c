@@ -7,6 +7,6 @@ import controllers.IRelationshipEntityController;
 
 public interface IRelationshipEntityControllerFactory {
 
-	IRelationshipEntityController create(List<RelationshipEntity> relationshipEntities);
+	IRelationshipEntityController create();
 
 }

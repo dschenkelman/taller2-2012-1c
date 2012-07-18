@@ -12,8 +12,8 @@ import com.jgoodies.forms.factories.*;
  * @author Santiago Storti
  */
 public abstract class RelationshipViewAbstract extends JFrame {
-	public RelationshipViewAbstract(RelationshipEntityViewImpl relEntView, AttributeView attView) {
-		initComponents(relEntView, attView);
+	public RelationshipViewAbstract(IRelationshipEntityView relEntView, IAttributeView attView) {
+		initComponents((RelationshipEntityViewImpl) relEntView, (AttributeView) attView);
 	}
 	protected abstract  void setUpCompontenents (RelationshipEntityViewImpl relEntView, AttributeView attView) ;
 

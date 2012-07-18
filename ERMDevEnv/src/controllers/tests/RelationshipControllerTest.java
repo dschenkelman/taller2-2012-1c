@@ -109,8 +109,7 @@ public class RelationshipControllerTest {
 		
 		view = new MockRelationshipView();
 		
-		relController = new RelationshipController(pContext, 
-				new Relationship(UUID.randomUUID(),null, false),
+		relController = new RelationshipController(pContext,
 				view,
 				mockAttributeControllerFactory,
 				mockRelationshipEntityControllerFactory);

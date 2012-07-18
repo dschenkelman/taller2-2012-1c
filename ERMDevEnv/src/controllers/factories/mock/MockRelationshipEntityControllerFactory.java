@@ -11,6 +11,7 @@ public class MockRelationshipEntityControllerFactory implements
 		IRelationshipEntityControllerFactory {
 
 	private MockRelationshipEntityController mockRelationshipEntityController;
+	private List<RelationshipEntity> relationshipEntities;
 	
 	public void setRelationshipEntityController(
 			IRelationshipEntityController mockRelationshipEntityController2) {
@@ -19,10 +20,13 @@ public class MockRelationshipEntityControllerFactory implements
 	}
 
 	@Override
-	public IRelationshipEntityController create(
-			List<RelationshipEntity> relationshipEntities) {
-			mockRelationshipEntityController.setRelationshipEntities(relationshipEntities);
-			return mockRelationshipEntityController;
+	public IRelationshipEntityController create() {
+		mockRelationshipEntityController.setRelationshipEntities(this.relationshipEntities);
+		return mockRelationshipEntityController;
+	}
+	
+	public void setRelationshipEntities(List<RelationshipEntity> relationshipEntities) {
+		this.relationshipEntities = relationshipEntities;
 	}
 
 }

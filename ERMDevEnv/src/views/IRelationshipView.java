@@ -14,5 +14,9 @@ public interface IRelationshipView {
 	void addRelationshipEntityView(RelationshipEntityViewImpl relEntView);
 
 	void addAttributeView(IAttributeView attview);
+
+	IAttributeView getAttributeView();
+
+	IRelationshipEntityView getRelationshipEntityView();
 	
 }
