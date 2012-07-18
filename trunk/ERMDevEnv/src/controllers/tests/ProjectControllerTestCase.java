@@ -22,7 +22,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import controllers.DiagramController;
 import controllers.IProjectController;
 import controllers.ProjectController;
 import controllers.factories.tests.mocks.MockDiagramControllerFactory;
@@ -420,9 +419,9 @@ public class ProjectControllerTestCase {
 		diagram1.setName("1");
 		diagram2.setName("2");
 		diagram3.setName("3");
-		DiagramTreeNode tree1 = new DiagramTreeNode(diagram1);
-		DiagramTreeNode tree2 = new DiagramTreeNode(diagram2);
-		DiagramTreeNode tree3 = new DiagramTreeNode(diagram3);
+		DiagramTreeNode tree1 = new DiagramTreeNode(diagram1, this.projectContext);
+		DiagramTreeNode tree2 = new DiagramTreeNode(diagram2, this.projectContext);
+		DiagramTreeNode tree3 = new DiagramTreeNode(diagram3, this.projectContext);
 		
 		DefaultMutableTreeNode child1 = new DefaultMutableTreeNode("dato1");
 		DefaultMutableTreeNode child2 = new DefaultMutableTreeNode("dato2");
@@ -665,9 +664,9 @@ public class ProjectControllerTestCase {
 		diagram1.setName("1");
 		diagram2.setName("2");
 		diagram3.setName("3");
-		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1);
-		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2);
-		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3);
+		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1, this.projectContext);
+		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2, this.projectContext);
+		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3, this.projectContext);
 		
 		DefaultMutableTreeNode diagramChild1 = new DefaultMutableTreeNode("dato1");
 		DefaultMutableTreeNode diagramChild2 = new DefaultMutableTreeNode("dato2");
@@ -707,9 +706,9 @@ public class ProjectControllerTestCase {
 		diagram1.setName("1");
 		diagram2.setName("2");
 		diagram3.setName("3");
-		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1);
-		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2);
-		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3);
+		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1, this.projectContext);
+		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2, this.projectContext);
+		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3, this.projectContext);
 		
 		DefaultMutableTreeNode diagramChild1 = new DefaultMutableTreeNode("dato1");
 		DefaultMutableTreeNode diagramChild2 = new DefaultMutableTreeNode("dato2");
@@ -751,9 +750,9 @@ public class ProjectControllerTestCase {
 		diagram1.setName("1");
 		diagram2.setName("2");
 		diagram3.setName("3");
-		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1);
-		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2);
-		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3);
+		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1, this.projectContext);
+		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2, this.projectContext);
+		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3, this.projectContext);
 		
 		DefaultMutableTreeNode diagramChild1 = new DefaultMutableTreeNode("dato1");
 		DefaultMutableTreeNode diagramChild2 = new DefaultMutableTreeNode("dato2");
@@ -778,50 +777,50 @@ public class ProjectControllerTestCase {
 		deleteFile("projectName");
 	}
 	
-//	@Test
-//	public void testShouldUpdateElementsSelectedInTreeNode() throws Exception{
-//		Diagram diagram1 = new Diagram();
-//		Diagram diagram2 = new Diagram();
-//		Diagram diagram3 = new Diagram();
-//		diagram1.setName("1");
-//		diagram2.setName("2");
-//		diagram3.setName("3");
-//		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1);
-//		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2);
-//		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3);
-//		Entity entity1 = new Entity("entity1");
-//		Entity entity2 = new Entity("entity2");
-//		Relationship relationship = new Relationship(new RelationshipEntity(entity1), new RelationshipEntity(entity2));
-//		Hierarchy hierarchy = new Hierarchy();
-//
-//		MockDiagramController newController = new MockDiagramController();
-//		
-//		ProjectController controller = this.createController();
-//		controller.createProject("projectName");		
-//		
-//		this.diagramControllerFactory.setController(newController);
-//		
-//		Object[] path1 = {diagramNode1, entity1, diagramNode2, entity2, hierarchy, diagramNode3, relationship};
-//		controller.changeElement(new TreePath(path1));
-//		
-//		Assert.assertTrue(newController.updateRelationshipWasCalled());
-//		Assert.assertEquals(relationship, newController.getUpdatedRelationship());
-//		
-//		Object[] path2 = {diagramNode1, entity1, diagramNode2, hierarchy, diagramNode3, relationship, entity2};
-//		controller.changeElement(new TreePath(path2));
-//		
-//		Assert.assertTrue(newController.updateEntityWasCalled());
-//		Assert.assertEquals(entity2, newController.getUpdatedEntity());
-//		
-//		Object[] path3 = {diagramNode1, entity1, diagramNode2, diagramNode3, relationship, entity2, hierarchy};
-//		controller.changeElement(new TreePath(path3));
-//		
-//		Assert.assertTrue(newController.updateHierarchyWasCalled());
-//		Assert.assertEquals(hierarchy, newController.getUpdatedHierarchy());
-//		
-//		deleteFile("projectName/Datos");
-//		deleteFile("projectName");
-//	}
+	@Test
+	public void testShouldUpdateElementsSelectedInTreeNode() throws Exception{
+		Diagram diagram1 = new Diagram();
+		Diagram diagram2 = new Diagram();
+		Diagram diagram3 = new Diagram();
+		diagram1.setName("1");
+		diagram2.setName("2");
+		diagram3.setName("3");
+		DiagramTreeNode diagramNode1 = new DiagramTreeNode(diagram1, this.projectContext);
+		DiagramTreeNode diagramNode2 = new DiagramTreeNode(diagram2, this.projectContext);
+		DiagramTreeNode diagramNode3 = new DiagramTreeNode(diagram3, this.projectContext);
+		Entity entity1 = new Entity("entity1");
+		Entity entity2 = new Entity("entity2");
+		Relationship relationship = new Relationship(new RelationshipEntity(entity1), new RelationshipEntity(entity2));
+		Hierarchy hierarchy = new Hierarchy();
+
+		MockDiagramController newController = new MockDiagramController();
+		
+		ProjectController controller = this.createController();
+		controller.createProject("projectName");		
+		
+		this.diagramControllerFactory.setController(newController);
+		
+		Object[] path1 = {diagramNode1, entity1, diagramNode2, entity2, hierarchy, diagramNode3, new DefaultMutableTreeNode(relationship)};
+		controller.changeElement(new TreePath(path1));
+		
+		Assert.assertTrue(newController.updateRelationshipWasCalled());
+		Assert.assertEquals(relationship, newController.getUpdatedRelationship());
+		
+		Object[] path2 = {diagramNode1, entity1, diagramNode2, hierarchy, diagramNode3, relationship, new DefaultMutableTreeNode(entity2)};
+		controller.changeElement(new TreePath(path2));
+		
+		Assert.assertTrue(newController.updateEntityWasCalled());
+		Assert.assertEquals(entity2, newController.getUpdatedEntity());
+		
+		Object[] path3 = {diagramNode1, entity1, diagramNode2, diagramNode3, relationship, entity2, new DefaultMutableTreeNode(hierarchy)};
+		controller.changeElement(new TreePath(path3));
+		
+		Assert.assertTrue(newController.updateHierarchyWasCalled());
+		Assert.assertEquals(hierarchy, newController.getUpdatedHierarchy());
+		
+		deleteFile("projectName/Datos");
+		deleteFile("projectName");
+	}
 	
 	private DefaultMutableTreeNode getNodeChildWithObject(DefaultMutableTreeNode node, String childName, Object object) {	
 		Enumeration children = node.children();

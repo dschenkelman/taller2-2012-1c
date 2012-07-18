@@ -3,9 +3,9 @@ package controllers;
 import infrastructure.IFileSystemService;
 import infrastructure.IProjectContext;
 import infrastructure.visual.DiagramTreeNode;
-import infrastructure.visual.HierarchyTreeNode;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -13,21 +13,18 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import persistence.IXmlFileManager;
-import persistence.IXmlManager;
-
 import models.Diagram;
 import models.Entity;
 import models.Hierarchy;
 import models.Relationship;
 
-import application.IShell;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
+import persistence.IXmlFileManager;
+import persistence.IXmlManager;
 import views.IProjectView;
-
+import application.IShell;
 import controllers.factories.IDiagramControllerFactory;
 import controllers.listeners.IDiagramEventListener;
 
@@ -72,7 +69,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		
 		Diagram mainDiagram = this.diagramController.getDiagram();
 		
-		this.currentDiagramNode = new DiagramTreeNode(this.diagramController.getDiagram());
+		this.currentDiagramNode = new DiagramTreeNode(this.diagramController.getDiagram(), this.projectContext);
 		this.projectTree = new DefaultTreeModel(this.currentDiagramNode);
 		
 		this.projectContext.addContextDiagram(mainDiagram);
@@ -179,7 +176,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 			this.diagramController.updateRelationship((Relationship) o);
 			return;
 		}
-		if (o instanceof HierarchyTreeNode) {
+		if (o instanceof Hierarchy) {
 			this.diagramController.updateHierarchy((Hierarchy) o);
 			return;
 		}
@@ -212,7 +209,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		
 		if (diagramName.equalsIgnoreCase(DefaultDiagramName)){
 			this.projectContext.addContextDiagram(diagram);
-			currentTreeNode = new DiagramTreeNode(diagram);
+			currentTreeNode = new DiagramTreeNode(diagram, this.projectContext);
 			this.currentDiagramNode = currentTreeNode;
 			this.projectTree = new DefaultTreeModel(this.currentDiagramNode);
 		}
@@ -230,6 +227,6 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 
 	@Override
 	public void handleHierarchyAdded(Diagram diagram, Hierarchy hierarchy) {
-		this.currentDiagramNode.addHierarchy(hierarchy, this.projectTree, this.projectContext);
+		this.currentDiagramNode.addHierarchy(hierarchy, this.projectTree);
 	}
 }

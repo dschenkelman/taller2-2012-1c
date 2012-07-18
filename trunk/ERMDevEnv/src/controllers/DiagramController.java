@@ -763,6 +763,10 @@ public class DiagramController extends BaseController
 
 	@Override
 	public void updateHierarchy(Hierarchy hierarchy) {
+		try {
+			this.diagram.getHierarchies().removeHierarchy(hierarchy.getId());
+		} catch (Exception e) {
+		}
 		IHierarchyController hierarchyController = this.hierarchyControllerFactory.create();
 		hierarchyController.addSuscriber(this);
 		hierarchyController.create(hierarchy);

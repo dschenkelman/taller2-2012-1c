@@ -35,8 +35,8 @@ public class HierarchyView implements IHierarchyView{
 	private JLabel generalEntityLabel;
 	private JLabel specificEntitiesLabel;
 	private JLabel availableEntitiesLabel;
-	private JList lstAvailableEntities;
-	private JList lstSpecificEntities;
+	private JList<Entity> lstAvailableEntities;
+	private JList<Entity> lstSpecificEntities;
 	private JButton arrAddSpecificEntities;
 	private JButton arrRemoveSpecificEntities;
 	private JComboBox comBoxGeneralEntity;
@@ -69,8 +69,8 @@ public class HierarchyView implements IHierarchyView{
 		// specific entities
 		this.specificEntitiesLabel = new JLabel("Entidades Específicas");
 		this.availableEntitiesLabel = new JLabel("Entidades Disponibles");
-		this.lstAvailableEntities = new JList(new DefaultListModel());
-		this.lstSpecificEntities = new JList(new DefaultListModel());
+		this.lstAvailableEntities = new JList<Entity>(new DefaultListModel<Entity>());
+		this.lstSpecificEntities = new JList<Entity>(new DefaultListModel<Entity>());
 		this.availableEntitiesLabel.setLabelFor(this.lstAvailableEntities);
 		this.specificEntitiesLabel.setLabelFor(this.lstSpecificEntities);
 		container.add(this.availableEntitiesLabel, CC.xywh(8, 30, 50, 10));
@@ -144,12 +144,12 @@ public class HierarchyView implements IHierarchyView{
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				DefaultListModel listModelSpecificEntities = (DefaultListModel) lstSpecificEntities.getModel();
-				DefaultListModel listModelAvailableEntities = (DefaultListModel) lstAvailableEntities.getModel();
-		
-				for (int i = 0; i < lstAvailableEntities.getSelectedValues().length; i++)
+				DefaultListModel<Entity> listModelSpecificEntities = (DefaultListModel<Entity>) lstSpecificEntities.getModel();
+				DefaultListModel<Entity> listModelAvailableEntities = (DefaultListModel<Entity>) lstAvailableEntities.getModel();
+				
+				for (Object o : lstAvailableEntities.getSelectedValuesList())
 				{
-					Entity entity = (Entity) lstAvailableEntities.getSelectedValues()[i];
+					Entity entity = (Entity) o;
 					try {
 						if (hierarchyController.addSpecificEntity(entity)) {
 							comBoxGeneralEntity.removeItem(entity);
@@ -166,11 +166,11 @@ public class HierarchyView implements IHierarchyView{
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				DefaultListModel listModelSpecificEntities = (DefaultListModel) lstSpecificEntities.getModel();
-				DefaultListModel listModelAvailableEntities = (DefaultListModel) lstAvailableEntities.getModel();
-				for (int i = 0; i < lstSpecificEntities.getSelectedValues().length; i++)
+				DefaultListModel<Entity> listModelSpecificEntities = (DefaultListModel<Entity>) lstSpecificEntities.getModel();
+				DefaultListModel<Entity> listModelAvailableEntities = (DefaultListModel<Entity>) lstAvailableEntities.getModel();
+				for (Object o : lstSpecificEntities.getSelectedValuesList())
 				{
-					Entity entity = (Entity) lstSpecificEntities.getSelectedValues()[i];
+					Entity entity = (Entity) o;
 					listModelSpecificEntities.removeElement(entity);
 					listModelAvailableEntities.addElement(entity);
 					comBoxGeneralEntity.addItem(entity);
@@ -210,7 +210,7 @@ public class HierarchyView implements IHierarchyView{
 				JComboBox comBox = (JComboBox) e.getSource();
 				
 				DefaultComboBoxModel combGeneralMdl = (DefaultComboBoxModel) comBoxGeneralEntity.getModel();
-				DefaultListModel lstAvailableMdl = (DefaultListModel) lstAvailableEntities.getModel();
+				DefaultListModel<Entity> lstAvailableMdl = (DefaultListModel<Entity>) lstAvailableEntities.getModel();
 				
 				for (Entity entity : availableEntities)
 					if (combGeneralMdl.getIndexOf(entity) != -1 && lstAvailableMdl.indexOf(entity) == -1)
@@ -258,8 +258,8 @@ public class HierarchyView implements IHierarchyView{
 		this.getAvailableEntities();
 		//specific entities
 		DefaultComboBoxModel combGeneralMdl = (DefaultComboBoxModel) this.comBoxGeneralEntity.getModel();
-		DefaultListModel lstAvailableMdl = (DefaultListModel) this.lstAvailableEntities.getModel();
-		DefaultListModel lstSpecificMdl = (DefaultListModel) this.lstSpecificEntities.getModel();
+		DefaultListModel<Entity> lstAvailableMdl = (DefaultListModel<Entity>) this.lstAvailableEntities.getModel();
+		DefaultListModel<Entity> lstSpecificMdl = (DefaultListModel<Entity>) this.lstSpecificEntities.getModel();
 
 		for (Entity entity : this.availableEntities) {
 			if (this.hierarchyController.hasSpecificEntity(entity)) {
@@ -279,7 +279,7 @@ public class HierarchyView implements IHierarchyView{
 	public void create() {
 		this.getAvailableEntities();
 		//general entity and available entities
-		DefaultListModel listModel = (DefaultListModel) this.lstAvailableEntities.getModel();
+		DefaultListModel<Entity> listModel = (DefaultListModel<Entity>) this.lstAvailableEntities.getModel();
 		for (Entity entity : this.availableEntities)
 		{
 			this.comBoxGeneralEntity.addItem(entity);
