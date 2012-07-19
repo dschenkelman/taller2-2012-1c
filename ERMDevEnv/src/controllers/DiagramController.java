@@ -754,11 +754,23 @@ public class DiagramController extends BaseController
 
 	@Override
 	public void updateEntity(Entity entity) {
+		this.diagram.getEntities().remove(entity.getName());
+		
 		IEntityController entityController = this.entityControllerFactory.create();
 		entityController.addSubscriber(this);
 		entityController.create(entity);
 		
-		String key = CellConstants.EntityPrefix + entity.getId().toString();
+		mxIGraphModel model = this.graph.getModel();
+		for (Attribute attribute : entity.getAttributes()) {
+			String keyConnector = CellConstants.AttributeConnectorPrefix + entity.getId().toString() + attribute.getName();
+			String keyCell = CellConstants.AttributePrefix + entity.getId().toString() + attribute.getName();
+			model.remove(this.attributeConnectorCells.remove(keyConnector));
+			model.remove(this.attributeCells.remove(keyCell));
+		}
+		
+//		String keyCell = CellConstants.EntityPrefix + entity.getId().toString();
+//		mxCell entity2 = this.entityCells.get(keyCell);
+//		entity2.
 	}
 
 	@Override
@@ -767,30 +779,40 @@ public class DiagramController extends BaseController
 			this.diagram.getHierarchies().removeHierarchy(hierarchy.getId());
 		} catch (Exception e) {
 		}
+		
 		IHierarchyController hierarchyController = this.hierarchyControllerFactory.create();
 		hierarchyController.addSuscriber(this);
 		hierarchyController.create(hierarchy);
 		
-		String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString();
-		String keyNode = CellConstants.HierarchyNodePrefix + hierarchy.getId().toString();
 		mxIGraphModel model = this.graph.getModel();
+		for (UUID uuid : hierarchy.getChildren()) {
+			String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + uuid;
+			model.remove(this.hierarchyConnectorCells.remove(keyConnector));
+		}
 		
+		String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + hierarchy.getGeneralEntityId().toString();
+		String keyNode = CellConstants.HierarchyNodePrefix + hierarchy.getId().toString();
 		model.remove(this.hierarchyConnectorCells.remove(keyConnector));
 		model.remove(this.hierarchyNodeCells.remove(keyNode));
 	}
 
 	@Override
 	public void updateRelationship(Relationship relationship) {
+		
+		this.diagram.getRelationships().remove(relationship);
+		
 		IRelationshipController relationshipController = this.relationshipControllerFactory.create();
 		relationshipController.addCreateListener(this);
 		relationshipController.create(relationship);
 		
-		String keyConnector = CellConstants.RelationshipConnectorPrefix + relationship.getId().toString();
-		String keyNode = CellConstants.RelationshipPrefix + relationship.getId().toString();
 		mxIGraphModel model = this.graph.getModel();
+		for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
+			String keyConnector = CellConstants.RelationshipConnectorPrefix + relationship.getId().toString() + relationshipEntity.getEntityId();
+			model.remove(this.relationshipConnectorCells.remove(keyConnector));
+		}
 		
-		model.remove(this.relationshipConnectorCells.remove(keyConnector));
-		model.remove(this.relationshipCells.remove(keyNode));
+		String keyCell = CellConstants.RelationshipPrefix + relationship.getId().toString();
+		model.remove(this.relationshipCells.remove(keyCell));
 		
 		
 	}
