@@ -169,14 +169,17 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		Object o = node.getUserObject();
 		
 		if (o instanceof Entity) {
+			this.projectTree.removeNodeFromParent(node);
 			this.diagramController.updateEntity((Entity) o);
 			return;	
 		}
 		if (o instanceof Relationship) {
+			this.projectTree.removeNodeFromParent(node);
 			this.diagramController.updateRelationship((Relationship) o);
 			return;
 		}
 		if (o instanceof Hierarchy) {
+			this.projectTree.removeNodeFromParent(node);
 			this.diagramController.updateHierarchy((Hierarchy) o);
 			return;
 		}

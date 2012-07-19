@@ -255,9 +255,10 @@ public class HierarchyView implements IHierarchyView{
 		this.cancel.setVisible(false);
 		this.frame1.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
+//		this.comBoxGeneralEntity.setSelectedItem(this.hierarchyController.getGeneralEntity());
+		
 		this.getAvailableEntities();
 		//specific entities
-		DefaultComboBoxModel combGeneralMdl = (DefaultComboBoxModel) this.comBoxGeneralEntity.getModel();
 		DefaultListModel<Entity> lstAvailableMdl = (DefaultListModel<Entity>) this.lstAvailableEntities.getModel();
 		DefaultListModel<Entity> lstSpecificMdl = (DefaultListModel<Entity>) this.lstSpecificEntities.getModel();
 
@@ -266,11 +267,11 @@ public class HierarchyView implements IHierarchyView{
 				lstSpecificMdl.addElement(entity);
 				continue;
 			}
+			this.comBoxGeneralEntity.addItem(entity);
 			if (this.hierarchyController.isGeneralEntity(entity)) {
-				combGeneralMdl.addElement(entity);
+				this.comBoxGeneralEntity.setSelectedItem(entity);
 				continue;
 			}
-			combGeneralMdl.addElement(entity);
 			lstAvailableMdl.addElement(entity);
 		}
 	}
