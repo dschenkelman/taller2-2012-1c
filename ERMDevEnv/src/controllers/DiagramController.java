@@ -1,5 +1,6 @@
 package controllers;
 
+import com.sun.corba.se.spi.ior.Identifiable;
 import infrastructure.IProjectContext;
 import infrastructure.IterableExtensions;
 import infrastructure.StringExtensions;
@@ -738,13 +739,7 @@ public class DiagramController extends BaseController
         entityController.addSubscriber(this);
         entityController.create(entity);
 
-        mxIGraphModel model = this.graph.getModel();
-        for (Attribute attribute : entity.getAttributes()) {
-            String keyConnector = CellConstants.AttributeConnectorPrefix + entity.getId().toString() + attribute.getName();
-            String keyCell = CellConstants.AttributePrefix + entity.getId().toString() + attribute.getName();
-            model.remove(this.attributeConnectorCells.remove(keyConnector));
-            model.remove(this.attributeCells.remove(keyCell));
-        }
+        removeAttributes(entity.getAttributes(),entity.getId().toString());
 
 //		String keyCell = CellConstants.EntityPrefix + entity.getId().toString();
 //		mxCell entity2 = this.entityCells.get(keyCell);
@@ -792,11 +787,18 @@ public class DiagramController extends BaseController
         String keyCell = CellConstants.RelationshipPrefix + relationship.getId().toString();
         model.remove(this.relationshipCells.remove(keyCell));
 
-        for (Attribute attribute : relationship.getAttributes()) {
-            String keyConnector = CellConstants.AttributeConnectorPrefix + relationship.getId().toString() + attribute.getName();
-            keyCell = CellConstants.AttributePrefix + relationship.getId().toString() + attribute.getName();
+        removeAttributes(relationship.getAttributes(), relationship.getId().toString());
+
+    }
+
+    private void removeAttributes(Iterable<Attribute> attributes, String id) {
+        mxIGraphModel model = this.graph.getModel();
+        for (Attribute attribute : attributes) {
+            String keyConnector = CellConstants.AttributeConnectorPrefix + id + attribute.getName();
+            String keyCell = CellConstants.AttributePrefix + id + attribute.getName();
             model.remove(this.attributeConnectorCells.remove(keyConnector));
             model.remove(this.attributeCells.remove(keyCell));
+            removeAttributes(attribute.getAttributes(),id);
         }
 
     }

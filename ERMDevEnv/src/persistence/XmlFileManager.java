@@ -38,8 +38,8 @@ public class XmlFileManager implements IXmlFileManager{
 
             // create Transformer for transformation
             Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //Java XML Indent
+            //transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            //transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //Java XML Indent
 
             // transform and deliver content to client
             transformer.transform(xmlSource, result);
