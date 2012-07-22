@@ -12,14 +12,10 @@ public enum EntityType {
 
     @Override
     public String toString() {
-        return this.getDescription();
+        return this.description;
     }
 
     public int getId() {
         return this.id;
-    }
-
-    public String getDescription() {
-        return this.description;
     }
 }

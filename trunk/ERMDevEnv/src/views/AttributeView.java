@@ -144,7 +144,7 @@ public class AttributeView implements IAttributeView {
 
     @Override
     public AttributeType getAttributeType() {
-        return AttributeType.valueOf((String) type.getItemAt(type.getSelectedIndex()));
+        return (AttributeType) type.getItemAt(type.getSelectedIndex());
     }
 
     @Override
@@ -190,7 +190,7 @@ public class AttributeView implements IAttributeView {
             this.name.setText(attributeSelected.getName());
             String expressionClone = (attributeSelected.getType() == AttributeType.calculated || attributeSelected.getType() == AttributeType.copy) ? attributeSelected.getExpression() : "";
             this.expression.setText(expressionClone);
-            this.type.setSelectedItem(attributeSelected.getType().toString());
+            this.type.setSelectedItem(attributeSelected.getType());
             Cardinality cardinality = this.attributeSelected.getCardinality();
             if (cardinality != null) {
                 minCardinality.setText(String.valueOf(cardinality.getMinimum()));
@@ -227,7 +227,7 @@ public class AttributeView implements IAttributeView {
         scrollPane1 = new JScrollPane();
         attributes = new JTree();
         typeText = new JLabel();
-        type = new JComboBox(AttributeType.attributesTypes);
+        type = new JComboBox(AttributeType.values());
         expressionText = new JLabel();
         scrollPane2 = new JScrollPane();
         expression = new JTextArea();
