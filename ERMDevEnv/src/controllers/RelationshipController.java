@@ -109,7 +109,9 @@ public class RelationshipController implements IRelationshipController {
 	
 	@Override
 	public void add() throws Exception {
-		if (this.pendingRelationship.getName()==null || this.pendingRelationship.getName() =="")
+		
+		
+		if (this.pendingRelationship.getName()==null || this.pendingRelationship.getName().equals(""))
 			throw new Exception ("The field \"name\"  is not completed");
 		
 		

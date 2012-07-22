@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import models.Attribute;
 import models.AttributeCollection;
 import models.Entity;
 import models.EntityCollection;
@@ -261,42 +260,6 @@ public class RelationshipControllerTest {
 		
 		relController.isComposition(true);
 		
-		
-			
 	}
-	
-
-	@Test
-	public void TestCreateRelationshipWithAttributes() {
-		relController.create();
-		List<Attribute> list = new ArrayList<Attribute>();
-		list.add(new Attribute("ATT_NAME_1"));
-		list.add(new Attribute("ATT_NAME_2"));
-		list.add(new Attribute("ATT_NAME_3"));
-		list.add(new Attribute("ATT_NAME_4"));
-		attController.setAttributes(list);
-		Entity entity1 = new Entity ("Entity1");
-		entity1.setType(EntityType.Domain);
-		Entity entity2 = new Entity ("Entity2");
-		entity2.setType(EntityType.Domain);
-		
-		mockRelationshipEntityController.add(entity1.getId(),null,null,false);
-		mockRelationshipEntityController.add(entity2.getId(),null,null,false);
-		relController.setName("Relationship");
-		
-		relController.addCreateListener(pContext);
-		try {
-			relController.add();
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail("it shouldn't fail to create this relationship");
-		}
-		
-		//The relationship should be added to the project context
-		assertTrue (this.pContext.getRelationshipCollection().size()==1);
-		Relationship aux =  pContext.getRelationshipCollection().iterator().next();
-		assertTrue(aux.getAttributes().count()==4);
-	}
-	
 	
 }
