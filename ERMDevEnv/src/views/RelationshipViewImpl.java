@@ -2,6 +2,8 @@ package views;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -69,9 +71,11 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 		// add listeners
 		checkBox1.addItemListener(new CheckListener());
 		this.textFieldName.addActionListener(new MyLabelNameListener());
+		this.textFieldName.addFocusListener(new MyTextBoxLister());
 		this.button1.addActionListener(new ActionAdd());
 		this.attView = attView;
 		this.relEntView = relEntView;
+			
 	}
 
 	@Override
@@ -82,6 +86,8 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 	@Override
 	public void setController(IRelationshipController relationshipController) {
 		relController = relationshipController;
+		this.textFieldName.setText(relController.getName());
+		this.checkBox1.setSelected(relController.isComposition());
 	}
 
 	@Override
@@ -126,6 +132,21 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 				showErrorDialog(e1.getMessage());
 			}
 		}
+	}
+	
+	private class MyTextBoxLister implements FocusListener {
+
+		@Override
+		public void focusGained(FocusEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) {
+			relController.setName(textFieldName.getText());
+		}
+		
 	}
 
 	private class MyLabelNameListener implements ActionListener {

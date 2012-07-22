@@ -93,7 +93,7 @@ public abstract class RelationshipViewAbstract extends JFrame {
 		checkBox1.setText("Composition");
 
 		//---- button1 ----
-		button1.setText("Add");
+		button1.setText("Finish");
 
 		GroupLayout contentPaneLayout = new GroupLayout(contentPane);
 		contentPane.setLayout(contentPaneLayout);

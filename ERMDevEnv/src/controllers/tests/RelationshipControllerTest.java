@@ -1,7 +1,8 @@
 package controllers.tests;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
@@ -18,14 +19,12 @@ import models.Relationship;
 import models.RelationshipEntity;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import views.mock.MockRelationshipView;
 import controllers.IRelationshipController;
 import controllers.RelationshipController;
 import controllers.factories.mock.MockRelationshipEntityControllerFactory;
-import controllers.listeners.IRelationshipEventListener;
 import controllers.tests.mocks.MockAttributeController;
 import controllers.tests.mocks.MockAttributeControllerFactory;
 import controllers.tests.mocks.MockProjectContext;
@@ -82,8 +81,7 @@ public class RelationshipControllerTest {
 		
 		// Set up the views
 		
-		
-		
+				
 		// Controllers
 
 		
@@ -134,7 +132,6 @@ public class RelationshipControllerTest {
 		
 		//There are no relationships at first in the project context
 		assertTrue (this.pContext.getRelationshipCollection().size()==0);
-		
 		relController.create();
 		relController.addCreateListener(pContext);
 		assertTrue(0 == mockRelationshipEntityController.getRelationshipEntities().size());
@@ -178,7 +175,6 @@ public class RelationshipControllerTest {
 		
 		//There are no relationships at first in the project context
 		assertTrue (this.pContext.getRelationshipCollection().size()==0);
-		
 		relController.create();
 		relController.setName("Relationship");
 		try {
@@ -204,7 +200,7 @@ public class RelationshipControllerTest {
 	
 	@Test
 	public void TestValidateComposeEntitiesOfSameTypes() throws Exception {
-					
+			
 		relController.create();
 		
 		Entity entity1 = new Entity ("Entity1");
@@ -272,6 +268,7 @@ public class RelationshipControllerTest {
 
 	@Test
 	public void TestCreateRelationshipWithAttributes() {
+		
 		relController.create();
 		List<Attribute> list = new ArrayList<Attribute>();
 		list.add(new Attribute("ATT_NAME_1"));
