@@ -40,6 +40,7 @@ public class AttributeController extends BaseController implements IAttributeCon
     @Override
     public void setAttributes(List<Attribute> attributes) {
     	this.attributes = attributes;
+        this.attributeView.setAttributes(attributes);
     }
 
     @Override

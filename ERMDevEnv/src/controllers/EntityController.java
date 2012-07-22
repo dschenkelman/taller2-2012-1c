@@ -36,7 +36,11 @@ public class EntityController extends BaseController implements IEntityControlle
     @Override
     public void create() {
         this.attributeController = this.attributeControllerFactory.create();
+        List<Attribute> attributes = this.pendingEntity.getAttributes().getAttributes();
+        this.attributeController.setAttributes(attributes);
+
         this.entityView.addAttributeView(attributeController.getAttributeView());
+        this.entityView.setEntityName(this.pendingEntity.getName());
         this.entityView.showView();
     }
     
@@ -47,8 +51,7 @@ public class EntityController extends BaseController implements IEntityControlle
         
         List<Attribute> attributes = this.pendingEntity.getAttributes().getAttributes();
         this.attributeController.setAttributes(attributes);
-        this.attributeController.getAttributeView().setAttributes(attributes);
-        
+
         this.entityView.addAttributeView(attributeController.getAttributeView());
         this.entityView.setEntityName(this.pendingEntity.getName());
         this.entityView.setEntityType(this.pendingEntity.getType());
@@ -85,19 +88,6 @@ public class EntityController extends BaseController implements IEntityControlle
         }
         this.pendingEntity.setName(entityName);
         pendingEntity.setType(this.entityView.getEntityType());
-
-
-        AttributeCollection attributeCollection = new AttributeCollection();
-        for (Attribute attribute : this.attributeController.getAttributes()) {
-            try {
-                attributeCollection.addAttribute(attribute);
-            } catch (Exception e) {
-                //When editing an entity
-                e.printStackTrace();
-            }
-        }
-
-        this.pendingEntity.setAttributes(attributeCollection);
 
         for (IEntityEventListener listener : this.listeners) {
             listener.handleCreatedEvent(pendingEntity);
