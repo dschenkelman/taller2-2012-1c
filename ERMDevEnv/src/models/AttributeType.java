@@ -1,9 +1,9 @@
 package models;
 
 public enum AttributeType {
-    characterization("Characterization", 0),
-    calculated("Calculated", 1),
-    copy("Copy", 2);
+    characterization("characterization", 0),
+    calculated("calculated", 1),
+    copy("copy", 2);
 
     private String description;
     private int id;
