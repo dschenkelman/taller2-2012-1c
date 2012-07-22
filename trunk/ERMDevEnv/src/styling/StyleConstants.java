@@ -15,6 +15,7 @@ public class StyleConstants {
 	public static String HIERARCHY_CHILD_LINK_STYLE = "endArrow=none;edgeStyle=orthogonalEdgeStyle;verticalAlign=bottom;align=left;exitX=0.5;exitY=0";
 	public static final String FIRST_ID_GROUP_CONNECTOR_STYLE = "endArrow=oval;startArrow=oval;endSize=6;startSize=6;strokeColor=black;routingCenterX=0.5;routingCenterY=0.5;";
 	public static final String NON_FIRST_ID_GROUP_CONNECTOR_STYLE = "endArrow=oval;startArrow=none;endSize=6;startSize=6;strokeColor=black;routingCenterX=0.5;routingCenterY=0.5;";
+	public static final String WEAK_ENTITY_CONNECTOR_STYLE = "endArrow=none;startArrow=none;strokeColor=black;routingCenterX=0.5;routingCenterY=0.5;";
 	public static String THING_COLOR = "fillColor=#F684B6";
 	public static String DOMAIN_COLOR = "fillColor=#A9A4ED";
 	public static String HISTORIC_COLOR = "fillColor=#A4EDA8";

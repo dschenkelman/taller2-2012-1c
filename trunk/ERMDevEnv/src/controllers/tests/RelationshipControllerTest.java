@@ -268,7 +268,6 @@ public class RelationshipControllerTest {
 
 	@Test
 	public void TestCreateRelationshipWithAttributes() {
-		
 		relController.create();
 		List<Attribute> list = new ArrayList<Attribute>();
 		list.add(new Attribute("ATT_NAME_1"));
@@ -297,7 +296,6 @@ public class RelationshipControllerTest {
 		assertTrue (this.pContext.getRelationshipCollection().size()==1);
 		Relationship aux =  pContext.getRelationshipCollection().iterator().next();
 		assertTrue(aux.getAttributes().count()==4);
-		
 	}
 	
 	
