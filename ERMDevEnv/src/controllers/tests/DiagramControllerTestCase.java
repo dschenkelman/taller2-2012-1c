@@ -969,6 +969,8 @@ public class DiagramControllerTestCase {
 		Diagram diagram = new Diagram();
 		diagram.setName("diagram1");
 		
+		this.graphPersistenceService.setCellsToLoad(new String[]{});
+		
 		DiagramController controller = this.createController();
 		
 		controller.load(diagram);
@@ -981,13 +983,32 @@ public class DiagramControllerTestCase {
 		Diagram diagram = new Diagram();
 		diagram.setName("diagram1");
 		
+		this.graphPersistenceService.setCellsToLoad(new String[] {
+				DiagramController.CellConstants.EntityPrefix + "1",
+				DiagramController.CellConstants.WeakEntityConnectorPrefix + "1",
+				DiagramController.CellConstants.IdGroupConnectorPrefix + "1",
+				DiagramController.CellConstants.RelationshipPrefix + "1",
+				DiagramController.CellConstants.AttributePrefix + "1",
+				DiagramController.CellConstants.AttributeConnectorPrefix + "1",
+				DiagramController.CellConstants.RelationshipConnectorPrefix + "1",
+				DiagramController.CellConstants.HierarchyNodePrefix + "1",
+				DiagramController.CellConstants.HierarchyConnectorPrefix + "1",
+				});
+		
 		DiagramController controller = this.createController();
 		
 		controller.load(diagram);
-		Assert.assertEquals(2, controller.getGraph().getChildCells(controller.getGraph().getDefaultParent()).length);
+		Assert.assertEquals(9, controller.getGraph().getChildCells(controller.getGraph().getDefaultParent()).length);
 		
-		Assert.assertNotNull(controller.getHierarchyNodeCell("1"));
 		Assert.assertNotNull(controller.getEntityCell("1"));
+		Assert.assertNotNull(controller.getWeakEntityConnectorCell("1"));
+		Assert.assertNotNull(controller.getIdGroupConnectorCell("1"));
+		Assert.assertNotNull(controller.getRelationshipCell("1"));
+		Assert.assertNotNull(controller.getAttributeCell("1"));
+		Assert.assertNotNull(controller.getAttributeConnectorCell("1"));
+		Assert.assertNotNull(controller.getRelationshipConnectorCell("1"));
+		Assert.assertNotNull(controller.getHierarchyNodeCell("1"));
+		Assert.assertNotNull(controller.getHierarchyConnectorCell("1"));
 	}
 	
 	private void addEntityToDiagram(DiagramController diagramController, 

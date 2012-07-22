@@ -51,10 +51,10 @@ import controllers.factories.IRelationshipControllerFactory;
 import controllers.listeners.IDiagramEventListener;
 import views.IDiagramView;
 
-public class DiagramController extends BaseController 
-	implements IDiagramController, mxIEventListener{
+public class DiagramController extends BaseController
+        implements IDiagramController, mxIEventListener {
 
-	private static class CellConstants{
+	public static class CellConstants{
 		public static final String WeakEntityConnectorPrefix = "WeakEntityConnector";
 		public static final String IdGroupConnectorPrefix = "IdGroupConnector";
 		public static final String EntityPrefix = "Entity";
@@ -132,34 +132,33 @@ public class DiagramController extends BaseController
 		return this.diagramView;
 	}
 
-	public mxGraph getGraph() {
-		return this.graph;
-	}
+    public mxGraph getGraph() {
+        return this.graph;
+    }
 
-	public void createEntity() {
-		if (!this.hasPendingEntity())
-		{
-			IEntityController entityController = this.entityControllerFactory.create();
-			entityController.addSubscriber(this);
-			entityController.create();
-		}
-	}
-	
+    public void createEntity() {
+        if (!this.hasPendingEntity()) {
+            IEntityController entityController = this.entityControllerFactory.create();
+            entityController.addSubscriber(this);
+            entityController.create();
+        }
+    }
+
     @Override
     public void handleCreatedEvent(Entity entity) {
         this.pendingEntity = entity;
     }
 
-	public void createRelationship() {
-		IRelationshipController relationshipController = 
-			this.relationshipControllerFactory.create();
-		
-		relationshipController.addCreateListener(this);
-		
-		relationshipController.create();
-	}
+    public void createRelationship() {
+        IRelationshipController relationshipController =
+                this.relationshipControllerFactory.create();
 
-	@Override
+        relationshipController.addCreateListener(this);
+
+        relationshipController.create();
+    }
+
+    @Override
 	public void handleCreatedEvent(Relationship relationship) throws Exception {
 		double[] coordinates = this.getRelationshipNodeCoordinates(relationship.getRelationshipEntities());
 		double x = coordinates[0];
@@ -223,10 +222,12 @@ public class DiagramController extends BaseController
 					currentRelationshipEntitiesAngle += partialRelationshipEntitiesAngle;
 					useExit = true;
 				}
-				this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity, xExit, yExit, useExit, appeareance);				
+				
+				this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity, xExit, yExit, useExit, appeareance);
 			}
 			
 			this.addAttributesToElement(parent, relationshipCell, relationship.getAttributes(), relationship.getId());
+		
 			if (relationship.hasWeakEntity()){
 				RelationshipEntity weakRelationshipEntity = relationship.getWeakEntity();
 				RelationshipEntity strongRelationshipEntity = relationship.getStrongEntity();
@@ -246,151 +247,117 @@ public class DiagramController extends BaseController
 			this.graph.getModel().endUpdate();
 		}
 	}
-	
-	private void addWeakEntityConnectors(Object parent, UUID entityId,
-			Entity weakEntity, UUID relationshipId, Map<String, List<Attribute>> attributesByIdGroup) {
-		mxCell strongEntityCell = this.getEntityCell(entityId.toString());
-		
-		mxCell cellToConnectTo = null;
-		Attribute firstAttribute = null;
-		
-		for (String key : attributesByIdGroup.keySet()) {
-			List<Attribute> attributesInGroup = attributesByIdGroup.get(key);
-			if (attributesInGroup.size() == 1){
-				// connect strong entity with attribute line
-				firstAttribute = attributesInGroup.get(0);
-				cellToConnectTo = this.getAttributeConnectorCell(weakEntity.getId() + firstAttribute.getName());
-			}else{
-				firstAttribute = attributesInGroup.get(0);
-				Attribute secondAttribute = attributesInGroup.get(1);
-				
-				String idGroupConnectorId = weakEntity.getId().toString() + "_" + firstAttribute.getName() + "_" + secondAttribute.getName() + "_" + key;
-				
-				cellToConnectTo = this.getIdGroupConnectorCell(idGroupConnectorId);
-			}
-			
-			String weakEntityConnectorId = weakEntity.getId().toString() + "_" + relationshipId.toString() + "_" + firstAttribute.getName() + "_" + key;
-			
-			mxCell weakEntityConnectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.WeakEntityConnectorPrefix + weakEntityConnectorId, "", 
-					strongEntityCell, cellToConnectTo, StyleConstants.WEAK_ENTITY_CONNECTOR_STYLE);
-			
-			this.weakEntityConnectorCells.put(CellConstants.WeakEntityConnectorPrefix + weakEntityConnectorId, weakEntityConnectorCell);
-		}
-	}
-	
-	public void addEntity(double x, double y) throws Exception 
-	{
-		this.graph.getModel().beginUpdate();
-		Object parent = this.graph.getDefaultParent();
-		try {
-			mxCell entityCell = this.addEntityToGraph(this.pendingEntity, parent, x, y);
-			this.addAttributesToElement(parent, entityCell, this.pendingEntity.getAttributes(), this.pendingEntity.getId());
-		}
-		finally {
-			this.diagram.getEntities().add(this.pendingEntity);
-			for (IDiagramEventListener listener : this.listeners) {
-				listener.handleEntityAdded(this.diagram, this.pendingEntity);
-			}
-			this.graph.getModel().endUpdate();
-		}
-		
-		this.pendingEntity = null;
-	}
+    
+    public void addEntity(double x, double y) throws Exception {
+        this.graph.getModel().beginUpdate();
+        Object parent = this.graph.getDefaultParent();
+        try {
+            mxCell entityCell = this.addEntityToGraph(this.pendingEntity, parent, x, y);
+            this.addAttributesToElement(parent, entityCell, this.pendingEntity.getAttributes(), this.pendingEntity.getId());
+        } finally {
+            this.diagram.getEntities().add(this.pendingEntity);
+            for (IDiagramEventListener listener : this.listeners) {
+                listener.handleEntityAdded(this.diagram, this.pendingEntity);
+            }
+            this.graph.getModel().endUpdate();
+        }
 
-	private void addAttributesToElement(Object parent, mxCell elementCell, AttributeCollection attributes, UUID elementId) {
-		double centerX = elementCell.getGeometry().getCenterX();
-		double centerY = elementCell.getGeometry().getCenterY();
-		
-		int attributeCount = attributes.count();
-		double partialAngle = attributeCount != 0 ? (2 * Math.PI) / attributeCount : 0;
-		double currentAngle = 0;
-		
-		Map<String, List<Attribute>> attributesByIdGroup = this.getAttributesByIdGroup(attributes);
-		
-		for (Attribute attribute : attributes) {
-			double xDistance = Math.cos(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
-			double yDistance = Math.sin(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
-			
-			double attributeX = centerX + xDistance;
-			double attributeY = centerY + yDistance;
-			
-			AttributeCollection childAttributes = attribute.getAttributes();
-			
-			boolean isComposite = childAttributes.count() != 0;
-			boolean isKey = this.isKeyOnItsOwn(attributesByIdGroup, attribute);
-			mxCell attributeCell = this.addAttributeToGraph(attribute, parent, elementId, attributeX, attributeY, isComposite);
-			this.addAttributeConnectorToGraph(parent, elementId, elementCell, attribute, attributeCell, isKey, isComposite);
-			
-			if (isComposite){
-				this.addAttributesToElement(parent, attributeCell, childAttributes, elementId);
-			}
-			
-			currentAngle += partialAngle;
-		}
-		
-		this.addIdGroupConnectorsToElement(parent, elementId, attributesByIdGroup);
-	}
+        this.pendingEntity = null;
+    }
 
-	private void addIdGroupConnectorsToElement(Object parent, UUID elementId,
-			Map<String, List<Attribute>> attributesByIdGroup) {
-		for (String key : attributesByIdGroup.keySet()) {
-			List<Attribute> attributes = attributesByIdGroup.get(key);
-			
-			mxCell lastIdGroupConnectorCell = null;
-			
-			for (int i = 1; i < attributes.size(); i++) {
-				Attribute currentAttribute = attributes.get(i - 1);
-				Attribute nextAttribute = attributes.get(i);
-				
-				mxCell currentAttributeCell = this.getAttributeConnectorCell(elementId.toString() + currentAttribute.getName());
-				mxCell nextAttributeCell = this.getAttributeConnectorCell(elementId.toString() + nextAttribute.getName());
-				
-				String idGroupConnectorId = elementId.toString() + "_" + currentAttribute.getName() + "_" + nextAttribute.getName() + "_" + key;
-				
-				lastIdGroupConnectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.IdGroupConnectorPrefix + idGroupConnectorId, "", 
-						i == 1 ? currentAttributeCell : lastIdGroupConnectorCell, nextAttributeCell, 
-								i == 1 ? StyleConstants.FIRST_ID_GROUP_CONNECTOR_STYLE : StyleConstants.NON_FIRST_ID_GROUP_CONNECTOR_STYLE);
-				
-				this.idGroupConnectorCells.put(CellConstants.IdGroupConnectorPrefix + idGroupConnectorId, lastIdGroupConnectorCell);
-			}
-		}
-	}
+    private void addAttributesToElement(Object parent, mxCell elementCell, AttributeCollection attributes, UUID elementId) {
+        double centerX = elementCell.getGeometry().getCenterX();
+        double centerY = elementCell.getGeometry().getCenterY();
 
-	private boolean isKeyOnItsOwn(
-			Map<String, List<Attribute>> attributesByIdGroup,
-			Attribute attribute) {
-		for (List<Attribute> attributeCollection : attributesByIdGroup.values()) {
-			if (attributeCollection.size() == 1 && attributeCollection.contains(attribute)){
-				return true;
-			}
-		}
-		
-		return false;
-	}
+        int attributeCount = attributes.count();
+        double partialAngle = attributeCount != 0 ? (2 * Math.PI) / attributeCount : 0;
+        double currentAngle = 0;
 
-	private Map<String, List<Attribute>> getAttributesByIdGroup(
-			AttributeCollection attributes) {
-		Map<String, List<Attribute>> attributesByKey = new HashMap<String, List<Attribute>>();
-		
-		for (Attribute attribute : attributes) {
-			for (IdGroup idGroup : attribute.getIdGroup()) {
-				List<Attribute> attributesForKey;
-				if (!attributesByKey.containsKey(idGroup.getName())){
-					attributesForKey = new ArrayList<Attribute>();
-					attributesByKey.put(idGroup.getName(), attributesForKey);
-				}
-				else{
-					attributesForKey = attributesByKey.get(idGroup.getName());
-				}
-				
-				attributesForKey.add(attribute);
-			}
-		}
-		
-		return attributesByKey;
-	}
+        Map<String, List<Attribute>> attributesByIdGroup = this.getAttributesByIdGroup(attributes);
 
-	private mxCell addRelationshipConnectorToGraph(Object parent, Relationship relationship, mxCell relationshipCell,
+        for (Attribute attribute : attributes) {
+            double xDistance = Math.cos(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
+            double yDistance = Math.sin(currentAngle) * StyleConstants.ATTRIBUTE_DEFAULT_DISTANCE;
+
+            double attributeX = centerX + xDistance;
+            double attributeY = centerY + yDistance;
+
+            AttributeCollection childAttributes = attribute.getAttributes();
+
+            boolean isComposite = childAttributes.count() != 0;
+            boolean isKey = this.isKeyOnItsOwn(attributesByIdGroup, attribute);
+            mxCell attributeCell = this.addAttributeToGraph(attribute, parent, elementId, attributeX, attributeY, isComposite);
+            this.addAttributeConnectorToGraph(parent, elementId, elementCell, attribute, attributeCell, isKey, isComposite);
+
+            if (isComposite) {
+                this.addAttributesToElement(parent, attributeCell, childAttributes, elementId);
+            }
+
+            currentAngle += partialAngle;
+        }
+
+        this.addIdGroupConnectorsToElement(parent, elementId, attributesByIdGroup);
+    }
+
+    private void addIdGroupConnectorsToElement(Object parent, UUID elementId,
+                                               Map<String, List<Attribute>> attributesByIdGroup) {
+        for (String key : attributesByIdGroup.keySet()) {
+            List<Attribute> attributes = attributesByIdGroup.get(key);
+
+            mxCell lastIdGroupConnectorCell = null;
+
+            for (int i = 1; i < attributes.size(); i++) {
+                Attribute currentAttribute = attributes.get(i - 1);
+                Attribute nextAttribute = attributes.get(i);
+
+                mxCell currentAttributeCell = this.getAttributeConnectorCell(elementId.toString() + currentAttribute.getName());
+                mxCell nextAttributeCell = this.getAttributeConnectorCell(elementId.toString() + nextAttribute.getName());
+
+                String idGroupConnectorId = elementId.toString() + "_" + currentAttribute.getName() + "_" + nextAttribute.getName() + "_" + key;
+
+                lastIdGroupConnectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.IdGroupConnectorPrefix + idGroupConnectorId, "",
+                        i == 1 ? currentAttributeCell : lastIdGroupConnectorCell, nextAttributeCell,
+                        i == 1 ? StyleConstants.FIRST_ID_GROUP_CONNECTOR_STYLE : StyleConstants.NON_FIRST_ID_GROUP_CONNECTOR_STYLE);
+
+                this.idGroupConnectorCells.put(CellConstants.IdGroupConnectorPrefix + idGroupConnectorId, lastIdGroupConnectorCell);
+            }
+        }
+    }
+
+    private boolean isKeyOnItsOwn(
+            Map<String, List<Attribute>> attributesByIdGroup,
+            Attribute attribute) {
+        for (List<Attribute> attributeCollection : attributesByIdGroup.values()) {
+            if (attributeCollection.size() == 1 && attributeCollection.contains(attribute)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private Map<String, List<Attribute>> getAttributesByIdGroup(
+            AttributeCollection attributes) {
+        Map<String, List<Attribute>> attributesByKey = new HashMap<String, List<Attribute>>();
+
+        for (Attribute attribute : attributes) {
+            for (IdGroup idGroup : attribute.getIdGroup()) {
+                List<Attribute> attributesForKey;
+                if (!attributesByKey.containsKey(idGroup.getName())) {
+                    attributesForKey = new ArrayList<Attribute>();
+                    attributesByKey.put(idGroup.getName(), attributesForKey);
+                } else {
+                    attributesForKey = attributesByKey.get(idGroup.getName());
+                }
+
+                attributesForKey.add(attribute);
+            }
+        }
+
+        return attributesByKey;
+    }
+
+    private mxCell addRelationshipConnectorToGraph(Object parent, Relationship relationship, mxCell relationshipCell,
 			RelationshipEntity relationshipEntity, double exitX, double exitY, Boolean useExit, Integer appeareance) {
 		String cardinalityDisplay = String.format("(%s,%s)", 
 				Cardinality.getStringForCardinality(relationshipEntity
@@ -422,166 +389,275 @@ public class DiagramController extends BaseController
 		return connectorCell;
 	}
 
-	private mxCell addAttributeConnectorToGraph(Object parent, UUID ownerId, mxCell entityCell,
-			Attribute attribute, mxCell attributeCell, boolean isKey, boolean isComposite) { 
-		String attributeConnectorId = ownerId.toString()+attribute.getName();
+    private mxCell addAttributeConnectorToGraph(Object parent, UUID ownerId, mxCell entityCell,
+                                                Attribute attribute, mxCell attributeCell, boolean isKey, boolean isComposite) {
+        String attributeConnectorId = ownerId.toString() + attribute.getName();
+
+        mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.AttributeConnectorPrefix + attributeConnectorId, "",
+                entityCell, attributeCell, Styler.getAttributeConnectorStyle(attribute.getType(), isKey, isComposite));
+
+        this.attributeConnectorCells.put(CellConstants.AttributeConnectorPrefix + attributeConnectorId, connectorCell);
+
+        return connectorCell;
+    }
+
+    private mxCell addAttributeToGraph(Attribute attribute, Object parent, UUID ownerId, double x, double y, boolean isComposite) {
+        String attributeId = ownerId.toString() + attribute.getName();
+        mxCell attributeCell = (mxCell) this.graph.insertVertex(parent, CellConstants.AttributePrefix + attributeId,
+                attribute.getName(), x, y,
+                isComposite ? StyleConstants.COMPOSED_ATTRIBUTE_WIDTH : StyleConstants.ATTRIBUTE_WIDTH,
+                isComposite ? StyleConstants.COMPOSED_ATTRIBUTE_HEIGHT : StyleConstants.ATTRIBUTE_HEIGHT,
+                Styler.getAttributeStyle(isComposite));
+
+        this.attributeCells.put(CellConstants.AttributePrefix + attributeId, attributeCell);
+
+
+        this.graph.updateCellSize(attributeCell);
+
+        return attributeCell;
+    }
+
+    private mxCell addRelationshipToGraph(Relationship relationship, Object parent, double x, double y) {
+        mxCell relationshipCell = (mxCell) this.graph.insertVertex(parent, CellConstants.RelationshipPrefix + relationship.getId().toString(),
+                relationship.getName(), x, y,
+                StyleConstants.RELATIONSHIP_WIDTH, StyleConstants.RELATIONSHIP_HEIGHT, Styler.getRelationshipStyle(relationship.isComposition()));
+
+        this.relationshipCells.put(CellConstants.RelationshipPrefix + relationship.getId().toString(), relationshipCell);
+
+        return relationshipCell;
+    }
+
+    private mxCell addEntityToGraph(Entity entity, Object parent, double x, double y) throws Exception {
+        mxCell entityCell = (mxCell) this.graph.insertVertex(parent, CellConstants.EntityPrefix + entity.getId().toString(),
+                entity.getName(), x, y,
+                StyleConstants.ENTITY_WIDTH, StyleConstants.ENTITY_HEIGHT, Styler.getFillColor(entity.getType()) + ";" + StyleConstants.ENTITY_STYLE);
+
+        this.entityCells.put(CellConstants.EntityPrefix + entity.getId().toString(), entityCell);
+
+        return entityCell;
+    }
+
+    private double[] getRelationshipNodeCoordinates(Iterable<RelationshipEntity> relationshipEntities) {
+        double maxX = 0;
+        double maxY = 0;
+        double minY = Double.POSITIVE_INFINITY;
+        double minX = Double.POSITIVE_INFINITY;
+
+        Iterable<RelationshipEntity> distinctEntities = IterableExtensions.distinct(relationshipEntities, new Comparator<RelationshipEntity>() {
+
+            @Override
+            public int compare(RelationshipEntity e1, RelationshipEntity e2) {
+                if (e1.getEntityId() == e2.getEntityId()) {
+                    return 0;
+                }
+
+                return 1;
+            }
+        });
+
+        if (IterableExtensions.count(distinctEntities) == 1) {
+            RelationshipEntity entity = IterableExtensions.firstOrDefault(distinctEntities);
+
+            mxCell entityCell = this.getEntityCell(entity.getEntityId().toString());
+            double x = entityCell.getGeometry().getX();
+            double y = entityCell.getGeometry().getY();
+
+            return new double[]{x, y + StyleConstants.ENTITY_HEIGHT * 3};
+        }
+
+        for (RelationshipEntity entity : distinctEntities) {
+            mxCell entityCell = this.getEntityCell(entity.getEntityId().toString());
+            double x = entityCell.getGeometry().getX();
+            double y = entityCell.getGeometry().getY();
+            if (x > maxX) {
+                maxX = x;
+            }
+
+            if (x < minX) {
+                minX = x;
+            }
+
+            if (y > maxY) {
+                maxY = y;
+            }
+
+            if (y < minY) {
+                minY = y;
+            }
+        }
+
+        double xPosition = minX + (maxX - minX) / 2;
+        double yPosition = minY + (maxY - minY) / 2;
+
+        return new double[]{xPosition, yPosition};
+    }
+
+    public mxCell getEntityCell(String id) {
+        return this.entityCells.get(CellConstants.EntityPrefix + id);
+    }
+
+    public mxCell getAttributeCell(String id) {
+        return this.attributeCells.get(CellConstants.AttributePrefix + id);
+    }
+
+    public mxCell getAttributeConnectorCell(String id) {
+        return this.attributeConnectorCells.get(CellConstants.AttributeConnectorPrefix + id);
+    }
+
+	
+	
+	private void addWeakEntityConnectors(Object parent, UUID entityId,
+			Entity weakEntity, UUID relationshipId, Map<String, List<Attribute>> attributesByIdGroup) {
+		mxCell strongEntityCell = this.getEntityCell(entityId.toString());
 		
-		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.AttributeConnectorPrefix + attributeConnectorId, "", 
-				entityCell, attributeCell, Styler.getAttributeConnectorStyle(attribute.getType(), isKey, isComposite));
+		mxCell cellToConnectTo = null;
+		Attribute firstAttribute = null;
 		
-		this.attributeConnectorCells.put(CellConstants.AttributeConnectorPrefix + attributeConnectorId, connectorCell);
+		for (String key : attributesByIdGroup.keySet()) {
+			List<Attribute> attributesInGroup = attributesByIdGroup.get(key);
+			if (attributesInGroup.size() == 1){
+				// connect strong entity with attribute line
+				firstAttribute = attributesInGroup.get(0);
+				cellToConnectTo = this.getAttributeConnectorCell(weakEntity.getId() + firstAttribute.getName());
+			}else{
+				firstAttribute = attributesInGroup.get(0);
+				Attribute secondAttribute = attributesInGroup.get(1);
 				
-		return connectorCell;		
-	}
-
-	private mxCell addAttributeToGraph(Attribute attribute, Object parent, UUID ownerId, double x, double y, boolean isComposite) {
-		String attributeId = ownerId.toString()+attribute.getName();
-		mxCell attributeCell = (mxCell) this.graph.insertVertex(parent, CellConstants.AttributePrefix +  attributeId, 
-				attribute.getName(), x, y,
-				isComposite ? StyleConstants.COMPOSED_ATTRIBUTE_WIDTH : StyleConstants.ATTRIBUTE_WIDTH,
-				isComposite ? StyleConstants.COMPOSED_ATTRIBUTE_HEIGHT : StyleConstants.ATTRIBUTE_HEIGHT,
-				Styler.getAttributeStyle(isComposite));
-		
-		this.attributeCells.put(CellConstants.AttributePrefix + attributeId, attributeCell);
-		
-		
-		this.graph.updateCellSize(attributeCell);	
-
-		return attributeCell;
-	}
-	
-	private mxCell addRelationshipToGraph(Relationship relationship, Object parent, double x, double y) {
-		mxCell relationshipCell = (mxCell) this.graph.insertVertex(parent, CellConstants.RelationshipPrefix + relationship.getId().toString(), 
-				relationship.getName(), x, y,
-				StyleConstants.RELATIONSHIP_WIDTH, StyleConstants.RELATIONSHIP_HEIGHT, StyleConstants.RELATIONSHIP_STYLE);
-		
-		this.relationshipCells.put(CellConstants.RelationshipPrefix + relationship.getId().toString(), relationshipCell);
-
-		return relationshipCell;
-	}
-
-	private mxCell addEntityToGraph(Entity entity, Object parent, double x, double y) throws Exception {
-		mxCell entityCell = (mxCell) this.graph.insertVertex(parent, CellConstants.EntityPrefix + entity.getId().toString(), 
-				entity.getName(), x, y,
-				StyleConstants.ENTITY_WIDTH, StyleConstants.ENTITY_HEIGHT, Styler.getFillColor(entity.getType()) + ";" + StyleConstants.ENTITY_STYLE);
-		
-		this.entityCells.put(CellConstants.EntityPrefix + entity.getId().toString(), entityCell);
-
-		return entityCell;
-	}
-	
-	private double[] getRelationshipNodeCoordinates(Iterable<RelationshipEntity> relationshipEntities) {
-		double maxX = 0;
-		double maxY = 0;
-		double minY = Double.POSITIVE_INFINITY;
-		double minX = Double.POSITIVE_INFINITY;
-		
-		Iterable<RelationshipEntity> distinctEntities = IterableExtensions.distinct(relationshipEntities, new Comparator<RelationshipEntity>() {
-
-			@Override
-			public int compare(RelationshipEntity e1, RelationshipEntity e2) {
-				if (e1.getEntityId() == e2.getEntityId())
-				{
-					return 0;
-				}
+				String idGroupConnectorId = weakEntity.getId().toString() + "_" + firstAttribute.getName() + "_" + secondAttribute.getName() + "_" + key;
 				
-				return 1;
+				cellToConnectTo = this.getIdGroupConnectorCell(idGroupConnectorId);
 			}
-		});
-		
-		if (IterableExtensions.count(distinctEntities) == 1)
-		{
-			RelationshipEntity entity = IterableExtensions.firstOrDefault(distinctEntities);
 			
-			mxCell entityCell = this.getEntityCell(entity.getEntityId().toString());
-			double x = entityCell.getGeometry().getX();
-			double y = entityCell.getGeometry().getY();
+			String weakEntityConnectorId = weakEntity.getId().toString() + "_" + relationshipId.toString() + "_" + firstAttribute.getName() + "_" + key;
 			
-			return new double[]{x, y + StyleConstants.ENTITY_HEIGHT * 3};
+			mxCell weakEntityConnectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.WeakEntityConnectorPrefix + weakEntityConnectorId, "", 
+					strongEntityCell, cellToConnectTo, StyleConstants.WEAK_ENTITY_CONNECTOR_STYLE);
+			
+			this.weakEntityConnectorCells.put(CellConstants.WeakEntityConnectorPrefix + weakEntityConnectorId, weakEntityConnectorCell);
 		}
-		
-		for (RelationshipEntity entity : distinctEntities) {
-			mxCell entityCell = this.getEntityCell(entity.getEntityId().toString());
-			double x = entityCell.getGeometry().getX();
-			double y = entityCell.getGeometry().getY();
-			if (x > maxX){
-				maxX = x;
-			}
-			
-			if (x < minX){
-				minX = x;
-			}
-			
-			if (y > maxY){
-				maxY = y;
-			}
-			
-			if (y < minY){
-				minY = y;
-			}
-		}
-		
-		double xPosition = minX + (maxX - minX) / 2;
-		double yPosition = minY + (maxY - minY) / 2;
-		
-		return new double[]{xPosition, yPosition};
 	}
 
-	public mxCell getEntityCell(String id) {
-		return this.entityCells.get(CellConstants.EntityPrefix + id);
-	}
+    public boolean hasPendingEntity() {
+        return this.pendingEntity != null;
+    }
 
-	public mxCell getAttributeCell(String id) {
-		return this.attributeCells.get(CellConstants.AttributePrefix + id);
-	}
-
-	public mxCell getAttributeConnectorCell(String id) {
-		return this.attributeConnectorCells.get(CellConstants.AttributeConnectorPrefix + id);
-	}
-
-	public boolean hasPendingEntity() {
-		return this.pendingEntity != null;
-	}
-
-	public mxCell getRelationshipCell(String id) {
-		return this.relationshipCells.get(CellConstants.RelationshipPrefix + id);
-	}
-
-	
-	public mxCell getRelationshipConnectorCell(String id) {
-		return this.relationshipConnectorCells.get(CellConstants.RelationshipConnectorPrefix + id);
-	}
-
-	public Diagram getDiagram() {
-		return this.diagram;
-	}
-
-	public void save() throws ParserConfigurationException {
-		Document document = this.xmlFileManager.createDocument();
-		Element element = 
-			this.diagramXmlManager.getElementFromItem(this.diagram, document);
-		
-		document.appendChild(element);
-		this.xmlFileManager.write(document, this.getComponentFilePath());
-		
-		this.graphPersistenceService.save(this.getRepresentationFilePath(), this.graph);
-	}
-
-	private String getRepresentationFilePath() {
-		return this.projectContext.getDataDirectory() + "/" + this.diagram.getName() + "-rep";
-	}
-
-	private String getComponentFilePath() {
-		return this.projectContext.getDataDirectory() + "/" + this.diagram.getName() + "-comp";
-	}
+    public mxCell getRelationshipCell(String id) {
+        return this.relationshipCells.get(CellConstants.RelationshipPrefix + id);
+    }
 
 
-	public void openDiagram(String path) throws Exception {
-		Document document = this.xmlFileManager.read(path);
-		Element element = document.getDocumentElement();
-		this.diagram = this.diagramXmlManager.getItemFromXmlElement(element);
-	}
-	
+    public mxCell getRelationshipConnectorCell(String id) {
+        return this.relationshipConnectorCells.get(CellConstants.RelationshipConnectorPrefix + id);
+    }
+
+    public Diagram getDiagram() {
+        return this.diagram;
+    }
+
+    public void save() throws ParserConfigurationException {
+        Document document = this.xmlFileManager.createDocument();
+        Element element =
+                this.diagramXmlManager.getElementFromItem(this.diagram, document);
+
+        document.appendChild(element);
+        this.xmlFileManager.write(document, this.getComponentFilePath());
+
+        this.graphPersistenceService.save(this.getRepresentationFilePath(), this.graph);
+
+    }
+
+    private String getRepresentationFilePath() {
+        return this.projectContext.getDataDirectory() + "/" + this.diagram.getName() + "-rep";
+    }
+
+    private String getComponentFilePath() {
+        return this.projectContext.getDataDirectory() + "/" + this.diagram.getName() + "-comp";
+    }
+
+
+    public void openDiagram(String path) throws Exception {
+        Document document = this.xmlFileManager.read(path);
+        Element element = document.getDocumentElement();
+        this.diagram = this.diagramXmlManager.getItemFromXmlElement(element);
+    }
+
+    @Override
+    public void load(Diagram diagram) {
+
+        this.diagram = diagram;
+        String fileName = this.getRepresentationFilePath();
+        this.graphPersistenceService.load(fileName, this.graph);
+
+        Pattern regex1 = Pattern.compile(CellConstants.EntityPrefix);
+        Pattern regex2 = Pattern.compile(CellConstants.RelationshipConnectorPrefix);
+        Pattern regex3 = Pattern.compile(CellConstants.RelationshipPrefix);
+        Pattern regex4 = Pattern.compile(CellConstants.AttributeConnectorPrefix);
+        Pattern regex5 = Pattern.compile(CellConstants.AttributePrefix);
+        Pattern regex6 = Pattern.compile(CellConstants.HierarchyConnectorPrefix);
+        Pattern regex7 = Pattern.compile(CellConstants.HierarchyNodePrefix);
+        Pattern regex8 = Pattern.compile(CellConstants.WeakEntityConnectorPrefix);
+        Pattern regex9 = Pattern.compile(CellConstants.IdGroupConnectorPrefix);
+        for (Object o : this.graph.getChildCells(this.graph.getDefaultParent())) {
+            mxCell cell = (mxCell) o;
+            
+            Matcher matcher = regex8.matcher(cell.getId());
+            boolean matchFound = matcher.find();
+            if (matchFound) {
+                this.weakEntityConnectorCells.put(cell.getId(), cell);
+                continue;
+            }
+            
+            matcher = regex1.matcher(cell.getId());
+            matchFound = matcher.find();
+            if (matchFound) {
+                this.entityCells.put(cell.getId(), cell);
+                continue;
+            }
+            matcher = regex2.matcher(cell.getId());
+            matchFound = matcher.find();
+            if (matchFound) {
+                this.relationshipConnectorCells.put(cell.getId(), cell);
+                continue;
+            }
+            matcher = regex3.matcher(cell.getId());
+            matchFound = matcher.find();
+            if (matchFound) {
+                this.relationshipCells.put(cell.getId(), cell);
+                continue;
+            }
+            matcher = regex4.matcher(cell.getId());
+            matchFound = matcher.find();
+            if (matchFound) {
+                this.attributeConnectorCells.put(cell.getId(), cell);
+                continue;
+            }
+            matcher = regex5.matcher(cell.getId());
+            matchFound = matcher.find();
+            if (matchFound) {
+                this.attributeCells.put(cell.getId(), cell);
+                continue;
+            }
+            matcher = regex6.matcher(cell.getId());
+            matchFound = matcher.find();
+            if (matchFound) {
+                this.hierarchyConnectorCells.put(cell.getId(), cell);
+                continue;
+            }
+            matcher = regex7.matcher(cell.getId());
+            matchFound = matcher.find();
+            if (matchFound) {
+                this.hierarchyNodeCells.put(cell.getId(), cell);
+                continue;
+            }
+            matcher = regex9.matcher(cell.getId());
+            matchFound = matcher.find();
+            if (matchFound) {
+                this.idGroupConnectorCells.put(cell.getId(), cell);
+                continue;
+            }
+        }
+    }
+    
 	@Override
 	public void invoke(Object arg0, mxEventObject arg1) {
 		// JGraph has a bug "removed" are those added to the selection. "added" are those that were removed from the selection
@@ -747,67 +823,6 @@ public class DiagramController extends BaseController
 		}
 	}
 	
-	@Override
-	public void load(Diagram diagram) {
-
-		this.diagram = diagram;
-		String fileName = this.getRepresentationFilePath();
-		this.graphPersistenceService.load(fileName, this.graph);
-		
-		Pattern regex1 = Pattern.compile("Entity");
-		Pattern regex2 = Pattern.compile("RelationshipConnector");
-		Pattern regex3 = Pattern.compile("Relationship");
-		Pattern regex4 = Pattern.compile("AttributeConnector");
-		Pattern regex5 = Pattern.compile("Attribute");
-		Pattern regex6 = Pattern.compile("HierarchyConnector");
-		Pattern regex7 = Pattern.compile("HierarchyNode");
-		for (Object o : this.graph.getChildCells(this.graph.getDefaultParent())) {
-			mxCell cell = (mxCell) o;
-			Matcher matcher = regex1.matcher(cell.getId());
-			boolean matchFound = matcher.find();
-			if (matchFound) {
-		        this.entityCells.put(cell.getId(), cell);
-		        continue;
-			}
-			matcher = regex2.matcher(cell.getId());
-			matchFound = matcher.find();
-			if (matchFound) {
-		        this.relationshipConnectorCells.put(cell.getId(), cell);
-		        continue;
-			}
-			matcher = regex3.matcher(cell.getId());
-			matchFound = matcher.find();
-			if (matchFound) {
-		        this.relationshipCells.put(cell.getId(), cell);
-		        continue;
-			}
-			matcher = regex4.matcher(cell.getId());
-			matchFound = matcher.find();
-			if (matchFound) {
-		        this.attributeConnectorCells.put(cell.getId(), cell);
-		        continue;
-			}
-			matcher = regex5.matcher(cell.getId());
-			matchFound = matcher.find();
-			if (matchFound) {
-		        this.attributeCells.put(cell.getId(), cell);
-		        continue;
-			}
-			matcher = regex6.matcher(cell.getId());
-			matchFound = matcher.find();
-			if (matchFound) {
-		        this.hierarchyConnectorCells.put(cell.getId(), cell);
-		        continue;
-			}
-			matcher = regex7.matcher(cell.getId());
-			matchFound = matcher.find();
-			if (matchFound) {
-		        this.hierarchyNodeCells.put(cell.getId(), cell);
-		        continue;
-			}
-		}
-	}
-
     @Override
     public void updateEntity(Entity entity) {
         this.diagram.getEntities().remove(entity.getName());

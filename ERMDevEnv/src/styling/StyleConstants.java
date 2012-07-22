@@ -10,6 +10,7 @@ public class StyleConstants {
 	public static String KEY_ATTRIBUTE_LINK_STYLE = "endArrow=oval;endSize=10;strokeColor=black";
 	public static String CALCULATED_KEY_ATTRIBUTE_LINK_STYLE = "endArrow=filledRedCircle;endSize=10;strokeColor=black";
 	public static String RELATIONSHIP_STYLE = "shape=rhombus;perimeter=rhombusPerimeter;portConstraint=eastwestsouthnorth;fillColor=#A7ABAB;strokeColor=#A7ABAB";
+	public static String COMPOSITION_RELATIONSHIP_STYLE = "shape=rhombus;perimeter=rhombusPerimeter;portConstraint=eastwestsouthnorth;fillColor=#A7FBAB;strokeColor=#A7FBAB";
 	public static String RELATIONSHIP_LINK_STYLE = "endArrow=none;edgeStyle=elbowEdgeStyle;verticalAlign=bottom;align=left;strokeColor=#FF0000";
 	public static String HIERARCHY_PARENT_LINK_STYLE = "endArrow=block;edgeStyle=orthogonalEdgeStyle;verticalAlign=bottom;align=left;verticalAlign=bottom;align=left;";
 	public static String HIERARCHY_CHILD_LINK_STYLE = "endArrow=none;edgeStyle=orthogonalEdgeStyle;verticalAlign=bottom;align=left;exitX=0.5;exitY=0";

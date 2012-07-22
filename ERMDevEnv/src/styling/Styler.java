@@ -55,4 +55,11 @@ public class Styler {
 		return StyleConstants.ATTRIBUTE_STYLE;
 	}
 
+	public static String getRelationshipStyle(boolean isComposition){
+		if (isComposition){
+			return StyleConstants.COMPOSITION_RELATIONSHIP_STYLE;
+		}
+		
+		return StyleConstants.RELATIONSHIP_STYLE;
+	}
 }

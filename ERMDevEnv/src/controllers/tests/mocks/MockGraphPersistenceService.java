@@ -18,17 +18,21 @@ public class MockGraphPersistenceService implements IGraphPersistenceService {
 	
 	private String diagramName;
 
+	private String[] cellsToLoad;
+	
+	public void setCellsToLoad(String[] cellNames){
+		this.cellsToLoad = cellNames;
+	}
+
 	@Override
 	public void load(String name, mxGraph graph) {
 		this.diagramName = name;
 		
-		mxCell cell = new mxCell();
-		cell.setId("Entity1");
-		mxCell cell2 = new mxCell();
-		cell2.setId("HierarchyNode1");
-		
-		graph.addCell(cell);
-        graph.addCell(cell2);
+		for (String cellName : this.cellsToLoad) {
+			mxCell cell = new mxCell();
+			cell.setId(cellName);
+			graph.addCell(cell);
+		}
 	}
 
 	public String getDiagramName() {
