@@ -60,8 +60,7 @@ public class RelationshipController implements IRelationshipController {
 
 	@Override
 	public void create() {
-		
-		
+			
 		view.setController(this);
 		relEntController = relationshipEntityControllerFactory.create();
 		relEntController.setRelatinshipEntities(IterableExtensions.getListOf(pendingRelationship.getRelationshipEntities()));
@@ -69,8 +68,7 @@ public class RelationshipController implements IRelationshipController {
 		attController.setAttributes(this.pendingRelationship.getAttributes().getAttributes());
 		attController.setAttributeView(this.view.getAttributeView());
 		this.relEntController.setRelationshipEntityView(this.view.getRelationshipEntityView());
-		
-		
+				
 		this.view.show();
 	}
 
@@ -121,7 +119,6 @@ public class RelationshipController implements IRelationshipController {
 		this.pendingRelationship.setRelationshipEntities(this.relEntController
 				.getRelationshipEntities());
 		
-		addAttributes();
 			       	        
 	    for (IRelationshipEventListener listener : listeners) 
 	       	listener.handleCreatedEvent(pendingRelationship);
@@ -130,19 +127,6 @@ public class RelationshipController implements IRelationshipController {
 	  }
 
 
-
-
-	private void addAttributes () {
-		AttributeCollection attributeCollection = this.pendingRelationship.getAttributes();
-        for (Attribute attribute : this.attController.getAttributes()) {
-            try {
-                attributeCollection.addAttribute(attribute);
-            } catch (Exception e) {
-                //When editing an Relationship
-                e.printStackTrace();
-            }
-        }
-	}
 
 	@Override
 	public void create(Relationship relationship) {

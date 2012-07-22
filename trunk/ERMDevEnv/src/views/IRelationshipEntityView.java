@@ -3,7 +3,6 @@ package views;
 import java.util.List;
 
 import controllers.IRelationshipEntityController;
-import controllers.RelationshipEntityController;
 
 public interface IRelationshipEntityView {
 
