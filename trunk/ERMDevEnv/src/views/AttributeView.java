@@ -19,6 +19,7 @@ import models.AttributeCollection;
 import models.AttributeType;
 import models.Cardinality;
 
+import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
@@ -90,11 +91,20 @@ public class AttributeView implements IAttributeView {
         this.type.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                expression.setEditable((getAttributeType() != AttributeType.characterization));
+                updateTypeSelection();
             }
         });
-        expression.setEditable((getAttributeType() != AttributeType.characterization));
+        updateTypeSelection();
         cleanView();
+    }
+
+    private void updateTypeSelection() {
+        boolean editable = (getAttributeType() != AttributeType.characterization);
+        if (editable)
+            expression.setBackground(Color.white);
+        else
+            expression.setBackground(Color.gray);
+        expression.setEditable(editable);
     }
 
     @Override
