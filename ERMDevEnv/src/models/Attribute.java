@@ -35,7 +35,8 @@ public class Attribute implements INameable, IKey {
     public Attribute(String name, Cardinality cardinality, IdGroupCollection idGroup,
                      AttributeType type, String expression, AttributeCollection attCol, UUID myID) {
         this(name, cardinality, idGroup, type, expression);
-        this.attributes = attCol;
+        if (attCol != null)
+            this.attributes = attCol;
         if (myID != null) {
             this.myID = myID;
         }
