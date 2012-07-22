@@ -105,8 +105,14 @@ public class AttributeView implements IAttributeView {
     @Override
     public void setAttributes(List<Attribute> attributes) {
         this.attributeModelList = attributes;
-        for (Attribute attribute : this.attributeModelList) {
-            ((DefaultMutableTreeNode) attributeModel.getRoot()).add(new AttributeTreeNode(attribute));
+        generateAttributeTree(this.attributeModelList, (DefaultMutableTreeNode) attributeModel.getRoot());
+    }
+
+    private void generateAttributeTree(Iterable<Attribute> attributes, DefaultMutableTreeNode node) {
+        for (Attribute attribute : attributes) {
+            DefaultMutableTreeNode newNode = new AttributeTreeNode(attribute);
+            node.add(newNode);
+            generateAttributeTree(attribute.getAttributes(), newNode);
         }
     }
 
@@ -118,7 +124,7 @@ public class AttributeView implements IAttributeView {
     public JPanel getFrame() {
         return panel1;
     }
-    
+
     @Override
     public String getName() {
         return name.getText();
