@@ -56,7 +56,12 @@ public class MockEntityView implements IEntityView {
     public void setEntityName(String s) {
         this.name = s;
     }
-    
+
+    @Override
+    public void setEntityType(EntityType type) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public String getName(){
         return this.name;
     }

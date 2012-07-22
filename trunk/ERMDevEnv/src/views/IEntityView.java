@@ -20,4 +20,6 @@ public interface IEntityView {
     public boolean isVisible();
 
     public void setEntityName(String name);
+
+    public void setEntityType(EntityType type);
 }

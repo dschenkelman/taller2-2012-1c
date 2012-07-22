@@ -50,6 +50,8 @@ public class EntityController extends BaseController implements IEntityControlle
         this.attributeController.getAttributeView().setAttributes(attributes);
         
         this.entityView.addAttributeView(attributeController.getAttributeView());
+        this.entityView.setEntityName(this.pendingEntity.getName());
+        this.entityView.setEntityType(this.pendingEntity.getType());
         this.entityView.showView();
     }
 
@@ -108,7 +110,6 @@ public class EntityController extends BaseController implements IEntityControlle
     @Override
     public void setEntityView(IEntityView entityView) {
         this.entityView = entityView;
-        this.entityView.setEntityName(this.pendingEntity.getName());
         this.entityView.setController(this);
     }
 
