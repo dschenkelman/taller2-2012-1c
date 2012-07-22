@@ -118,6 +118,7 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 			} catch (Exception exception) {
 				showErrorDialog(exception.getMessage());
 				checkBox1.setSelected(false);
+                exception.printStackTrace();
 			}
 		}
 	}
@@ -130,6 +131,7 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 				relController.add();
 			} catch (Exception e1) {
 				showErrorDialog(e1.getMessage());
+                e1.printStackTrace();
 			}
 		}
 	}
