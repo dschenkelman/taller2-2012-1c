@@ -289,10 +289,10 @@ public class DiagramControllerTestCase {
 		mxCell entity1Cell = diagramController.getEntityCell(entity1.getId().toString());
 		mxCell relationshipEntity11Cell = 
 			diagramController.getRelationshipConnectorCell
-				(relationship.getId().toString()+entity1.getId().toString()+"Role1");
+				(relationship.getId().toString()+entity1.getId().toString()+"Role1"+"1");
 		mxCell relationshipEntity12Cell = 
 			diagramController.getRelationshipConnectorCell
-				(relationship.getId().toString()+entity1.getId().toString()+"Role2");
+				(relationship.getId().toString()+entity1.getId().toString()+"Role2"+"2");
 		Assert.assertTrue(diagramController.getGraph().getModel().isEdge(relationshipEntity11Cell));
 		Object[] entity1RelationshipConnectors = diagramController.getGraph().getEdgesBetween(entity1Cell, relationshipCell);
 		Assert.assertEquals(2, entity1RelationshipConnectors.length);
@@ -304,7 +304,7 @@ public class DiagramControllerTestCase {
 		mxCell entity2Cell = diagramController.getEntityCell(entity2.getId().toString());
 		mxCell relationshipEntity2Cell = 
 			diagramController.getRelationshipConnectorCell
-				(relationship.getId().toString()+entity2.getId().toString()+"");
+				(relationship.getId().toString()+entity2.getId().toString()+""+"1");
 		Assert.assertTrue(diagramController.getGraph().getModel().isEdge(relationshipEntity2Cell));
 		Object[] entity2RelationshipConnectors = diagramController.getGraph().getEdgesBetween(entity2Cell, relationshipCell);
 		Assert.assertEquals(1, entity2RelationshipConnectors.length);
@@ -314,7 +314,7 @@ public class DiagramControllerTestCase {
 		mxCell entity3Cell = diagramController.getEntityCell(entity3.getId().toString());
 		mxCell relationshipEntity3Cell = 
 			diagramController.getRelationshipConnectorCell
-				(relationship.getId().toString()+entity3.getId().toString()+"");
+				(relationship.getId().toString()+entity3.getId().toString()+""+"1");
 		Assert.assertTrue(diagramController.getGraph().getModel().isEdge(relationshipEntity3Cell));
 		Object[] entity3RelationshipConnectors = diagramController.getGraph().getEdgesBetween(entity3Cell, relationshipCell);
 		Assert.assertEquals(1, entity3RelationshipConnectors.length);

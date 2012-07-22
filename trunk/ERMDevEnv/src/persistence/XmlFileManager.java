@@ -111,14 +111,17 @@ public class XmlFileManager implements IXmlFileManager{
     }
     
     private static String readFile(String path) throws IOException {
-    	FileInputStream stream = new FileInputStream(new File(path));
+    	File file = new File(path);
+    	FileInputStream stream = new FileInputStream(file);
+    	FileChannel fc = null;
     	try {
-    		FileChannel fc = stream.getChannel();
+    		fc = stream.getChannel();
     		MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
     		/* Instead of using default, pass in a decoder. */
     		return Charset.defaultCharset().decode(bb).toString();
     	}
     	finally {
+    		fc.close();
     		stream.close();
     	}
 	}

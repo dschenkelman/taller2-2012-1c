@@ -69,10 +69,10 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 	protected void setUpCompontenents(RelationshipEntityViewImpl relEntView,
 			AttributeView attView) {
 		// add listeners
-		checkBox1.addItemListener(new CheckListener());
-		this.textFieldName.addActionListener(new MyLabelNameListener());
-		this.textFieldName.addFocusListener(new MyTextBoxLister());
-		this.button1.addActionListener(new ActionAdd());
+//		checkBox1.addItemListener(new CheckListener());
+//		this.textFieldName.addActionListener(new MyLabelNameListener());
+//		this.textFieldName.addFocusListener(new MyTextBoxLister());
+//		this.button1.addActionListener(new ActionAdd());
 		this.attView = attView;
 		this.relEntView = relEntView;
 			
@@ -88,6 +88,10 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 		relController = relationshipController;
 		this.textFieldName.setText(relController.getName());
 		this.checkBox1.setSelected(relController.isComposition());
+		checkBox1.addItemListener(new CheckListener());
+		this.textFieldName.addActionListener(new MyLabelNameListener());
+		this.textFieldName.addFocusListener(new MyTextBoxLister());
+		this.button1.addActionListener(new ActionAdd());
 	}
 
 	@Override
@@ -116,6 +120,7 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 			try {
 				relController.isComposition(checkBox1.isSelected());
 			} catch (Exception exception) {
+				exception.printStackTrace();
 				showErrorDialog(exception.getMessage());
 				checkBox1.setSelected(false);
                 exception.printStackTrace();
@@ -130,6 +135,7 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 			try {
 				relController.add();
 			} catch (Exception e1) {
+				e1.printStackTrace();
 				showErrorDialog(e1.getMessage());
                 e1.printStackTrace();
 			}
@@ -139,10 +145,7 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 	private class MyTextBoxLister implements FocusListener {
 
 		@Override
-		public void focusGained(FocusEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void focusGained(FocusEvent e) {}
 
 		@Override
 		public void focusLost(FocusEvent e) {

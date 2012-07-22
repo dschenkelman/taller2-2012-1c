@@ -167,7 +167,7 @@ public class RelationshipEntityController extends BaseController implements
 					double maxCard = (row[2].toString().equals(""))?0:Cardinality.getCardinalityFromString(row[2].toString());
 					//double minCard = (row[1].toString().equals(""))?0:Double.valueOf(row[1].toString());
 					//double maxCard = (row[2].toString().equals(""))?0:Double.valueOf(row[2].toString());
-					String role = (row[3].toString().equals(""))?"":row[3].toString();
+					String role = (row[3].toString().equals("") || row[3] == null )?"":row[3].toString();
 					boolean strong = (Boolean)row[4];
 					RelationshipEntity rel = new RelationshipEntity (id,new Cardinality (minCard,maxCard),role,strong);
 					listAux.add(rel);

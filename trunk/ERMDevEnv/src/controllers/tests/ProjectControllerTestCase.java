@@ -800,19 +800,29 @@ public class ProjectControllerTestCase {
 		
 		this.diagramControllerFactory.setController(newController);
 		
-		Object[] path1 = {diagramNode1, entity1, diagramNode2, entity2, hierarchy, diagramNode3, new DefaultMutableTreeNode(relationship)};
+		DefaultMutableTreeNode root = ((DefaultMutableTreeNode)controller.getProjectTree().getRoot());
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(relationship);
+		root.add(node);
+		
+		Object[] path1 = {diagramNode1, entity1, diagramNode2, entity2, hierarchy, diagramNode3, node};
 		controller.changeElement(new TreePath(path1));
 		
 		Assert.assertTrue(newController.updateRelationshipWasCalled());
 		Assert.assertEquals(relationship, newController.getUpdatedRelationship());
 		
-		Object[] path2 = {diagramNode1, entity1, diagramNode2, hierarchy, diagramNode3, relationship, new DefaultMutableTreeNode(entity2)};
+		node = new DefaultMutableTreeNode(entity2);
+		root.add(node);
+		
+		Object[] path2 = {diagramNode1, entity1, diagramNode2, hierarchy, diagramNode3, relationship, node};
 		controller.changeElement(new TreePath(path2));
 		
 		Assert.assertTrue(newController.updateEntityWasCalled());
 		Assert.assertEquals(entity2, newController.getUpdatedEntity());
 		
-		Object[] path3 = {diagramNode1, entity1, diagramNode2, diagramNode3, relationship, entity2, new DefaultMutableTreeNode(hierarchy)};
+		node = new DefaultMutableTreeNode(hierarchy);
+		root.add(node);
+		
+		Object[] path3 = {diagramNode1, entity1, diagramNode2, diagramNode3, relationship, entity2, node};
 		controller.changeElement(new TreePath(path3));
 		
 		Assert.assertTrue(newController.updateHierarchyWasCalled());
