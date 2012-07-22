@@ -8,7 +8,6 @@ public class RelationshipEntity {
 	private UUID entityId;
 	private boolean isStrongEntity;
 	
-	
 	public RelationshipEntity(Entity entity) {
 		super();
 		this.entityId = entity.getId();

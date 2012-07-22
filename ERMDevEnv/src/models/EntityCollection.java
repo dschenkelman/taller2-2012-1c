@@ -1,5 +1,10 @@
 package models;
 
+import java.util.UUID;
+
+import infrastructure.Func;
+import infrastructure.IterableExtensions;
+
 public class EntityCollection extends ModelCollection<Entity>{
 	
 	public EntityCollection () {
@@ -18,6 +23,16 @@ public class EntityCollection extends ModelCollection<Entity>{
 			this.items.add(entity);
 		}
 		return false;
+	}
+	
+	public Entity get(UUID id) {
+		return IterableExtensions.firstOrDefault(this.items,
+				new Func<Entity, String, Boolean>() {
+					@Override
+					public Boolean execute(Entity item, String id) {
+						return item.getId().toString().equals(id);
+					}
+				}, id.toString());
 	}
 	
 	@Override

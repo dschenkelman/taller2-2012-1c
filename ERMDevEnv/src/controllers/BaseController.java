@@ -6,7 +6,7 @@ public abstract class BaseController {
 	
 	protected IProjectContext projectContext;
 	
-	protected BaseController(IProjectContext projectContext)
+	public BaseController(IProjectContext projectContext)
 	{
 		this.projectContext = projectContext;
 	}

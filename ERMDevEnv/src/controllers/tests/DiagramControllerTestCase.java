@@ -896,7 +896,73 @@ public class DiagramControllerTestCase {
 		Assert.assertEquals(1, attribute3To4ConnectorCells.length);
 		Assert.assertSame(attribute3To4ConnectorCell, attribute3To4ConnectorCells[0]);		
 	}
+	
+	@Test
+	public void testShouldJoinAttributesThatMakeUpEachIdGroupWithLinesFromStrongEntity() throws Exception
+	{
+		Entity entity1 = new Entity("Entity1");
+		
+		Entity entity2 = new Entity("Entity2");
+		
+		DiagramController diagramController = this.createController();
 
+		IdGroupCollection collection1 = new IdGroupCollection();
+		collection1.addIdGroup(new IdGroup("1"));
+		
+		IdGroupCollection collection2 = new IdGroupCollection();
+		collection2.addIdGroup(new IdGroup("2"));
+		
+		IdGroupCollection collection3 = new IdGroupCollection();
+		collection3.addIdGroup(new IdGroup("2"));
+		
+		entity1.getAttributes().addAttribute("Attribute1", new Cardinality(0, 1), collection1, AttributeType.copy, null);
+		entity1.getAttributes().addAttribute("Attribute2", new Cardinality(0, 1), collection2, AttributeType.copy, null);
+		entity1.getAttributes().addAttribute("Attribute3", new Cardinality(0, 1), collection3, AttributeType.calculated, "expression");
+		entity1.getAttributes().addAttribute("Attribute4", new Cardinality(0, 1), collection3, AttributeType.copy, null);
+		
+		this.addEntityToDiagram(diagramController, entity1, 20, 30);
+		this.addEntityToDiagram(diagramController, entity2, 60, 30);
+		
+		mxCell attribute1To2ConnectorCell = diagramController.getIdGroupConnectorCell(entity1.getId()+"_Attribute1_Attribute2_1");
+		mxCell attribute2To3ConnectorCell = diagramController.getIdGroupConnectorCell(entity1.getId()+"_Attribute2_Attribute3_2");
+		mxCell attribute3To4ConnectorCell = diagramController.getIdGroupConnectorCell(entity1.getId()+"_Attribute3_Attribute4_2");
+		
+		mxCell attribute1ConnectorCell = diagramController.getAttributeConnectorCell(entity1.getId()+"Attribute1");
+		mxCell attribute2ConnectorCell = diagramController.getAttributeConnectorCell(entity1.getId()+"Attribute2");
+		mxCell attribute3ConnectorCell = diagramController.getAttributeConnectorCell(entity1.getId()+"Attribute3");
+		mxCell attribute4ConnectorCell = diagramController.getAttributeConnectorCell(entity1.getId()+"Attribute4");
+		
+		RelationshipEntity relationshipEntity1 = 
+			new RelationshipEntity(entity1, new Cardinality(0, 1), "Role1", false);
+		RelationshipEntity relationshipEntity2 = 
+			new RelationshipEntity(entity2, new Cardinality(0, Double.POSITIVE_INFINITY), "", true);
+		
+		Relationship relationship = new Relationship(relationshipEntity1, relationshipEntity2);
+		relationship.setName("Relationship");
+		
+		Object[] attribute2To3ConnectorCells = diagramController.getGraph().getEdgesBetween(attribute2ConnectorCell, attribute3ConnectorCell);
+		Assert.assertEquals(1, attribute2To3ConnectorCells.length);
+		Assert.assertSame(attribute2To3ConnectorCell, attribute2To3ConnectorCells[0]);
+		
+		Object[] attribute3To4ConnectorCells = diagramController.getGraph().getEdgesBetween(attribute2To3ConnectorCell, attribute4ConnectorCell);
+		Assert.assertEquals(1, attribute3To4ConnectorCells.length);
+		Assert.assertSame(attribute3To4ConnectorCell, attribute3To4ConnectorCells[0]);
+		
+		diagramController.handleCreatedEvent(relationship);
+		
+		mxCell attribute1ToEntity2ConnectorCell = diagramController.getWeakEntityConnectorCell(entity1.getId().toString() + "_" + relationship.getId().toString() +"_Attribute1_1");
+		mxCell attribute2ToEntity2ConnectorCell = diagramController.getWeakEntityConnectorCell(entity1.getId().toString() + "_" + relationship.getId().toString() +"_Attribute2_2");
+		
+		mxCell entity2Cell = diagramController.getEntityCell(entity2.getId().toString());
+		
+		Object[] attribute1ToEntity2ConnectorCells = diagramController.getGraph().getEdgesBetween(attribute1ConnectorCell, entity2Cell);
+		Assert.assertEquals(1, attribute1ToEntity2ConnectorCells.length);
+		Assert.assertSame(attribute1ToEntity2ConnectorCell, attribute1ToEntity2ConnectorCells[0]);
+		
+		Object[] attribute2ToEntity2ConnectorCells = diagramController.getGraph().getEdgesBetween(attribute2To3ConnectorCell, entity2Cell);
+		Assert.assertEquals(1, attribute2ToEntity2ConnectorCells.length);
+		Assert.assertSame(attribute2ToEntity2ConnectorCell, attribute2ToEntity2ConnectorCells[0]);
+	}
 	
 	@Test
 	public void testShouldCallToLoadWithCorrectDiagramName() {

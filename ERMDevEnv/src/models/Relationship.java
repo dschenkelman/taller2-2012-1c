@@ -1,5 +1,8 @@
 package models;
 
+import infrastructure.Func;
+import infrastructure.IterableExtensions;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -93,6 +96,49 @@ public class Relationship implements INameable {
 
 	public void setAttributes(AttributeCollection attributes) {
 		this.attributes = attributes;
+	}
+	
+	public boolean hasWeakEntity(){
+		if (this.relationshipEntites.size() != 2){
+			return false;
+		}
+		
+		Func<RelationshipEntity, Boolean, Boolean> cmp = new Func<RelationshipEntity, Boolean, Boolean>(){
+
+			@Override
+			public Boolean execute(RelationshipEntity relationshipEntity, Boolean isStrong) {
+				return relationshipEntity.isStrongEntity() == isStrong;
+			}
+			
+		};
+		
+		return IterableExtensions.firstOrDefault(this.relationshipEntites, cmp, true) != null;
+	}
+	
+	public RelationshipEntity getWeakEntity(){
+		Func<RelationshipEntity, Boolean, Boolean> cmp = new Func<RelationshipEntity, Boolean, Boolean>(){
+
+			@Override
+			public Boolean execute(RelationshipEntity relationshipEntity, Boolean isStrong) {
+				return relationshipEntity.isStrongEntity() == isStrong;
+			}
+			
+		};
+		
+		return IterableExtensions.firstOrDefault(this.relationshipEntites, cmp, false);
+	}
+	
+	public RelationshipEntity getStrongEntity(){
+		Func<RelationshipEntity, Boolean, Boolean> cmp = new Func<RelationshipEntity, Boolean, Boolean>(){
+
+			@Override
+			public Boolean execute(RelationshipEntity relationshipEntity, Boolean isStrong) {
+				return relationshipEntity.isStrongEntity() == isStrong;
+			}
+			
+		};
+		
+		return IterableExtensions.firstOrDefault(this.relationshipEntites, cmp, true);
 	}
 	
 	@Override

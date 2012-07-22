@@ -32,6 +32,7 @@ public interface IDiagramController extends IEntityEventListener, IRelationshipE
 	mxCell getAttributeCell(String id);
 	mxCell getAttributeConnectorCell(String id);
 	mxCell getIdGroupConnectorCell(String string);
+	mxCell getWeakEntityConnectorCell(String id);
 	boolean hasPendingEntity();
 	void save() throws ParserConfigurationException;
 	IDiagramView getView();

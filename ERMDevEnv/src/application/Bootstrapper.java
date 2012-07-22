@@ -1,30 +1,17 @@
 package application;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
-
-import javax.swing.text.html.parser.Entity;
-
-import controllers.factories.*;
-import controllers.factories.mock.MockEntityControllerFactory;
-import controllers.factories.mock.MockHierarchyControllerFactory;
+import static org.picocontainer.Characteristics.CACHE;
 import infrastructure.FileSystemService;
 import infrastructure.IFileSystemService;
 import infrastructure.IProjectContext;
 import infrastructure.ProjectContext;
 
+import java.awt.Color;
+import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
+
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
-import static org.picocontainer.Characteristics.CACHE;
-
-import com.mxgraph.canvas.mxGraphics2DCanvas;
-import com.mxgraph.shape.mxIMarker;
-import com.mxgraph.view.mxCellState;
-import com.mxgraph.shape.mxMarkerRegistry;
-import com.mxgraph.util.mxPoint;
 
 import persistence.DiagramXmlManager;
 import persistence.GraphPersistenceService;
@@ -46,8 +33,16 @@ import views.IRelationshipEntityView;
 import views.IRelationshipView;
 import views.KeyView;
 import views.ProjectView;
+
+import com.mxgraph.canvas.mxGraphics2DCanvas;
+import com.mxgraph.shape.mxIMarker;
+import com.mxgraph.shape.mxMarkerRegistry;
+import com.mxgraph.util.mxPoint;
+import com.mxgraph.view.mxCellState;
+
 import views.RelationshipEntityViewImpl;
 import views.RelationshipViewImpl;
+
 import controllers.AttributeController;
 import controllers.DiagramController;
 import controllers.EntityController;
@@ -62,6 +57,23 @@ import controllers.IRelationshipController;
 import controllers.IRelationshipEntityController;
 import controllers.KeysController;
 import controllers.ProjectController;
+
+import controllers.factories.AttributeControllerFactory;
+import controllers.factories.DiagramControllerFactory;
+import controllers.factories.EntityControllerFactory;
+import controllers.factories.HierarchyControllerFactory;
+import controllers.factories.IAttributeControllerFactory;
+import controllers.factories.IDiagramControllerFactory;
+import controllers.factories.IEntityControllerFactory;
+import controllers.factories.IHierarchyControllerFactory;
+import controllers.factories.IKeysControllerFactory;
+import controllers.factories.IRelationshipControllerFactory;
+import controllers.factories.IRelationshipEntityControllerFactory;
+import controllers.factories.KeyControllerFactory;
+import controllers.factories.RelationshipControllerFactory;
+import controllers.factories.RelationshipEntityControllerFactory;
+import controllers.factories.mock.MockEntityControllerFactory;
+import controllers.factories.mock.MockHierarchyControllerFactory;
 import controllers.RelationshipController;
 import controllers.RelationshipEntityController;
 
@@ -110,6 +122,26 @@ public class Bootstrapper {
 				Color originalColor = canvas.getGraphics().getColor();
 				canvas.getGraphics().setColor(Color.RED);
 				canvas.getGraphics().draw(shape);
+				canvas.getGraphics().setColor(originalColor);
+
+				return new mxPoint(-nx / 2, -ny / 2);
+			}
+		});
+		mxMarkerRegistry.registerMarker("filledRedCircle", new mxIMarker()
+		{
+			public mxPoint paintMarker(mxGraphics2DCanvas canvas,
+					mxCellState state, String type, mxPoint pe, double nx,
+					double ny, double size)
+			{
+				double cx = pe.getX() - nx / 2;
+				double cy = pe.getY() - ny / 2;
+				double a = size / 2;
+				Shape shape = new Ellipse2D.Double(cx - a, cy - a, size, size);
+				
+				Color originalColor = canvas.getGraphics().getColor();
+				canvas.getGraphics().setColor(Color.RED);
+				canvas.getGraphics().draw(shape);
+				canvas.getGraphics().fill(shape);
 				canvas.getGraphics().setColor(originalColor);
 
 				return new mxPoint(-nx / 2, -ny / 2);

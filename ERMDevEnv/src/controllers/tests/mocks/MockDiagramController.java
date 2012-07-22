@@ -218,4 +218,10 @@ public class MockDiagramController implements IDiagramController {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public mxCell getWeakEntityConnectorCell(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

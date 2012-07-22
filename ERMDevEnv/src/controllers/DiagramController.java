@@ -55,80 +55,83 @@ import views.IDiagramView;
 public class DiagramController extends BaseController
         implements IDiagramController, mxIEventListener {
 
-    private static class CellConstants {
-        public static final String IdGroupConnectorPrefix = "IdGroupConnector";
-        public static final String EntityPrefix = "Entity";
-        public static final String RelationshipPrefix = "Relationship";
-        public static final String AttributePrefix = "Attribute";
-        public static final String AttributeConnectorPrefix = "AttributeConnector";
-        public static final String RelationshipConnectorPrefix = "RelationshipConnector";
-        public static final String HierarchyNodePrefix = "HierarchyNode";
-        public static final String HierarchyConnectorPrefix = "HierarchyConnector";
-    }
-
-    private CustomGraph graph;
-    private Map<String, mxCell> entityCells;
-    private Map<String, mxCell> relationshipCells;
-    private Map<String, mxCell> attributeCells;
-    private Map<String, mxCell> attributeConnectorCells;
-    private Map<String, mxCell> relationshipConnectorCells;
-    private Map<String, mxCell> hierarchyNodeCells;
-    private Map<String, mxCell> hierarchyConnectorCells;
-    private Map<String, mxCell> idGroupConnectorCells;
-    private IEntityControllerFactory entityControllerFactory;
-    private Entity pendingEntity;
-    private IRelationshipControllerFactory relationshipControllerFactory;
-    private Diagram diagram;
-    private IXmlFileManager xmlFileManager;
-    private IXmlManager<Diagram> diagramXmlManager;
-    private IDiagramView diagramView;
-    private List<mxCell> selectedCells;
-    private Point dragStartPoint;
-    private IHierarchyControllerFactory hierarchyControllerFactory;
-    private IGraphPersistenceService graphPersistenceService;
-    private List<IDiagramEventListener> listeners;
-    private Pattern regex;
-
-    public DiagramController(IProjectContext projectContext, IDiagramView diagramView,
-                             IEntityControllerFactory entityControllerFactory,
-                             IRelationshipControllerFactory relationshipControllerFactory,
-                             IHierarchyControllerFactory hierarchyControllerFactory,
-                             IXmlFileManager xmlFileManager,
-                             IXmlManager<Diagram> diagramXmlManager,
-                             IGraphPersistenceService graphPersistenceService) {
-        super(projectContext);
-        this.diagram = new Diagram();
-        this.selectedCells = new ArrayList<mxCell>();
-        this.entityControllerFactory = entityControllerFactory;
-        this.relationshipControllerFactory = relationshipControllerFactory;
-        this.hierarchyControllerFactory = hierarchyControllerFactory;
-        this.graph = new CustomGraph();
-
-        this.graph.getSelectionModel().addListener(mxEvent.CHANGE, this);
-
-        this.entityCells = new HashMap<String, mxCell>();
-        this.attributeCells = new HashMap<String, mxCell>();
-        this.attributeConnectorCells = new HashMap<String, mxCell>();
-        this.relationshipCells = new HashMap<String, mxCell>();
-        this.relationshipConnectorCells = new HashMap<String, mxCell>();
-        this.hierarchyConnectorCells = new HashMap<String, mxCell>();
-        this.hierarchyNodeCells = new HashMap<String, mxCell>();
-        this.idGroupConnectorCells = new HashMap<String, mxCell>();
-        this.xmlFileManager = xmlFileManager;
-        this.diagramXmlManager = diagramXmlManager;
-        this.diagramView = diagramView;
-        this.diagramView.setController(this);
-        this.graphPersistenceService = graphPersistenceService;
-        this.listeners = new ArrayList<IDiagramEventListener>();
-
-        this.regex = Pattern.compile("(?:" + CellConstants.EntityPrefix + "|"
-                + CellConstants.RelationshipPrefix + ")"
-                + "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}).*");
-    }
-
-    public IDiagramView getView() {
-        return this.diagramView;
-    }
+	private static class CellConstants{
+		public static final String WeakEntityConnectorPrefix = "WeakEntityConnector";
+		public static final String IdGroupConnectorPrefix = "IdGroupConnector";
+		public static final String EntityPrefix = "Entity";
+		public static final String RelationshipPrefix = "Relationship";
+		public static final String AttributePrefix = "Attribute";
+		public static final String AttributeConnectorPrefix = "AttributeConnector";
+		public static final String RelationshipConnectorPrefix = "RelationshipConnector";
+		public static final String HierarchyNodePrefix = "HierarchyNode";
+		public static final String HierarchyConnectorPrefix = "HierarchyConnector";
+	}
+	
+	private CustomGraph graph;
+	private Map<String, mxCell> entityCells;
+	private Map<String, mxCell> relationshipCells;
+	private Map<String, mxCell> attributeCells;
+	private Map<String, mxCell> attributeConnectorCells;
+	private Map<String, mxCell> relationshipConnectorCells;
+	private Map<String, mxCell> hierarchyNodeCells;
+	private Map<String, mxCell> hierarchyConnectorCells;
+	private Map<String, mxCell> idGroupConnectorCells;
+	private Map<String, mxCell> weakEntityConnectorCells;
+	private IEntityControllerFactory entityControllerFactory;
+	private Entity pendingEntity;
+	private IRelationshipControllerFactory relationshipControllerFactory;
+	private Diagram diagram;
+	private IXmlFileManager xmlFileManager;
+	private IXmlManager<Diagram> diagramXmlManager;
+	private IDiagramView diagramView;
+	private List<mxCell> selectedCells;
+	private Point dragStartPoint;
+	private IHierarchyControllerFactory hierarchyControllerFactory;
+	private IGraphPersistenceService graphPersistenceService;
+	private List<IDiagramEventListener> listeners;
+	private Pattern regex;
+	
+	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
+			IEntityControllerFactory entityControllerFactory,
+			IRelationshipControllerFactory relationshipControllerFactory,
+			IHierarchyControllerFactory hierarchyControllerFactory,
+			IXmlFileManager xmlFileManager,
+			IXmlManager<Diagram> diagramXmlManager,
+			IGraphPersistenceService graphPersistenceService) {
+		super(projectContext);
+		this.diagram = new Diagram();
+		this.selectedCells = new ArrayList<mxCell>();
+		this.entityControllerFactory = entityControllerFactory;
+		this.relationshipControllerFactory = relationshipControllerFactory;
+		this.hierarchyControllerFactory = hierarchyControllerFactory;
+		this.graph = new CustomGraph();
+						
+		this.graph.getSelectionModel().addListener(mxEvent.CHANGE, this);
+		
+		this.entityCells = new HashMap<String, mxCell>();
+		this.attributeCells = new HashMap<String, mxCell>();
+		this.attributeConnectorCells = new HashMap<String, mxCell>();
+		this.relationshipCells = new HashMap<String, mxCell>();
+		this.relationshipConnectorCells = new HashMap<String, mxCell>();
+		this.hierarchyConnectorCells = new HashMap<String, mxCell>();
+		this.hierarchyNodeCells = new HashMap<String, mxCell>();
+		this.idGroupConnectorCells = new HashMap<String, mxCell>();
+		this.weakEntityConnectorCells = new HashMap<String, mxCell>();
+		this.xmlFileManager = xmlFileManager;
+		this.diagramXmlManager = diagramXmlManager;
+		this.diagramView = diagramView;
+		this.diagramView.setController(this);
+		this.graphPersistenceService = graphPersistenceService;
+		this.listeners = new ArrayList<IDiagramEventListener>();
+		
+		this.regex = Pattern.compile("(?:" + CellConstants.EntityPrefix + "|" 
+				+ CellConstants.RelationshipPrefix + ")"
+				+ "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}).*");
+	}
+	
+	public IDiagramView getView(){
+		return this.diagramView;
+	}
 
     public mxGraph getGraph() {
         return this.graph;
@@ -157,66 +160,81 @@ public class DiagramController extends BaseController
     }
 
     @Override
-    public void handleCreatedEvent(Relationship relationship) throws Exception {
-        double[] coordinates = this.getRelationshipNodeCoordinates(relationship.getRelationshipEntities());
-        double x = coordinates[0];
-        double y = coordinates[1];
-        this.graph.getModel().beginUpdate();
-
-        try {
-            Object parent = this.graph.getDefaultParent();
-            mxCell relationshipCell = this.addRelationshipToGraph(relationship, parent, x, y);
-
-            Map<UUID, Integer> entityCount = new HashMap<UUID, Integer>();
-
-            for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
-                if (!entityCount.containsKey(relationshipEntity.getEntityId())) {
-                    entityCount.put(relationshipEntity.getEntityId(), 1);
-                } else {
-                    Integer count = entityCount.get(relationshipEntity.getEntityId());
-                    count++;
-                    entityCount.put(relationshipEntity.getEntityId(), count);
-                }
-            }
-
-            List<UUID> repeatedRelationships = new ArrayList<UUID>();
-            int relationshipEntitiesCount = 0;
-            for (UUID uuid : entityCount.keySet()) {
-                Integer count = entityCount.get(uuid);
-                if (count > 1) {
-                    repeatedRelationships.add(uuid);
-                    relationshipEntitiesCount += count;
-                }
-            }
-
-            double partialRelationshipEntitiesAngle = relationshipEntitiesCount != 0 ? (2 * Math.PI) / relationshipEntitiesCount : 0;
-            double currentRelationshipEntitiesAngle = 0;
-
-            for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
-
-                double xExit = 0;
-                double yExit = 0;
-                Boolean useExit = false;
-                if (repeatedRelationships.contains(relationshipEntity.getEntityId())) {
-                    xExit = Math.cos(currentRelationshipEntitiesAngle) * 0.5 + 0.5;
-                    yExit = Math.sin(currentRelationshipEntitiesAngle) * 0.5 + 0.5;
-                    currentRelationshipEntitiesAngle += partialRelationshipEntitiesAngle;
-                    useExit = true;
-                }
-
-                this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity, xExit, yExit, useExit);
-            }
-
-            this.addAttributesToElement(parent, relationshipCell, relationship.getAttributes(), relationship.getId());
-        } finally {
-            this.diagram.getRelationships().add(relationship);
-            for (IDiagramEventListener eventListener : this.listeners) {
-                eventListener.handleRelationshipAdded(this.diagram, relationship);
-            }
-            this.graph.getModel().endUpdate();
-        }
-    }
-
+	public void handleCreatedEvent(Relationship relationship) throws Exception {
+		double[] coordinates = this.getRelationshipNodeCoordinates(relationship.getRelationshipEntities());
+		double x = coordinates[0];
+		double y = coordinates[1];
+		this.graph.getModel().beginUpdate();
+		
+		try{
+			Object parent = this.graph.getDefaultParent();
+			mxCell relationshipCell = this.addRelationshipToGraph(relationship, parent, x, y);
+			
+			Map<UUID, Integer> entityCount = new HashMap<UUID, Integer>();
+			
+			for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
+				if (!entityCount.containsKey(relationshipEntity.getEntityId()))
+				{
+					entityCount.put(relationshipEntity.getEntityId(), 1);
+				}
+				else
+				{
+					Integer count = entityCount.get(relationshipEntity.getEntityId()); 
+					count++;
+					entityCount.put(relationshipEntity.getEntityId(), count);
+				}
+			}
+			
+			List<UUID> repeatedRelationships = new ArrayList<UUID>();
+			int relationshipEntitiesCount = 0;
+			for (UUID uuid : entityCount.keySet()) {
+				Integer count = entityCount.get(uuid);
+				if (count > 1){
+					repeatedRelationships.add(uuid);
+					relationshipEntitiesCount += count;
+				}
+			}
+			
+			double partialRelationshipEntitiesAngle = relationshipEntitiesCount != 0 ? (2 * Math.PI) / relationshipEntitiesCount : 0;
+			double currentRelationshipEntitiesAngle = 0;
+			
+			for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
+				
+				double xExit = 0;
+				double yExit = 0;
+				Boolean useExit = false;
+				if (repeatedRelationships.contains(relationshipEntity.getEntityId())){
+					xExit = Math.cos(currentRelationshipEntitiesAngle) * 0.5 + 0.5;
+					yExit = Math.sin(currentRelationshipEntitiesAngle) * 0.5 + 0.5;
+					currentRelationshipEntitiesAngle += partialRelationshipEntitiesAngle;
+					useExit = true;
+				}
+				
+				this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity, xExit, yExit, useExit);
+			}
+			
+			this.addAttributesToElement(parent, relationshipCell, relationship.getAttributes(), relationship.getId());
+		
+			if (relationship.hasWeakEntity()){
+				RelationshipEntity weakRelationshipEntity = relationship.getWeakEntity();
+				RelationshipEntity strongRelationshipEntity = relationship.getStrongEntity();
+		
+				Entity weakEntity = this.diagram.getEntities().get(weakRelationshipEntity.getEntityId());
+				
+				Map<String, List<Attribute>> attributesByIdGroup = this.getAttributesByIdGroup(weakEntity.getAttributes());
+				
+				this.addWeakEntityConnectors(parent, strongRelationshipEntity.getEntityId(), weakEntity, relationship.getId(), attributesByIdGroup);
+			}			
+		}
+		finally {
+			this.diagram.getRelationships().add(relationship);
+			for (IDiagramEventListener eventListener : this.listeners) {
+				eventListener.handleRelationshipAdded(this.diagram, relationship);
+			}
+			this.graph.getModel().endUpdate();
+		}
+	}
+    
     public void addEntity(double x, double y) throws Exception {
         this.graph.getModel().beginUpdate();
         Object parent = this.graph.getDefaultParent();
@@ -473,6 +491,39 @@ public class DiagramController extends BaseController
         return this.attributeConnectorCells.get(CellConstants.AttributeConnectorPrefix + id);
     }
 
+	
+	
+	private void addWeakEntityConnectors(Object parent, UUID entityId,
+			Entity weakEntity, UUID relationshipId, Map<String, List<Attribute>> attributesByIdGroup) {
+		mxCell strongEntityCell = this.getEntityCell(entityId.toString());
+		
+		mxCell cellToConnectTo = null;
+		Attribute firstAttribute = null;
+		
+		for (String key : attributesByIdGroup.keySet()) {
+			List<Attribute> attributesInGroup = attributesByIdGroup.get(key);
+			if (attributesInGroup.size() == 1){
+				// connect strong entity with attribute line
+				firstAttribute = attributesInGroup.get(0);
+				cellToConnectTo = this.getAttributeConnectorCell(weakEntity.getId() + firstAttribute.getName());
+			}else{
+				firstAttribute = attributesInGroup.get(0);
+				Attribute secondAttribute = attributesInGroup.get(1);
+				
+				String idGroupConnectorId = weakEntity.getId().toString() + "_" + firstAttribute.getName() + "_" + secondAttribute.getName() + "_" + key;
+				
+				cellToConnectTo = this.getIdGroupConnectorCell(idGroupConnectorId);
+			}
+			
+			String weakEntityConnectorId = weakEntity.getId().toString() + "_" + relationshipId.toString() + "_" + firstAttribute.getName() + "_" + key;
+			
+			mxCell weakEntityConnectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.WeakEntityConnectorPrefix + weakEntityConnectorId, "", 
+					strongEntityCell, cellToConnectTo, StyleConstants.WEAK_ENTITY_CONNECTOR_STYLE);
+			
+			this.weakEntityConnectorCells.put(CellConstants.WeakEntityConnectorPrefix + weakEntityConnectorId, weakEntityConnectorCell);
+		}
+	}
+
     public boolean hasPendingEntity() {
         return this.pendingEntity != null;
     }
@@ -645,15 +696,6 @@ public class DiagramController extends BaseController
         return this.hierarchyNodeCells.get(CellConstants.HierarchyNodePrefix + id);
     }
 
-    public mxCell getHierarchyConnectorCell(String id) {
-        return this.hierarchyConnectorCells.get(CellConstants.HierarchyConnectorPrefix + id);
-    }
-
-    @Override
-    public mxCell getIdGroupConnectorCell(String id) {
-        return this.idGroupConnectorCells.get(CellConstants.IdGroupConnectorPrefix + id);
-    }
-
     public void addListener(IDiagramEventListener listener) {
         this.listeners.add(listener);
     }
@@ -730,6 +772,20 @@ public class DiagramController extends BaseController
             }
         }
     }
+    
+	public mxCell getHierarchyConnectorCell(String id) {
+		return this.hierarchyConnectorCells.get(CellConstants.HierarchyConnectorPrefix + id);
+	}
+	
+	@Override
+	public mxCell getWeakEntityConnectorCell(String id) {
+		return this.weakEntityConnectorCells.get(CellConstants.WeakEntityConnectorPrefix + id);
+	}
+	
+	@Override
+	public mxCell getIdGroupConnectorCell(String id) {
+		return this.idGroupConnectorCells.get(CellConstants.IdGroupConnectorPrefix + id);
+	}
 
     @Override
     public void updateEntity(Entity entity) {
@@ -762,13 +818,12 @@ public class DiagramController extends BaseController
             String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + uuid;
             model.remove(this.hierarchyConnectorCells.remove(keyConnector));
         }
-
         String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + hierarchy.getGeneralEntityId().toString();
         String keyNode = CellConstants.HierarchyNodePrefix + hierarchy.getId().toString();
         model.remove(this.hierarchyConnectorCells.remove(keyConnector));
         model.remove(this.hierarchyNodeCells.remove(keyNode));
     }
-
+     
     @Override
     public void updateRelationship(Relationship relationship) {
 
