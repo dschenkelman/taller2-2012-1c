@@ -97,13 +97,6 @@ public class EntityControllerTest {
 		Assert.assertFalse(this.entityController.addEntity());
 		this.mockEntityCreatedListener.called = false;
 		Assert.assertFalse(this.mockEntityCreatedListener.called);
-
-		Entity entity = mockEntityCreatedListener.get();
-		AttributeCollection attributeCollection = entity.getAttributes();
-		Assert.assertNotNull(attributeCollection.getAttribute(ATT_NAME_1));
-		Assert.assertNotNull(attributeCollection.getAttribute(ATT_NAME_2));
-		Assert.assertNotNull(attributeCollection.getAttribute(ATT_NAME_3));
-		Assert.assertNotNull(attributeCollection.getAttribute(ATT_NAME_4));
 	}
 
 	@Test
