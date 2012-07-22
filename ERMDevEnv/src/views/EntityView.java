@@ -43,7 +43,7 @@ public class EntityView implements IEntityView {
         entityNameText = new JLabel();
         entityName = new JTextField();
         entityTypeText = new JLabel();
-        entityTypeComboBox = new JComboBox(EntityType.entityTypes);
+        entityTypeComboBox = new JComboBox(EntityType.values());
         panel1 = new JPanel();
         selectKeysButton = new JButton();
         createButton = new JButton();
@@ -53,8 +53,8 @@ public class EntityView implements IEntityView {
             frame1.setTitle("Entity Creation");
             Container frame1ContentPane = frame1.getContentPane();
             frame1ContentPane.setLayout(new FormLayout(
-                "74*(default, $lcgap), default",
-                "73*(default, $lgap), default"));
+                    "74*(default, $lcgap), default",
+                    "73*(default, $lgap), default"));
 
             //---- entityNameText ----
             entityNameText.setText("Name: ");
@@ -74,12 +74,12 @@ public class EntityView implements IEntityView {
                 GroupLayout panel1Layout = new GroupLayout(panel1);
                 panel1.setLayout(panel1Layout);
                 panel1Layout.setHorizontalGroup(
-                    panel1Layout.createParallelGroup()
-                        .addGap(0, 1745, Short.MAX_VALUE)
+                        panel1Layout.createParallelGroup()
+                                .addGap(0, 1745, Short.MAX_VALUE)
                 );
                 panel1Layout.setVerticalGroup(
-                    panel1Layout.createParallelGroup()
-                        .addGap(0, 1269, Short.MAX_VALUE)
+                        panel1Layout.createParallelGroup()
+                                .addGap(0, 1269, Short.MAX_VALUE)
                 );
             }
             frame1ContentPane.add(panel1, CC.xywh(5, 11, 145, 133));
@@ -100,14 +100,14 @@ public class EntityView implements IEntityView {
     private void createEntity() {
         if (entityController.addEntity()) {
             this.frame1.setVisible(false);
-        }else{
+        } else {
             showWrongEntityNameDialog();
         }
     }
 
     private void showWrongEntityNameDialog() {
-        if(entityName.getText().equals("")){
-            JOptionPane.showMessageDialog(null,"An entity must have a name, please complete it.", "Invalid Entity Name", JOptionPane.QUESTION_MESSAGE);
+        if (entityName.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "An entity must have a name, please complete it.", "Invalid Entity Name", JOptionPane.QUESTION_MESSAGE);
         } else
             JOptionPane.showMessageDialog(null, this.entityName.getText() + " already exists as an entity name on this project, please change it.", "Invalid Entity Name", JOptionPane.QUESTION_MESSAGE);
     }
@@ -138,7 +138,7 @@ public class EntityView implements IEntityView {
 
     @Override
     public EntityType getEntityType() {
-        return EntityType.valueOf((String) this.entityTypeComboBox.getItemAt(this.entityTypeComboBox.getSelectedIndex()));
+        return (EntityType) this.entityTypeComboBox.getItemAt(this.entityTypeComboBox.getSelectedIndex());
     }
 
     @Override
@@ -149,6 +149,13 @@ public class EntityView implements IEntityView {
     @Override
     public void setEntityName(String name) {
         this.entityName.setText(name);
+    }
+
+    @Override
+    public void setEntityType(EntityType type) {
+        entityTypeComboBox.setSelectedItem(type);
+        entityTypeComboBox.repaint();
+        entityTypeComboBox.updateUI();
     }
 
     @Override
