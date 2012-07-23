@@ -1,5 +1,6 @@
 package controllers;
 
+import infrastructure.Func;
 import infrastructure.IProjectContext;
 import infrastructure.IterableExtensions;
 import infrastructure.StringExtensions;
@@ -863,7 +864,6 @@ public class DiagramController extends BaseController
 
     @Override
     public void updateRelationship(Relationship relationship) {
-
         this.diagram.getRelationships().remove(relationship);
 
         IRelationshipController relationshipController = this.relationshipControllerFactory.create();
@@ -881,6 +881,26 @@ public class DiagramController extends BaseController
             	
             	model.remove(cell);
             }
+        }
+        
+        if (relationship.hasWeakEntity()){
+        	RelationshipEntity weakEntity = relationship.getWeakEntity();
+        	
+        	Func<String, String, Boolean> cmp = new Func<String, String, Boolean>(){
+				@Override
+				public Boolean execute(String mapKey, String beginning) {
+					return mapKey.startsWith(beginning);
+				}
+        	};
+        	
+        	String param = CellConstants.WeakEntityConnectorPrefix + weakEntity.getEntityId().toString() + "_" + relationship.getId().toString();
+        	
+        	Iterable<String> keys = IterableExtensions.where(this.weakEntityConnectorCells.keySet(), cmp, param);
+        	
+        	for (String key : keys){
+        		mxCell cellToRemove = this.weakEntityConnectorCells.remove(key);
+        		model.remove(cellToRemove);
+        	}
         }
 
         String keyCell = CellConstants.RelationshipPrefix + relationship.getId().toString();
