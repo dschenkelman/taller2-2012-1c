@@ -40,6 +40,14 @@ public class IterableExtensions {
         }
         return null;
     }
+    
+    public static <T, Param, U> Iterable<U> select(Iterable<T> iterable, Func<T, Param, U> func, Param param) {
+        ArrayList<U> allItems = new ArrayList<U>();
+        for (T item : iterable) {
+            allItems.add(func.execute(item, param));
+        }
+        return allItems;
+    }
 
     public static <T, U> Iterable<T> where(Iterable<T> iterable, Func<T, U, Boolean> func, U param) {
 
