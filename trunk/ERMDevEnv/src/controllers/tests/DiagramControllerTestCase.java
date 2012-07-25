@@ -226,7 +226,6 @@ public class DiagramControllerTestCase {
 		
 	@Test
 	public void testShouldCreateCellsForRelationshipWhenAddingRelationship() throws Exception{
-
 		Entity entity1 = new Entity("Entity1");
 		Entity entity2 = new Entity("Entity2");
 		Entity entity3 = new Entity("Entity3");
@@ -254,6 +253,7 @@ public class DiagramControllerTestCase {
 		relationship.getAttributes().addAttribute("Attribute1");
 		relationship.getAttributes().addAttribute("Attribute2");
 		
+		diagramController.createRelationship();
 		diagramController.handleCreatedEvent(relationship);
 		
 		Func<Entity, String, Boolean> cmpFunc = new Func<Entity, String, Boolean>() {
@@ -654,6 +654,7 @@ public class DiagramControllerTestCase {
 		Assert.assertNull(listener.getDiagram());
 		Assert.assertNull(listener.getRelationship());
 		
+		diagramController.createRelationship();
 		diagramController.handleCreatedEvent(relationship);
 		
 		Assert.assertSame(relationship, listener.getRelationship());

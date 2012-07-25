@@ -73,6 +73,7 @@ public class EntityControllerTest {
 
 		mockEntityCreatedListener = new MockEntityEventListener();
 		this.entityController.addSubscriber(this.mockEntityCreatedListener);
+		this.entityController.create();
 		this.mockEntityView.setEntityName("");
 		Assert.assertFalse(this.entityController.addEntity());
 		Assert.assertFalse(this.mockEntityCreatedListener.called);

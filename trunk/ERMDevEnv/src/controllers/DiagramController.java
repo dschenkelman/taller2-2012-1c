@@ -70,7 +70,9 @@ public class DiagramController extends BaseController
 	private enum Operations{
 		None,
 		CreateEntity,
-		UpdateEntity
+		UpdateEntity,
+		CreateRelationship,
+		UpdateRelationship
 	}
 	
 	private CustomGraph graph;
@@ -194,8 +196,12 @@ public class DiagramController extends BaseController
 				this.addWeakEntityConnectors(parent, strongRelationshipEntity.getEntityId(), weakEntity, relationship.getId(), attributesByIdGroup);
 			}
 		        
-		    graph.getView().getState(entityCell).setLabel(entity.getName());
+		    this.graph.getView().getState(entityCell).setLabel(entity.getName());
 		    entityCell.setValue(entity.getName());
+		    entityCell.setStyle(Styler.getFillColor(entity.getType()) + ";" + StyleConstants.ENTITY_STYLE);
+		    this.diagramView.refreshGraphComponent();
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 		    this.graph.getModel().endUpdate();
 		    this.graph.repaint();
@@ -203,6 +209,8 @@ public class DiagramController extends BaseController
 	}
 
     public void createRelationship() {
+    	this.currentOperation = Operations.CreateRelationship;
+    	
         IRelationshipController relationshipController =
                 this.relationshipControllerFactory.create();
 
@@ -293,12 +301,16 @@ public class DiagramController extends BaseController
 			}	
 		}
 		finally {
-			this.diagram.getRelationships().add(relationship);
-			for (IDiagramEventListener eventListener : this.listeners) {
-				eventListener.handleRelationshipAdded(this.diagram, relationship);
+			if (this.currentOperation == Operations.CreateRelationship){
+				this.diagram.getRelationships().add(relationship);
+				for (IDiagramEventListener eventListener : this.listeners) {
+					eventListener.handleRelationshipAdded(this.diagram, relationship);
+				}
 			}
 			this.graph.getModel().endUpdate();
 		}
+		
+		this.currentOperation = Operations.None;
 	}
     
     public void addEntity(double x, double y) throws Exception {
@@ -929,15 +941,27 @@ public class DiagramController extends BaseController
 
     @Override
     public void updateRelationship(Relationship relationship) {
-        this.diagram.getRelationships().remove(relationship);
+        mxIGraphModel model = this.graph.getModel();
+        this.removeRelationshipConnectors(relationship, model);
+        
+        this.removeWeakEntityConnectors(relationship, model);
 
+        String relationshipCell = CellConstants.RelationshipPrefix + relationship.getId().toString();
+        model.remove(this.relationshipCells.remove(relationshipCell));
+
+        this.removeAttributes(relationship.getAttributes(), relationship.getId().toString());
+
+        this.currentOperation = Operations.UpdateRelationship;
+        
         IRelationshipController relationshipController = this.relationshipControllerFactory.create();
         relationshipController.addCreateListener(this);
         relationshipController.create(relationship);
+    }
 
-        mxIGraphModel model = this.graph.getModel();
-        for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
-            String keyConnector = CellConstants.RelationshipConnectorPrefix + relationship.getId().toString() + relationshipEntity.getEntityId();
+	private void removeRelationshipConnectors(Relationship relationship,
+			mxIGraphModel model) {
+		for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
+            String keyConnector = CellConstants.RelationshipConnectorPrefix + relationship.getId().toString() + relationshipEntity.getEntityId().toString();
             
             for(Integer i = 1; ;i++) {
             	mxCell cell = this.relationshipConnectorCells.remove(keyConnector + i.toString()); 
@@ -947,8 +971,11 @@ public class DiagramController extends BaseController
             	model.remove(cell);
             }
         }
-        
-        if (relationship.hasWeakEntity()){
+	}
+
+	private void removeWeakEntityConnectors(Relationship relationship,
+			mxIGraphModel model) {
+		if (relationship.hasWeakEntity()){
         	RelationshipEntity weakEntity = relationship.getWeakEntity();
         	
         	Func<String, String, Boolean> cmp = new Func<String, String, Boolean>(){
@@ -967,12 +994,7 @@ public class DiagramController extends BaseController
         		model.remove(cellToRemove);
         	}
         }
-
-        String keyCell = CellConstants.RelationshipPrefix + relationship.getId().toString();
-        model.remove(this.relationshipCells.remove(keyCell));
-
-        removeAttributes(relationship.getAttributes(), relationship.getId().toString());
-    }
+	}
 
     private void removeAttributes(Iterable<Attribute> attributes, String id) {
         mxIGraphModel model = this.graph.getModel();

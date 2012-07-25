@@ -31,6 +31,7 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 	private JButton btnHierarchy;
 	private JButton btnSave;
 	private JButton btnSubdiagram;
+	private mxGraphComponent graphComponent;
 
 	/**
 	 * Create the panel.
@@ -85,10 +86,10 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 	public void setController(IDiagramController controller) {
 		this.diagramController = controller;
 		
-		mxGraphComponent graphComponent = new mxGraphComponent(this.diagramController.getGraph());
+		this.graphComponent = new mxGraphComponent(this.diagramController.getGraph());
 		// cannot create new arrows clicking from entity
-		graphComponent.getConnectionHandler().setCreateTarget(false);
-		graphComponent.setConnectable(false);
+		this.graphComponent.getConnectionHandler().setCreateTarget(false);
+		this.graphComponent.setConnectable(false);
 		MouseListener listener = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -103,16 +104,16 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 			}
 		};
 		
-		graphComponent.getGraphControl().addMouseListener(listener);
+		this.graphComponent.getGraphControl().addMouseListener(listener);
 		
 		try {
-			graphComponent.getDropTarget().addDropTargetListener(this);
+			this.graphComponent.getDropTarget().addDropTargetListener(this);
 		} catch (TooManyListenersException e1) {
 			// should not occur
 			e1.printStackTrace();
 		}
 		
-		this.add(graphComponent, "2, 4, 15, 1, fill, fill");
+		this.add(this.graphComponent, "2, 4, 15, 1, fill, fill");
 		
 		this.btnEntity.addMouseListener(new MouseAdapter() {
 			@Override
@@ -179,5 +180,10 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 
 	@Override
 	public void dropActionChanged(DropTargetDragEvent dtde) {
+	}
+
+	@Override
+	public void refreshGraphComponent() {
+		this.graphComponent.refresh();
 	}
 }

@@ -24,4 +24,10 @@ public class MockDiagramView implements IDiagramView{
 		return this.graph;
 	}
 
+	@Override
+	public void refreshGraphComponent() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
