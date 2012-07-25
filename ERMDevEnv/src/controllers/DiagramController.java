@@ -161,16 +161,7 @@ public class DiagramController extends BaseController
 			this.pendingEntity = entity;
 			break;
 		case UpdateEntity:
-			Object parent = this.graph.getDefaultParent();
-	        try {
-	            mxCell entityCell = this.getEntityCell(entity.getId().toString());
-	            this.addAttributesToElement(parent, entityCell, entity.getAttributes(), entity.getId());
-	            graph.getView().getState(entityCell).setLabel(entity.getName());
-	            entityCell.setValue(entity.getName());
-	        } finally {
-	            this.graph.getModel().endUpdate();
-	            this.graph.repaint();
-	        }
+			this.handleEntityUpdate(entity);
 			break;
 		default:
 			break;
@@ -178,6 +169,38 @@ public class DiagramController extends BaseController
         
         this.currentOperation = Operations.None;
     }
+
+	private void handleEntityUpdate(Entity entity) {
+		Object parent = this.graph.getDefaultParent();
+		try {
+		    mxCell entityCell = this.getEntityCell(entity.getId().toString());
+		    this.addAttributesToElement(parent, entityCell, entity.getAttributes(), entity.getId());
+		    
+		    Func<Relationship, String, Boolean> relCmp = new Func<Relationship, String, Boolean>() {
+				@Override
+				public Boolean execute(Relationship relationship, String entityId) {
+					return relationship.hasWeakEntity() && relationship.getWeakEntity().getEntityId().toString().equalsIgnoreCase(entityId);
+				}
+			};
+		    
+			for (Relationship relationship : IterableExtensions.where(this.diagram.getRelationships(), relCmp, entity.getId().toString())) {
+				RelationshipEntity weakRelationshipEntity = relationship.getWeakEntity();
+				RelationshipEntity strongRelationshipEntity = relationship.getStrongEntity();
+		
+				Entity weakEntity = this.diagram.getEntities().get(weakRelationshipEntity.getEntityId());
+				
+				Map<String, List<Attribute>> attributesByIdGroup = this.getAttributesByIdGroup(weakEntity.getAttributes());
+				
+				this.addWeakEntityConnectors(parent, strongRelationshipEntity.getEntityId(), weakEntity, relationship.getId(), attributesByIdGroup);
+			}
+		        
+		    graph.getView().getState(entityCell).setLabel(entity.getName());
+		    entityCell.setValue(entity.getName());
+		} finally {
+		    this.graph.getModel().endUpdate();
+		    this.graph.repaint();
+		}
+	}
 
     public void createRelationship() {
         IRelationshipController relationshipController =
@@ -858,13 +881,30 @@ public class DiagramController extends BaseController
     	this.currentOperation = Operations.UpdateEntity;
     	this.removeAttributes(entity.getAttributes(),entity.getId().toString());
     	this.removeIdGroupConnectors(entity.getId().toString(), this.graph.getModel());
+    	this.removeWeakEntityConnectors(entity.getId().toString(), this.graph.getModel());
         
         IEntityController entityController = this.entityControllerFactory.create();
         entityController.addSubscriber(this);
         entityController.create(entity);
     }
 
-    @Override
+    private void removeWeakEntityConnectors(String entityId, mxIGraphModel model) {
+    	Func<String, String, Boolean> cmp = new Func<String, String, Boolean>(){
+			@Override
+			public Boolean execute(String mapKey, String id) {
+				return mapKey.contains(id);
+			}
+    	};
+    	
+    	for (String weakEntityConnectorKey : IterableExtensions.where(this.weakEntityConnectorCells.keySet(), cmp, entityId)) {
+    		if (weakEntityConnectorKey.contains(entityId)){
+    			mxCell weakEntityConnector = this.weakEntityConnectorCells.remove(weakEntityConnectorKey);
+    			model.remove(weakEntityConnector);
+    		}
+		}
+	}
+
+	@Override
     public void updateHierarchy(Hierarchy hierarchy) {
         try {
             this.diagram.getHierarchies().removeHierarchy(hierarchy.getId());
@@ -932,7 +972,6 @@ public class DiagramController extends BaseController
         model.remove(this.relationshipCells.remove(keyCell));
 
         removeAttributes(relationship.getAttributes(), relationship.getId().toString());
-
     }
 
     private void removeAttributes(Iterable<Attribute> attributes, String id) {
