@@ -60,6 +60,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	}
 
 	public void createProject(String projectName) {
+		this.projectContext.clearContextDiagrams();
 		this.projectContext.setName(projectName);
 		new File(this.projectContext.getDataDirectory()).mkdirs();
 		
@@ -174,8 +175,8 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 			return;	
 		}
 		if (o instanceof Relationship) {
-			this.projectTree.removeNodeFromParent(node);
 			this.diagramController.updateRelationship((Relationship) o);
+			this.projectTree.nodeChanged(node);
 			return;
 		}
 		if (o instanceof Hierarchy) {

@@ -6,9 +6,12 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 
 import controllers.IAttributeController;
 import controllers.IRelationshipController;
@@ -57,7 +60,7 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 			vent.setController(mockRelController);
 
 			vent.setVisible(true);
-			vent.setDefaultCloseOperation(vent.EXIT_ON_CLOSE);
+			vent.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -89,8 +92,10 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 		this.textFieldName.setText(relController.getName());
 		this.checkBox1.setSelected(relController.isComposition());
 		checkBox1.addItemListener(new CheckListener());
-		this.textFieldName.addActionListener(new MyLabelNameListener());
-		this.textFieldName.addFocusListener(new MyTextBoxLister());
+		MyTextBoxListener listener = new MyTextBoxListener();
+		this.textFieldName.addActionListener(listener);
+		this.textFieldName.addFocusListener(listener);
+		this.textFieldName.addKeyListener(listener);
 		this.button1.addActionListener(new ActionAdd());
 	}
 
@@ -142,7 +147,7 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 		}
 	}
 	
-	private class MyTextBoxLister implements FocusListener {
+	private class MyTextBoxListener implements FocusListener, ActionListener, KeyListener {
 
 		@Override
 		public void focusGained(FocusEvent e) {}
@@ -152,11 +157,21 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 			relController.setName(textFieldName.getText());
 		}
 		
-	}
-
-	private class MyLabelNameListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			relController.setName(textFieldName.getText());
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
 			relController.setName(textFieldName.getText());
 		}
 	}
