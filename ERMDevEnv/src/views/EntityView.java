@@ -89,7 +89,7 @@ public class EntityView implements IEntityView {
             frame1ContentPane.add(selectKeysButton, CC.xy(145, 147));
 
             //---- createButton ----
-            createButton.setText("Create");
+            createButton.setText("Finish");
             frame1ContentPane.add(createButton, CC.xy(149, 147));
             frame1.pack();
             frame1.setLocationRelativeTo(frame1.getOwner());

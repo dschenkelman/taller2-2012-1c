@@ -118,7 +118,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 			e.printStackTrace();
 		}
 		
-		DiagramTreeNode childDiagramNode = this.currentDiagramNode.addSubdiagram(childDiagram);
+		DiagramTreeNode childDiagramNode = this.currentDiagramNode.addSubdiagram(childDiagram, this.projectTree);
 		
 		this.projectContext.addContextDiagram(childDiagram);
 		this.projectContext.addProjectDiagram(childDiagram);
@@ -147,6 +147,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 				DiagramTreeNode node = (DiagramTreeNode) o;
 				Diagram diagram = (Diagram) node.getUserObject();
 				diagramToLoad = diagram;
+				this.currentDiagramNode = node;
 				this.projectContext.addContextDiagram(diagram);
 			}
 		}
@@ -164,13 +165,12 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		this.diagramController.load(diagramToLoad);
 		this.shell.setRightContent(this.diagramController.getView());
 		
-		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) treePath.getLastPathComponent();
 		Object o = node.getUserObject();
 		
 		if (o instanceof Entity) {
-			this.projectTree.removeNodeFromParent(node);
 			this.diagramController.updateEntity((Entity) o);
+			this.projectTree.nodeChanged(node);
 			return;	
 		}
 		if (o instanceof Relationship) {
@@ -218,7 +218,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		}
 		else
 		{
-			currentTreeNode = parentTreeNode.addSubdiagram(diagram);
+			currentTreeNode = parentTreeNode.addSubdiagram(diagram, this.projectTree);
 		}
 		
 		this.projectContext.addProjectDiagram(diagram);

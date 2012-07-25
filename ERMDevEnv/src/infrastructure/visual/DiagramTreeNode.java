@@ -79,9 +79,11 @@ public class DiagramTreeNode extends DefaultMutableTreeNode {
 		tree.nodesWereInserted(this.hierarchiesNode, new int[]{index});
 	}
 	
-	public DiagramTreeNode addSubdiagram(Diagram diagram){
+	public DiagramTreeNode addSubdiagram(Diagram diagram, DefaultTreeModel tree){
 		DiagramTreeNode diagramNode = new DiagramTreeNode(diagram, this.projectContext);
 		this.subdiagramsNode.add(diagramNode);
+		int index = this.subdiagramsNode.getChildCount() - 1;
+		tree.nodesWereInserted(this.subdiagramsNode, new int[]{index});
 		return diagramNode;
 	}
 

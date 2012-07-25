@@ -21,6 +21,13 @@ public class EntityController extends BaseController implements IEntityControlle
     private IKeysControllerFactory keysControllerFactory;
     private IAttributeControllerFactory attributeControllerFactory;
     private IAttributeController attributeController;
+	private Operations operation;
+    
+    private enum Operations {
+    	Creating,
+    	Updating,
+    	None
+    }
 
     public EntityController(IProjectContext projectContext, IEntityView entityView, IAttributeControllerFactory attributeControllerFactory, IKeysControllerFactory keysControllerFactory) {
         super(projectContext);
@@ -30,6 +37,7 @@ public class EntityController extends BaseController implements IEntityControlle
         this.listeners = new ArrayList<IEntityEventListener>();
         this.entityCollection = projectContext.getAllEntities(this.pendingEntity);
         this.setEntityView(entityView);
+        this.operation = Operations.None;
     }
 
 
@@ -42,6 +50,7 @@ public class EntityController extends BaseController implements IEntityControlle
         this.entityView.addAttributeView(attributeController.getAttributeView());
         this.entityView.setEntityName(this.pendingEntity.getName());
         this.entityView.showView();
+        this.operation = Operations.Creating;
     }
     
     @Override
@@ -56,6 +65,7 @@ public class EntityController extends BaseController implements IEntityControlle
         this.entityView.setEntityName(this.pendingEntity.getName());
         this.entityView.setEntityType(this.pendingEntity.getType());
         this.entityView.showView();
+        this.operation = Operations.Updating;
     }
 
     @Override
@@ -83,7 +93,7 @@ public class EntityController extends BaseController implements IEntityControlle
     public boolean addEntity() {
 
         String entityName = this.entityView.getEntityName();
-        if (!this.validateEntityName(entityName)) {
+        if (this.operation == Operations.Creating && !this.validateEntityName(entityName)) {
             return false;
         }
         this.pendingEntity.setName(entityName);
