@@ -67,6 +67,12 @@ public class DiagramController extends BaseController
 		public static final String HierarchyConnectorPrefix = "HierarchyConnector";
 	}
 	
+	private enum Operations{
+		None,
+		CreateEntity,
+		UpdateEntity
+	}
+	
 	private CustomGraph graph;
 	private Map<String, mxCell> entityCells;
 	private Map<String, mxCell> relationshipCells;
@@ -90,6 +96,7 @@ public class DiagramController extends BaseController
 	private IGraphPersistenceService graphPersistenceService;
 	private List<IDiagramEventListener> listeners;
 	private Pattern regex;
+	private Operations currentOperation;
 	
 	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
 			IEntityControllerFactory entityControllerFactory,
@@ -99,6 +106,7 @@ public class DiagramController extends BaseController
 			IXmlManager<Diagram> diagramXmlManager,
 			IGraphPersistenceService graphPersistenceService) {
 		super(projectContext);
+		this.currentOperation = Operations.None;
 		this.diagram = new Diagram();
 		this.selectedCells = new ArrayList<mxCell>();
 		this.entityControllerFactory = entityControllerFactory;
@@ -139,7 +147,8 @@ public class DiagramController extends BaseController
 
     public void createEntity() {
         if (!this.hasPendingEntity()) {
-            IEntityController entityController = this.entityControllerFactory.create();
+        	this.currentOperation = Operations.CreateEntity;
+        	IEntityController entityController = this.entityControllerFactory.create();
             entityController.addSubscriber(this);
             entityController.create();
         }
@@ -147,7 +156,27 @@ public class DiagramController extends BaseController
 
     @Override
     public void handleCreatedEvent(Entity entity) {
-        this.pendingEntity = entity;
+        switch (this.currentOperation) {
+		case CreateEntity:
+			this.pendingEntity = entity;
+			break;
+		case UpdateEntity:
+			Object parent = this.graph.getDefaultParent();
+	        try {
+	            mxCell entityCell = this.getEntityCell(entity.getId().toString());
+	            this.addAttributesToElement(parent, entityCell, entity.getAttributes(), entity.getId());
+	            graph.getView().getState(entityCell).setLabel(entity.getName());
+	            entityCell.setValue(entity.getName());
+	        } finally {
+	            this.graph.getModel().endUpdate();
+	            this.graph.repaint();
+	        }
+			break;
+		default:
+			break;
+		}
+        
+        this.currentOperation = Operations.None;
     }
 
     public void createRelationship() {
@@ -826,17 +855,13 @@ public class DiagramController extends BaseController
 	
     @Override
     public void updateEntity(Entity entity) {
-        this.diagram.getEntities().remove(entity.getName());
-
+    	this.currentOperation = Operations.UpdateEntity;
+    	this.removeAttributes(entity.getAttributes(),entity.getId().toString());
+    	this.removeIdGroupConnectors(entity.getId().toString(), this.graph.getModel());
+        
         IEntityController entityController = this.entityControllerFactory.create();
         entityController.addSubscriber(this);
         entityController.create(entity);
-
-        removeAttributes(entity.getAttributes(),entity.getId().toString());
-
-//		String keyCell = CellConstants.EntityPrefix + entity.getId().toString();
-//		mxCell entity2 = this.entityCells.get(keyCell);
-//		entity2.
     }
 
     @Override
@@ -917,10 +942,19 @@ public class DiagramController extends BaseController
             String keyCell = CellConstants.AttributePrefix + id + attribute.getName();
             model.remove(this.attributeConnectorCells.remove(keyConnector));
             model.remove(this.attributeCells.remove(keyCell));
-            removeAttributes(attribute.getAttributes(),id);
+            this.removeAttributes(attribute.getAttributes(),id);
         }
-
     }
+
+	private void removeIdGroupConnectors(String entityId, mxIGraphModel model) {
+		for (Object idGroupConnectorKey : this.idGroupConnectorCells.keySet().toArray()) {
+			String idGroupKey = (String) idGroupConnectorKey;
+			if (idGroupKey.contains(entityId)){
+				mxCell idGroupConnectorCell = this.idGroupConnectorCells.remove(idGroupConnectorKey);
+				model.remove(idGroupConnectorCell);
+			}
+		}
+	}
     
 	@Override
 	public mxCell getWeakEntityConnectorCell(String id) {
