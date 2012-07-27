@@ -645,6 +645,28 @@ public class ProjectControllerTestCase {
 	}
 	
 	@Test
+	public void testShouldRemoveOldComponentsInProjectContextWhenOpenOtherProject() throws Exception {
+		Entity entity = new Entity("entity1");
+		
+		Diagram diagram = new Diagram();
+		diagram.getEntities().add(entity);
+		
+		this.projectContext.addProjectDiagram(diagram);
+		this.projectContext.addContextDiagram(diagram);
+		
+		
+		String projectName = UUID.randomUUID().toString();
+		
+		ProjectController controller = this.createController();
+		
+		Assert.assertNotNull(this.projectContext.getEntity(entity.getId()));
+		
+		controller.openProject(projectName);
+		
+		Assert.assertNull(this.projectContext.getEntity(entity.getId()));
+	}
+	
+	@Test
 	public void testShouldLoadADiagram() throws Exception{
 		String projectName = UUID.randomUUID().toString();
 		
