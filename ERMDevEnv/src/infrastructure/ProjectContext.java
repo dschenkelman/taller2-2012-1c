@@ -111,6 +111,11 @@ public class ProjectContext implements IProjectContext {
 	}
 
 	@Override
+	public void clearProjectDiagrams() {
+		this.projectDiagram.clear();
+	}
+	
+	@Override
 	public void clearContextDiagrams() {
 		this.contextDiagram.clear();
 	}

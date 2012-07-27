@@ -188,7 +188,11 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 
 	@Override
 	public boolean openProject(String projectName) throws Exception {
+		this.projectContext.clearContextDiagrams();
+		this.projectContext.clearProjectDiagrams();
+		
 		this.projectContext.setName(projectName);
+		
 		if (!this.fileSystemService.exists(this.projectContext.getDataDirectory(), DefaultDiagramName)) {
 			return false;
 		}
