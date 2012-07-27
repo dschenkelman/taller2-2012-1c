@@ -166,6 +166,9 @@ public class DiagramController extends BaseController
 			break;
 		case UpdateEntity:
 			this.handleEntityUpdate(entity);
+			for (IDiagramEventListener listener : this.listeners) {
+				listener.handleEntityUpdated(this.diagram, entity);
+			}
 			break;
 		default:
 			break;
@@ -307,6 +310,11 @@ public class DiagramController extends BaseController
 				this.diagram.getRelationships().add(relationship);
 				for (IDiagramEventListener eventListener : this.listeners) {
 					eventListener.handleRelationshipAdded(this.diagram, relationship);
+				}
+			}
+			else{
+				for (IDiagramEventListener listener : this.listeners) {
+					listener.handleRelationshipUpdated(this.diagram, relationship);
 				}
 			}
 			this.graph.getModel().endUpdate();
@@ -837,6 +845,11 @@ public class DiagramController extends BaseController
 					listener.handleHierarchyAdded(this.diagram, hierarchy);
 				}
 			}
+			else{
+				for (IDiagramEventListener listener : this.listeners) {
+					listener.handleHierarchyUpdated(this.diagram, hierarchy);
+				}
+			}
 			this.graph.getModel().endUpdate();
 		}
 		this.currentOperation = Operations.CreateHierarchy;
@@ -897,15 +910,19 @@ public class DiagramController extends BaseController
 	
     @Override
     public void updateEntity(Entity entity) {
-    	this.currentOperation = Operations.UpdateEntity;
-    	this.removeAttributes(entity.getAttributes(),entity.getId().toString());
-    	this.removeIdGroupConnectors(entity.getId().toString(), this.graph.getModel());
-    	this.removeWeakEntityConnectors(entity.getId().toString(), this.graph.getModel());
+    	this.deleteEntityPeripherals(entity);
         
         IEntityController entityController = this.entityControllerFactory.create();
         entityController.addSubscriber(this);
         entityController.create(entity);
     }
+
+	public void deleteEntityPeripherals(Entity entity) {
+		this.currentOperation = Operations.UpdateEntity;
+		this.removeAttributes(entity.getAttributes(),entity.getId().toString());
+    	this.removeIdGroupConnectors(entity.getId().toString(), this.graph.getModel());
+    	this.removeWeakEntityConnectors(entity.getId().toString(), this.graph.getModel());
+	}
 
     private void removeWeakEntityConnectors(String entityId, mxIGraphModel model) {
     	Func<String, String, Boolean> cmp = new Func<String, String, Boolean>(){
