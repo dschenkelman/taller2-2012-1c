@@ -77,10 +77,10 @@ public class MockProjectContext implements IProjectContext,IRelationshipEventLis
 
 	@Override
 	public Entity getEntity(UUID entityId) {
-		for (Entity entity : entityCollection) {
-			if (entity.getId() == entityId)
-				return entity;
-		}
+		for (Diagram diagram : this.globalDiagrams)
+			for (Entity entity : diagram.getEntities())
+				if (entity.getId().equals(entityId))
+					return entity;
 		return null;
 	}
 
@@ -160,5 +160,10 @@ public class MockProjectContext implements IProjectContext,IRelationshipEventLis
 	public Iterable<Entity> getFamilyEntities() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void clearProjectDiagrams() {
+		this.globalDiagrams.clear();
 	}
 }
