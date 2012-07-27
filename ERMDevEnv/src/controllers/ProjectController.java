@@ -180,7 +180,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 			return;
 		}
 		if (o instanceof Hierarchy) {
-			this.projectTree.removeNodeFromParent(node);
+//			this.projectTree.removeNodeFromParent(node);
 			this.diagramController.updateHierarchy((Hierarchy) o);
 			return;
 		}

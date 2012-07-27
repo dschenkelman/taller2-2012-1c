@@ -33,4 +33,8 @@ public interface IHierarchyController {
 
 	void create(Hierarchy hierarchy);
 
+	boolean relationshipIsTotal();
+
+	boolean relationshipIsExclusive();
+
 }

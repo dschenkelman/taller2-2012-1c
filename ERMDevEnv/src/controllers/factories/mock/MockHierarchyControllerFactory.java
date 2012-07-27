@@ -113,6 +113,18 @@ public class MockHierarchyControllerFactory implements IHierarchyControllerFacto
 				// TODO Auto-generated method stub
 				
 			}
+
+			@Override
+			public boolean relationshipIsTotal() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean relationshipIsExclusive() {
+				// TODO Auto-generated method stub
+				return false;
+			}
 		};
 	}
 }

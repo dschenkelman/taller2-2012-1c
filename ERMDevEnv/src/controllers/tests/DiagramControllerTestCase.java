@@ -4,6 +4,7 @@ package controllers.tests;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.UUID;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -522,6 +523,7 @@ public class DiagramControllerTestCase {
 		
 		Assert.assertEquals(0, diagramController.getDiagram().getHierarchies().count());
 		
+		diagramController.createHierarchy();
 		diagramController.handleCreatedEvent(hierarchy);
 		
 		Assert.assertEquals(1, diagramController.getDiagram().getHierarchies().count());
@@ -692,6 +694,7 @@ public class DiagramControllerTestCase {
 		Assert.assertNull(listener.getDiagram());
 		Assert.assertNull(listener.getHierarchy());
 		
+		diagramController.createHierarchy();
 		diagramController.handleCreatedEvent(hierarchy);
 		
 		Assert.assertSame(hierarchy, listener.getHierarchy());
@@ -1011,6 +1014,71 @@ public class DiagramControllerTestCase {
 		Assert.assertNotNull(controller.getHierarchyNodeCell("1"));
 		Assert.assertNotNull(controller.getHierarchyConnectorCell("1"));
 	}
+	
+	@Test
+	public void testShouldRemoveHierarchyAndHierarchyConnectorCellsWhenUpdateHierarchy() throws Exception {
+		Diagram diagram = new Diagram();
+		diagram.setName("diagram1");
+		
+		Entity gEntity = new Entity("gEntity");
+		Entity entity1 = new Entity("entity1");
+		Entity entity2 = new Entity("entity2");
+		Entity entity3 = new Entity("entity3");
+		
+		Hierarchy hierarchy = new Hierarchy();
+		hierarchy.setGeneralEntityId(gEntity.getId());
+		hierarchy.addChildEntity(entity1.getId());
+		hierarchy.addChildEntity(entity2.getId());
+		hierarchy.addChildEntity(entity3.getId());
+		
+		this.graphPersistenceService.setCellsToLoad(new String[] {
+				DiagramController.CellConstants.HierarchyNodePrefix + hierarchy.getId().toString(),
+				DiagramController.CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + gEntity.getId().toString(),
+				DiagramController.CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + entity1.getId().toString(),
+				DiagramController.CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + entity2.getId().toString(),
+				DiagramController.CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + entity3.getId().toString(),
+				});
+		
+		DiagramController controller = this.createController();
+		controller.load(diagram);
+		
+		Assert.assertNotNull(controller.getHierarchyNodeCell(hierarchy.getId().toString()));
+		Assert.assertNotNull(controller.getHierarchyConnectorCell(hierarchy.getId().toString() + gEntity.getId().toString()));
+		Assert.assertNotNull(controller.getHierarchyConnectorCell(hierarchy.getId().toString() + entity1.getId().toString()));
+		Assert.assertNotNull(controller.getHierarchyConnectorCell(hierarchy.getId().toString() + entity2.getId().toString()));
+		Assert.assertNotNull(controller.getHierarchyConnectorCell(hierarchy.getId().toString() + entity3.getId().toString()));
+		
+		controller.updateHierarchy(hierarchy);
+		
+		Assert.assertNull(controller.getHierarchyNodeCell(hierarchy.getId().toString()));
+		Assert.assertNull(controller.getHierarchyConnectorCell(hierarchy.getId().toString() + gEntity.getId().toString()));
+		Assert.assertNull(controller.getHierarchyConnectorCell(hierarchy.getId().toString() + entity1.getId().toString()));
+		Assert.assertNull(controller.getHierarchyConnectorCell(hierarchy.getId().toString() + entity2.getId().toString()));
+		Assert.assertNull(controller.getHierarchyConnectorCell(hierarchy.getId().toString() + entity3.getId().toString()));
+	}
+	
+	@Test
+	public void testShouldUpdateHierarchyThroughHierarchyControllerWhenUpdateHierarchy() throws Exception {
+		Entity entity1 = new Entity("entity1");
+		Entity entity2 = new Entity("entity2");
+		
+		Hierarchy hierarchy = new Hierarchy();
+		hierarchy.setGeneralEntityId(entity1.getId());
+		hierarchy.addChildEntity(entity2.getId());
+		
+		DiagramController diagramController = this.createController();
+		
+		Assert.assertEquals(0, this.hierarchyController.getUpdateCallsCount());
+		Assert.assertEquals(0, this.hierarchyControllerFactory.getCreateCallsCount());
+		
+		diagramController.updateHierarchy(hierarchy);
+		
+		Assert.assertEquals(1, this.hierarchyControllerFactory.getCreateCallsCount());
+		Assert.assertEquals(1, this.hierarchyController.getUpdateCallsCount());
+	}
+		
+	
+	
 	
 	private void addEntityToDiagram(DiagramController diagramController, 
 			Entity entity, double x, double y) throws Exception {
