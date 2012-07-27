@@ -116,6 +116,16 @@ public class HierarchyController extends BaseController implements IHierarchyCon
 	}
 
 	@Override
+	public boolean relationshipIsTotal() {
+		return this.pendingHierarchy.isTotal();
+	}
+	
+	@Override
+	public boolean relationshipIsExclusive() {
+		return this.pendingHierarchy.isExclusive();
+	}
+	
+	@Override
 	public Iterable<Entity> getAvailableEntities() {
 		return this.projectContext.getContextEntities();
 	}

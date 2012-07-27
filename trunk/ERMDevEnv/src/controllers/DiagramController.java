@@ -72,7 +72,9 @@ public class DiagramController extends BaseController
 		CreateEntity,
 		UpdateEntity,
 		CreateRelationship,
-		UpdateRelationship
+		UpdateRelationship,
+		CreateHierarchy,
+		UpdateHierarchy
 	}
 	
 	private CustomGraph graph;
@@ -808,6 +810,8 @@ public class DiagramController extends BaseController
 
 	@Override
 	public void createHierarchy() {
+		this.currentOperation = Operations.CreateHierarchy;
+		
 		IHierarchyController hierarchyController = this.hierarchyControllerFactory.create();
 		hierarchyController.addSuscriber(this);
 		hierarchyController.create();
@@ -827,12 +831,15 @@ public class DiagramController extends BaseController
 			}
 		}
 		finally {
-			this.diagram.getHierarchies().add(hierarchy);
-			for (IDiagramEventListener listener : this.listeners) {
-				listener.handleHierarchyAdded(this.diagram, hierarchy);
+			if (this.currentOperation == Operations.CreateHierarchy) {
+				this.diagram.getHierarchies().add(hierarchy);
+				for (IDiagramEventListener listener : this.listeners) {
+					listener.handleHierarchyAdded(this.diagram, hierarchy);
+				}
 			}
 			this.graph.getModel().endUpdate();
 		}
+		this.currentOperation = Operations.CreateHierarchy;
 	}
 
 	private void connectChildToHierarchy(Object parent, mxCell hierarchyNode, UUID hierarchyId, UUID childId) {
@@ -918,44 +925,39 @@ public class DiagramController extends BaseController
 
 	@Override
     public void updateHierarchy(Hierarchy hierarchy) {
-        try {
-            this.diagram.getHierarchies().removeHierarchy(hierarchy.getId());
-        } catch (Exception e) {
-        }
-
+		this.currentOperation = Operations.UpdateHierarchy;
+        this.removeHierarchyConnectors(hierarchy, this.graph.getModel());
+        this.removeHierarchyCells(hierarchy, this.graph.getModel());
+        
         IHierarchyController hierarchyController = this.hierarchyControllerFactory.create();
         hierarchyController.addSuscriber(this);
         hierarchyController.create(hierarchy);
-
-        mxIGraphModel model = this.graph.getModel();
-        for (UUID uuid : hierarchy.getChildren()) {
-            String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + uuid;
-            model.remove(this.hierarchyConnectorCells.remove(keyConnector));
-        }
-
-        String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + hierarchy.getGeneralEntityId().toString();
-        String keyNode = CellConstants.HierarchyNodePrefix + hierarchy.getId().toString();
-        model.remove(this.hierarchyConnectorCells.remove(keyConnector));
-        model.remove(this.hierarchyNodeCells.remove(keyNode));
     }
 
     @Override
     public void updateRelationship(Relationship relationship) {
-        mxIGraphModel model = this.graph.getModel();
-        this.removeRelationshipConnectors(relationship, model);
-        
-        this.removeWeakEntityConnectors(relationship, model);
-
-        String relationshipCell = CellConstants.RelationshipPrefix + relationship.getId().toString();
-        model.remove(this.relationshipCells.remove(relationshipCell));
+    	this.currentOperation = Operations.UpdateRelationship;
+        this.removeRelationshipConnectors(relationship, this.graph.getModel());
+        this.removeWeakEntityConnectors(relationship, this.graph.getModel());
+        this.removeRelationshipCells(relationship, this.graph.getModel());
 
         this.removeAttributes(relationship.getAttributes(), relationship.getId().toString());
-
-        this.currentOperation = Operations.UpdateRelationship;
         
         IRelationshipController relationshipController = this.relationshipControllerFactory.create();
         relationshipController.addCreateListener(this);
         relationshipController.create(relationship);
+    }
+    
+    private void removeRelationshipCells(Relationship relationship,
+    		mxIGraphModel model) {
+    	String relationshipCell = CellConstants.RelationshipPrefix + relationship.getId().toString();
+        model.remove(this.relationshipCells.remove(relationshipCell));
+    }
+    
+    private void removeHierarchyCells(Hierarchy hierarchy,
+    		mxIGraphModel model) {
+    	String keyNode = CellConstants.HierarchyNodePrefix + hierarchy.getId().toString();
+    	model.remove(this.hierarchyNodeCells.remove(keyNode));
     }
 
 	private void removeRelationshipConnectors(Relationship relationship,
@@ -971,6 +973,18 @@ public class DiagramController extends BaseController
             	model.remove(cell);
             }
         }
+	}
+	
+	private void removeHierarchyConnectors(Hierarchy hierarchy,
+			mxIGraphModel model) {
+		for (UUID uuid : hierarchy.getChildren()) {
+			String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + uuid;
+			model.remove(this.hierarchyConnectorCells.remove(keyConnector));
+        }
+		 
+        String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + hierarchy.getGeneralEntityId().toString();
+      
+        model.remove(this.hierarchyConnectorCells.remove(keyConnector));
 	}
 
 	private void removeWeakEntityConnectors(Relationship relationship,

@@ -11,7 +11,9 @@ import controllers.listeners.IHierarchyEventListener;
 public class MockHierarchyController implements IHierarchyController {
 
 	private int createCalls;
+	private int updateCalls;
 	private List<IHierarchyEventListener> listeners;
+	
 	
 	public MockHierarchyController(){
 		this.listeners = new ArrayList<IHierarchyEventListener>();
@@ -97,8 +99,23 @@ public class MockHierarchyController implements IHierarchyController {
 
 	@Override
 	public void create(Hierarchy hierarchy) {
+		this.updateCalls++;
+	}
+
+	@Override
+	public boolean relationshipIsTotal() {
 		// TODO Auto-generated method stub
-		
+		return false;
+	}
+
+	@Override
+	public boolean relationshipIsExclusive() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public int getUpdateCallsCount() {
+		return this.updateCalls;
 	}
 
 }

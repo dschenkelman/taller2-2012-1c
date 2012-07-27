@@ -230,17 +230,17 @@ public class HierarchyView implements IHierarchyView{
 
 	private void checkCountSpecificEntities(int size) {
 		if (size == 1) {
-			btnParcial.doClick();
-			btnExclusive.doClick();
-			btnParcial.setEnabled(false);
-			btnTotal.setEnabled(false);
-			btnExclusive.setEnabled(false);
-			btnOverlap.setEnabled(false);
+			this.btnParcial.doClick();
+			this.btnExclusive.doClick();
+			this.btnParcial.setEnabled(false);
+			this.btnTotal.setEnabled(false);
+			this.btnExclusive.setEnabled(false);
+			this.btnOverlap.setEnabled(false);
 		}else {
-			btnParcial.setEnabled(true);
-			btnTotal.setEnabled(true);
-			btnExclusive.setEnabled(true);
-			btnOverlap.setEnabled(true);
+			this.btnParcial.setEnabled(true);
+			this.btnTotal.setEnabled(true);
+			this.btnExclusive.setEnabled(true);
+			this.btnOverlap.setEnabled(true);
 		}
 	}
 	
@@ -254,8 +254,6 @@ public class HierarchyView implements IHierarchyView{
 	public void update() {
 		this.cancel.setVisible(false);
 		this.frame1.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		
-//		this.comBoxGeneralEntity.setSelectedItem(this.hierarchyController.getGeneralEntity());
 		
 		this.getAvailableEntities();
 		//specific entities
@@ -274,6 +272,17 @@ public class HierarchyView implements IHierarchyView{
 			}
 			lstAvailableMdl.addElement(entity);
 		}
+		
+		//Radiobuttoms
+		if (this.hierarchyController.relationshipIsTotal())
+			this.btnTotal.doClick();
+		else
+			this.btnParcial.doClick();
+		
+		if (this.hierarchyController.relationshipIsExclusive())
+			this.btnExclusive.doClick();
+		else
+			this.btnOverlap.doClick();
 	}
 
 	@Override

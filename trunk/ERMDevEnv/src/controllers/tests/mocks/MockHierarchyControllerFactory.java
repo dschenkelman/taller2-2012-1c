@@ -21,5 +21,4 @@ public class MockHierarchyControllerFactory implements IHierarchyControllerFacto
 	public int getCreateCallsCount() {
 		return this.createCalls;
 	}
-
 }

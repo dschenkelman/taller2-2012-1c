@@ -800,9 +800,7 @@ public class ProjectControllerTestCase {
 		
 		this.diagramControllerFactory.setController(newController);
 		
-		DefaultMutableTreeNode root = ((DefaultMutableTreeNode)controller.getProjectTree().getRoot());
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(relationship);
-		root.add(node);
 		
 		Object[] path1 = {diagramNode1, entity1, diagramNode2, entity2, hierarchy, diagramNode3, node};
 		controller.changeElement(new TreePath(path1));
@@ -811,7 +809,6 @@ public class ProjectControllerTestCase {
 		Assert.assertEquals(relationship, newController.getUpdatedRelationship());
 		
 		node = new DefaultMutableTreeNode(entity2);
-		root.add(node);
 		
 		Object[] path2 = {diagramNode1, entity1, diagramNode2, hierarchy, diagramNode3, relationship, node};
 		controller.changeElement(new TreePath(path2));
@@ -820,7 +817,6 @@ public class ProjectControllerTestCase {
 		Assert.assertEquals(entity2, newController.getUpdatedEntity());
 		
 		node = new DefaultMutableTreeNode(hierarchy);
-		root.add(node);
 		
 		Object[] path3 = {diagramNode1, entity1, diagramNode2, diagramNode3, relationship, entity2, node};
 		controller.changeElement(new TreePath(path3));
