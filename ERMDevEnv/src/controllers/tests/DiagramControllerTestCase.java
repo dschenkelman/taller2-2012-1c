@@ -11,6 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import infrastructure.Func;
 import infrastructure.IterableExtensions;
 import models.Attribute;
+import models.AttributeCollection;
 import models.AttributeType;
 import models.Cardinality;
 import models.Diagram;
@@ -23,6 +24,7 @@ import models.RelationshipEntity;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -1016,7 +1018,7 @@ public class DiagramControllerTestCase {
 	}
 	
 	@Test
-	public void testShouldRemoveHierarchyAndHierarchyConnectorCellsWhenUpdateHierarchy() throws Exception {
+	public void testShouldRemoveHierarchyAndHierarchyConnectorCellsWhenUpdatingHierarchy() throws Exception {
 		Diagram diagram = new Diagram();
 		diagram.setName("diagram1");
 		
@@ -1058,7 +1060,120 @@ public class DiagramControllerTestCase {
 	}
 	
 	@Test
-	public void testShouldUpdateHierarchyThroughHierarchyControllerWhenUpdateHierarchy() throws Exception {
+	public void testShouldRemoveAttributesFromRelationshipWhenUpdatingRelationship() throws Exception {
+		Diagram diagram = new Diagram();
+		diagram.setName("diagram1");
+		
+		Attribute attribute1 = new Attribute("attribute 1");
+		Attribute attribute2 = new Attribute("attribute 2");
+		Attribute attribute3 = new Attribute("attribute 3");
+		AttributeCollection attributes = new AttributeCollection(); 
+		attributes.addAttribute(attribute1);
+		attributes.addAttribute(attribute2);
+		attributes.addAttribute(attribute3);
+		
+		Relationship relationship = new Relationship();
+		relationship.setAttributes(attributes);
+		
+		this.graphPersistenceService.setCellsToLoad(new String[] {
+				DiagramController.CellConstants.AttributePrefix + relationship.getId().toString() + attribute1.getName(),
+				DiagramController.CellConstants.AttributePrefix + relationship.getId().toString() + attribute2.getName(),
+				DiagramController.CellConstants.AttributePrefix + relationship.getId().toString() + attribute3.getName(),
+				DiagramController.CellConstants.AttributeConnectorPrefix + relationship.getId().toString() + attribute1.getName(),
+				DiagramController.CellConstants.AttributeConnectorPrefix + relationship.getId().toString() + attribute2.getName(),
+				DiagramController.CellConstants.AttributeConnectorPrefix + relationship.getId().toString() + attribute3.getName()
+				});
+		
+		DiagramController controller = this.createController();
+		controller.load(diagram);
+		
+		Assert.assertNotNull(controller.getAttributeCell(relationship.getId().toString() + attribute1.getName()));
+		Assert.assertNotNull(controller.getAttributeCell(relationship.getId().toString() + attribute2.getName()));
+		Assert.assertNotNull(controller.getAttributeCell(relationship.getId().toString() + attribute3.getName()));
+		Assert.assertNotNull(controller.getAttributeConnectorCell(relationship.getId().toString() + attribute1.getName()));
+		Assert.assertNotNull(controller.getAttributeConnectorCell(relationship.getId().toString() + attribute2.getName()));
+		Assert.assertNotNull(controller.getAttributeConnectorCell(relationship.getId().toString() + attribute3.getName()));
+		
+		controller.updateRelationship(relationship);
+		
+		Assert.assertNull(controller.getAttributeCell(relationship.getId().toString() + attribute1.getName()));
+		Assert.assertNull(controller.getAttributeCell(relationship.getId().toString() + attribute2.getName()));
+		Assert.assertNull(controller.getAttributeCell(relationship.getId().toString() + attribute3.getName()));
+		Assert.assertNull(controller.getAttributeConnectorCell(relationship.getId().toString() + attribute1.getName()));
+		Assert.assertNull(controller.getAttributeConnectorCell(relationship.getId().toString() + attribute2.getName()));
+		Assert.assertNull(controller.getAttributeConnectorCell(relationship.getId().toString() + attribute3.getName()));
+	}
+	
+	@Test
+	public void testShouldRemoveWeakEntitiesWhenUpdatingRelationship() {
+		Diagram diagram = new Diagram();
+		diagram.setName("diagram1");
+		
+		RelationshipEntity relEntity1 = new RelationshipEntity(new Entity("entity1"));
+		RelationshipEntity relEntity2 = new RelationshipEntity(new Entity("entity2"));
+		relEntity1.setStrongEntity(true);
+		
+		Relationship relationship = new Relationship();
+		relationship.addRelationshipEntity(relEntity1);
+		relationship.addRelationshipEntity(relEntity2);
+
+		this.graphPersistenceService.setCellsToLoad(new String[] {
+				DiagramController.CellConstants.WeakEntityConnectorPrefix + relEntity2.getEntityId().toString() + "_" + relationship.getId().toString()
+				});
+		
+		DiagramController controller = this.createController();
+		controller.load(diagram);
+		
+		Assert.assertNotNull(controller.getWeakEntityConnectorCell(relEntity2.getEntityId().toString() + "_" + relationship.getId().toString()));
+		
+		controller.updateRelationship(relationship);
+		
+		Assert.assertNull(controller.getWeakEntityConnectorCell(relEntity2.getEntityId().toString() + "_" + relationship.getId().toString()));
+	}
+	
+	@Test
+	public void testShouldRemoveRelationshipConnectorsAndRelationshipCellsWhenUpdatingRelationship() {
+		Diagram diagram = new Diagram();
+		diagram.setName("diagram1");
+		
+		RelationshipEntity relEntity1 = new RelationshipEntity(new Entity("entity1"));
+		RelationshipEntity relEntity2 = new RelationshipEntity(new Entity("entity2"));
+		RelationshipEntity relEntity3 = new RelationshipEntity(new Entity("entity3"));
+		
+		Relationship relationship = new Relationship();
+		relationship.addRelationshipEntity(relEntity1);
+		relationship.addRelationshipEntity(relEntity1);
+		relationship.addRelationshipEntity(relEntity2);
+		relationship.addRelationshipEntity(relEntity3);
+		
+		this.graphPersistenceService.setCellsToLoad(new String[] {
+				DiagramController.CellConstants.RelationshipPrefix + relationship.getId().toString(),
+				DiagramController.CellConstants.RelationshipConnectorPrefix + relationship.getId().toString() + relEntity1.getEntityId().toString() +"1",
+				DiagramController.CellConstants.RelationshipConnectorPrefix + relationship.getId().toString() + relEntity1.getEntityId().toString() +"2",
+				DiagramController.CellConstants.RelationshipConnectorPrefix + relationship.getId().toString() + relEntity2.getEntityId().toString() +"1",
+				DiagramController.CellConstants.RelationshipConnectorPrefix + relationship.getId().toString() + relEntity3.getEntityId().toString() +"1"
+				});
+		
+		DiagramController controller = this.createController();
+		controller.load(diagram);
+		
+		Assert.assertNotNull(controller.getRelationshipCell(relationship.getId().toString()));
+		Assert.assertNotNull(controller.getRelationshipConnectorCell(relationship.getId().toString() + relEntity1.getEntityId().toString() +"1"));
+		Assert.assertNotNull(controller.getRelationshipConnectorCell(relationship.getId().toString() + relEntity1.getEntityId().toString() +"2"));
+		Assert.assertNotNull(controller.getRelationshipConnectorCell(relationship.getId().toString() + relEntity2.getEntityId().toString() +"1"));
+		Assert.assertNotNull(controller.getRelationshipConnectorCell(relationship.getId().toString() + relEntity3.getEntityId().toString() +"1"));
+		
+		controller.updateRelationship(relationship);
+		
+		Assert.assertNull(controller.getRelationshipCell(relationship.getId().toString()));
+		Assert.assertNull(controller.getRelationshipConnectorCell(relationship.getId().toString() + relEntity1.getEntityId().toString() +"1"));
+		Assert.assertNull(controller.getRelationshipConnectorCell(relationship.getId().toString() + relEntity1.getEntityId().toString() +"2"));
+		Assert.assertNull(controller.getRelationshipConnectorCell(relationship.getId().toString() + relEntity2.getEntityId().toString() +"1"));
+		Assert.assertNull(controller.getRelationshipConnectorCell(relationship.getId().toString() + relEntity3.getEntityId().toString() +"1"));
+	}
+	
+	@Test
+	public void testShouldUpdateHierarchyThroughHierarchyControllerWhenUpdatingHierarchy() throws Exception {
 		Entity entity1 = new Entity("entity1");
 		Entity entity2 = new Entity("entity2");
 		
@@ -1077,7 +1192,33 @@ public class DiagramControllerTestCase {
 		Assert.assertEquals(1, this.hierarchyController.getUpdateCallsCount());
 	}
 		
+	@Test
+	public void testShouldUpdateEntityThroughEntityControllerWhenUpdatingEntity() {
+		Entity entity = new Entity("enitty1");
+		DiagramController diagramController = this.createController();
+		
+		Assert.assertEquals(0, this.entityController.getUpdateCallsCount());
+		Assert.assertEquals(0, this.entityControllerFactory.getCreateCallsCount());
+		
+		diagramController.updateEntity(entity);
+		
+		Assert.assertEquals(1, this.entityControllerFactory.getCreateCallsCount());
+		Assert.assertEquals(1, this.entityController.getUpdateCallsCount());
+	}
 	
+	@Test
+	public void testShouldUpdateRelationshipThroughRelationshipControllerWhenUpdatingRelationship() {
+		Relationship relationship = new Relationship();
+		DiagramController diagramController = this.createController();
+		
+		Assert.assertEquals(0, this.relationshipController.getUpdateCallsCount());
+		Assert.assertEquals(0, this.relationshipControllerFactory.getCreateCallsCount());
+		
+		diagramController.updateRelationship(relationship);
+		
+		Assert.assertEquals(1, this.relationshipControllerFactory.getCreateCallsCount());
+		Assert.assertEquals(1, this.relationshipController.getUpdateCallsCount());
+	}
 	
 	
 	private void addEntityToDiagram(DiagramController diagramController, 

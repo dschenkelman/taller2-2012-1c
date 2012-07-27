@@ -19,6 +19,7 @@ public class MockRelationshipController implements IRelationshipController{
 
 	private boolean createCalled;
 	private List<IRelationshipEventListener> listeners;
+	private int updateCalls;
 	
 	public MockRelationshipController(){
 		this.createCalled = false;
@@ -83,8 +84,10 @@ public class MockRelationshipController implements IRelationshipController{
 
 	@Override
 	public void create(Relationship relationship) {
-		// TODO Auto-generated method stub
-		
+		this.updateCalls++;
 	}
 
+	public int getUpdateCallsCount() {
+		return this.updateCalls;
+	}
 }
