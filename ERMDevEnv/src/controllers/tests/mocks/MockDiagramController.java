@@ -224,4 +224,10 @@ public class MockDiagramController implements IDiagramController {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void deleteEntityPeripherals(Entity entity) {
+		// TODO Auto-generated method stub
+		
+	}
 }

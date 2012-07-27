@@ -49,6 +49,10 @@ public class DiagramTreeNode extends DefaultMutableTreeNode {
 		}
 	}
 	
+	public Diagram getDiagram(){
+		return this.diagram;
+	}
+	
 	private void populateRelationships() {
 		for (Relationship relationship : this.diagram.getRelationships()) {
 			this.relationshipsNode.add(new DefaultMutableTreeNode(relationship));

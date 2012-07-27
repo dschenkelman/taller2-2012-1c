@@ -42,4 +42,5 @@ public interface IDiagramController extends IEntityEventListener, IRelationshipE
 	void updateEntity(Entity entity);
 	void updateRelationship(Relationship relationship);
 	void updateHierarchy(Hierarchy hierarchy);
+	void deleteEntityPeripherals(Entity entity);
 }

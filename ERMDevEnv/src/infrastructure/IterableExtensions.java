@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.swing.tree.TreeNode;
+
 public class IterableExtensions {
     public static <T> int count(Iterable<T> iterable) {
         int count = 0;
@@ -68,5 +70,14 @@ public class IterableExtensions {
 		}
 		
 		return set;
+	}
+
+	public static <T> Iterable<T> getIterableOf(T[] array) {
+		List<T> list = new ArrayList<T>();
+		for (int i = 0; i < array.length; i++) {
+			list.add(array[i]);
+		}
+		
+		return list;
 	}
 }

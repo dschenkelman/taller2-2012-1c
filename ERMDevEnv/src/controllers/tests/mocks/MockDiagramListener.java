@@ -57,4 +57,23 @@ public class MockDiagramListener implements IDiagramEventListener {
 	public Hierarchy getHierarchy() {
 		return this.hierarchy;
 	}
+
+	@Override
+	public void handleEntityUpdated(Diagram diagram, Entity entity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleRelationshipUpdated(Diagram diagram,
+			Relationship relantionship) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handleHierarchyUpdated(Diagram diagram, Hierarchy hierarchy) {
+		// TODO Auto-generated method stub
+		
+	}
 }

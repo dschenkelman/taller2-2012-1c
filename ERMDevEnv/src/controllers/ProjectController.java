@@ -1,15 +1,19 @@
 package controllers;
 
+import infrastructure.Func;
 import infrastructure.IFileSystemService;
 import infrastructure.IProjectContext;
+import infrastructure.IterableExtensions;
 import infrastructure.visual.DiagramTreeNode;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -18,6 +22,7 @@ import models.Entity;
 import models.Hierarchy;
 import models.Relationship;
 
+import org.hamcrest.core.IsInstanceOf;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -38,6 +43,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	private IProjectView projectView;
 	private IShell shell;
 	private DiagramTreeNode currentDiagramNode;
+	private TreeNode editedNode;
 
 	private IXmlFileManager xmlFileManager;
 
@@ -172,17 +178,15 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		
 		if (o instanceof Entity) {
 			this.diagramController.updateEntity((Entity) o);
-			this.projectTree.nodeChanged(node);
-			return;	
+			this.editedNode = node;
 		}
-		if (o instanceof Relationship) {
+		else if (o instanceof Relationship) {
 			this.diagramController.updateRelationship((Relationship) o);
-			this.projectTree.nodeChanged(node);
-			return;
+			this.editedNode = node;
 		}
-		if (o instanceof Hierarchy) {
+		else if (o instanceof Hierarchy) {
 			this.diagramController.updateHierarchy((Hierarchy) o);
-			return;
+			this.editedNode = node;
 		}
 	}
 
@@ -236,5 +240,79 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	@Override
 	public void handleHierarchyAdded(Diagram diagram, Hierarchy hierarchy) {
 		this.currentDiagramNode.addHierarchy(hierarchy, this.projectTree);
+	}
+
+	@Override
+	public void handleEntityUpdated(Diagram diagram, Entity entity) {
+		Func<TreeNode, Boolean, Boolean> cmp = new Func<TreeNode, Boolean, Boolean>(){
+
+			@Override
+			public Boolean execute(TreeNode node, Boolean notUsed) {
+				return node instanceof DiagramTreeNode;
+			}
+		};
+		
+		Iterable<TreeNode> ancestors = IterableExtensions.where(
+				IterableExtensions.getIterableOf(this.projectTree.getPathToRoot(this.currentDiagramNode)),
+				cmp,
+				false);
+		Iterable<DiagramTreeNode> descendants = this.getDiagramTreeNodeDescendants(this.currentDiagramNode);
+		
+		for (DiagramTreeNode diagramTreeNode : descendants) {
+			this.updateEntityInDiagram(diagramTreeNode.getDiagram(), entity);
+		}
+		
+		for (TreeNode treeNode : ancestors) {
+			DiagramTreeNode diagramTreeNode = (DiagramTreeNode)treeNode;
+			this.updateEntityInDiagram(diagramTreeNode.getDiagram(), entity);
+		}
+		
+		this.projectTree.nodeChanged(this.editedNode);
+		this.editedNode = null;
+	}
+
+	private void updateEntityInDiagram(Diagram diagram, Entity entity) {
+		IDiagramController controller = this.diagramControllerFactory.create();
+		controller.load(diagram);
+		controller.deleteEntityPeripherals(entity);
+		controller.handleCreatedEvent(entity);
+		try {
+			controller.save();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private Iterable<DiagramTreeNode> getDiagramTreeNodeDescendants(
+			TreeNode currentNode) {
+		List<DiagramTreeNode> diagramTreeNodes = new ArrayList<DiagramTreeNode>();
+		
+		int childCount = currentNode.getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			TreeNode node = currentNode.getChildAt(i);
+			
+			if (node instanceof DiagramTreeNode){
+				diagramTreeNodes.add((DiagramTreeNode) node);
+			}
+			
+			for (DiagramTreeNode diagramTreeNode : this.getDiagramTreeNodeDescendants(node)) {
+				diagramTreeNodes.add(diagramTreeNode);
+			}
+		}		
+		
+		return diagramTreeNodes;
+	}
+
+	@Override
+	public void handleRelationshipUpdated(Diagram diagram,
+			Relationship relantionship) {
+		this.projectTree.nodeChanged(this.editedNode);
+		this.editedNode = null;
+	}
+
+	@Override
+	public void handleHierarchyUpdated(Diagram diagram, Hierarchy hierarchy) {
+		this.projectTree.nodeChanged(this.editedNode);
+		this.editedNode = null;
 	}
 }
