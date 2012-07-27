@@ -23,5 +23,6 @@ public interface IProjectContext {
 	Hierarchy getHierarchy(UUID id);
 	Entity getEntity(UUID entityId);
 	Diagram getContextDiagram(String defaultDiagramName);
+	void clearProjectDiagrams();
 	
 }
