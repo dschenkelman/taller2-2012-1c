@@ -13,6 +13,7 @@ public class MockEntityController implements IEntityController{
 
 	private int createCalls;
 	private List<IEntityEventListener> listeners;
+	private int updateCalls;
 	
 	public MockEntityController(){
 		this.createCalls = 0;
@@ -60,8 +61,10 @@ public class MockEntityController implements IEntityController{
 
 	@Override
 	public void create(Entity entity) {
-		// TODO Auto-generated method stub
-		
+		this.updateCalls++;
 	}
-	
+
+	public int getUpdateCallsCount() {
+		return this.updateCalls;
+	}
 }
