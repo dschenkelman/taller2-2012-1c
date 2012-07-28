@@ -161,16 +161,15 @@ public class DiagramController extends BaseController
     @Override
     public void handleCreatedEvent(Entity entity) {
         switch (this.currentOperation) {
-		case CreateEntity:
-			this.pendingEntity = entity;
-			break;
 		case UpdateEntity:
 			this.handleEntityUpdate(entity);
 			for (IDiagramEventListener listener : this.listeners) {
 				listener.handleEntityUpdated(this.diagram, entity);
 			}
 			break;
+		case CreateEntity:
 		default:
+			this.pendingEntity = entity;
 			break;
 		}
         
@@ -1051,5 +1050,12 @@ public class DiagramController extends BaseController
 	@Override
 	public mxCell getWeakEntityConnectorCell(String id) {
 		return this.weakEntityConnectorCells.get(CellConstants.WeakEntityConnectorPrefix + id);
+	}
+
+	@Override
+	public Iterable<Entity> getAvailableEntities() {
+		Iterable<Entity> entities = this.projectContext.getAllEntities();
+		
+		return entities;
 	}
 }
