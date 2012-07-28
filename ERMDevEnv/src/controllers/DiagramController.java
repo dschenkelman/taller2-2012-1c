@@ -1055,7 +1055,12 @@ public class DiagramController extends BaseController
 	@Override
 	public Iterable<Entity> getAvailableEntities() {
 		Iterable<Entity> entities = this.projectContext.getAllEntities();
-		
-		return entities;
+		List<Entity> entityList = IterableExtensions.getListOf(entities);
+	
+		for (Entity entity : this.diagram.getEntities()) {
+			entityList.remove(entity);
+		}
+	
+		return entityList;
 	}
 }

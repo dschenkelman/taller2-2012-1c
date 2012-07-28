@@ -1,5 +1,7 @@
 package views;
 
+import infrastructure.IterableExtensions;
+
 import java.awt.Point;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -96,8 +98,13 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Iterable<Entity> entities = diagramController.getAvailableEntities();
+				existingEntitiesMenu.removeAll();
+				
+				if (IterableExtensions.count(entities) == 0){
+					return;
+				}
+				
 				for (final Entity entity : entities) {
-					existingEntitiesMenu.removeAll();
 					existingEntitiesMenu.add(new JMenuItem(new AbstractAction(entity.getName()) {			
 						@Override
 						public void actionPerformed(ActionEvent e) {
