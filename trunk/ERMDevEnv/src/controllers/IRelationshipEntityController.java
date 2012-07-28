@@ -27,5 +27,6 @@ public interface IRelationshipEntityController {
 	public boolean entitiesAreSameType();
 	void updateModel(List<Object[]> list) throws Exception;
 	public void setRelatinshipEntities(List<RelationshipEntity> relationshipEntities);
+	boolean isUnary();
 	
 }

@@ -232,4 +232,10 @@ public class MockRelationshipEntityController extends BaseController implements
 		this.relationshipEntity = relationshipEntities;
 	}
 
+	@Override
+	public boolean isUnary() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

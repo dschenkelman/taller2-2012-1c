@@ -7,8 +7,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import javax.smartcardio.Card;
+
 import models.Cardinality;
 import models.Entity;
+import models.EntityType;
 import models.RelationshipEntity;
 import views.IRelationshipEntityView;
 import controllers.listeners.IRelationshipEntityEventListener;
@@ -69,7 +72,8 @@ public class RelationshipEntityController extends BaseController implements
 				String minCard =  (relEnt.getCardinality()!=null) ?Cardinality.getStringForCardinality(relEnt.getCardinality().getMinimum()):"0"; 
 				String maxCard =  (relEnt.getCardinality()!=null) ?Cardinality.getStringForCardinality(relEnt.getCardinality().getMaximum()):"0";
 				String role = (relEnt.getRole()!= null) ? relEnt.getRole():"";
-							
+				
+								
 				Object[] obj = new Object[] {
 					ent,
 					minCard,
@@ -143,6 +147,23 @@ public class RelationshipEntityController extends BaseController implements
 		return projectContext.getAllEntities();
 	}
 
+	
+	@Override
+	public boolean isUnary () {
+		List<Object []> list = relationshipEntityView.getModelList();
+		for (Object [] row1 : list) {
+			for (Object [] row2 : list) {
+				Entity ent1 = (Entity)row1[0];
+				Entity ent2 = (Entity)row2[0];
+				if (row1 != row2 && ent1.getId() == ent2.getId()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	
 	@Override
 	public boolean entitiesAreSameType() {
 		List<Object []> list = relationshipEntityView.getModelList();
@@ -150,6 +171,8 @@ public class RelationshipEntityController extends BaseController implements
 			Entity ent1 = (Entity) list.get(i-1)[0];
 			Entity ent2 = (Entity ) list.get(i)[0];
 			if (ent1.getType() != ent2.getType()) 
+				return false;
+			if (ent1.getType() == EntityType.None || ent2.getType() == EntityType.None )
 				return false;
 		}
 		return true;
@@ -165,8 +188,12 @@ public class RelationshipEntityController extends BaseController implements
 					UUID id = ((Entity)row[0]).getId();
 					double minCard = (row[1].toString().equals(""))?0:Cardinality.getCardinalityFromString(row[1].toString());
 					double maxCard = (row[2].toString().equals(""))?0:Cardinality.getCardinalityFromString(row[2].toString());
-					//double minCard = (row[1].toString().equals(""))?0:Double.valueOf(row[1].toString());
-					//double maxCard = (row[2].toString().equals(""))?0:Double.valueOf(row[2].toString());
+					
+					if (minCard > maxCard) { 
+						maxCard = minCard;
+						row[2] = Cardinality.getStringForCardinality(maxCard);
+					}
+			
 					String role = (row[3].toString().equals("") || row[3] == null )?"":row[3].toString();
 					boolean strong = (Boolean)row[4];
 					RelationshipEntity rel = new RelationshipEntity (id,new Cardinality (minCard,maxCard),role,strong);
