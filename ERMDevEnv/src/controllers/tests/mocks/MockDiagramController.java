@@ -230,4 +230,10 @@ public class MockDiagramController implements IDiagramController {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Iterable<Entity> getAvailableEntities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

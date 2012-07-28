@@ -5,15 +5,21 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.TooManyListenersException;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.xml.parsers.ParserConfigurationException;
+
+import models.Entity;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -26,13 +32,16 @@ import controllers.IDiagramController;
 public class DiagramView extends JPanel implements IDiagramView, DropTargetListener{
 
 	private IDiagramController diagramController;
-	private JButton btnEntity;
-	private JButton btnRelationship;
-	private JButton btnHierarchy;
-	private JButton btnSave;
-	private JButton btnSubdiagram;
+	private final JButton btnEntity;
+	private final JButton btnRelationship;
+	private final JButton btnHierarchy;
+	private final JButton btnSave;
+	private final JButton btnSubdiagram;
 	private mxGraphComponent graphComponent;
-
+	private JPopupMenu entityMenu;
+	private JPopupMenu existingEntitiesMenu;
+	private JMenuItem existingEntitiesMenuItem;
+    
 	/**
 	 * Create the panel.
 	 */
@@ -80,6 +89,36 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 		
 		this.btnSubdiagram = new JButton("Sub-Diagram");
 		add(this.btnSubdiagram, "10, 2");
+		
+		this.entityMenu = new JPopupMenu();
+		this.existingEntitiesMenu = new JPopupMenu();
+		this.existingEntitiesMenuItem = new JMenuItem(new AbstractAction("Existing Entity") {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Iterable<Entity> entities = diagramController.getAvailableEntities();
+				for (final Entity entity : entities) {
+					existingEntitiesMenu.removeAll();
+					existingEntitiesMenu.add(new JMenuItem(new AbstractAction(entity.getName()) {			
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							 diagramController.handleCreatedEvent(entity);
+						}
+					}));
+				}
+				existingEntitiesMenu.show(btnEntity,  
+						btnEntity.getX(), btnEntity.getY() +  btnEntity.getHeight());
+			}
+		});
+		
+
+		this.entityMenu.add(new JMenuItem(new AbstractAction("New Entity") {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 diagramController.createEntity();
+			}
+		}));
+		
+		this.entityMenu.add(this.existingEntitiesMenuItem);		
 	}
 
 	@Override
@@ -97,13 +136,11 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 					try {
 						diagramController.addEntity(e.getPoint().x, e.getPoint().y);
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
 			}
 		};
-		
 		this.graphComponent.getGraphControl().addMouseListener(listener);
 		
 		try {
@@ -118,7 +155,8 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 		this.btnEntity.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				diagramController.createEntity();
+				entityMenu.show(e.getComponent(), btnEntity.getX(), btnEntity.getY() +  btnEntity.getHeight());
+				//diagramController.createEntity();
 			}
 		});
 		
