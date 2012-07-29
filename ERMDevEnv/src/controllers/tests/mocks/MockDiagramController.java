@@ -236,4 +236,22 @@ public class MockDiagramController implements IDiagramController {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean deleteEntity(Entity entity) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteRelationship(Relationship relationship) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteHierarchy(Hierarchy hierarchy) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

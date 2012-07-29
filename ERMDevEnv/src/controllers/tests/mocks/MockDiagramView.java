@@ -30,4 +30,10 @@ public class MockDiagramView implements IDiagramView{
 		
 	}
 
+	@Override
+	public boolean showDeleteDialog(String name, boolean couldDelete) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

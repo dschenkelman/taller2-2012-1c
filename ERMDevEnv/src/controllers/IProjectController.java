@@ -12,4 +12,5 @@ public interface IProjectController {
 	IProjectView getView();
 	TreeModel getProjectTree();
 	void changeElement(TreePath treePath);
+	void deleteElement(TreePath path);
 }

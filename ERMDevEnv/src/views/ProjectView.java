@@ -1,5 +1,7 @@
 package views;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -93,6 +95,15 @@ public class ProjectView extends JPanel implements IProjectView {
 				TreePath path = tree.getPathForLocation(e.getX(),e.getY());
 				if (e.getClickCount() == 2) {
 					projectController.changeElement(path);					
+				}
+			}
+		});
+		this.tree.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				TreePath path = tree.getSelectionPath();
+				if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+					projectController.deleteElement(path);
 				}
 			}
 		});

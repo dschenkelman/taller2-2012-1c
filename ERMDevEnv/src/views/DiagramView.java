@@ -231,4 +231,22 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 	public void refreshGraphComponent() {
 		this.graphComponent.refresh();
 	}
+
+	@Override
+	public boolean showDeleteDialog(String typeAndName, boolean couldDelete) {
+		int result = -1;
+		if (couldDelete == false)
+			JOptionPane.showMessageDialog(null, "The selected " + typeAndName +
+					" don't belong into current diagram", "Deleting invalid " +
+					typeAndName, JOptionPane.QUESTION_MESSAGE);
+		else
+			result = JOptionPane.showConfirmDialog(null,"The " + typeAndName + 
+					" are being deleted, are you shure you want this?", 
+					"Deleting " + typeAndName, JOptionPane.YES_NO_OPTION);
+		
+		if (result == JOptionPane.YES_OPTION) {
+			return true;
+		}
+		return false;
+	}
 }
