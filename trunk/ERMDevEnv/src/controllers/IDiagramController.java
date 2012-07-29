@@ -44,4 +44,7 @@ public interface IDiagramController extends IEntityEventListener, IRelationshipE
 	void updateHierarchy(Hierarchy hierarchy);
 	void deleteEntityPeripherals(Entity entity);
 	Iterable<Entity> getAvailableEntities();
+	boolean deleteEntity(Entity entity);
+	boolean deleteRelationship(Relationship relationship);
+	boolean deleteHierarchy(Hierarchy hierarchy);
 }

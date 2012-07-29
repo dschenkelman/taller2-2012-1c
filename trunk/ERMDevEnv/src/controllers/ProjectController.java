@@ -22,7 +22,6 @@ import models.Entity;
 import models.Hierarchy;
 import models.Relationship;
 
-import org.hamcrest.core.IsInstanceOf;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -190,6 +189,28 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		}
 	}
 
+	@Override
+	public void deleteElement(TreePath treePath) {
+		if (treePath == null)
+			return;
+		
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) treePath.getLastPathComponent();
+		Object o = node.getUserObject();
+		
+		if (o instanceof Entity) {
+			if (this.diagramController.deleteEntity((Entity) o))
+				this.projectTree.removeNodeFromParent(node);
+		}
+		else if (o instanceof Relationship) {
+			if (this.diagramController.deleteRelationship((Relationship) o))
+				this.projectTree.removeNodeFromParent(node);
+		}
+		else if (o instanceof Hierarchy) {
+			if (this.diagramController.deleteHierarchy((Hierarchy) o))
+				this.projectTree.removeNodeFromParent(node);
+		}
+	}
+	
 	@Override
 	public boolean openProject(String projectName) throws Exception {
 		this.projectContext.clearContextDiagrams();
