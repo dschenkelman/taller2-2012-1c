@@ -125,10 +125,10 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 			try {
 				relController.isComposition(checkBox1.isSelected());
 			} catch (Exception exception) {
-				exception.printStackTrace();
+				//exception.printStackTrace();
 				showErrorDialog(exception.getMessage());
 				checkBox1.setSelected(false);
-                exception.printStackTrace();
+                
 			}
 		}
 	}
@@ -140,10 +140,9 @@ public class RelationshipViewImpl extends RelationshipViewAbstract implements
 			try {
 				relController.add();
 			} catch (Exception e1) {
-				e1.printStackTrace();
+				//e1.printStackTrace();
 				showErrorDialog(e1.getMessage());
-                e1.printStackTrace();
-			}
+          	}
 		}
 	}
 	

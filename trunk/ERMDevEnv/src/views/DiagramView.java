@@ -92,6 +92,12 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 		this.btnSubdiagram = new JButton("Sub-Diagram");
 		add(this.btnSubdiagram, "10, 2");
 		
+				this.btnPrint = new JButton("Print");
+		add(this.btnPrint, "12, 2");
+
+		this.btnExport = new JButton("Export");
+		add(this.btnExport, "14, 2");
+		
 		this.entityMenu = new JPopupMenu();
 		this.existingEntitiesMenu = new JPopupMenu();
 		this.existingEntitiesMenuItem = new JMenuItem(new AbstractAction("Existing Entity") {			
@@ -201,6 +207,9 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 				}
 			}
 		});
+		
+		this.btnPrint.addActionListener(new PrintAction());
+		this.btnExport.addActionListener(new ExportAction());
 	}
 
 	@Override
@@ -249,4 +258,85 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 		}
 		return false;
 	}
+	
+		private class ExportAction implements ActionListener {
+
+		
+		public void actionPerformed(ActionEvent e) {
+			mxGraph graph = graphComponent.getGraph();
+
+			// Creates the image for the PNG file
+			BufferedImage image = mxCellRenderer.createBufferedImage(graph,
+					null, 1, graphComponent.getBackground(), graphComponent.isAntiAlias(), null,
+					graphComponent.getCanvas());
+
+			// Creates the URL-encoded XML data
+			mxCodec codec = new mxCodec();
+			String xml;
+			FileOutputStream outputStream = null;
+			try {
+				xml = URLEncoder.encode(
+						mxXmlUtils.getXml(codec.encode(graph.getModel())), "UTF-8");
+		
+			mxPngEncodeParam param = mxPngEncodeParam
+					.getDefaultEncodeParam(image);
+			param.setCompressedText(new String[] { "mxGraphModel", xml });
+
+			// Saves as a PNG file
+			String name = diagramController.getDiagram().getName();
+			outputStream = new FileOutputStream(new File(name+".jpg"));
+			
+				mxPngImageEncoder encoder = new mxPngImageEncoder(outputStream,
+						param);
+				
+				if (image != null)
+				{
+					encoder.encode(image);
+				
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(graphComponent,
+							mxResources.get("noImageData"));
+				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			finally {
+				try {
+					outputStream.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private class PrintAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			PrinterJob pj = PrinterJob.getPrinterJob();
+
+			if (pj.printDialog()) {
+				PageFormat pf = graphComponent.getPageFormat();
+				Paper paper = new Paper();
+				double margin = 36;
+				paper.setImageableArea(margin, margin, paper.getWidth()
+						- margin * 2, paper.getHeight() - margin * 2);
+				pf.setPaper(paper);
+				pj.setPrintable(graphComponent, pf);
+
+				try {
+					pj.print();
+				} catch (PrinterException e2) {
+					System.out.println(e2);
+				}
+			}
+		}
+	}
+	
 }

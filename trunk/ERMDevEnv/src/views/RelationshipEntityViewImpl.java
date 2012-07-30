@@ -121,7 +121,7 @@ public class RelationshipEntityViewImpl extends RelationshipEntityViewAbstract i
 			controller.updateModel(tableModel.getModelList());
 		
 		}catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			showErrorDialog(e.getMessage());
 			tableModel.setModel(controller.getListForModel());
 		}
