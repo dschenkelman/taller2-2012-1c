@@ -64,6 +64,7 @@ public class EntityController extends BaseController implements IEntityControlle
         this.entityView.addAttributeView(attributeController.getAttributeView());
         this.entityView.setEntityName(this.pendingEntity.getName());
         this.entityView.setEntityType(this.pendingEntity.getType());
+        this.entityView.setModeUpdating();
         this.entityView.showView();
         this.operation = Operations.Updating;
     }

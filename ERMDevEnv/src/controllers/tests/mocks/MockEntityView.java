@@ -65,4 +65,10 @@ public class MockEntityView implements IEntityView {
     public String getName(){
         return this.name;
     }
+
+	@Override
+	public void setModeUpdating() {
+		// TODO Auto-generated method stub
+		
+	}
 }

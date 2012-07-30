@@ -22,4 +22,6 @@ public interface IEntityView {
     public void setEntityName(String name);
 
     public void setEntityType(EntityType type);
+
+	public void setModeUpdating();
 }
