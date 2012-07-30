@@ -3,12 +3,12 @@ package validation;
 import models.Diagram;
 import models.Entity;
 
-public class AttributeValidationEntry implements IValidationEntry {
+public class AttributesPerEntityValidationEntry implements IValidationEntry {
 	private Diagram diagram;
 	private Entity entity;
 	private int attributeCount;
 	
-	public AttributeValidationEntry(Diagram diagram, Entity entity, int attributeCount){
+	public AttributesPerEntityValidationEntry(Diagram diagram, Entity entity, int attributeCount){
 		this.diagram = diagram;
 		this.entity = entity;
 		this.attributeCount = attributeCount;
