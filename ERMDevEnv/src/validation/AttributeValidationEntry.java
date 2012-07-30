@@ -8,6 +8,12 @@ public class AttributeValidationEntry implements IValidationEntry {
 	private Entity entity;
 	private int attributeCount;
 	
+	public AttributeValidationEntry(Diagram diagram, Entity entity, int attributeCount){
+		this.diagram = diagram;
+		this.entity = entity;
+		this.attributeCount = attributeCount;
+	}
+	
 	@Override
 	public String getValidation() {
 		return String.format("Entity %s in diagram %s has %d attributes.", entity.getName(), diagram.getName(), attributeCount);
