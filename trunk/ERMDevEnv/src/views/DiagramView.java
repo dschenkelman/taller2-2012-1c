@@ -261,12 +261,12 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
 	}
 
 	@Override
-	public boolean showDeleteDialog(String typeAndName, boolean couldDelete) {
+	public boolean showDeleteDialog(String typeAndName, String otherMessege, boolean couldDelete) {
 		int result = -1;
 		if (couldDelete == false)
-			JOptionPane.showMessageDialog(null, "The selected " + typeAndName +
-					" don't belong into current diagram", "Deleting invalid " +
-					typeAndName, JOptionPane.QUESTION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "The selected " + typeAndName + 
+					otherMessege, "Deleting invalid " + typeAndName, 
+					JOptionPane.QUESTION_MESSAGE);
 		else
 			result = JOptionPane.showConfirmDialog(null,"The " + typeAndName + 
 					" are being deleted, are you shure you want this?", 

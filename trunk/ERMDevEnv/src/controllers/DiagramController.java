@@ -1075,23 +1075,45 @@ public class DiagramController extends BaseController
 	@Override
 	public boolean deleteEntity(Entity entity) {
 		if (this.diagram.getEntities().get(entity.getId()) == null) {
-			this.diagramView.showDeleteDialog("entity " + entity.getName(), false);
+			this.diagramView.showDeleteDialog("entity " + entity.getName(), 
+					" don't belong into current diagram", false);
 			return false;
 		}
-		if (this.diagramView.showDeleteDialog("entity " + entity.getName(), true)) {
-			this.removeEntity(entity);
-			return true;
+		if (canDeleteEntity(entity)) {
+			if (this.diagramView.showDeleteDialog("entity " + entity.getName(), "", true)) {
+				this.removeEntity(entity);
+				return true;
+			}
+		}else {
+			this.diagramView.showDeleteDialog("entity " + entity.getName(), 
+					" belongs to a relationship or a hierarchy", false);
 		}
 		return false;
+	}
+	
+	private boolean canDeleteEntity(Entity entity) {
+		for (Relationship relationship : this.diagram.getRelationships())
+			for (RelationshipEntity relEntity : relationship.getRelationshipEntities())
+				if (relEntity.getEntityId().equals(entity.getId()))
+					return false;
+		for (Hierarchy hierarchy : this.diagram.getHierarchies()) {
+			if (hierarchy.getGeneralEntityId().equals(entity.getId()))
+				return false;
+			for (UUID entityId : hierarchy.getChildren())
+				if (entityId.equals(entity.getId()))
+					return false;
+		}
+		return true;
 	}
 
 	@Override
 	public boolean deleteRelationship(Relationship relationship) {
 		if (this.diagram.getRelationship(relationship.getId()) == null) {
-			this.diagramView.showDeleteDialog("relationship " + relationship.getName(), false);
+			this.diagramView.showDeleteDialog("relationship " + relationship.getName(), 
+					" don't belong into current diagram", false);
 			return false;	
 		}
-		if (this.diagramView.showDeleteDialog("relationship " + relationship.getName(), true)) {
+		if (this.diagramView.showDeleteDialog("relationship " + relationship.getName(), "", true)) {
 			this.removeRelationship(relationship);
 			return true;
 		}
@@ -1101,10 +1123,11 @@ public class DiagramController extends BaseController
 	@Override
 	public boolean deleteHierarchy(Hierarchy hierarchy) {
 		if (this.diagram.getHierarchies().getHierarchy(hierarchy.getId()) == null) {
-			this.diagramView.showDeleteDialog("Hierarchy", false);
+			this.diagramView.showDeleteDialog("Hierarchy", 
+					" don't belong into current diagram", false);
 			return false;
 		}
-		if (this.diagramView.showDeleteDialog("Hierarchy", true)) {
+		if (this.diagramView.showDeleteDialog("Hierarchy", "", true)) {
 			this.removeHierarchy(hierarchy);
 			return true;
 		}
@@ -1113,6 +1136,11 @@ public class DiagramController extends BaseController
 	
 	private void removeEntity(Entity entity) {
 		this.deleteEntityPeripherals(entity);
+		
+		mxIGraphModel model = this.graph.getModel();
+		
+    	String entityCell = CellConstants.EntityPrefix + entity.getId().toString();
+        model.remove(this.entityCells.remove(entityCell));
 		
 		this.diagram.getEntities().remove(entity.getName());
 	}
