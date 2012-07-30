@@ -1,54 +1,57 @@
 package validation;
 
 public class Metrics {
-	private double attributesPerEntity;
-	private double attributesPerRelationship;
-	private double entitiesPerDiagram;
-	private double entitiesPerRelationship;
-	private double relationshipsPerDiagram;
-	private double entitiesPerHierarchy;
-	private double hierarchiesPerDiagram;
 	
-	public double getAttributesPerEntity() {
+	private MetricPair attributesPerEntity;
+	private MetricPair attributesPerRelationship;
+	private MetricPair entitiesPerDiagram;
+	private MetricPair entitiesPerRelationship;
+	private MetricPair relationshipsPerDiagram;
+	private MetricPair entitiesPerHierarchy;
+	private MetricPair hierarchiesPerDiagram;
+	
+	public MetricPair getAttributesPerEntity() {
 		return attributesPerEntity;
 	}
-	public void setAttributesPerEntity(double attributesPerEntity) {
+	
+	public void setAttributesPerEntity(MetricPair attributesPerEntity) {
 		this.attributesPerEntity = attributesPerEntity;
 	}
-	public double getAttributesPerRelationship() {
+	
+	public MetricPair getAttributesPerRelationship() {
 		return attributesPerRelationship;
 	}
-	public void setAttributesPerRelationship(double attributesPerRelationship) {
+	public void setAttributesPerRelationship(MetricPair attributesPerRelationship) {
 		this.attributesPerRelationship = attributesPerRelationship;
 	}
-	public double getEntitiesPerDiagram() {
+	public MetricPair getEntitiesPerDiagram() {
 		return entitiesPerDiagram;
 	}
-	public void setEntitiesPerDiagram(double entitiesPerDiagram) {
+	public void setEntitiesPerDiagram(MetricPair entitiesPerDiagram) {
 		this.entitiesPerDiagram = entitiesPerDiagram;
 	}
-	public double getEntitiesPerRelationship() {
+	public MetricPair getEntitiesPerRelationship() {
 		return entitiesPerRelationship;
 	}
-	public void setEntitiesPerRelationship(double entitiesPerRelationship) {
+	public void setEntitiesPerRelationship(MetricPair entitiesPerRelationship) {
 		this.entitiesPerRelationship = entitiesPerRelationship;
 	}
-	public double getRelationshipsPerDiagram() {
+	public MetricPair getRelationshipsPerDiagram() {
 		return relationshipsPerDiagram;
 	}
-	public void setRelationshipsPerDiagram(double relationshipsPerDiagram) {
+	public void setRelationshipsPerDiagram(MetricPair relationshipsPerDiagram) {
 		this.relationshipsPerDiagram = relationshipsPerDiagram;
 	}
-	public double getEntitiesPerHierarchy() {
+	public MetricPair getEntitiesPerHierarchy() {
 		return entitiesPerHierarchy;
 	}
-	public void setEntitiesPerHierarchy(double entitiesPerHierarchy) {
+	public void setEntitiesPerHierarchy(MetricPair entitiesPerHierarchy) {
 		this.entitiesPerHierarchy = entitiesPerHierarchy;
 	}
-	public double getHierarchiesPerDiagram() {
+	public MetricPair getHierarchiesPerDiagram() {
 		return hierarchiesPerDiagram;
 	}
-	public void setHierarchiesPerDiagram(double hierarchiesPerDiagram) {
+	public void setHierarchiesPerDiagram(MetricPair hierarchiesPerDiagram) {
 		this.hierarchiesPerDiagram = hierarchiesPerDiagram;
 	}
 }

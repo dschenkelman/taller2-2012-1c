@@ -40,18 +40,66 @@ public class MetricsCalculator implements IMetricsCalculator {
 		
 		Metrics metrics = new Metrics();
 		
-		metrics.setAttributesPerEntity(attributesInEntities / entities);
-		metrics.setAttributesPerRelationship(attributesInRelationships / relationships);
-		metrics.setEntitiesPerDiagram(entities / diagramCount);
-		metrics.setEntitiesPerHierarchy(entitiesInHierarchies / hierarchies);
-		metrics.setEntitiesPerRelationship(entitiesInRelationships / relationships);
-		metrics.setHierarchiesPerDiagram(hierarchies / diagramCount);
-		metrics.setRelationshipsPerDiagram(relationships / diagramCount);
+		metrics.setAttributesPerEntity(new MetricPair(attributesInEntities / entities));
+		metrics.setAttributesPerRelationship(new MetricPair(attributesInRelationships / relationships));
+		metrics.setEntitiesPerDiagram(new MetricPair(entities / diagramCount));
+		metrics.setEntitiesPerHierarchy(new MetricPair(entitiesInHierarchies / hierarchies));
+		metrics.setEntitiesPerRelationship(new MetricPair(entitiesInRelationships / relationships));
+		metrics.setHierarchiesPerDiagram(new MetricPair(hierarchies / diagramCount));
+		metrics.setRelationshipsPerDiagram(new MetricPair(relationships / diagramCount));
+	
+		double entitiesDeviation = 0;
+		double attributesInEntitiesDeviation = 0;
+		double entitiesInRelationshipsDeviation = 0;
+		double attributesInRelationshipsDeviation = 0;
+		double relationshipsDeviation = 0;
+		double hierarchiesDeviation = 0;
+		double entitiesInHierarchiesDeviation = 0;
+		
+		for (Diagram diagram : diagrams) {
+			entitiesDeviation += calculateDeviation(metrics.getEntitiesPerDiagram().getMean(), IterableExtensions.count(diagram.getEntities()));
+			
+			for (Entity entity : diagram.getEntities()) {
+				double attributeCount = getAttributeCount(entity.getAttributes());
+				attributesInEntitiesDeviation += calculateDeviation(metrics.getAttributesPerEntity().getMean(), attributeCount);
+			}
+			
+			relationshipsDeviation += calculateDeviation(metrics.getRelationshipsPerDiagram().getMean(), IterableExtensions.count(diagram.getRelationships()));
+			
+			for (Relationship relationship : diagram.getRelationships()) {
+				double entitiesCount = IterableExtensions.count(relationship.getRelationshipEntities());
+				double attributeCount = getAttributeCount(relationship.getAttributes());
+				attributesInRelationshipsDeviation += calculateDeviation(metrics.getAttributesPerRelationship().getMean(), attributeCount);
+				entitiesInRelationshipsDeviation += calculateDeviation(metrics.getRelationshipsPerDiagram().getMean(), entitiesCount);
+			}
+			
+			hierarchiesDeviation += calculateDeviation(metrics.getRelationshipsPerDiagram().getMean(), IterableExtensions.count(diagram.getHierarchies()));
+			
+			for (Hierarchy hierarchy : diagram.getHierarchies()) {
+				entitiesInHierarchiesDeviation += calculateDeviation(metrics.getEntitiesPerHierarchy().getMean(), IterableExtensions.count(hierarchy.getChildren()));
+			}
+		}
+
+		entitiesDeviation = Math.sqrt(entitiesDeviation / entities);
+		attributesInEntitiesDeviation = Math.sqrt(attributesInEntitiesDeviation / attributesInEntities);
+		entitiesInRelationshipsDeviation = Math.sqrt(entitiesInRelationshipsDeviation / entitiesInRelationships);
+		attributesInRelationshipsDeviation = Math.sqrt(attributesInRelationshipsDeviation / attributesInRelationships);
+		relationshipsDeviation = Math.sqrt(relationshipsDeviation / relationships);
+		entitiesInHierarchiesDeviation = Math.sqrt(entitiesInHierarchiesDeviation / entitiesInHierarchies);
+		hierarchiesDeviation = Math.sqrt(hierarchiesDeviation / hierarchies);
+		
+		metrics.getAttributesPerEntity().setStandardDeviation(attributesInEntitiesDeviation);
+		metrics.getAttributesPerRelationship().setStandardDeviation(attributesInRelationshipsDeviation);
+		metrics.getEntitiesPerDiagram().setStandardDeviation(entitiesDeviation);
+		metrics.getEntitiesPerHierarchy().setStandardDeviation(entitiesInHierarchiesDeviation);
+		metrics.getEntitiesPerRelationship().setStandardDeviation(entitiesInRelationshipsDeviation);
+		metrics.getHierarchiesPerDiagram().setStandardDeviation(hierarchiesDeviation);
+		metrics.getRelationshipsPerDiagram().setStandardDeviation(relationshipsDeviation);
 		
 		return metrics;
 	}
 	
-	private int getAttributeCount(Iterable<Attribute> attributes){
+	public static int getAttributeCount(Iterable<Attribute> attributes){
 		int count = 0;
 		
 		for (Attribute attribute : attributes) {
@@ -61,5 +109,9 @@ public class MetricsCalculator implements IMetricsCalculator {
 		}
 		
 		return count;
+	}
+	
+	private static double calculateDeviation(double mean, double x){
+		return Math.pow(mean - x, 2);
 	}
 }
