@@ -174,4 +174,9 @@ public class EntityView implements IEntityView {
     private JButton selectKeysButton;
     private JButton createButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
+
+	@Override
+	public void setModeUpdating() {
+		this.frame1.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	}
 }
