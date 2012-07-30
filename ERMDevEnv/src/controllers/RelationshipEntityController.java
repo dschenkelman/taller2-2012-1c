@@ -144,7 +144,7 @@ public class RelationshipEntityController extends BaseController implements
 
 	@Override
 	public Iterable<Entity> getEntities() {
-		return projectContext.getAllEntities();
+		return projectContext.getContextEntities();
 	}
 
 	
