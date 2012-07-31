@@ -7,9 +7,8 @@ import validation.IValidationEntry;
 public class MockProjectValidationService implements IProjectValidationService {
 
 	@Override
-	public Iterable<IValidationEntry> validate(Iterable<Diagram> diagrams,
+	public void validate(Iterable<Diagram> diagrams,
 			int tolerance) {
-		return null;
 	}
 
 }

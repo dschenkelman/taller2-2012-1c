@@ -1,5 +1,6 @@
 package validation;
 
+import validation.MetricPair.MetricNames;
 import infrastructure.IterableExtensions;
 import models.Attribute;
 import models.Diagram;
@@ -40,13 +41,13 @@ public class MetricsCalculator implements IMetricsCalculator {
 		
 		Metrics metrics = new Metrics();
 		
-		metrics.setAttributesPerEntity(new MetricPair(attributesInEntities / entities));
-		metrics.setAttributesPerRelationship(new MetricPair(attributesInRelationships / relationships));
-		metrics.setEntitiesPerDiagram(new MetricPair(entities / diagramCount));
-		metrics.setEntitiesPerHierarchy(new MetricPair(entitiesInHierarchies / hierarchies));
-		metrics.setEntitiesPerRelationship(new MetricPair(entitiesInRelationships / relationships));
-		metrics.setHierarchiesPerDiagram(new MetricPair(hierarchies / diagramCount));
-		metrics.setRelationshipsPerDiagram(new MetricPair(relationships / diagramCount));
+		metrics.setAttributesPerEntity(new MetricPair(MetricNames.AttributesPerEntity, attributesInEntities / entities));
+		metrics.setAttributesPerRelationship(new MetricPair(MetricNames.AttributesPerRelationship, attributesInRelationships / relationships));
+		metrics.setEntitiesPerDiagram(new MetricPair(MetricNames.EntitiesPerDiagram, entities / diagramCount));
+		metrics.setEntitiesPerHierarchy(new MetricPair(MetricNames.EntitiesPerHierarchy, entitiesInHierarchies / hierarchies));
+		metrics.setEntitiesPerRelationship(new MetricPair(MetricNames.EntitiesPerRelationship, entitiesInRelationships / relationships));
+		metrics.setHierarchiesPerDiagram(new MetricPair(MetricNames.HierarchiesPerDiagram, hierarchies / diagramCount));
+		metrics.setRelationshipsPerDiagram(new MetricPair(MetricNames.RelationshipsPerDiagram, relationships / diagramCount));
 	
 		double entitiesDeviation = 0;
 		double attributesInEntitiesDeviation = 0;

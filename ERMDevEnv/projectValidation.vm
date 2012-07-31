@@ -1,0 +1,23 @@
+<html>
+  <head>
+    Project Validation
+  </head>
+  <body>
+    <h2>Project Metrisc</h2>
+    <table>
+      <tr>
+        <td>Metric</td>
+        <td>Mean</td>
+        <td>Standard Deviation</td>
+      </tr>
+      #foreach( $metric in $metrics )
+      <tr>
+        <td>$metric.getName()</td>
+        <td>$metric.getMean()</td>
+        <td>$metric.getStandardDeviation()</td>
+      </tr>
+      #end
+    </table>
+    <h2>Errors</h2>
+  </body>
+</html>

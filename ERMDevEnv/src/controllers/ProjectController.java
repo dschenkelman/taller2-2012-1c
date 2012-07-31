@@ -22,6 +22,9 @@ import models.Entity;
 import models.Hierarchy;
 import models.Relationship;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
