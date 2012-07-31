@@ -16,7 +16,7 @@ public class EntitiesPerRelationshipValidator implements IValidator {
     	
         for (Relationship relationship : diagram.getRelationships()) {
         	int entitiesInRelationship = IterableExtensions.count(relationship.getRelationshipEntities());
-        	if (!metrics.getAttributesPerRelationship().isInRange(entitiesInRelationship, tolerance)){
+        	if (!metrics.getEntitiesPerRelationship().isInRange(entitiesInRelationship, tolerance)){
 				entries.add(new EntitiesPerRelationshipValidationEntry(diagram, relationship, entitiesInRelationship));
 			}
 		}

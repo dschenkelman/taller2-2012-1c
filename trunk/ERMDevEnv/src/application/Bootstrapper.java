@@ -19,6 +19,15 @@ import persistence.IGraphPersistenceService;
 import persistence.IXmlFileManager;
 import persistence.IXmlManager;
 import persistence.XmlFileManager;
+import validation.AttributesPerEntityValidationEntry;
+import validation.AttributesPerRelationshipValidationEntry;
+import validation.EntitiesPerDiagramValidationEntry;
+import validation.EntitiesPerHierarchyValidationEntry;
+import validation.EntitiesPerRelationshipValidationEntry;
+import validation.HierarchiesPerDiagramValidationEntry;
+import validation.IProjectValidationService;
+import validation.ProjectValidationService;
+import validation.RelationshipsPerDiagramValidationEntry;
 import views.AttributeView;
 import views.DiagramView;
 import views.EntityView;
@@ -152,6 +161,7 @@ public class Bootstrapper {
 	private void configureContainer() {
 		this.container
 					.as(CACHE).addComponent(MutablePicoContainer.class, this.container)
+					.as(CACHE).addComponent(IProjectValidationService.class, ProjectValidationService.class)
 					.addComponent(IDiagramController.class, DiagramController.class)
 					.addComponent(IDiagramView.class, DiagramView.class)
 					.addComponent(IXmlManager.class, DiagramXmlManager.class)
@@ -176,9 +186,17 @@ public class Bootstrapper {
 					.as(CACHE).addComponent(IDiagramControllerFactory.class, DiagramControllerFactory.class)
 					.addComponent(IProjectController.class, ProjectController.class)
 					.addComponent(IProjectView.class, ProjectView.class)
+					.addComponent(IAttributeController.class, AttributeController.class)
 					.as(CACHE).addComponent(IFileSystemService.class, FileSystemService.class)
 					.as(CACHE).addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class)
-					.addComponent(IAttributeController.class, AttributeController.class)
+					.as(CACHE).addComponent(RelationshipsPerDiagramValidationEntry.class)
+					.as(CACHE).addComponent(EntitiesPerDiagramValidationEntry.class)
+					.as(CACHE).addComponent(EntitiesPerHierarchyValidationEntry.class)
+					.as(CACHE).addComponent(EntitiesPerRelationshipValidationEntry.class)
+					.as(CACHE).addComponent(HierarchiesPerDiagramValidationEntry.class)
+					.as(CACHE).addComponent(RelationshipsPerDiagramValidationEntry.class)
+					.as(CACHE).addComponent(AttributesPerRelationshipValidationEntry.class)
+					.as(CACHE).addComponent(AttributesPerEntityValidationEntry.class)
 					.addComponent(IAttributeView.class, AttributeView.class);
 	}
 

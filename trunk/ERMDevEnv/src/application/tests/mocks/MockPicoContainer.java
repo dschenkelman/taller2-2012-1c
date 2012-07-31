@@ -41,9 +41,9 @@ public class MockPicoContainer implements MutablePicoContainer {
 	}
 
 	@Override
-	public MutablePicoContainer addComponent(Object arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	public MutablePicoContainer addComponent(Object toType) {
+		this.mappings.put(toType, toType);
+		return this;
 	}
 
 	@Override
