@@ -1,5 +1,8 @@
 package validation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Metrics {
 	
 	private MetricPair attributesPerEntity;
@@ -53,5 +56,18 @@ public class Metrics {
 	}
 	public void setHierarchiesPerDiagram(MetricPair hierarchiesPerDiagram) {
 		this.hierarchiesPerDiagram = hierarchiesPerDiagram;
+	}
+	
+	public List<MetricPair> getMetrics(){
+		List<MetricPair> metrics = new ArrayList<MetricPair>();
+		metrics.add(this.hierarchiesPerDiagram);
+		metrics.add(this.entitiesPerDiagram);
+		metrics.add(this.relationshipsPerDiagram);
+		metrics.add(this.entitiesPerHierarchy);
+		metrics.add(this.entitiesPerRelationship);
+		metrics.add(this.attributesPerEntity);
+		metrics.add(this.attributesPerRelationship);
+		
+		return metrics;
 	}
 }
