@@ -5,12 +5,12 @@ public class MetricPair {
 	private double standardDeviation;
 	
 	public MetricPair(double mean){
-		this.mean = mean;
+		this(mean, 0);
 	}
 	
 	public MetricPair(double mean, double deviation){
-		this.mean = mean;
-		this.standardDeviation = deviation;
+		this.mean = Double.isNaN(mean) ? 0 : mean;
+		this.standardDeviation = Double.isNaN(deviation) ? 0 : deviation;
 	}
 	
 	public double getStandardDeviation() {

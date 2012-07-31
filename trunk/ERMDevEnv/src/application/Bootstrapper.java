@@ -19,15 +19,17 @@ import persistence.IGraphPersistenceService;
 import persistence.IXmlFileManager;
 import persistence.IXmlManager;
 import persistence.XmlFileManager;
-import validation.AttributesPerEntityValidationEntry;
-import validation.AttributesPerRelationshipValidationEntry;
-import validation.EntitiesPerDiagramValidationEntry;
-import validation.EntitiesPerHierarchyValidationEntry;
-import validation.EntitiesPerRelationshipValidationEntry;
-import validation.HierarchiesPerDiagramValidationEntry;
+import validation.AttributesPerEntityValidator;
+import validation.AttributesPerRelationshipValidator;
+import validation.EntitiesPerDiagramValidator;
+import validation.EntitiesPerHierarchyValidator;
+import validation.EntitiesPerRelationshipValidator;
+import validation.HierarchiesPerDiagramValidator;
+import validation.IMetricsCalculator;
 import validation.IProjectValidationService;
+import validation.MetricsCalculator;
 import validation.ProjectValidationService;
-import validation.RelationshipsPerDiagramValidationEntry;
+import validation.RelationshipsPerDiagramValidator;
 import views.AttributeView;
 import views.DiagramView;
 import views.EntityView;
@@ -81,8 +83,6 @@ import controllers.factories.IRelationshipEntityControllerFactory;
 import controllers.factories.KeyControllerFactory;
 import controllers.factories.RelationshipControllerFactory;
 import controllers.factories.RelationshipEntityControllerFactory;
-import controllers.factories.mock.MockEntityControllerFactory;
-import controllers.factories.mock.MockHierarchyControllerFactory;
 import controllers.RelationshipController;
 import controllers.RelationshipEntityController;
 
@@ -161,7 +161,6 @@ public class Bootstrapper {
 	private void configureContainer() {
 		this.container
 					.as(CACHE).addComponent(MutablePicoContainer.class, this.container)
-					.as(CACHE).addComponent(IProjectValidationService.class, ProjectValidationService.class)
 					.addComponent(IDiagramController.class, DiagramController.class)
 					.addComponent(IDiagramView.class, DiagramView.class)
 					.addComponent(IXmlManager.class, DiagramXmlManager.class)
@@ -187,16 +186,17 @@ public class Bootstrapper {
 					.addComponent(IProjectController.class, ProjectController.class)
 					.addComponent(IProjectView.class, ProjectView.class)
 					.addComponent(IAttributeController.class, AttributeController.class)
+					.as(CACHE).addComponent(IProjectValidationService.class, ProjectValidationService.class)
+					.as(CACHE).addComponent(IMetricsCalculator.class, MetricsCalculator.class)
 					.as(CACHE).addComponent(IFileSystemService.class, FileSystemService.class)
 					.as(CACHE).addComponent(IAttributeControllerFactory.class, AttributeControllerFactory.class)
-					.as(CACHE).addComponent(RelationshipsPerDiagramValidationEntry.class)
-					.as(CACHE).addComponent(EntitiesPerDiagramValidationEntry.class)
-					.as(CACHE).addComponent(EntitiesPerHierarchyValidationEntry.class)
-					.as(CACHE).addComponent(EntitiesPerRelationshipValidationEntry.class)
-					.as(CACHE).addComponent(HierarchiesPerDiagramValidationEntry.class)
-					.as(CACHE).addComponent(RelationshipsPerDiagramValidationEntry.class)
-					.as(CACHE).addComponent(AttributesPerRelationshipValidationEntry.class)
-					.as(CACHE).addComponent(AttributesPerEntityValidationEntry.class)
+					.as(CACHE).addComponent(RelationshipsPerDiagramValidator.class)
+					.as(CACHE).addComponent(EntitiesPerDiagramValidator.class)
+					.as(CACHE).addComponent(EntitiesPerHierarchyValidator.class)
+					.as(CACHE).addComponent(EntitiesPerRelationshipValidator.class)
+					.as(CACHE).addComponent(HierarchiesPerDiagramValidator.class)
+					.as(CACHE).addComponent(AttributesPerRelationshipValidator.class)
+					.as(CACHE).addComponent(AttributesPerEntityValidator.class)
 					.addComponent(IAttributeView.class, AttributeView.class);
 	}
 

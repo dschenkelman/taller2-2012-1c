@@ -10,20 +10,18 @@ import models.Entity;
 import models.EntityCollection;
 import models.Hierarchy;
 
-
-
 public class ProjectContext implements IProjectContext {
 	
 	private static String SubFolder = "Datos";
 	
-	private List<Diagram> projectDiagram;
-	private List<Diagram> contextDiagram;
+	private List<Diagram> projectDiagrams;
+	private List<Diagram> contextDiagrams;
 
 	private String name;
 
     public ProjectContext() {
-    	this.projectDiagram = new ArrayList<Diagram>();
-    	this.contextDiagram = new ArrayList<Diagram>();
+    	this.projectDiagrams = new ArrayList<Diagram>();
+    	this.contextDiagrams = new ArrayList<Diagram>();
     }
 
     @Override
@@ -33,7 +31,7 @@ public class ProjectContext implements IProjectContext {
     
     @Override
     public Iterable<Entity> getAllEntities(Entity entityToExclude) {
-    	return this.getEntities(entityToExclude, this.projectDiagram);
+    	return this.getEntities(entityToExclude, this.projectDiagrams);
     }
     
     /** 
@@ -41,7 +39,7 @@ public class ProjectContext implements IProjectContext {
      */
     @Override
     public Iterable<Entity> getFamilyEntities() {
-       return this.getEntities(null, this.contextDiagram);
+       return this.getEntities(null, this.contextDiagrams);
     }
     
     /** 
@@ -49,7 +47,7 @@ public class ProjectContext implements IProjectContext {
      */
     @Override
     public Iterable<Entity> getFamilyEntities(Entity entityToExclude) {
-       return this.getEntities(entityToExclude, this.contextDiagram);
+       return this.getEntities(entityToExclude, this.contextDiagrams);
     }
     
     /**
@@ -65,7 +63,7 @@ public class ProjectContext implements IProjectContext {
      */
     @Override
     public Iterable<Hierarchy> getFamilyHierarchies() {
-    	return this.getHierarchies(this.contextDiagram);
+    	return this.getHierarchies(this.contextDiagrams);
     }
     
     /**
@@ -78,7 +76,7 @@ public class ProjectContext implements IProjectContext {
     
     @Override
     public Iterable<Hierarchy> getAllHierarchies() {
-    	return this.getHierarchies(this.projectDiagram);
+    	return this.getHierarchies(this.projectDiagrams);
     }
     
 	@Override
@@ -102,27 +100,27 @@ public class ProjectContext implements IProjectContext {
 
 	@Override
 	public void addContextDiagram(Diagram diagram) {
-		this.contextDiagram.add(diagram);
+		this.contextDiagrams.add(diagram);
 	}
 	
 	@Override
 	public void addProjectDiagram(Diagram diagram) {
-		this.projectDiagram.add(diagram);
+		this.projectDiagrams.add(diagram);
 	}
 
 	@Override
 	public void clearProjectDiagrams() {
-		this.projectDiagram.clear();
+		this.projectDiagrams.clear();
 	}
 	
 	@Override
 	public void clearContextDiagrams() {
-		this.contextDiagram.clear();
+		this.contextDiagrams.clear();
 	}
 
 	@Override
 	public Entity getEntity(UUID id) {
-		for (Diagram diagram : this.projectDiagram)
+		for (Diagram diagram : this.projectDiagrams)
         	for (Entity item : diagram.getEntities())
         		if (item.getId().equals(id))
         			return item;
@@ -131,7 +129,7 @@ public class ProjectContext implements IProjectContext {
 
 	@Override
 	public Hierarchy getHierarchy(UUID id) {
-		for (Diagram diagram : this.projectDiagram)
+		for (Diagram diagram : this.projectDiagrams)
         	for (Hierarchy item : diagram.getHierarchies())
         		if (item.getId().equals(id))
         			return item;
@@ -140,7 +138,7 @@ public class ProjectContext implements IProjectContext {
 
 	@Override
 	public Diagram getContextDiagram(String diagramName) {
-		for (Diagram diagram : this.projectDiagram)
+		for (Diagram diagram : this.projectDiagrams)
 			if (diagram.getName().equals(diagramName))
 				return diagram;
 		return null;
@@ -149,10 +147,10 @@ public class ProjectContext implements IProjectContext {
 	private Iterable<Entity> getEntities(Entity entityToExclude, List<Diagram> diagrams) {
     	Set<Entity> entities = new HashSet<Entity>();
     	if (diagrams == null) {
-    		if (this.contextDiagram.isEmpty())
+    		if (this.contextDiagrams.isEmpty())
     			return entities;
-    		int size = this.contextDiagram.size();
-    		for (Entity item : this.contextDiagram.get(size - 1).getEntities())
+    		int size = this.contextDiagrams.size();
+    		for (Entity item : this.contextDiagrams.get(size - 1).getEntities())
     			entities.add(item);
     	}else {
 	        for (Diagram diagram : diagrams) {
@@ -172,10 +170,10 @@ public class ProjectContext implements IProjectContext {
     private Iterable<Hierarchy> getHierarchies(List<Diagram> diagrams) {
     	Set<Hierarchy> hierarchies = new HashSet<Hierarchy>();
     	if (diagrams == null) {
-    		if (this.contextDiagram.isEmpty())
+    		if (this.contextDiagrams.isEmpty())
     			return hierarchies;
-    		int size = this.contextDiagram.size();
-    		for (Hierarchy item : this.contextDiagram.get(size - 1).getHierarchies())
+    		int size = this.contextDiagrams.size();
+    		for (Hierarchy item : this.contextDiagrams.get(size - 1).getHierarchies())
         		hierarchies.add(item);
     	}else {
 	    	for (Diagram diagram : diagrams)
@@ -185,4 +183,9 @@ public class ProjectContext implements IProjectContext {
         return hierarchies;
     	
     }
+
+	@Override
+	public Iterable<Diagram> getProjectDiagrams() {
+		return this.projectDiagrams;
+	}	
 }

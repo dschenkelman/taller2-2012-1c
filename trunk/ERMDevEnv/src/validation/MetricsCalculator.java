@@ -22,13 +22,13 @@ public class MetricsCalculator implements IMetricsCalculator {
 		
 		for (Diagram diagram : diagrams) {
 			for (Entity entity : diagram.getEntities()) {
-				attributesInEntities += this.getAttributeCount(entity.getAttributes());
+				attributesInEntities += MetricsCalculator.getAttributeCount(entity.getAttributes());
 				entities++;
 			}
 			
 			for (Relationship relationship : diagram.getRelationships()) {
 				entitiesInRelationships += IterableExtensions.count(relationship.getRelationshipEntities());
-				attributesInRelationships += this.getAttributeCount(relationship.getAttributes());
+				attributesInRelationships += MetricsCalculator.getAttributeCount(relationship.getAttributes());
 				relationships++;
 			}
 			
@@ -81,11 +81,11 @@ public class MetricsCalculator implements IMetricsCalculator {
 		}
 
 		entitiesDeviation = Math.sqrt(entitiesDeviation / entities);
-		attributesInEntitiesDeviation = Math.sqrt(attributesInEntitiesDeviation / attributesInEntities);
-		entitiesInRelationshipsDeviation = Math.sqrt(entitiesInRelationshipsDeviation / entitiesInRelationships);
-		attributesInRelationshipsDeviation = Math.sqrt(attributesInRelationshipsDeviation / attributesInRelationships);
+		attributesInEntitiesDeviation = Math.sqrt(attributesInEntitiesDeviation / entities);
+		entitiesInRelationshipsDeviation = Math.sqrt(entitiesInRelationshipsDeviation / relationships);
+		attributesInRelationshipsDeviation = Math.sqrt(attributesInRelationshipsDeviation / relationships);
 		relationshipsDeviation = Math.sqrt(relationshipsDeviation / relationships);
-		entitiesInHierarchiesDeviation = Math.sqrt(entitiesInHierarchiesDeviation / entitiesInHierarchies);
+		entitiesInHierarchiesDeviation = Math.sqrt(entitiesInHierarchiesDeviation / hierarchies);
 		hierarchiesDeviation = Math.sqrt(hierarchiesDeviation / hierarchies);
 		
 		metrics.getAttributesPerEntity().setStandardDeviation(attributesInEntitiesDeviation);

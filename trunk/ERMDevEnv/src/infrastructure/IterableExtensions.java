@@ -24,6 +24,14 @@ public class IterableExtensions {
         }
         return list;
     }
+    
+    public static <T> List<T> getListOf(T[] array){
+        List<T> list = new ArrayList<T>();
+        for (int i = 0; i < array.length; i++) {
+			list.add(array[i]);
+		}
+        return list;
+    }
 
     public static <T> T firstOrDefault(Iterable<T> iterable) {
         return IterableExtensions.firstOrDefault(iterable, new Func<T, Boolean, Boolean>(){
