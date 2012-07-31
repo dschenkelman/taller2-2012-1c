@@ -27,6 +27,7 @@ import org.w3c.dom.Element;
 
 import persistence.IXmlFileManager;
 import persistence.IXmlManager;
+import validation.IProjectValidationService;
 import views.IProjectView;
 import application.IShell;
 import controllers.factories.IDiagramControllerFactory;
@@ -49,11 +50,13 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	private IXmlManager<Diagram> diagramXmlManager;
 
 	private IFileSystemService fileSystemService;
+
+	private IProjectValidationService validationService;
 	
 	public ProjectController(IProjectContext projectContext, IProjectView projectView, 
 			IShell shell, IDiagramControllerFactory diagramControllerFactory,
 			IXmlFileManager xmlFileManager, IXmlManager<Diagram> diagramXmlManager, 
-			IFileSystemService fileSystemService) {
+			IFileSystemService fileSystemService, IProjectValidationService validationService) {
 		this.projectContext = projectContext;
 		this.diagramControllerFactory = diagramControllerFactory;
 		this.shell = shell;
@@ -62,6 +65,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 		this.xmlFileManager = xmlFileManager;
 		this.diagramXmlManager = diagramXmlManager;
 		this.fileSystemService = fileSystemService;
+		this.validationService = validationService;
 	}
 
 	public void createProject(String projectName) {
@@ -335,5 +339,10 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 	public void handleHierarchyUpdated(Diagram diagram, Hierarchy hierarchy) {
 		this.projectTree.nodeChanged(this.editedNode);
 		this.editedNode = null;
+	}
+
+	@Override
+	public void validateProject(int toleranceLevel) {
+		this.validationService.validate(this.projectContext.getProjectDiagrams(), toleranceLevel);
 	}
 }

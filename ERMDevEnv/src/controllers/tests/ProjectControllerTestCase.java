@@ -22,6 +22,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import validation.IProjectValidationService;
+
 import controllers.IProjectController;
 import controllers.ProjectController;
 import controllers.factories.tests.mocks.MockDiagramControllerFactory;
@@ -50,6 +52,8 @@ public class ProjectControllerTestCase {
 	private MockXmlFileManager xmlFileManager;
 	
 	private MockFileSystemService fileSystemService;
+
+	private MockProjectValidationService projectValidationService;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -63,6 +67,7 @@ public class ProjectControllerTestCase {
 		this.xmlFileManager = new MockXmlFileManager();
 		this.fileSystemService = new MockFileSystemService();
 		this.fileSystemService.setExistsReturnValue(true);
+		this.projectValidationService = new MockProjectValidationService();
 	}
 	
 	@Test
@@ -884,7 +889,7 @@ public class ProjectControllerTestCase {
 	private ProjectController createController(){
 		return new ProjectController(this.projectContext, this.projectView,
 				this.shell, this.diagramControllerFactory, this.xmlFileManager,
-				this.diagramXmlManager, this.fileSystemService);
+				this.diagramXmlManager, this.fileSystemService, this.projectValidationService);
 	}
 }
 

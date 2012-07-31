@@ -13,4 +13,5 @@ public interface IProjectController {
 	TreeModel getProjectTree();
 	void changeElement(TreePath treePath);
 	void deleteElement(TreePath path);
+	void validateProject(int toleranceLevel);
 }

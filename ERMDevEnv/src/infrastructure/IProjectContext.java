@@ -18,11 +18,11 @@ public interface IProjectContext {
 	Iterable<Hierarchy> getAllHierarchies();
 	Iterable<Hierarchy> getFamilyHierarchies();
 	Iterable<Hierarchy> getContextHierarchies();
+	Iterable<Diagram> getProjectDiagrams();
 	void addContextDiagram(Diagram diagram);
 	void addProjectDiagram(Diagram diagram);
 	Hierarchy getHierarchy(UUID id);
 	Entity getEntity(UUID entityId);
 	Diagram getContextDiagram(String defaultDiagramName);
 	void clearProjectDiagrams();
-	
 }

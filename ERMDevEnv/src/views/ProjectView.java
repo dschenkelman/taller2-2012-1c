@@ -1,5 +1,7 @@
 package views;
 
+import infrastructure.IterableExtensions;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -26,6 +28,7 @@ public class ProjectView extends JPanel implements IProjectView {
 	private JButton btnOpen;
 	private JButton btnCreate;
 	private IProjectController projectController;
+	private JButton btnValidate;
 
 	/**
 	 * Create the panel.
@@ -52,7 +55,10 @@ public class ProjectView extends JPanel implements IProjectView {
 		this.add(this.btnCreate, "2, 2");
 		
 		this.btnOpen = new JButton("Open");
-		this.add(this.btnOpen, "6, 2");
+		this.add(this.btnOpen, "4, 2");
+		
+		this.btnValidate = new JButton("Validate");
+		this.add(btnValidate, "6, 2");
 		
 		this.tree = new JTree();
 		tree.setModel(null);
@@ -85,6 +91,21 @@ public class ProjectView extends JPanel implements IProjectView {
 						ex.printStackTrace();
 					}
 					tree.setModel(projectController.getProjectTree());
+				}
+			}	
+		});
+		
+		this.btnValidate.addMouseListener(new MouseAdapter() {
+			private String[] toleranceOptions = {"Low", "Medium", "High"};
+			
+			@Override
+			public void mouseClicked(MouseEvent e){
+				
+				String tolerance = (String)JOptionPane.showInputDialog(null, "Select the tolerance level", "Project Validation",
+						JOptionPane.QUESTION_MESSAGE, null, toleranceOptions, "Low");
+				if (tolerance != null){
+					int toleranceLevel = IterableExtensions.getListOf(toleranceOptions).indexOf(tolerance) + 1;
+					projectController.validateProject(toleranceLevel);
 				}
 			}	
 		});
