@@ -12,6 +12,8 @@ import javax.swing.tree.MutableTreeNode;
 import com.jgoodies.forms.factories.*;
 
 import com.jgoodies.forms.layout.*;
+import com.mxgraph.util.mxConstants;
+
 import controllers.IAttributeController;
 import infrastructure.visual.AttributeTreeNode;
 import models.Attribute;
@@ -144,7 +146,7 @@ public class AttributeView implements IAttributeView {
     public Cardinality getCardinality() {
         if (!minCardinality.getText().equals("") && !maxCardinality.getText().equals("")) {
             try {
-                return new Cardinality(Double.valueOf(minCardinality.getText()), Double.valueOf(minCardinality.getText()));
+                return new Cardinality(Double.valueOf(minCardinality.getText()), Double.valueOf(maxCardinality.getText()));
             } catch (Exception e) {
                 return null;
             }

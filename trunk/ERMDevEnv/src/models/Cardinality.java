@@ -33,6 +33,16 @@ public class Cardinality {
 	public double getMaximum() {
 		return maximum;
 	}
+	
+	public boolean equals(double min, double max){
+		return this.maximum == max && this.minimum == min;
+	}
+	
+	public String toString(){
+		 return String.format("(%s,%s)", 
+					Cardinality.getStringForCardinality(this.minimum),
+					Cardinality.getStringForCardinality(this.maximum));
+	}
 
 	public static double getCardinalityFromString(String value) {
 		return value.equalsIgnoreCase("*") ? Double.POSITIVE_INFINITY : Double.parseDouble(value);
@@ -41,5 +51,4 @@ public class Cardinality {
 	public static String getStringForCardinality(double value) {
 		return value == Double.POSITIVE_INFINITY ? "*" : Integer.toString((int) value);
 	}
-
 }
