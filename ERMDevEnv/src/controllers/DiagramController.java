@@ -472,7 +472,7 @@ public class DiagramController extends BaseController
         String attributeConnectorId = ownerId.toString() + attribute.getName();
 
         mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.AttributeConnectorPrefix + attributeConnectorId, 
-        		attribute.getCardinality().equals(1, 1) ? "" : attribute.getCardinality().toString(),
+        		attribute.getCardinality() == null || attribute.getCardinality().equals(1, 1) ? "" : attribute.getCardinality().toString(),
                 entityCell, attributeCell, Styler.getAttributeConnectorStyle(attribute.getType(), isKey, isComposite));
 
         this.attributeConnectorCells.put(CellConstants.AttributeConnectorPrefix + attributeConnectorId, connectorCell);
