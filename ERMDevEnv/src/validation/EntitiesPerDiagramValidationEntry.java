@@ -13,8 +13,8 @@ public class EntitiesPerDiagramValidationEntry implements IValidationEntry {
 	}
 	
 	@Override
-	public String getValidation() {
-		return String.format("Diagram %s has %d entities.", this.diagram.getName(), this.entityCount);
+	public String getMessage() {
+		return String.format("Diagram has %d entities.", this.entityCount);
 	}
 
 	@Override
@@ -22,4 +22,8 @@ public class EntitiesPerDiagramValidationEntry implements IValidationEntry {
 		return ValidationType.WARNING;
 	}
 
+	@Override
+	public Diagram getDiagram() {
+		return this.diagram;
+	}
 }

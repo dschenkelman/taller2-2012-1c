@@ -15,8 +15,8 @@ public class AttributesPerEntityValidationEntry implements IValidationEntry {
 	}
 	
 	@Override
-	public String getValidation() {
-		return String.format("Entity %s in diagram %s has %d attributes.", entity.getName(), diagram.getName(), attributeCount);
+	public String getMessage() {
+		return String.format("Entity %s has %d attributes.", entity.getName(), attributeCount);
 	}
 
 	@Override
@@ -30,5 +30,10 @@ public class AttributesPerEntityValidationEntry implements IValidationEntry {
 
 	public void setEntity(Entity entity) {
 		this.entity = entity;
+	}
+
+	@Override
+	public Diagram getDiagram() {
+		return this.diagram;
 	}
 }

@@ -19,13 +19,18 @@ public class EntitiesPerHierarchyValidationEntry implements IValidationEntry {
 	}
 
 	@Override
-	public String getValidation() {
-		return String.format("Hierarchy %s in diagram %s has %d entities.", this.hierarchy.toString(), this.diagram.getName(), this.entitiesInHierarchy);
+	public String getMessage() {
+		return String.format("Hierarchy %s has %d entities.", this.hierarchy.toString(), this.entitiesInHierarchy);
 	}
 
 	@Override
 	public ValidationType getType() {
 		return ValidationType.WARNING;
+	}
+
+	@Override
+	public Diagram getDiagram() {
+		return this.diagram;
 	}
 
 }

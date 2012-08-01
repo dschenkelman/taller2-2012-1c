@@ -24,5 +24,7 @@
 	<classpathentry kind="lib" path="lib/oro-2.0.8.jar"/>
 	<classpathentry kind="lib" path="lib/servletapi-2.3.jar"/>
 	<classpathentry kind="lib" path="lib/werken-xpath-0.9.4.jar"/>
+	<classpathentry kind="lib" path="/home/damian/workspace/ERMDevEnv/lib/velocity-tools-2.0.jar"/>
+	<classpathentry kind="lib" path="/home/damian/workspace/ERMDevEnv/lib/velocity-tools-generic-2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

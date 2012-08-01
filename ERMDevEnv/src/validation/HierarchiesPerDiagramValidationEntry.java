@@ -13,8 +13,8 @@ public class HierarchiesPerDiagramValidationEntry implements IValidationEntry {
 	}
 	
 	@Override
-	public String getValidation() {
-		return String.format("Diagram %s has %d hierarchies.", this.diagram.getName(), this.hierarchyCount);
+	public String getMessage() {
+		return String.format("Diagram has %d hierarchies.", this.hierarchyCount);
 	}
 
 	@Override
@@ -22,5 +22,8 @@ public class HierarchiesPerDiagramValidationEntry implements IValidationEntry {
 		return ValidationType.WARNING;
 	}
 
-
+	@Override
+	public Diagram getDiagram() {
+		return this.diagram;
+	}
 }

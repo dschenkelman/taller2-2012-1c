@@ -16,7 +16,7 @@ public class RelationshipsPerDiagramValidator implements IValidator {
 		
 		int relationshipCount = IterableExtensions.count(diagram.getRelationships());
 		 
-		if (!metrics.getEntitiesPerDiagram().isInRange(relationshipCount, tolerance)){
+		if (!metrics.getRelationshipsPerDiagram().isInRange(relationshipCount, tolerance)){
 			entries.add(new RelationshipsPerDiagramValidationEntry(diagram, relationshipCount));
 		}
 		 

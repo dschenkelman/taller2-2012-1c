@@ -14,12 +14,17 @@ public class RelationshipsPerDiagramValidationEntry implements IValidationEntry 
 	}
 
 	@Override
-	public String getValidation() {
-		return String.format("Diagram %s has %d relationships.", this.diagram.getName(), this.relationshipCount);
+	public String getMessage() {
+		return String.format("Diagram has %d relationships.", this.relationshipCount);
 	}
 
 	@Override
 	public ValidationType getType() {
 		return ValidationType.WARNING;
+	}
+
+	@Override
+	public Diagram getDiagram() {
+		return this.diagram;
 	}
 }
