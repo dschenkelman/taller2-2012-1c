@@ -9,6 +9,8 @@ import views.IAttributeView;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mxgraph.util.mxConstants;
+
 public class AttributeController extends BaseController implements IAttributeController {
 
     private IAttributeView attributeView;

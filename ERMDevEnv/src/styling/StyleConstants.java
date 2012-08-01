@@ -4,8 +4,8 @@ public class StyleConstants {
 	public static final String COMPOSED_ATTRIBUTE_LINK_STYLE = "endArrow=none;verticalAlign=bottom;align=left;strokeColor=black";
 	public static final String ENTITY_STYLE = "strokeColor=black";
 	public static final String COMPOSED_ATTRIBUTE_STYLE = "fontSize=9;shape=ellipse;fillColor=white;perimeter=ellipsePerimeter;align=center;verticalAlign=middle;strokeColor=black";
-	public static final String ATTRIBUTE_STYLE = "fontSize=9;strokeColor=none;fillColor=none;gradientColor=none;verticalAlign=middle;align=center;spacingBottom=0;spacingTop=0;spacing=0";
-	public static final String ATTRIBUTE_LINK_STYLE = "endArrow=emptyCircle;endSize=10;strokeColor=black";
+	public static final String ATTRIBUTE_STYLE = "fontSize=9;strokeColor=none;fontColor=black;fillColor=none;gradientColor=none;verticalAlign=middle;align=center;spacingBottom=0;spacingTop=0;spacing=0";
+	public static final String ATTRIBUTE_LINK_STYLE = "endArrow=emptyCircle;endSize=10;strokeColor=#777777;fontColor=black";
 	public static final String CALCULATED_ATTRIBUTE_LINK_STYLE = "endArrow=emptyRedCircle;endSize=10;strokeColor=black";
 	public static final String KEY_ATTRIBUTE_LINK_STYLE = "endArrow=oval;endSize=10;strokeColor=black";
 	public static final String CALCULATED_KEY_ATTRIBUTE_LINK_STYLE = "endArrow=filledRedCircle;endSize=10;strokeColor=black";
@@ -30,6 +30,6 @@ public class StyleConstants {
 	public static double COMPOSED_ATTRIBUTE_HEIGHT = 20;
 	public static double RELATIONSHIP_HEIGHT = 60;
 	public static double RELATIONSHIP_WIDTH = 60;
-	public static double ATTRIBUTE_DEFAULT_DISTANCE = 70;
+	public static double ATTRIBUTE_DEFAULT_DISTANCE = 100;
 	public static Integer HIERARCHY_DISTANCE_TO_PARENT = 80;
 }

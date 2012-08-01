@@ -323,7 +323,11 @@ public class DiagramController extends BaseController
 	}
     
     public void addEntity(double x, double y) throws Exception {
-        this.graph.getModel().beginUpdate();
+        if (pendingEntity == null){
+        	return;
+        }
+        
+    	this.graph.getModel().beginUpdate();
         Object parent = this.graph.getDefaultParent();
         try {
             mxCell entityCell = this.addEntityToGraph(this.pendingEntity, parent, x, y);
@@ -467,7 +471,8 @@ public class DiagramController extends BaseController
                                                 Attribute attribute, mxCell attributeCell, boolean isKey, boolean isComposite) {
         String attributeConnectorId = ownerId.toString() + attribute.getName();
 
-        mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.AttributeConnectorPrefix + attributeConnectorId, "",
+        mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.AttributeConnectorPrefix + attributeConnectorId, 
+        		attribute.getCardinality().equals(1, 1) ? "" : attribute.getCardinality().toString(),
                 entityCell, attributeCell, Styler.getAttributeConnectorStyle(attribute.getType(), isKey, isComposite));
 
         this.attributeConnectorCells.put(CellConstants.AttributeConnectorPrefix + attributeConnectorId, connectorCell);
