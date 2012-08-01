@@ -18,13 +18,18 @@ public class EntitiesPerRelationshipValidationEntry implements IValidationEntry 
 	}
 
 	@Override
-	public String getValidation() {
-		return String.format("Relationship %s in diagram %s has %d entities.", this.relationship.getName(), this.diagram.getName(), this.entitiesInRelationship);
+	public String getMessage() {
+		return String.format("Relationship %s has %d entities.", this.relationship.getName(), this.entitiesInRelationship);
 	}
 
 	@Override
 	public ValidationType getType() {
 		return ValidationType.WARNING;
+	}
+
+	@Override
+	public Diagram getDiagram() {
+		return this.diagram;
 	}
 
 }

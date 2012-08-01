@@ -6,7 +6,9 @@ import infrastructure.IProjectContext;
 import infrastructure.IterableExtensions;
 import infrastructure.visual.DiagramTreeNode;
 
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -346,6 +348,14 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 
 	@Override
 	public void validateProject(int toleranceLevel) {
-		this.validationService.validate(this.projectContext.getProjectDiagrams(), toleranceLevel);
+		String reportHtml = this.validationService.generateValidationReport(this.projectContext.getProjectDiagrams(), toleranceLevel);
+		String reportName = this.projectContext.getDataDirectory() + "_report.html";
+		this.fileSystemService.save(reportName, reportHtml);
+		Desktop desktop = Desktop.getDesktop();
+		try {
+			desktop.open(new File(reportName));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

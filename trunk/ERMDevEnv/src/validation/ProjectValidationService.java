@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.tools.generic.NumberTool;
 
 import models.Diagram;
 
@@ -21,7 +22,7 @@ public class ProjectValidationService implements IProjectValidationService {
 	}
 	
 	@Override
-	public void validate(Iterable<Diagram> diagrams, int tolerance) {
+	public String generateValidationReport(Iterable<Diagram> diagrams, int tolerance) {
 		List<IValidationEntry> entries = new ArrayList<IValidationEntry>();
 		Metrics metrics = this.metricsCalculator.calculateMetrics(diagrams);
 		
@@ -34,19 +35,16 @@ public class ProjectValidationService implements IProjectValidationService {
 			}
 		}
 		
-		/*  first, get and initialize an engine  */
-        VelocityEngine ve = new VelocityEngine();
-        ve.init();
-        /*  next, get the Template  */
-        Template t = ve.getTemplate( "projectValidation.vm" );
-        /*  create a context and add data */
+        VelocityEngine engine = new VelocityEngine();
+        engine.init();
+        Template template = engine.getTemplate("projectValidation.vm");
         VelocityContext context = new VelocityContext();
         context.put("metrics", metrics.getMetrics());
-        /* now render the template into a StringWriter */
+        context.put("entries", entries);
+        context.put("numberTool", new NumberTool());
         StringWriter writer = new StringWriter();
-        t.merge( context, writer );
-        /* show the World */
-        System.out.println( writer.toString() );   
+        template.merge(context, writer);
+        return writer.toString();   
 	}
 
 }

@@ -22,5 +22,10 @@ public class MockFileSystemService implements IFileSystemService{
 	public void setExistsReturnValue(boolean value) {
 		this.exists = value;
 	}
+	@Override
+	public void save(String fileName, String content) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -1,6 +1,9 @@
 package validation;
 
+import models.Diagram;
+
 public interface IValidationEntry {
-    public String getValidation();
+	public Diagram getDiagram();
+	public String getMessage();
     public ValidationType getType();
 }

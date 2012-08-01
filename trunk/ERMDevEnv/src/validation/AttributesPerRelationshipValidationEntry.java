@@ -16,12 +16,17 @@ public class AttributesPerRelationshipValidationEntry implements IValidationEntr
 	}
 	
 	@Override
-	public String getValidation() {
-		return String.format("Relationship %s in diagram %s has %d attributes.", this.relationship.getName(), diagram.getName(), attributeCount);
+	public String getMessage() {
+		return String.format("Relationship %s has %d attributes.", this.relationship.getName(), attributeCount);
 	}
 
 	@Override
 	public ValidationType getType() {
 		return ValidationType.WARNING;
+	}
+
+	@Override
+	public Diagram getDiagram() {
+		return this.diagram;
 	}
 }
