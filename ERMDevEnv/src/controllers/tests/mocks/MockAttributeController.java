@@ -56,4 +56,9 @@ public class MockAttributeController implements IAttributeController {
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
     }
+
+    @Override
+    public boolean correctCardinality(String min, String max) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

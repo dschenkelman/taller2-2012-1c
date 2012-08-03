@@ -14,7 +14,7 @@ public class MockAttributeView implements IAttributeView {
     private IAttributeController controller;
     private String expression;
     private String name;
-    private Cardinality cardinality;
+    private List<String> cardinality;
     private AttributeType attType;
 
 
@@ -39,8 +39,8 @@ public class MockAttributeView implements IAttributeView {
     }
 
     @Override
-    public Cardinality getCardinality() {
-        return this.cardinality;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<String> getCardinality() {
+        return this.cardinality;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MockAttributeView implements IAttributeView {
         this.attType = attType;
     }
 
-    public void setCardinality(Cardinality cardinality) {
+    public void setCardinality(List<String> cardinality) {
         this.cardinality = cardinality;
     }
 
