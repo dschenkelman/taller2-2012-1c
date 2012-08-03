@@ -10,7 +10,7 @@ import views.IAttributeView;
 
 import javax.swing.*;
 
-public interface IAttributeController{
+public interface IAttributeController {
 
     public Attribute addNewAttribute();
 
@@ -26,5 +26,7 @@ public interface IAttributeController{
 
     public void removeAttribute(Attribute attribute);
 
-	void setAttributes(List<Attribute> attributes);
+    public void setAttributes(List<Attribute> attributes);
+
+    public boolean correctCardinality(String min, String max);
 }

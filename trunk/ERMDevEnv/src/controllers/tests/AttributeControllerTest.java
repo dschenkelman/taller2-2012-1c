@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class AttributeControllerTest {
@@ -39,11 +38,10 @@ public class AttributeControllerTest {
     public void testAddNewAttribute() {
         MockAttributeView mockAttributeView = new MockAttributeView();
         mockAttributeView.setName("att");
-        try {
-            mockAttributeView.setCardinality(new Cardinality(1, 1));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<String> card = new ArrayList<String>();
+        card.add("1");
+        card.add("1");
+        mockAttributeView.setCardinality(card);
         mockAttributeView.setAttType(AttributeType.calculated);
         mockAttributeView.setExpression("aaksda");
 
@@ -76,14 +74,17 @@ public class AttributeControllerTest {
         Assert.assertEquals(2, IterableExtensions.count(this.attributeController.getAttributes()));
 
     }
-    
+
     @Test
     public void testAddNewAttributeToAttribute() {
         Attribute attribute = new Attribute("name");
         MockAttributeView mockAttributeView = new MockAttributeView();
         mockAttributeView.setName("att");
+        List<String> card = new ArrayList<String>();
+        card.add("1");
+        card.add("1");
         try {
-            mockAttributeView.setCardinality(new Cardinality(1, 1));
+            mockAttributeView.setCardinality(card);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -112,16 +113,15 @@ public class AttributeControllerTest {
         attributes.add(a1);
         attributes.add(a2);
         this.attributeController.setAttributes(attributes);
-        
+
         Attribute attribute = new Attribute("name");
 
         MockAttributeView mockAttributeView = new MockAttributeView();
         mockAttributeView.setName("att");
-        try {
-            mockAttributeView.setCardinality(new Cardinality(1, 1));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<String> card = new ArrayList<String>();
+        card.add("1");
+        card.add("1");
+            mockAttributeView.setCardinality(card);
         mockAttributeView.setAttType(AttributeType.calculated);
         mockAttributeView.setExpression("aaksda");
         attributeController.setAttributeView(mockAttributeView);
@@ -151,7 +151,7 @@ public class AttributeControllerTest {
         attributes.add(a1);
         attributes.add(a2);
         this.attributeController.setAttributes(attributes);
-        
+
         attributeController.removeAttribute(a1);
         Assert.assertFalse(attributes.contains(a1));
 

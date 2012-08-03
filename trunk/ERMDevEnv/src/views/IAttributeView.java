@@ -19,11 +19,14 @@ public interface IAttributeView {
 
     public String getName();
 
-    public Cardinality getCardinality();
+    /**
+     * @return size == 2, the first is the min cardinality and the second is the max cardinality
+     */
+    public List<String> getCardinality();
 
     public AttributeType getAttributeType();
 
     public String getExpression();
 
-	public JPanel getFrame();
+    public JPanel getFrame();
 }

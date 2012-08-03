@@ -1,8 +1,6 @@
 package views;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -12,18 +10,19 @@ import javax.swing.tree.MutableTreeNode;
 import com.jgoodies.forms.factories.*;
 
 import com.jgoodies.forms.layout.*;
-import com.mxgraph.util.mxConstants;
 
 import controllers.IAttributeController;
 import infrastructure.visual.AttributeTreeNode;
 import models.Attribute;
-import models.AttributeCollection;
 import models.AttributeType;
 import models.Cardinality;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AttributeView implements IAttributeView {
 
@@ -143,15 +142,11 @@ public class AttributeView implements IAttributeView {
     }
 
     @Override
-    public Cardinality getCardinality() {
-        if (!minCardinality.getText().equals("") && !maxCardinality.getText().equals("")) {
-            try {
-                return new Cardinality(Double.valueOf(minCardinality.getText()), Double.valueOf(maxCardinality.getText()));
-            } catch (Exception e) {
-                return null;
-            }
-        }
-        return null;
+    public List<String> getCardinality() {
+        List<String> card = new ArrayList<String>();
+        card.add(this.minCardinality.getText());
+        card.add(this.maxCardinality.getText());
+        return card;
     }
 
     @Override
@@ -165,31 +160,41 @@ public class AttributeView implements IAttributeView {
     }
 
     private void addAttributeToSelectedOne() {
-        if (attributeSelected != null) {
-            Attribute attribute = controller.addNewAttributeToAttribute(attributeSelected);
-            if (attribute != null) {
-                ((AttributeTreeNode) attributes.getLastSelectedPathComponent()).add(new AttributeTreeNode(attribute));
-                cleanView();
-            } else
-                showWrongAttributeDialog();
+        if (this.controller.correctCardinality(this.minCardinality.getText(), this.maxCardinality.getText())) {
+            if (attributeSelected != null) {
+                Attribute attribute = controller.addNewAttributeToAttribute(attributeSelected);
+                if (attribute != null) {
+                    ((AttributeTreeNode) attributes.getLastSelectedPathComponent()).add(new AttributeTreeNode(attribute));
+                    cleanView();
+                } else
+                    showWrongAttributeDialog();
+            }
+        } else {
+            this.showWrongCardinalityDialog();
         }
+
     }
 
     private void createAttribute() {
-        Attribute attributeCreated = this.controller.addNewAttribute();
-        if (attributeCreated != null) {
-            ((DefaultMutableTreeNode) attributeModel.getRoot()).add(new AttributeTreeNode(attributeCreated));
-            cleanView();
-        } else
-            showWrongAttributeDialog();
+        if (this.controller.correctCardinality(this.minCardinality.getText(), this.maxCardinality.getText())) {
+            Attribute attributeCreated = this.controller.addNewAttribute();
+            if (attributeCreated != null) {
+                ((DefaultMutableTreeNode) attributeModel.getRoot()).add(new AttributeTreeNode(attributeCreated));
+                cleanView();
+            } else
+                showWrongAttributeDialog();
+        } else {
+            this.showWrongCardinalityDialog();
+        }
+
     }
 
     private void cleanView() {
         this.name.setText("");
         this.expression.setText("");
         this.type.setSelectedIndex(0);
-        this.maxCardinality.setText("");
-        this.minCardinality.setText("");
+        this.maxCardinality.setText("1");
+        this.minCardinality.setText("1");
         attributes.revalidate();
         attributes.repaint();
         attributes.updateUI();
@@ -205,24 +210,32 @@ public class AttributeView implements IAttributeView {
             this.type.setSelectedItem(attributeSelected.getType());
             Cardinality cardinality = this.attributeSelected.getCardinality();
             if (cardinality != null) {
-                minCardinality.setText(String.valueOf(cardinality.getMinimum()));
-                maxCardinality.setText(String.valueOf(cardinality.getMaximum()));
+                minCardinality.setText(Cardinality.getStringForCardinality(cardinality.getMinimum()));
+                maxCardinality.setText(Cardinality.getStringForCardinality(cardinality.getMaximum()));
             } else {
-                minCardinality.setText("");
-                maxCardinality.setText("");
+                minCardinality.setText("1");
+                maxCardinality.setText("1");
             }
         }
 
     }
 
     private void editAttribute() {
-        if (attributeSelected != null) {
-            if (this.controller.editAttribute(attributeSelected)) {
-                attributeSelected = null;
-                cleanView();
-            } else
-                showWrongAttributeDialog();
+        if (this.controller.correctCardinality(this.minCardinality.getText(), this.maxCardinality.getText())) {
+            if (attributeSelected != null) {
+                if (this.controller.editAttribute(attributeSelected)) {
+                    attributeSelected = null;
+                    cleanView();
+                } else
+                    showWrongAttributeDialog();
+            }
+        } else {
+            this.showWrongCardinalityDialog();
         }
+    }
+
+    private void showWrongCardinalityDialog() {
+        JOptionPane.showMessageDialog(null, "Please put a correct value for the attribute's cardinality. If you want to put Infinit value please write *");
     }
 
     private void showWrongAttributeDialog() {
@@ -249,7 +262,9 @@ public class AttributeView implements IAttributeView {
         label1 = new JLabel();
         label2 = new JLabel();
         minCardinality = new JTextField();
+        minCardinality.setText("1");
         maxCardinality = new JTextField();
+        maxCardinality.setText("1");
         label3 = new JLabel();
 
         //======== panel1 ========
