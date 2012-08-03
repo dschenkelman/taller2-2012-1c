@@ -1,5 +1,7 @@
-package validation;
+package validation.metrics;
 
+import validation.IValidationEntry;
+import validation.ValidationType;
 import models.Diagram;
 
 public class RelationshipsPerDiagramValidationEntry implements IValidationEntry {
