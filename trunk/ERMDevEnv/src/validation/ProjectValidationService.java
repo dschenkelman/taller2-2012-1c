@@ -9,16 +9,23 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.tools.generic.NumberTool;
 
+import validation.metrics.IMetricsCalculator;
+import validation.metrics.IMetricsValidator;
+import validation.metrics.Metrics;
+import validation.rules.IRulesValidator;
+
 import models.Diagram;
 
 public class ProjectValidationService implements IProjectValidationService {
 
 	private IMetricsCalculator metricsCalculator;
-	private IValidator[] validators;
+	private IMetricsValidator[] metricsValidators;
+	private IRulesValidator[] rulesValidators;
 
-	public ProjectValidationService(IMetricsCalculator metricsCalculator, IValidator[] validators){
+	public ProjectValidationService(IMetricsCalculator metricsCalculator, IMetricsValidator[] metricsValidators, IRulesValidator[] rulesValidator){
 		this.metricsCalculator = metricsCalculator;
-		this.validators = validators;
+		this.metricsValidators = metricsValidators;
+		this.rulesValidators = rulesValidator;
 	}
 	
 	@Override
@@ -27,9 +34,16 @@ public class ProjectValidationService implements IProjectValidationService {
 		Metrics metrics = this.metricsCalculator.calculateMetrics(diagrams);
 		
 		for (Diagram diagram : diagrams) {
-			for (int i = 0; i < this.validators.length; i++) {
-				IValidator validator = this.validators[i];
+			for (int i = 0; i < this.metricsValidators.length; i++) {
+				IMetricsValidator validator = this.metricsValidators[i];
 				for (IValidationEntry entry : validator.validate(diagram, metrics, tolerance)) {
+					entries.add(entry);
+				}
+			}
+			
+			for (int i = 0; i < this.rulesValidators.length; i++) {
+				IRulesValidator validator = this.rulesValidators[i];
+				for (IValidationEntry entry : validator.validate(diagram)) {
 					entries.add(entry);
 				}
 			}

@@ -1,15 +1,17 @@
-package validation;
+package validation.metrics;
 
 import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import validation.IValidationEntry;
+
 import models.Diagram;
 import models.Hierarchy;
 import models.Relationship;
 
-public class EntitiesPerHierarchyValidator implements IValidator {
+public class EntitiesPerHierarchyValidator implements IMetricsValidator {
 	@Override
 	public Iterable<IValidationEntry> validate(Diagram diagram,
 			Metrics metrics, int tolerance) {

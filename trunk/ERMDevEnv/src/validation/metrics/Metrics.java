@@ -1,4 +1,4 @@
-package validation;
+package validation.metrics;
 
 import java.util.ArrayList;
 import java.util.List;

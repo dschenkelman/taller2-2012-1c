@@ -1,6 +1,6 @@
-package validation;
+package validation.metrics;
 
-import validation.MetricPair.MetricNames;
+import validation.metrics.MetricPair.MetricNames;
 import infrastructure.IterableExtensions;
 import models.Attribute;
 import models.Diagram;

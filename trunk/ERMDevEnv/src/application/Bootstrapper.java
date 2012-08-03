@@ -19,17 +19,22 @@ import persistence.IGraphPersistenceService;
 import persistence.IXmlFileManager;
 import persistence.IXmlManager;
 import persistence.XmlFileManager;
-import validation.AttributesPerEntityValidator;
-import validation.AttributesPerRelationshipValidator;
-import validation.EntitiesPerDiagramValidator;
-import validation.EntitiesPerHierarchyValidator;
-import validation.EntitiesPerRelationshipValidator;
-import validation.HierarchiesPerDiagramValidator;
-import validation.IMetricsCalculator;
 import validation.IProjectValidationService;
-import validation.MetricsCalculator;
 import validation.ProjectValidationService;
-import validation.RelationshipsPerDiagramValidator;
+import validation.metrics.AttributesPerEntityValidator;
+import validation.metrics.AttributesPerRelationshipValidator;
+import validation.metrics.EntitiesPerDiagramValidator;
+import validation.metrics.EntitiesPerHierarchyValidator;
+import validation.metrics.EntitiesPerRelationshipValidator;
+import validation.metrics.HierarchiesPerDiagramValidator;
+import validation.metrics.IMetricsCalculator;
+import validation.metrics.MetricsCalculator;
+import validation.metrics.RelationshipsPerDiagramValidator;
+import validation.rules.AttributeCardinalityValidator;
+import validation.rules.DiagramMustHaveEntitiesValidator;
+import validation.rules.DiagramShouldHaveRelationshipsValidator;
+import validation.rules.EntityTypeValidator;
+import validation.rules.RelationshipCardinalityValidator;
 import views.AttributeView;
 import views.DiagramView;
 import views.EntityView;
@@ -197,6 +202,11 @@ public class Bootstrapper {
 					.as(CACHE).addComponent(HierarchiesPerDiagramValidator.class)
 					.as(CACHE).addComponent(AttributesPerRelationshipValidator.class)
 					.as(CACHE).addComponent(AttributesPerEntityValidator.class)
+					.as(CACHE).addComponent(RelationshipCardinalityValidator.class)
+					.as(CACHE).addComponent(EntityTypeValidator.class)
+					.as(CACHE).addComponent(AttributeCardinalityValidator.class)
+					.as(CACHE).addComponent(DiagramShouldHaveRelationshipsValidator.class)
+					.as(CACHE).addComponent(DiagramMustHaveEntitiesValidator.class)
 					.addComponent(IAttributeView.class, AttributeView.class);
 	}
 

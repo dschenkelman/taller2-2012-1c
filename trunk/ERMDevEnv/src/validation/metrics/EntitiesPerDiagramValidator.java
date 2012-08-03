@@ -1,13 +1,15 @@
-package validation;
+package validation.metrics;
 
 import infrastructure.IterableExtensions;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import validation.IValidationEntry;
+
 import models.Diagram;
 
-public class EntitiesPerDiagramValidator implements IValidator {
+public class EntitiesPerDiagramValidator implements IMetricsValidator {
 
 	@Override
 	public Iterable<IValidationEntry> validate(Diagram diagram,
