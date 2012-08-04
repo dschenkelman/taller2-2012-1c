@@ -23,8 +23,6 @@ public class RelationshipController implements IRelationshipController {
 	private IRelationshipView view;
 	private List<IRelationshipEventListener> listeners;
 	
-	//controllers
-	private IProjectContext pContext;
 	private IRelationshipEntityController relEntController;
 	private IAttributeController attController;
 		
@@ -40,7 +38,6 @@ public class RelationshipController implements IRelationshipController {
 			IRelationshipEntityControllerFactory relationshipEntityControllerFactory) {
 		
 		pendingRelationship = new Relationship();
-		this.pContext = pContext;
 		this.view = view;
 		this.attributeControllerFactory = attributeControllerFactory;
 		this.relationshipEntityControllerFactory = relationshipEntityControllerFactory;	

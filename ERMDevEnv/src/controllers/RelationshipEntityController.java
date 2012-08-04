@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import javax.smartcardio.Card;
-
 import models.Cardinality;
 import models.Entity;
 import models.EntityType;

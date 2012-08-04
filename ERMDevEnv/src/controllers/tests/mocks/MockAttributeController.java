@@ -2,7 +2,6 @@ package controllers.tests.mocks;
 
 import controllers.IAttributeController;
 import models.Attribute;
-import models.AttributeCollection;
 import views.AttributeView;
 import views.IAttributeView;
 

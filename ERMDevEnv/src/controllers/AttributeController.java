@@ -3,15 +3,18 @@ package controllers;
 import infrastructure.Func;
 import infrastructure.IProjectContext;
 import infrastructure.IterableExtensions;
-import models.*;
-import views.IAttributeView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.mxgraph.util.mxConstants;
+import models.Attribute;
+import models.AttributeCollection;
+import models.AttributeType;
+import models.Cardinality;
+import models.IdGroupCollection;
+import views.IAttributeView;
 
 public class AttributeController extends BaseController implements IAttributeController {
 

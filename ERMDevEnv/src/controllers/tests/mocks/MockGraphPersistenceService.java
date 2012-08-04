@@ -1,12 +1,9 @@
 package controllers.tests.mocks;
 
-import models.Entity;
-import models.Hierarchy;
+import persistence.IGraphPersistenceService;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
-
-import persistence.IGraphPersistenceService;
 
 public class MockGraphPersistenceService implements IGraphPersistenceService {
 

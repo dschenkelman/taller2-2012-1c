@@ -1,12 +1,12 @@
 package controllers.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import infrastructure.IProjectContext;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
-
-import infrastructure.IProjectContext;
 
 import models.Cardinality;
 import models.RelationshipEntity;
@@ -16,7 +16,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import views.mock.MockRelationshipEntityView;
-
 import controllers.IRelationshipEntityController;
 import controllers.RelationshipEntityController;
 import controllers.tests.mocks.MockProjectContext;

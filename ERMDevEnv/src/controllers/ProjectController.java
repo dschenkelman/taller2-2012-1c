@@ -345,7 +345,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 
 	@Override
 	public void validateProject(int toleranceLevel) {
-		String reportHtml = this.validationService.generateGlobalReport(this.projectContext.getProjectDiagrams(), toleranceLevel);
+		String reportHtml = this.validationService.generateGlobalReport(this.projectContext.getName(), this.projectContext.getProjectDiagrams(), toleranceLevel);
 		String reportName = this.projectContext.getDataDirectory() + "_report.html";
 		this.fileSystemService.save(reportName, reportHtml);
 		Desktop desktop = Desktop.getDesktop();

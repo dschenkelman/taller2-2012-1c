@@ -10,9 +10,6 @@ import views.IKeysView;
 import infrastructure.IProjectContext;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import controllers.listeners.IIdGroupEventListener;
 
 public class KeysController extends BaseController implements IKeysController {
 
