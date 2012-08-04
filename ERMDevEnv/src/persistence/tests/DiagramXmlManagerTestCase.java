@@ -12,6 +12,7 @@ import models.Hierarchy;
 import models.HierarchyCollection;
 import models.Relationship;
 import models.RelationshipCollection;
+import models.Diagram.DiagramState;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -90,7 +91,7 @@ public class DiagramXmlManagerTestCase {
 	@Test
 	public void testShouldGenerateADiagramFromXml() throws Exception
 	{
-		String xml = "<diagram id='3F2504E0-4F89-11D3-9A0C-0300FFFFFFFF'><entities>" +
+		String xml = "<diagram id='3F2504E0-4F89-11D3-9A0C-0300FFFFFFFF' state='Invalid'><entities>" +
 				"<entity name='entity1' id='3F2504E0-4F89-11D3-9A0C-030CFFFFFFFF'/>" +
 				"<entity name='entity2' id='3F2504E0-4F89-11D3-9A0C-030DFFFFFFFF'/></entities>" +
 				"<relationships><relationship id='3F2504E0-4F89-11D3-9A0C-030CFFFFFFFA' " +
@@ -116,6 +117,7 @@ public class DiagramXmlManagerTestCase {
 		Diagram diagram = xmlManager.getItemFromXmlElement(diagramElement);
 		
 		Assert.assertEquals("3f2504e0-4f89-11d3-9a0c-0300ffffffff", diagram.getId().toString());
+		Assert.assertEquals(DiagramState.Invalid, diagram.getState());
 		
 		Assert.assertEquals(2, diagram.getEntities().count());
 		Assert.assertNotNull(diagram.getEntities().get("entity1"));

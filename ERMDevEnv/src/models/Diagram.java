@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class Diagram implements Iterable<Diagram>{
 
-	private enum DiagramState {
+	public enum DiagramState {
 		NotValidated,
 		Invalid,
 		Valid
@@ -32,13 +32,19 @@ public class Diagram implements Iterable<Diagram>{
 	{
 		this(UUID.randomUUID(), new EntityCollection(), 
 				new RelationshipCollection(), new HierarchyCollection(), 
-				new ArrayList<Diagram>());
+				new ArrayList<Diagram>(), DiagramState.NotValidated);
 	}
 
 	public Diagram(UUID id)
 	{
 		this(id, new EntityCollection(), new RelationshipCollection(), 
-				new HierarchyCollection(), new ArrayList<Diagram>());
+				new HierarchyCollection(), new ArrayList<Diagram>(), DiagramState.NotValidated);
+	}
+	
+	public Diagram(UUID id, DiagramState state)
+	{
+		this(id, new EntityCollection(), new RelationshipCollection(), 
+				new HierarchyCollection(), new ArrayList<Diagram>(), state);
 	}
 	
 	public Diagram(EntityCollection entities,
@@ -46,16 +52,16 @@ public class Diagram implements Iterable<Diagram>{
 			HierarchyCollection hierarchies, List<Diagram> subDiagrams)
 	{
 		this(UUID.randomUUID(), entities, relationships, hierarchies, 
-				subDiagrams);
+				subDiagrams, DiagramState.NotValidated);
 	}
 	
 	public Diagram(UUID id, EntityCollection entities,
 			RelationshipCollection relationships,
-			HierarchyCollection hierarchies, List<Diagram> subDiagram) 
+			HierarchyCollection hierarchies, List<Diagram> subDiagram, DiagramState state) 
 	{
 		this.id = id;
 		this.subDiagramNames = new ArrayList<String>();
-		this.isNotValidated();
+		this.state = state;
 		this.setEntities(entities);
 		this.setRelationships(relationships);
 		this.setHierarchies(hierarchies);
