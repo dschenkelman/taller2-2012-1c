@@ -4,8 +4,6 @@ import infrastructure.StringExtensions;
 
 import java.util.UUID;
 
-import junit.framework.Assert;
-
 import models.AttributeCollection;
 import models.Cardinality;
 import models.Relationship;
