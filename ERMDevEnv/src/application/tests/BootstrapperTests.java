@@ -1,8 +1,5 @@
 package application.tests;
 
-import controllers.factories.*;
-import controllers.factories.mock.MockEntityControllerFactory;
-import controllers.factories.mock.MockHierarchyControllerFactory;
 import infrastructure.IProjectContext;
 import infrastructure.ProjectContext;
 
@@ -10,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.picocontainer.MutablePicoContainer;
+
 import persistence.DiagramXmlManager;
 import persistence.GraphPersistenceService;
 import persistence.IGraphPersistenceService;
@@ -22,15 +20,28 @@ import views.IDiagramView;
 import views.IHierarchyView;
 import views.IProjectView;
 import views.ProjectView;
+import application.Bootstrapper;
+import application.tests.mocks.MockPicoContainer;
 import controllers.DiagramController;
 import controllers.HierarchyController;
 import controllers.IDiagramController;
 import controllers.IHierarchyController;
 import controllers.IProjectController;
 import controllers.ProjectController;
-
-import application.Bootstrapper;
-import application.tests.mocks.MockPicoContainer;
+import controllers.factories.AttributeControllerFactory;
+import controllers.factories.DiagramControllerFactory;
+import controllers.factories.EntityControllerFactory;
+import controllers.factories.HierarchyControllerFactory;
+import controllers.factories.IAttributeControllerFactory;
+import controllers.factories.IDiagramControllerFactory;
+import controllers.factories.IEntityControllerFactory;
+import controllers.factories.IHierarchyControllerFactory;
+import controllers.factories.IKeysControllerFactory;
+import controllers.factories.IRelationshipControllerFactory;
+import controllers.factories.IRelationshipEntityControllerFactory;
+import controllers.factories.KeyControllerFactory;
+import controllers.factories.RelationshipControllerFactory;
+import controllers.factories.RelationshipEntityControllerFactory;
 
 public class BootstrapperTests {
 	
@@ -64,7 +75,7 @@ public class BootstrapperTests {
 		
 		bootstrapper.run();
 		
-		Assert.assertEquals(38, this.container.getMappings().size());
+		Assert.assertEquals(43, this.container.getMappings().size());
 		Assert.assertSame(this.container, this.container.getMappings().get(MutablePicoContainer.class));
 		Assert.assertSame(DiagramController.class, this.container.getMappings().get(IDiagramController.class));
 		Assert.assertSame(DiagramView.class, this.container.getMappings().get(IDiagramView.class));
