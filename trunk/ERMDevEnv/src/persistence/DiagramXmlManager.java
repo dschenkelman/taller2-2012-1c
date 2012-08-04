@@ -3,6 +3,7 @@ package persistence;
 import java.util.UUID;
 
 import models.Diagram;
+import models.Diagram.DiagramState;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -14,6 +15,7 @@ public class DiagramXmlManager implements IXmlManager<Diagram> {
 		Element diagramElement = document.createElement("diagram");
 		
 		diagramElement.setAttribute("id", diagram.getId().toString());
+		diagramElement.setAttribute("state", diagram.getState().toString());
 		diagramElement.appendChild(new EntityCollectionXmlManager().getElementFromItem(diagram.getEntities(), document));
 		diagramElement.appendChild(new RelationshipCollectionXmlManager().getElementFromItem(diagram.getRelationships(), document));
 		diagramElement.appendChild(new HierarchyCollectionXmlManager().getElementFromItem(diagram.getHierarchies(), document));
@@ -37,8 +39,8 @@ public class DiagramXmlManager implements IXmlManager<Diagram> {
 	}
 	
 	public Diagram getItemFromXmlElement(Element diagramElement) throws Exception {
-		Diagram diagram = new Diagram(UUID.fromString(diagramElement.getAttribute("id")));
-		
+		Diagram diagram = new Diagram(UUID.fromString(diagramElement.getAttribute("id")), DiagramState.valueOf(diagramElement.getAttribute("state")));
+				
 		Element entitiesElement = (Element) diagramElement.getElementsByTagName("entities").item(0);
 		Element relationshipsElement = (Element) diagramElement.getElementsByTagName("relationships").item(0);
 		Element hierarchiesElement = (Element) diagramElement.getElementsByTagName("hierarchies").item(0);
