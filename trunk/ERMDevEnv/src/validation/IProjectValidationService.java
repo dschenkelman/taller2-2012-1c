@@ -3,5 +3,7 @@ package validation;
 import models.Diagram;
 
 public interface IProjectValidationService {
-	String generateValidationReport(Iterable<Diagram> diagrams, int tolerance);
+    String generateGlobalReport(Iterable<Diagram> diagrams, int tolerance);
+
+    String generateIndividualReport(Diagram diagram);
 }

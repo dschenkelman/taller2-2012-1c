@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import controllers.tests.mocks.*;
 import infrastructure.Func;
 import infrastructure.IterableExtensions;
 import models.Attribute;
@@ -37,18 +38,6 @@ import com.mxgraph.util.mxEventObject;
 
 import controllers.DiagramController;
 import controllers.listeners.IDiagramEventListener;
-import controllers.tests.mocks.MockDiagramListener;
-import controllers.tests.mocks.MockDiagramView;
-import controllers.tests.mocks.MockDiagramXmlManager;
-import controllers.tests.mocks.MockEntityController;
-import controllers.tests.mocks.MockEntityControllerFactory;
-import controllers.tests.mocks.MockGraphPersistenceService;
-import controllers.tests.mocks.MockHierarchyController;
-import controllers.tests.mocks.MockHierarchyControllerFactory;
-import controllers.tests.mocks.MockProjectContext;
-import controllers.tests.mocks.MockRelationshipController;
-import controllers.tests.mocks.MockRelationshipControllerFactory;
-import controllers.tests.mocks.MockXmlFileManager;
 
 public class DiagramControllerTestCase {
 
@@ -63,8 +52,12 @@ public class DiagramControllerTestCase {
 	private MockHierarchyController hierarchyController;
 	private MockHierarchyControllerFactory hierarchyControllerFactory;
 	private MockGraphPersistenceService graphPersistenceService;
+    private MockFileSystemService fileSystemService;
 
-	@Before
+    private MockProjectValidationService projectValidationService;
+
+
+    @Before
 	public void setUp() throws Exception {
 		this.projectContext = new MockProjectContext();
 		this.diagramView = new MockDiagramView();
@@ -80,6 +73,9 @@ public class DiagramControllerTestCase {
 		this.hierarchyControllerFactory = new MockHierarchyControllerFactory();
 		this.hierarchyControllerFactory.setController(this.hierarchyController);
 		this.graphPersistenceService = new MockGraphPersistenceService();
+        this.fileSystemService = new MockFileSystemService();
+        this.fileSystemService.setExistsReturnValue(true);
+        this.projectValidationService = new MockProjectValidationService();
 	}
 	
 	@Test
@@ -1231,7 +1227,8 @@ public class DiagramControllerTestCase {
 	private DiagramController createController() {
 		return new DiagramController(this.projectContext, this.diagramView,
 				this.entityControllerFactory, this.relationshipControllerFactory, 
-				this.hierarchyControllerFactory, this.xmlFileManager, this.diagramXmlManager, this.graphPersistenceService);
+				this.hierarchyControllerFactory, this.xmlFileManager, this.diagramXmlManager,
+                this.graphPersistenceService , this.projectValidationService,this.fileSystemService);
 	}
 
 }

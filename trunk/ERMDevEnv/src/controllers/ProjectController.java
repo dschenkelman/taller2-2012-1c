@@ -24,9 +24,6 @@ import models.Entity;
 import models.Hierarchy;
 import models.Relationship;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -348,7 +345,7 @@ public class ProjectController implements IProjectController, IDiagramEventListe
 
 	@Override
 	public void validateProject(int toleranceLevel) {
-		String reportHtml = this.validationService.generateValidationReport(this.projectContext.getProjectDiagrams(), toleranceLevel);
+		String reportHtml = this.validationService.generateGlobalReport(this.projectContext.getProjectDiagrams(), toleranceLevel);
 		String reportName = this.projectContext.getDataDirectory() + "_report.html";
 		this.fileSystemService.save(reportName, reportHtml);
 		Desktop desktop = Desktop.getDesktop();

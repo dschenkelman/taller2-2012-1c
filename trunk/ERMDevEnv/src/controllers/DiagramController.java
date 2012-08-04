@@ -1,11 +1,10 @@
 package controllers;
 
-import infrastructure.Func;
-import infrastructure.IProjectContext;
-import infrastructure.IterableExtensions;
-import infrastructure.StringExtensions;
+import infrastructure.*;
 
-import java.awt.Point;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -33,7 +32,6 @@ import models.Diagram;
 import models.Entity;
 import models.Hierarchy;
 import models.IdGroup;
-import models.IdGroupCollection;
 import models.Relationship;
 import models.RelationshipEntity;
 
@@ -50,100 +48,109 @@ import controllers.factories.IEntityControllerFactory;
 import controllers.factories.IHierarchyControllerFactory;
 import controllers.factories.IRelationshipControllerFactory;
 import controllers.listeners.IDiagramEventListener;
+import validation.IProjectValidationService;
 import views.IDiagramView;
 
 public class DiagramController extends BaseController
         implements IDiagramController, mxIEventListener {
 
-	public static class CellConstants{
-		public static final String WeakEntityConnectorPrefix = "WeakEntityConnector";
-		public static final String IdGroupConnectorPrefix = "IdGroupConnector";
-		public static final String EntityPrefix = "Entity";
-		public static final String RelationshipPrefix = "Relationship";
-		public static final String AttributePrefix = "Attribute";
-		public static final String AttributeConnectorPrefix = "AttributeConnector";
-		public static final String RelationshipConnectorPrefix = "RelationshipConnector";
-		public static final String HierarchyNodePrefix = "HierarchyNode";
-		public static final String HierarchyConnectorPrefix = "HierarchyConnector";
-	}
-	
-	private enum Operations{
-		None,
-		CreateEntity,
-		UpdateEntity,
-		CreateRelationship,
-		UpdateRelationship,
-		CreateHierarchy,
-		UpdateHierarchy
-	}
-	
-	private CustomGraph graph;
-	private Map<String, mxCell> entityCells;
-	private Map<String, mxCell> relationshipCells;
-	private Map<String, mxCell> attributeCells;
-	private Map<String, mxCell> attributeConnectorCells;
-	private Map<String, mxCell> relationshipConnectorCells;
-	private Map<String, mxCell> hierarchyNodeCells;
-	private Map<String, mxCell> hierarchyConnectorCells;
-	private Map<String, mxCell> idGroupConnectorCells;
-	private Map<String, mxCell> weakEntityConnectorCells;
-	private IEntityControllerFactory entityControllerFactory;
-	private Entity pendingEntity;
-	private IRelationshipControllerFactory relationshipControllerFactory;
-	private Diagram diagram;
-	private IXmlFileManager xmlFileManager;
-	private IXmlManager<Diagram> diagramXmlManager;
-	private IDiagramView diagramView;
-	private List<mxCell> selectedCells;
-	private Point dragStartPoint;
-	private IHierarchyControllerFactory hierarchyControllerFactory;
-	private IGraphPersistenceService graphPersistenceService;
-	private List<IDiagramEventListener> listeners;
-	private Pattern regex;
-	private Operations currentOperation;
-	
-	public DiagramController(IProjectContext projectContext, IDiagramView diagramView, 
-			IEntityControllerFactory entityControllerFactory,
-			IRelationshipControllerFactory relationshipControllerFactory,
-			IHierarchyControllerFactory hierarchyControllerFactory,
-			IXmlFileManager xmlFileManager,
-			IXmlManager<Diagram> diagramXmlManager,
-			IGraphPersistenceService graphPersistenceService) {
-		super(projectContext);
-		this.currentOperation = Operations.None;
-		this.diagram = new Diagram();
-		this.selectedCells = new ArrayList<mxCell>();
-		this.entityControllerFactory = entityControllerFactory;
-		this.relationshipControllerFactory = relationshipControllerFactory;
-		this.hierarchyControllerFactory = hierarchyControllerFactory;
-		this.graph = new CustomGraph();
-						
-		this.graph.getSelectionModel().addListener(mxEvent.CHANGE, this);
-		
-		this.entityCells = new HashMap<String, mxCell>();
-		this.attributeCells = new HashMap<String, mxCell>();
-		this.attributeConnectorCells = new HashMap<String, mxCell>();
-		this.relationshipCells = new HashMap<String, mxCell>();
-		this.relationshipConnectorCells = new HashMap<String, mxCell>();
-		this.hierarchyConnectorCells = new HashMap<String, mxCell>();
-		this.hierarchyNodeCells = new HashMap<String, mxCell>();
-		this.idGroupConnectorCells = new HashMap<String, mxCell>();
-		this.weakEntityConnectorCells = new HashMap<String, mxCell>();
-		this.xmlFileManager = xmlFileManager;
-		this.diagramXmlManager = diagramXmlManager;
-		this.diagramView = diagramView;
-		this.diagramView.setController(this);
-		this.graphPersistenceService = graphPersistenceService;
-		this.listeners = new ArrayList<IDiagramEventListener>();
-		
-		this.regex = Pattern.compile("(?:" + CellConstants.EntityPrefix + "|" 
-				+ CellConstants.RelationshipPrefix + ")"
-				+ "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}).*");
-	}
-	
-	public IDiagramView getView(){
-		return this.diagramView;
-	}
+    public static class CellConstants {
+        public static final String WeakEntityConnectorPrefix = "WeakEntityConnector";
+        public static final String IdGroupConnectorPrefix = "IdGroupConnector";
+        public static final String EntityPrefix = "Entity";
+        public static final String RelationshipPrefix = "Relationship";
+        public static final String AttributePrefix = "Attribute";
+        public static final String AttributeConnectorPrefix = "AttributeConnector";
+        public static final String RelationshipConnectorPrefix = "RelationshipConnector";
+        public static final String HierarchyNodePrefix = "HierarchyNode";
+        public static final String HierarchyConnectorPrefix = "HierarchyConnector";
+    }
+
+    private IProjectValidationService validationService;
+    private IFileSystemService fileSystemService;
+
+
+    private enum Operations {
+        None,
+        CreateEntity,
+        UpdateEntity,
+        CreateRelationship,
+        UpdateRelationship,
+        CreateHierarchy,
+        UpdateHierarchy
+    }
+
+    private CustomGraph graph;
+    private Map<String, mxCell> entityCells;
+    private Map<String, mxCell> relationshipCells;
+    private Map<String, mxCell> attributeCells;
+    private Map<String, mxCell> attributeConnectorCells;
+    private Map<String, mxCell> relationshipConnectorCells;
+    private Map<String, mxCell> hierarchyNodeCells;
+    private Map<String, mxCell> hierarchyConnectorCells;
+    private Map<String, mxCell> idGroupConnectorCells;
+    private Map<String, mxCell> weakEntityConnectorCells;
+    private IEntityControllerFactory entityControllerFactory;
+    private Entity pendingEntity;
+    private IRelationshipControllerFactory relationshipControllerFactory;
+    private Diagram diagram;
+    private IXmlFileManager xmlFileManager;
+    private IXmlManager<Diagram> diagramXmlManager;
+    private IDiagramView diagramView;
+    private List<mxCell> selectedCells;
+    private Point dragStartPoint;
+    private IHierarchyControllerFactory hierarchyControllerFactory;
+    private IGraphPersistenceService graphPersistenceService;
+    private List<IDiagramEventListener> listeners;
+    private Pattern regex;
+    private Operations currentOperation;
+
+    public DiagramController(IProjectContext projectContext, IDiagramView diagramView,
+                             IEntityControllerFactory entityControllerFactory,
+                             IRelationshipControllerFactory relationshipControllerFactory,
+                             IHierarchyControllerFactory hierarchyControllerFactory,
+                             IXmlFileManager xmlFileManager,
+                             IXmlManager<Diagram> diagramXmlManager,
+                             IGraphPersistenceService graphPersistenceService,
+                             IProjectValidationService validationService,
+                             IFileSystemService fileSystemService) {
+        super(projectContext);
+        this.validationService = validationService;
+        this.fileSystemService = fileSystemService;
+        this.currentOperation = Operations.None;
+        this.diagram = new Diagram();
+        this.selectedCells = new ArrayList<mxCell>();
+        this.entityControllerFactory = entityControllerFactory;
+        this.relationshipControllerFactory = relationshipControllerFactory;
+        this.hierarchyControllerFactory = hierarchyControllerFactory;
+        this.graph = new CustomGraph();
+
+        this.graph.getSelectionModel().addListener(mxEvent.CHANGE, this);
+
+        this.entityCells = new HashMap<String, mxCell>();
+        this.attributeCells = new HashMap<String, mxCell>();
+        this.attributeConnectorCells = new HashMap<String, mxCell>();
+        this.relationshipCells = new HashMap<String, mxCell>();
+        this.relationshipConnectorCells = new HashMap<String, mxCell>();
+        this.hierarchyConnectorCells = new HashMap<String, mxCell>();
+        this.hierarchyNodeCells = new HashMap<String, mxCell>();
+        this.idGroupConnectorCells = new HashMap<String, mxCell>();
+        this.weakEntityConnectorCells = new HashMap<String, mxCell>();
+        this.xmlFileManager = xmlFileManager;
+        this.diagramXmlManager = diagramXmlManager;
+        this.diagramView = diagramView;
+        this.diagramView.setController(this);
+        this.graphPersistenceService = graphPersistenceService;
+        this.listeners = new ArrayList<IDiagramEventListener>();
+
+        this.regex = Pattern.compile("(?:" + CellConstants.EntityPrefix + "|"
+                + CellConstants.RelationshipPrefix + ")"
+                + "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}).*");
+    }
+
+    public IDiagramView getView() {
+        return this.diagramView;
+    }
 
     public mxGraph getGraph() {
         return this.graph;
@@ -151,8 +158,8 @@ public class DiagramController extends BaseController
 
     public void createEntity() {
         if (!this.hasPendingEntity()) {
-        	this.currentOperation = Operations.CreateEntity;
-        	IEntityController entityController = this.entityControllerFactory.create();
+            this.currentOperation = Operations.CreateEntity;
+            IEntityController entityController = this.entityControllerFactory.create();
             entityController.addSubscriber(this);
             entityController.create();
         }
@@ -161,60 +168,60 @@ public class DiagramController extends BaseController
     @Override
     public void handleCreatedEvent(Entity entity) {
         switch (this.currentOperation) {
-		case UpdateEntity:
-			this.handleEntityUpdate(entity);
-			for (IDiagramEventListener listener : this.listeners) {
-				listener.handleEntityUpdated(this.diagram, entity);
-			}
-			break;
-		case CreateEntity:
-		default:
-			this.pendingEntity = entity;
-			break;
-		}
-        
+            case UpdateEntity:
+                this.handleEntityUpdate(entity);
+                for (IDiagramEventListener listener : this.listeners) {
+                    listener.handleEntityUpdated(this.diagram, entity);
+                }
+                break;
+            case CreateEntity:
+            default:
+                this.pendingEntity = entity;
+                break;
+        }
+
         this.currentOperation = Operations.None;
     }
 
-	private void handleEntityUpdate(Entity entity) {
-		Object parent = this.graph.getDefaultParent();
-		try {
-		    mxCell entityCell = this.getEntityCell(entity.getId().toString());
-		    this.addAttributesToElement(parent, entityCell, entity.getAttributes(), entity.getId());
-		    
-		    Func<Relationship, String, Boolean> relCmp = new Func<Relationship, String, Boolean>() {
-				@Override
-				public Boolean execute(Relationship relationship, String entityId) {
-					return relationship.hasWeakEntity() && relationship.getWeakEntity().getEntityId().toString().equalsIgnoreCase(entityId);
-				}
-			};
-		    
-			for (Relationship relationship : IterableExtensions.where(this.diagram.getRelationships(), relCmp, entity.getId().toString())) {
-				RelationshipEntity weakRelationshipEntity = relationship.getWeakEntity();
-				RelationshipEntity strongRelationshipEntity = relationship.getStrongEntity();
-		
-				Entity weakEntity = this.diagram.getEntities().get(weakRelationshipEntity.getEntityId());
-				
-				Map<String, List<Attribute>> attributesByIdGroup = this.getAttributesByIdGroup(weakEntity.getAttributes());
-				
-				this.addWeakEntityConnectors(parent, strongRelationshipEntity.getEntityId(), weakEntity, relationship.getId(), attributesByIdGroup);
-			}
-		        
-		    this.graph.getView().getState(entityCell).setLabel(entity.getName());
-		    entityCell.setValue(entity.getName());
-		    entityCell.setStyle(Styler.getFillColor(entity.getType()) + ";" + StyleConstants.ENTITY_STYLE);
-		    this.diagramView.refreshGraphComponent();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-		    this.graph.getModel().endUpdate();
-		    this.graph.repaint();
-		}
-	}
+    private void handleEntityUpdate(Entity entity) {
+        Object parent = this.graph.getDefaultParent();
+        try {
+            mxCell entityCell = this.getEntityCell(entity.getId().toString());
+            this.addAttributesToElement(parent, entityCell, entity.getAttributes(), entity.getId());
+
+            Func<Relationship, String, Boolean> relCmp = new Func<Relationship, String, Boolean>() {
+                @Override
+                public Boolean execute(Relationship relationship, String entityId) {
+                    return relationship.hasWeakEntity() && relationship.getWeakEntity().getEntityId().toString().equalsIgnoreCase(entityId);
+                }
+            };
+
+            for (Relationship relationship : IterableExtensions.where(this.diagram.getRelationships(), relCmp, entity.getId().toString())) {
+                RelationshipEntity weakRelationshipEntity = relationship.getWeakEntity();
+                RelationshipEntity strongRelationshipEntity = relationship.getStrongEntity();
+
+                Entity weakEntity = this.diagram.getEntities().get(weakRelationshipEntity.getEntityId());
+
+                Map<String, List<Attribute>> attributesByIdGroup = this.getAttributesByIdGroup(weakEntity.getAttributes());
+
+                this.addWeakEntityConnectors(parent, strongRelationshipEntity.getEntityId(), weakEntity, relationship.getId(), attributesByIdGroup);
+            }
+
+            this.graph.getView().getState(entityCell).setLabel(entity.getName());
+            entityCell.setValue(entity.getName());
+            entityCell.setStyle(Styler.getFillColor(entity.getType()) + ";" + StyleConstants.ENTITY_STYLE);
+            this.diagramView.refreshGraphComponent();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            this.graph.getModel().endUpdate();
+            this.graph.repaint();
+        }
+    }
 
     public void createRelationship() {
-    	this.currentOperation = Operations.CreateRelationship;
-    	
+        this.currentOperation = Operations.CreateRelationship;
+
         IRelationshipController relationshipController =
                 this.relationshipControllerFactory.create();
 
@@ -224,110 +231,104 @@ public class DiagramController extends BaseController
     }
 
     @Override
-	public void handleCreatedEvent(Relationship relationship) throws Exception {
-		double[] coordinates = this.getRelationshipNodeCoordinates(relationship.getRelationshipEntities());
-		double x = coordinates[0];
-		double y = coordinates[1];
-		this.graph.getModel().beginUpdate();
-		
-		try{
-			Object parent = this.graph.getDefaultParent();
-			mxCell relationshipCell = this.addRelationshipToGraph(relationship, parent, x, y);
-			
-			Map<UUID, Integer> entityCount = new HashMap<UUID, Integer>();
-			
-			for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
-				if (!entityCount.containsKey(relationshipEntity.getEntityId()))
-				{
-					entityCount.put(relationshipEntity.getEntityId(), 1);
-				}
-				else
-				{
-					Integer count = entityCount.get(relationshipEntity.getEntityId()); 
-					count++;
-					entityCount.put(relationshipEntity.getEntityId(), count);
-				}
-			}
-			
-			List<UUID> repeatedEntities = new ArrayList<UUID>();
-			int relationshipEntitiesCount = 0;
-			for (UUID uuid : entityCount.keySet()) {
-				Integer count = entityCount.get(uuid);
-				if (count > 1){
-					repeatedEntities.add(uuid);
-					relationshipEntitiesCount += count;
-				}
-			}
-			
-			double partialRelationshipEntitiesAngle = relationshipEntitiesCount != 0 ? (2 * Math.PI) / relationshipEntitiesCount : 0;
-			double currentRelationshipEntitiesAngle = 0;
-			
-			Map<UUID, Integer> entityAppeareanceCount = new HashMap<UUID, Integer>();
-			
-			for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
-				
-				int appeareance = 0;
-				
-				if (entityAppeareanceCount.containsKey(relationshipEntity.getEntityId())){
-					appeareance = entityAppeareanceCount.get(relationshipEntity.getEntityId()) + 1;
-				}
-				else{
-					appeareance = 1;
-					
-				}
-				
-				entityAppeareanceCount.put(relationshipEntity.getEntityId(), appeareance);
-				
-				double xExit = 0;
-				double yExit = 0;
-				Boolean useExit = false;
-				if (repeatedEntities.contains(relationshipEntity.getEntityId())){
-					xExit = Math.cos(currentRelationshipEntitiesAngle) * 0.5 + 0.5;
-					yExit = Math.sin(currentRelationshipEntitiesAngle) * 0.5 + 0.5;
-					currentRelationshipEntitiesAngle += partialRelationshipEntitiesAngle;
-					useExit = true;
-				}
-				
-				this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity, xExit, yExit, useExit, appeareance);
-			}
-			
-			this.addAttributesToElement(parent, relationshipCell, relationship.getAttributes(), relationship.getId());
-		
-			if (relationship.hasWeakEntity()){
-				RelationshipEntity weakRelationshipEntity = relationship.getWeakEntity();
-				RelationshipEntity strongRelationshipEntity = relationship.getStrongEntity();
-		
-				Entity weakEntity = this.diagram.getEntities().get(weakRelationshipEntity.getEntityId());
-				
-				Map<String, List<Attribute>> attributesByIdGroup = this.getAttributesByIdGroup(weakEntity.getAttributes());
-				
-				this.addWeakEntityConnectors(parent, strongRelationshipEntity.getEntityId(), weakEntity, relationship.getId(), attributesByIdGroup);
-			}	
-		}
-		finally {
-			if (this.currentOperation == Operations.CreateRelationship){
-				this.diagram.getRelationships().add(relationship);
-				for (IDiagramEventListener eventListener : this.listeners) {
-					eventListener.handleRelationshipAdded(this.diagram, relationship);
-				}
-			}
-			else{
-				for (IDiagramEventListener listener : this.listeners) {
-					listener.handleRelationshipUpdated(this.diagram, relationship);
-				}
-			}
-			this.graph.getModel().endUpdate();
-		}
-		
-		this.currentOperation = Operations.None;
-	}
-    
-    public void addEntity(double x, double y) throws Exception {
-        if (pendingEntity == null){
-        	return;
+    public void handleCreatedEvent(Relationship relationship) throws Exception {
+        double[] coordinates = this.getRelationshipNodeCoordinates(relationship.getRelationshipEntities());
+        double x = coordinates[0];
+        double y = coordinates[1];
+        this.graph.getModel().beginUpdate();
+
+        try {
+            Object parent = this.graph.getDefaultParent();
+            mxCell relationshipCell = this.addRelationshipToGraph(relationship, parent, x, y);
+
+            Map<UUID, Integer> entityCount = new HashMap<UUID, Integer>();
+
+            for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
+                if (!entityCount.containsKey(relationshipEntity.getEntityId())) {
+                    entityCount.put(relationshipEntity.getEntityId(), 1);
+                } else {
+                    Integer count = entityCount.get(relationshipEntity.getEntityId());
+                    count++;
+                    entityCount.put(relationshipEntity.getEntityId(), count);
+                }
+            }
+
+            List<UUID> repeatedEntities = new ArrayList<UUID>();
+            int relationshipEntitiesCount = 0;
+            for (UUID uuid : entityCount.keySet()) {
+                Integer count = entityCount.get(uuid);
+                if (count > 1) {
+                    repeatedEntities.add(uuid);
+                    relationshipEntitiesCount += count;
+                }
+            }
+
+            double partialRelationshipEntitiesAngle = relationshipEntitiesCount != 0 ? (2 * Math.PI) / relationshipEntitiesCount : 0;
+            double currentRelationshipEntitiesAngle = 0;
+
+            Map<UUID, Integer> entityAppeareanceCount = new HashMap<UUID, Integer>();
+
+            for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
+
+                int appeareance = 0;
+
+                if (entityAppeareanceCount.containsKey(relationshipEntity.getEntityId())) {
+                    appeareance = entityAppeareanceCount.get(relationshipEntity.getEntityId()) + 1;
+                } else {
+                    appeareance = 1;
+
+                }
+
+                entityAppeareanceCount.put(relationshipEntity.getEntityId(), appeareance);
+
+                double xExit = 0;
+                double yExit = 0;
+                Boolean useExit = false;
+                if (repeatedEntities.contains(relationshipEntity.getEntityId())) {
+                    xExit = Math.cos(currentRelationshipEntitiesAngle) * 0.5 + 0.5;
+                    yExit = Math.sin(currentRelationshipEntitiesAngle) * 0.5 + 0.5;
+                    currentRelationshipEntitiesAngle += partialRelationshipEntitiesAngle;
+                    useExit = true;
+                }
+
+                this.addRelationshipConnectorToGraph(parent, relationship, relationshipCell, relationshipEntity, xExit, yExit, useExit, appeareance);
+            }
+
+            this.addAttributesToElement(parent, relationshipCell, relationship.getAttributes(), relationship.getId());
+
+            if (relationship.hasWeakEntity()) {
+                RelationshipEntity weakRelationshipEntity = relationship.getWeakEntity();
+                RelationshipEntity strongRelationshipEntity = relationship.getStrongEntity();
+
+                Entity weakEntity = this.diagram.getEntities().get(weakRelationshipEntity.getEntityId());
+
+                Map<String, List<Attribute>> attributesByIdGroup = this.getAttributesByIdGroup(weakEntity.getAttributes());
+
+                this.addWeakEntityConnectors(parent, strongRelationshipEntity.getEntityId(), weakEntity, relationship.getId(), attributesByIdGroup);
+            }
+        } finally {
+            if (this.currentOperation == Operations.CreateRelationship) {
+                this.diagram.getRelationships().add(relationship);
+                for (IDiagramEventListener eventListener : this.listeners) {
+                    eventListener.handleRelationshipAdded(this.diagram, relationship);
+                }
+            } else {
+                for (IDiagramEventListener listener : this.listeners) {
+                    listener.handleRelationshipUpdated(this.diagram, relationship);
+                }
+            }
+            this.graph.getModel().endUpdate();
         }
-        
-    	this.graph.getModel().beginUpdate();
+
+        this.currentOperation = Operations.None;
+    }
+
+    public void addEntity(double x, double y) throws Exception {
+        if (pendingEntity == null) {
+            return;
+        }
+
+        this.graph.getModel().beginUpdate();
         Object parent = this.graph.getDefaultParent();
         try {
             mxCell entityCell = this.addEntityToGraph(this.pendingEntity, parent, x, y);
@@ -436,43 +437,43 @@ public class DiagramController extends BaseController
     }
 
     private mxCell addRelationshipConnectorToGraph(Object parent, Relationship relationship, mxCell relationshipCell,
-			RelationshipEntity relationshipEntity, double exitX, double exitY, Boolean useExit, Integer appeareance) {
-		String cardinalityDisplay = String.format("(%s,%s)", 
-				Cardinality.getStringForCardinality(relationshipEntity
-						.getCardinality().getMinimum()),
-				Cardinality.getStringForCardinality(relationshipEntity
-						.getCardinality().getMaximum()));
-		
-		String displayValue = StringExtensions.isNullOrEmpty(relationshipEntity.getRole()) ? 
-				cardinalityDisplay
-				: String.format("%s %s", relationshipEntity.getRole(), cardinalityDisplay);
-		
-		String connectorId = relationship.getId().toString() + 
-			relationshipEntity.getEntityId().toString() + 
-			relationshipEntity.getRole()+appeareance.toString();
-		
-		mxCell entityCell = this.getEntityCell(relationshipEntity.getEntityId().toString());
-		
-		String exitStyle = "";
-		
-		if (useExit){
-			exitStyle = ";" + Styler.getEdgeExitStyle(exitX, exitY);
-		} 
-		
-		mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.RelationshipConnectorPrefix + connectorId, displayValue, 
-				relationshipCell, entityCell, StyleConstants.RELATIONSHIP_LINK_STYLE + exitStyle);
-		
-		this.relationshipConnectorCells.put(CellConstants.RelationshipConnectorPrefix + connectorId, connectorCell);
-		
-		return connectorCell;
-	}
+                                                   RelationshipEntity relationshipEntity, double exitX, double exitY, Boolean useExit, Integer appeareance) {
+        String cardinalityDisplay = String.format("(%s,%s)",
+                Cardinality.getStringForCardinality(relationshipEntity
+                        .getCardinality().getMinimum()),
+                Cardinality.getStringForCardinality(relationshipEntity
+                        .getCardinality().getMaximum()));
+
+        String displayValue = StringExtensions.isNullOrEmpty(relationshipEntity.getRole()) ?
+                cardinalityDisplay
+                : String.format("%s %s", relationshipEntity.getRole(), cardinalityDisplay);
+
+        String connectorId = relationship.getId().toString() +
+                relationshipEntity.getEntityId().toString() +
+                relationshipEntity.getRole() + appeareance.toString();
+
+        mxCell entityCell = this.getEntityCell(relationshipEntity.getEntityId().toString());
+
+        String exitStyle = "";
+
+        if (useExit) {
+            exitStyle = ";" + Styler.getEdgeExitStyle(exitX, exitY);
+        }
+
+        mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.RelationshipConnectorPrefix + connectorId, displayValue,
+                relationshipCell, entityCell, StyleConstants.RELATIONSHIP_LINK_STYLE + exitStyle);
+
+        this.relationshipConnectorCells.put(CellConstants.RelationshipConnectorPrefix + connectorId, connectorCell);
+
+        return connectorCell;
+    }
 
     private mxCell addAttributeConnectorToGraph(Object parent, UUID ownerId, mxCell entityCell,
                                                 Attribute attribute, mxCell attributeCell, boolean isKey, boolean isComposite) {
         String attributeConnectorId = ownerId.toString() + attribute.getName();
 
-        mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.AttributeConnectorPrefix + attributeConnectorId, 
-        		attribute.getCardinality() == null || attribute.getCardinality().equals(1, 1) ? "" : attribute.getCardinality().toString(),
+        mxCell connectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.AttributeConnectorPrefix + attributeConnectorId,
+                attribute.getCardinality() == null || attribute.getCardinality().equals(1, 1) ? "" : attribute.getCardinality().toString(),
                 entityCell, attributeCell, Styler.getAttributeConnectorStyle(attribute.getType(), isKey, isComposite));
 
         this.attributeConnectorCells.put(CellConstants.AttributeConnectorPrefix + attributeConnectorId, connectorCell);
@@ -583,38 +584,37 @@ public class DiagramController extends BaseController
         return this.attributeConnectorCells.get(CellConstants.AttributeConnectorPrefix + id);
     }
 
-	
-	
-	private void addWeakEntityConnectors(Object parent, UUID entityId,
-			Entity weakEntity, UUID relationshipId, Map<String, List<Attribute>> attributesByIdGroup) {
-		mxCell strongEntityCell = this.getEntityCell(entityId.toString());
-		
-		mxCell cellToConnectTo = null;
-		Attribute firstAttribute = null;
-		
-		for (String key : attributesByIdGroup.keySet()) {
-			List<Attribute> attributesInGroup = attributesByIdGroup.get(key);
-			if (attributesInGroup.size() == 1){
-				// connect strong entity with attribute line
-				firstAttribute = attributesInGroup.get(0);
-				cellToConnectTo = this.getAttributeConnectorCell(weakEntity.getId() + firstAttribute.getName());
-			}else{
-				firstAttribute = attributesInGroup.get(0);
-				Attribute secondAttribute = attributesInGroup.get(1);
-				
-				String idGroupConnectorId = weakEntity.getId().toString() + "_" + firstAttribute.getName() + "_" + secondAttribute.getName() + "_" + key;
-				
-				cellToConnectTo = this.getIdGroupConnectorCell(idGroupConnectorId);
-			}
-			
-			String weakEntityConnectorId = weakEntity.getId().toString() + "_" + relationshipId.toString() + "_" + firstAttribute.getName() + "_" + key;
-			
-			mxCell weakEntityConnectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.WeakEntityConnectorPrefix + weakEntityConnectorId, "", 
-					strongEntityCell, cellToConnectTo, StyleConstants.WEAK_ENTITY_CONNECTOR_STYLE);
-			
-			this.weakEntityConnectorCells.put(CellConstants.WeakEntityConnectorPrefix + weakEntityConnectorId, weakEntityConnectorCell);
-		}
-	}
+
+    private void addWeakEntityConnectors(Object parent, UUID entityId,
+                                         Entity weakEntity, UUID relationshipId, Map<String, List<Attribute>> attributesByIdGroup) {
+        mxCell strongEntityCell = this.getEntityCell(entityId.toString());
+
+        mxCell cellToConnectTo = null;
+        Attribute firstAttribute = null;
+
+        for (String key : attributesByIdGroup.keySet()) {
+            List<Attribute> attributesInGroup = attributesByIdGroup.get(key);
+            if (attributesInGroup.size() == 1) {
+                // connect strong entity with attribute line
+                firstAttribute = attributesInGroup.get(0);
+                cellToConnectTo = this.getAttributeConnectorCell(weakEntity.getId() + firstAttribute.getName());
+            } else {
+                firstAttribute = attributesInGroup.get(0);
+                Attribute secondAttribute = attributesInGroup.get(1);
+
+                String idGroupConnectorId = weakEntity.getId().toString() + "_" + firstAttribute.getName() + "_" + secondAttribute.getName() + "_" + key;
+
+                cellToConnectTo = this.getIdGroupConnectorCell(idGroupConnectorId);
+            }
+
+            String weakEntityConnectorId = weakEntity.getId().toString() + "_" + relationshipId.toString() + "_" + firstAttribute.getName() + "_" + key;
+
+            mxCell weakEntityConnectorCell = (mxCell) this.graph.insertEdge(parent, CellConstants.WeakEntityConnectorPrefix + weakEntityConnectorId, "",
+                    strongEntityCell, cellToConnectTo, StyleConstants.WEAK_ENTITY_CONNECTOR_STYLE);
+
+            this.weakEntityConnectorCells.put(CellConstants.WeakEntityConnectorPrefix + weakEntityConnectorId, weakEntityConnectorCell);
+        }
+    }
 
     public boolean hasPendingEntity() {
         return this.pendingEntity != null;
@@ -678,14 +678,14 @@ public class DiagramController extends BaseController
         Pattern regex9 = Pattern.compile(CellConstants.IdGroupConnectorPrefix);
         for (Object o : this.graph.getChildCells(this.graph.getDefaultParent())) {
             mxCell cell = (mxCell) o;
-            
+
             Matcher matcher = regex8.matcher(cell.getId());
             boolean matchFound = matcher.find();
             if (matchFound) {
                 this.weakEntityConnectorCells.put(cell.getId(), cell);
                 continue;
             }
-            
+
             matcher = regex1.matcher(cell.getId());
             matchFound = matcher.find();
             if (matchFound) {
@@ -736,222 +736,209 @@ public class DiagramController extends BaseController
             }
         }
     }
-    
-	@Override
-	public void invoke(Object arg0, mxEventObject arg1) {
-		// JGraph has a bug "removed" are those added to the selection. "added" are those that were removed from the selection
-		ArrayList added = arg1.getProperties().containsKey("removed") ? (ArrayList)arg1.getProperties().get("removed") : null;
-		ArrayList removed = arg1.getProperties().containsKey("added") ? (ArrayList)arg1.getProperties().get("added") : null;
-		
-		if (removed != null)
-		{
-			for (Object cell : removed) {
-				this.selectedCells.remove((mxCell)cell);
-			}
-		}
-		
-		if (added != null)
-		{
-			for (Object cell : added) {
-				if (this.entityCells.containsValue(cell) || this.relationshipCells.containsValue(cell))
-				{
-					this.selectedCells.add((mxCell)cell);
-				}
-			}
-		}
-	}
-	
-	private String getElementUUID(String elementId){
-		Matcher matcher = this.regex.matcher(elementId);
-		boolean matchFound = matcher.find();
-		
-		if (matchFound) {
-	        return matcher.group(1);
+
+    @Override
+    public void invoke(Object arg0, mxEventObject arg1) {
+        // JGraph has a bug "removed" are those added to the selection. "added" are those that were removed from the selection
+        ArrayList added = arg1.getProperties().containsKey("removed") ? (ArrayList) arg1.getProperties().get("removed") : null;
+        ArrayList removed = arg1.getProperties().containsKey("added") ? (ArrayList) arg1.getProperties().get("added") : null;
+
+        if (removed != null) {
+            for (Object cell : removed) {
+                this.selectedCells.remove((mxCell) cell);
+            }
         }
-		return null;
-	}
 
-	public void handleDrop(Point end) {
-		if (this.dragStartPoint != null)
-		{
-			double dx = end.getX() - this.dragStartPoint.getX();
-			double dy = end.getY() - this.dragStartPoint.getY();
-			
-			List<mxCell> attributesCellsToMove = new ArrayList<mxCell>();
-			
-			for (mxCell cell : this.selectedCells) {
-				String elementId = this.getElementUUID(cell.getId());
-				
-				for (String attributeKey : this.attributeCells.keySet()) {
-					if (elementId != null) {
-				        if (attributeKey.startsWith(CellConstants.AttributePrefix + elementId))
-						{
-							mxCell attributeCell = this.attributeCells.get(attributeKey);
-							attributesCellsToMove.add(attributeCell);
-						}
-					}
-				}
-			}
-		
-			if (attributesCellsToMove.size() == 0)
-			{
-				return;
-			}
-			
-			this.graph.getModel().beginUpdate();
-			
-			try
-			{
-				this.graph.moveCells(attributesCellsToMove.toArray(), dx, dy);
-			}
-			finally
-			{
-				this.graph.getModel().endUpdate();
-			}
-			
-			this.dragStartPoint = null;
-		}
-	}
+        if (added != null) {
+            for (Object cell : added) {
+                if (this.entityCells.containsValue(cell) || this.relationshipCells.containsValue(cell)) {
+                    this.selectedCells.add((mxCell) cell);
+                }
+            }
+        }
+    }
 
-	public void handleDragStart(Point start) {
-		if (this.dragStartPoint == null && this.selectedCells.size() != 0)
-		{
-			this.dragStartPoint = new Point(start);
-		}
-	}
+    private String getElementUUID(String elementId) {
+        Matcher matcher = this.regex.matcher(elementId);
+        boolean matchFound = matcher.find();
 
-	@Override
-	public void createHierarchy() {
-		this.currentOperation = Operations.CreateHierarchy;
-		
-		IHierarchyController hierarchyController = this.hierarchyControllerFactory.create();
-		hierarchyController.addSuscriber(this);
-		hierarchyController.create();
-	}
+        if (matchFound) {
+            return matcher.group(1);
+        }
+        return null;
+    }
 
-	@Override
-	public void handleCreatedEvent(Hierarchy hierarchy) {
-		this.graph.getModel().beginUpdate();
-		
-		try
-		{
-			Object parent = this.graph.getDefaultParent();
-			mxCell hierarchyNode = this.addHierarchyNode(hierarchy, parent);
-			
-			for (UUID childId : hierarchy.getChildren()) {
-				this.connectChildToHierarchy(parent, hierarchyNode, hierarchy.getId(), childId);
-			}
-		}
-		finally {
-			if (this.currentOperation == Operations.CreateHierarchy) {
-				this.diagram.getHierarchies().add(hierarchy);
-				for (IDiagramEventListener listener : this.listeners) {
-					listener.handleHierarchyAdded(this.diagram, hierarchy);
-				}
-			}
-			else{
-				for (IDiagramEventListener listener : this.listeners) {
-					listener.handleHierarchyUpdated(this.diagram, hierarchy);
-				}
-			}
-			this.graph.getModel().endUpdate();
-		}
-		this.currentOperation = Operations.CreateHierarchy;
-	}
+    public void handleDrop(Point end) {
+        if (this.dragStartPoint != null) {
+            double dx = end.getX() - this.dragStartPoint.getX();
+            double dy = end.getY() - this.dragStartPoint.getY();
 
-	private void connectChildToHierarchy(Object parent, mxCell hierarchyNode, UUID hierarchyId, UUID childId) {
-		String stringId = childId.toString();
-		mxCell childCell = this.getEntityCell(stringId);
-		
-		mxCell hierarchyConnectorCell = (mxCell) this.graph
-			.insertEdge(parent, CellConstants.HierarchyConnectorPrefix + hierarchyId.toString() + childId, "", childCell, hierarchyNode, StyleConstants.HIERARCHY_CHILD_LINK_STYLE);
-		
-		this.hierarchyConnectorCells.put(CellConstants.HierarchyConnectorPrefix + hierarchyId.toString() + childId, hierarchyConnectorCell);
-	}
+            List<mxCell> attributesCellsToMove = new ArrayList<mxCell>();
 
-	private mxCell addHierarchyNode(Hierarchy hierarchy, Object parent) {
-		String parentId = hierarchy.getGeneralEntityId().toString();
-		mxCell parentCell = this.getEntityCell(parentId);
-		double x = parentCell.getGeometry().getCenterX();
-		double y = parentCell.getGeometry().getCenterY() + StyleConstants.ENTITY_HEIGHT / 2 + StyleConstants.HIERARCHY_DISTANCE_TO_PARENT;
-		mxCell hierarchyNode = (mxCell) this.graph.insertVertex(parent, CellConstants.HierarchyNodePrefix + hierarchy.getId().toString(), "", x, y, 0, 0);
-		mxCell hierarchyConnectorCell = (mxCell) this.graph
-			.insertEdge(parent, CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + parentId, hierarchy.getSummary(), hierarchyNode, parentCell, StyleConstants.HIERARCHY_PARENT_LINK_STYLE);
-		this.hierarchyNodeCells.put(CellConstants.HierarchyNodePrefix + hierarchy.getId().toString(), hierarchyNode);
-		this.hierarchyConnectorCells.put(CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + parentId, hierarchyConnectorCell);
-		
-		return hierarchyNode;
-	}
-	
-	public mxCell getHierarchyNodeCell(String id) {
-		return this.hierarchyNodeCells.get(CellConstants.HierarchyNodePrefix + id);
-	}
+            for (mxCell cell : this.selectedCells) {
+                String elementId = this.getElementUUID(cell.getId());
 
-	public mxCell getHierarchyConnectorCell(String id) {
-		return this.hierarchyConnectorCells.get(CellConstants.HierarchyConnectorPrefix + id);
-	}
-	
-	@Override
-	public mxCell getIdGroupConnectorCell(String id) {
-		return this.idGroupConnectorCells.get(CellConstants.IdGroupConnectorPrefix + id);
-	}
+                for (String attributeKey : this.attributeCells.keySet()) {
+                    if (elementId != null) {
+                        if (attributeKey.startsWith(CellConstants.AttributePrefix + elementId)) {
+                            mxCell attributeCell = this.attributeCells.get(attributeKey);
+                            attributesCellsToMove.add(attributeCell);
+                        }
+                    }
+                }
+            }
 
-	public void addListener(IDiagramEventListener listener) {
-		this.listeners.add(listener);
-	}
+            if (attributesCellsToMove.size() == 0) {
+                return;
+            }
 
-	public void createSubDiagram(String diagramName) {
-		for (IDiagramEventListener listener : this.listeners) {
-			listener.handleSubDiagramCreated(this.diagram, diagramName);
-		}
-		
-		try {
-			this.save();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-	}
-	
+            this.graph.getModel().beginUpdate();
+
+            try {
+                this.graph.moveCells(attributesCellsToMove.toArray(), dx, dy);
+            } finally {
+                this.graph.getModel().endUpdate();
+            }
+
+            this.dragStartPoint = null;
+        }
+    }
+
+    public void handleDragStart(Point start) {
+        if (this.dragStartPoint == null && this.selectedCells.size() != 0) {
+            this.dragStartPoint = new Point(start);
+        }
+    }
+
+    @Override
+    public void createHierarchy() {
+        this.currentOperation = Operations.CreateHierarchy;
+
+        IHierarchyController hierarchyController = this.hierarchyControllerFactory.create();
+        hierarchyController.addSuscriber(this);
+        hierarchyController.create();
+    }
+
+    @Override
+    public void handleCreatedEvent(Hierarchy hierarchy) {
+        this.graph.getModel().beginUpdate();
+
+        try {
+            Object parent = this.graph.getDefaultParent();
+            mxCell hierarchyNode = this.addHierarchyNode(hierarchy, parent);
+
+            for (UUID childId : hierarchy.getChildren()) {
+                this.connectChildToHierarchy(parent, hierarchyNode, hierarchy.getId(), childId);
+            }
+        } finally {
+            if (this.currentOperation == Operations.CreateHierarchy) {
+                this.diagram.getHierarchies().add(hierarchy);
+                for (IDiagramEventListener listener : this.listeners) {
+                    listener.handleHierarchyAdded(this.diagram, hierarchy);
+                }
+            } else {
+                for (IDiagramEventListener listener : this.listeners) {
+                    listener.handleHierarchyUpdated(this.diagram, hierarchy);
+                }
+            }
+            this.graph.getModel().endUpdate();
+        }
+        this.currentOperation = Operations.CreateHierarchy;
+    }
+
+    private void connectChildToHierarchy(Object parent, mxCell hierarchyNode, UUID hierarchyId, UUID childId) {
+        String stringId = childId.toString();
+        mxCell childCell = this.getEntityCell(stringId);
+
+        mxCell hierarchyConnectorCell = (mxCell) this.graph
+                .insertEdge(parent, CellConstants.HierarchyConnectorPrefix + hierarchyId.toString() + childId, "", childCell, hierarchyNode, StyleConstants.HIERARCHY_CHILD_LINK_STYLE);
+
+        this.hierarchyConnectorCells.put(CellConstants.HierarchyConnectorPrefix + hierarchyId.toString() + childId, hierarchyConnectorCell);
+    }
+
+    private mxCell addHierarchyNode(Hierarchy hierarchy, Object parent) {
+        String parentId = hierarchy.getGeneralEntityId().toString();
+        mxCell parentCell = this.getEntityCell(parentId);
+        double x = parentCell.getGeometry().getCenterX();
+        double y = parentCell.getGeometry().getCenterY() + StyleConstants.ENTITY_HEIGHT / 2 + StyleConstants.HIERARCHY_DISTANCE_TO_PARENT;
+        mxCell hierarchyNode = (mxCell) this.graph.insertVertex(parent, CellConstants.HierarchyNodePrefix + hierarchy.getId().toString(), "", x, y, 0, 0);
+        mxCell hierarchyConnectorCell = (mxCell) this.graph
+                .insertEdge(parent, CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + parentId, hierarchy.getSummary(), hierarchyNode, parentCell, StyleConstants.HIERARCHY_PARENT_LINK_STYLE);
+        this.hierarchyNodeCells.put(CellConstants.HierarchyNodePrefix + hierarchy.getId().toString(), hierarchyNode);
+        this.hierarchyConnectorCells.put(CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + parentId, hierarchyConnectorCell);
+
+        return hierarchyNode;
+    }
+
+    public mxCell getHierarchyNodeCell(String id) {
+        return this.hierarchyNodeCells.get(CellConstants.HierarchyNodePrefix + id);
+    }
+
+    public mxCell getHierarchyConnectorCell(String id) {
+        return this.hierarchyConnectorCells.get(CellConstants.HierarchyConnectorPrefix + id);
+    }
+
+    @Override
+    public mxCell getIdGroupConnectorCell(String id) {
+        return this.idGroupConnectorCells.get(CellConstants.IdGroupConnectorPrefix + id);
+    }
+
+    public void addListener(IDiagramEventListener listener) {
+        this.listeners.add(listener);
+    }
+
+    public void createSubDiagram(String diagramName) {
+        for (IDiagramEventListener listener : this.listeners) {
+            listener.handleSubDiagramCreated(this.diagram, diagramName);
+        }
+
+        try {
+            this.save();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void updateEntity(Entity entity) {
-    	this.deleteEntityPeripherals(entity);
-        
+        this.deleteEntityPeripherals(entity);
+
         IEntityController entityController = this.entityControllerFactory.create();
         entityController.addSubscriber(this);
         entityController.create(entity);
     }
 
-	public void deleteEntityPeripherals(Entity entity) {
-		this.currentOperation = Operations.UpdateEntity;
-		this.removeAttributes(entity.getAttributes(),entity.getId().toString());
-    	this.removeIdGroupConnectors(entity.getId().toString());
-    	this.removeWeakEntityConnectors(entity.getId().toString());
-	}
+    public void deleteEntityPeripherals(Entity entity) {
+        this.currentOperation = Operations.UpdateEntity;
+        this.removeAttributes(entity.getAttributes(), entity.getId().toString());
+        this.removeIdGroupConnectors(entity.getId().toString());
+        this.removeWeakEntityConnectors(entity.getId().toString());
+    }
 
     private void removeWeakEntityConnectors(String entityId) {
-    	Func<String, String, Boolean> cmp = new Func<String, String, Boolean>(){
-			@Override
-			public Boolean execute(String mapKey, String id) {
-				return mapKey.contains(id);
-			}
-    	};
-    	
-    	mxIGraphModel model = this.graph.getModel();
-		
-    	for (String weakEntityConnectorKey : IterableExtensions.where(this.weakEntityConnectorCells.keySet(), cmp, entityId)) {
-    		if (weakEntityConnectorKey.contains(entityId)){
-    			mxCell weakEntityConnector = this.weakEntityConnectorCells.remove(weakEntityConnectorKey);
-    			model.remove(weakEntityConnector);
-    		}
-		}
-	}
+        Func<String, String, Boolean> cmp = new Func<String, String, Boolean>() {
+            @Override
+            public Boolean execute(String mapKey, String id) {
+                return mapKey.contains(id);
+            }
+        };
 
-	@Override
+        mxIGraphModel model = this.graph.getModel();
+
+        for (String weakEntityConnectorKey : IterableExtensions.where(this.weakEntityConnectorCells.keySet(), cmp, entityId)) {
+            if (weakEntityConnectorKey.contains(entityId)) {
+                mxCell weakEntityConnector = this.weakEntityConnectorCells.remove(weakEntityConnectorKey);
+                model.remove(weakEntityConnector);
+            }
+        }
+    }
+
+    @Override
     public void updateHierarchy(Hierarchy hierarchy) {
-		this.currentOperation = Operations.UpdateHierarchy;
+        this.currentOperation = Operations.UpdateHierarchy;
         this.removeHierarchyConnectors(hierarchy);
         this.removeHierarchyCells(hierarchy);
-        
+
         IHierarchyController hierarchyController = this.hierarchyControllerFactory.create();
         hierarchyController.addSuscriber(this);
         hierarchyController.create(hierarchy);
@@ -959,83 +946,83 @@ public class DiagramController extends BaseController
 
     @Override
     public void updateRelationship(Relationship relationship) {
-    	this.currentOperation = Operations.UpdateRelationship;
+        this.currentOperation = Operations.UpdateRelationship;
         this.removeRelationshipConnectors(relationship);
         this.removeWeakEntityConnectors(relationship);
         this.removeRelationshipCells(relationship);
 
         this.removeAttributes(relationship.getAttributes(), relationship.getId().toString());
-        
+
         IRelationshipController relationshipController = this.relationshipControllerFactory.create();
         relationshipController.addCreateListener(this);
         relationshipController.create(relationship);
     }
-    
+
     private void removeRelationshipCells(Relationship relationship) {
-    	mxIGraphModel model = this.graph.getModel();
-		
-    	String relationshipCell = CellConstants.RelationshipPrefix + relationship.getId().toString();
+        mxIGraphModel model = this.graph.getModel();
+
+        String relationshipCell = CellConstants.RelationshipPrefix + relationship.getId().toString();
         model.remove(this.relationshipCells.remove(relationshipCell));
     }
-    
+
     private void removeHierarchyCells(Hierarchy hierarchy) {
-    	mxIGraphModel model = this.graph.getModel();
-		    	
-    	String keyNode = CellConstants.HierarchyNodePrefix + hierarchy.getId().toString();
-    	model.remove(this.hierarchyNodeCells.remove(keyNode));
+        mxIGraphModel model = this.graph.getModel();
+
+        String keyNode = CellConstants.HierarchyNodePrefix + hierarchy.getId().toString();
+        model.remove(this.hierarchyNodeCells.remove(keyNode));
     }
 
-	private void removeRelationshipConnectors(Relationship relationship) {
-		mxIGraphModel model = this.graph.getModel();
-		for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
+    private void removeRelationshipConnectors(Relationship relationship) {
+        mxIGraphModel model = this.graph.getModel();
+        for (RelationshipEntity relationshipEntity : relationship.getRelationshipEntities()) {
             String keyConnector = CellConstants.RelationshipConnectorPrefix + relationship.getId().toString() + relationshipEntity.getEntityId().toString();
-            
-            for(Integer i = 1; ;i++) {
-            	mxCell cell = this.relationshipConnectorCells.remove(keyConnector + i.toString()); 
-            	if (cell == null)
-            		break;
-            	
-            	model.remove(cell);
+
+            for (Integer i = 1; ; i++) {
+                mxCell cell = this.relationshipConnectorCells.remove(keyConnector + i.toString());
+                if (cell == null)
+                    break;
+
+                model.remove(cell);
             }
         }
-	}
-	
-	private void removeHierarchyConnectors(Hierarchy hierarchy) {
-		mxIGraphModel model = this.graph.getModel();
-		
-		for (UUID uuid : hierarchy.getChildren()) {
-			String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + uuid;
-			model.remove(this.hierarchyConnectorCells.remove(keyConnector));
-        }
-		 
-        String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + hierarchy.getGeneralEntityId().toString();
-      
-        model.remove(this.hierarchyConnectorCells.remove(keyConnector));
-	}
+    }
 
-	private void removeWeakEntityConnectors(Relationship relationship) {
-		mxIGraphModel model = this.graph.getModel();
-		
-		if (relationship.hasWeakEntity()){
-        	RelationshipEntity weakEntity = relationship.getWeakEntity();
-        	
-        	Func<String, String, Boolean> cmp = new Func<String, String, Boolean>(){
-				@Override
-				public Boolean execute(String mapKey, String beginning) {
-					return mapKey.startsWith(beginning);
-				}
-        	};
-        	
-        	String param = CellConstants.WeakEntityConnectorPrefix + weakEntity.getEntityId().toString() + "_" + relationship.getId().toString();
-        	
-        	Iterable<String> keys = IterableExtensions.where(this.weakEntityConnectorCells.keySet(), cmp, param);
-        	
-        	for (String key : keys){
-        		mxCell cellToRemove = this.weakEntityConnectorCells.remove(key);
-        		model.remove(cellToRemove);
-        	}
+    private void removeHierarchyConnectors(Hierarchy hierarchy) {
+        mxIGraphModel model = this.graph.getModel();
+
+        for (UUID uuid : hierarchy.getChildren()) {
+            String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + uuid;
+            model.remove(this.hierarchyConnectorCells.remove(keyConnector));
         }
-	}
+
+        String keyConnector = CellConstants.HierarchyConnectorPrefix + hierarchy.getId().toString() + hierarchy.getGeneralEntityId().toString();
+
+        model.remove(this.hierarchyConnectorCells.remove(keyConnector));
+    }
+
+    private void removeWeakEntityConnectors(Relationship relationship) {
+        mxIGraphModel model = this.graph.getModel();
+
+        if (relationship.hasWeakEntity()) {
+            RelationshipEntity weakEntity = relationship.getWeakEntity();
+
+            Func<String, String, Boolean> cmp = new Func<String, String, Boolean>() {
+                @Override
+                public Boolean execute(String mapKey, String beginning) {
+                    return mapKey.startsWith(beginning);
+                }
+            };
+
+            String param = CellConstants.WeakEntityConnectorPrefix + weakEntity.getEntityId().toString() + "_" + relationship.getId().toString();
+
+            Iterable<String> keys = IterableExtensions.where(this.weakEntityConnectorCells.keySet(), cmp, param);
+
+            for (String key : keys) {
+                mxCell cellToRemove = this.weakEntityConnectorCells.remove(key);
+                model.remove(cellToRemove);
+            }
+        }
+    }
 
     private void removeAttributes(Iterable<Attribute> attributes, String id) {
         mxIGraphModel model = this.graph.getModel();
@@ -1044,134 +1031,147 @@ public class DiagramController extends BaseController
             String keyCell = CellConstants.AttributePrefix + id + attribute.getName();
             model.remove(this.attributeConnectorCells.remove(keyConnector));
             model.remove(this.attributeCells.remove(keyCell));
-            this.removeAttributes(attribute.getAttributes(),id);
+            this.removeAttributes(attribute.getAttributes(), id);
         }
     }
 
-	private void removeIdGroupConnectors(String entityId) {
-		mxIGraphModel model = this.graph.getModel();
-		
-		for (Object idGroupConnectorKey : this.idGroupConnectorCells.keySet().toArray()) {
-			String idGroupKey = (String) idGroupConnectorKey;
-			if (idGroupKey.contains(entityId)){
-				mxCell idGroupConnectorCell = this.idGroupConnectorCells.remove(idGroupConnectorKey);
-				model.remove(idGroupConnectorCell);
-			}
-		}
-	}
-    
-	@Override
-	public mxCell getWeakEntityConnectorCell(String id) {
-		return this.weakEntityConnectorCells.get(CellConstants.WeakEntityConnectorPrefix + id);
-	}
+    private void removeIdGroupConnectors(String entityId) {
+        mxIGraphModel model = this.graph.getModel();
 
-	@Override
-	public Iterable<Entity> getAvailableEntities() {
-		Iterable<Entity> entities = this.projectContext.getAllEntities();
-		List<Entity> entityList = IterableExtensions.getListOf(entities);
-	
-		for (Entity entity : this.diagram.getEntities()) {
-			entityList.remove(entity);
-		}
-	
-		return entityList;
-	}
+        for (Object idGroupConnectorKey : this.idGroupConnectorCells.keySet().toArray()) {
+            String idGroupKey = (String) idGroupConnectorKey;
+            if (idGroupKey.contains(entityId)) {
+                mxCell idGroupConnectorCell = this.idGroupConnectorCells.remove(idGroupConnectorKey);
+                model.remove(idGroupConnectorCell);
+            }
+        }
+    }
 
-	@Override
-	public boolean deleteEntity(Entity entity) {
-		if (this.diagram.getEntities().get(entity.getId()) == null) {
-			this.diagramView.showDeleteDialog("entity " + entity.getName(), 
-					" don't belong into current diagram", false);
-			return false;
-		}
-		if (canDeleteEntity(entity)) {
-			if (this.diagramView.showDeleteDialog("entity " + entity.getName(), "", true)) {
-				this.removeEntity(entity);
-				return true;
-			}
-		}else {
-			this.diagramView.showDeleteDialog("entity " + entity.getName(), 
-					" belongs to a relationship or a hierarchy", false);
-		}
-		return false;
-	}
-	
-	private boolean canDeleteEntity(Entity entity) {
-		for (Relationship relationship : this.diagram.getRelationships())
-			for (RelationshipEntity relEntity : relationship.getRelationshipEntities())
-				if (relEntity.getEntityId().equals(entity.getId()))
-					return false;
-		for (Hierarchy hierarchy : this.diagram.getHierarchies()) {
-			if (hierarchy.getGeneralEntityId().equals(entity.getId()))
-				return false;
-			for (UUID entityId : hierarchy.getChildren())
-				if (entityId.equals(entity.getId()))
-					return false;
-		}
-		return true;
-	}
+    @Override
+    public mxCell getWeakEntityConnectorCell(String id) {
+        return this.weakEntityConnectorCells.get(CellConstants.WeakEntityConnectorPrefix + id);
+    }
 
-	@Override
-	public boolean deleteRelationship(Relationship relationship) {
-		if (this.diagram.getRelationship(relationship.getId()) == null) {
-			this.diagramView.showDeleteDialog("relationship " + relationship.getName(), 
-					" don't belong into current diagram", false);
-			return false;	
-		}
-		if (this.diagramView.showDeleteDialog("relationship " + relationship.getName(), "", true)) {
-			this.removeRelationship(relationship);
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public Iterable<Entity> getAvailableEntities() {
+        Iterable<Entity> entities = this.projectContext.getAllEntities();
+        List<Entity> entityList = IterableExtensions.getListOf(entities);
 
-	@Override
-	public boolean deleteHierarchy(Hierarchy hierarchy) {
-		if (this.diagram.getHierarchies().getHierarchy(hierarchy.getId()) == null) {
-			this.diagramView.showDeleteDialog("Hierarchy", 
-					" don't belong into current diagram", false);
-			return false;
-		}
-		if (this.diagramView.showDeleteDialog("Hierarchy", "", true)) {
-			this.removeHierarchy(hierarchy);
-			return true;
-		}
-		return false;
-	}
-	
-	private void removeEntity(Entity entity) {
-		this.deleteEntityPeripherals(entity);
-		
-		mxIGraphModel model = this.graph.getModel();
-		
-    	String entityCell = CellConstants.EntityPrefix + entity.getId().toString();
+        for (Entity entity : this.diagram.getEntities()) {
+            entityList.remove(entity);
+        }
+
+        return entityList;
+    }
+
+    @Override
+    public boolean deleteEntity(Entity entity) {
+        if (this.diagram.getEntities().get(entity.getId()) == null) {
+            this.diagramView.showDeleteDialog("entity " + entity.getName(),
+                    " don't belong into current diagram", false);
+            return false;
+        }
+        if (canDeleteEntity(entity)) {
+            if (this.diagramView.showDeleteDialog("entity " + entity.getName(), "", true)) {
+                this.removeEntity(entity);
+                return true;
+            }
+        } else {
+            this.diagramView.showDeleteDialog("entity " + entity.getName(),
+                    " belongs to a relationship or a hierarchy", false);
+        }
+        return false;
+    }
+
+    private boolean canDeleteEntity(Entity entity) {
+        for (Relationship relationship : this.diagram.getRelationships())
+            for (RelationshipEntity relEntity : relationship.getRelationshipEntities())
+                if (relEntity.getEntityId().equals(entity.getId()))
+                    return false;
+        for (Hierarchy hierarchy : this.diagram.getHierarchies()) {
+            if (hierarchy.getGeneralEntityId().equals(entity.getId()))
+                return false;
+            for (UUID entityId : hierarchy.getChildren())
+                if (entityId.equals(entity.getId()))
+                    return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteRelationship(Relationship relationship) {
+        if (this.diagram.getRelationship(relationship.getId()) == null) {
+            this.diagramView.showDeleteDialog("relationship " + relationship.getName(),
+                    " don't belong into current diagram", false);
+            return false;
+        }
+        if (this.diagramView.showDeleteDialog("relationship " + relationship.getName(), "", true)) {
+            this.removeRelationship(relationship);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteHierarchy(Hierarchy hierarchy) {
+        if (this.diagram.getHierarchies().getHierarchy(hierarchy.getId()) == null) {
+            this.diagramView.showDeleteDialog("Hierarchy",
+                    " don't belong into current diagram", false);
+            return false;
+        }
+        if (this.diagramView.showDeleteDialog("Hierarchy", "", true)) {
+            this.removeHierarchy(hierarchy);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void validate() {
+        String reportHtml = this.validationService.generateIndividualReport(diagram);
+        String reportName = this.projectContext.getDataDirectory() + "_" + diagram.getName() + "_report.html";
+        this.fileSystemService.save(reportName, reportHtml);
+        Desktop desktop = Desktop.getDesktop();
+        try {
+            desktop.open(new File(reportName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void removeEntity(Entity entity) {
+        this.deleteEntityPeripherals(entity);
+
+        mxIGraphModel model = this.graph.getModel();
+
+        String entityCell = CellConstants.EntityPrefix + entity.getId().toString();
         model.remove(this.entityCells.remove(entityCell));
-		
-		this.diagram.getEntities().remove(entity.getName());
-	}
-	
-	private void removeRelationship(Relationship relationship) {
-		this.removeRelationshipConnectors(relationship);
-	    this.removeWeakEntityConnectors(relationship);
-	    this.removeRelationshipCells(relationship);
 
-	    this.removeAttributes(relationship.getAttributes(), relationship.getId().toString());
-		
-		try {
-			this.diagram.removeRelationship(relationship.getId());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void removeHierarchy(Hierarchy hierarchy) {
-		this.removeHierarchyConnectors(hierarchy);
+        this.diagram.getEntities().remove(entity.getName());
+    }
+
+    private void removeRelationship(Relationship relationship) {
+        this.removeRelationshipConnectors(relationship);
+        this.removeWeakEntityConnectors(relationship);
+        this.removeRelationshipCells(relationship);
+
+        this.removeAttributes(relationship.getAttributes(), relationship.getId().toString());
+
+        try {
+            this.diagram.removeRelationship(relationship.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void removeHierarchy(Hierarchy hierarchy) {
+        this.removeHierarchyConnectors(hierarchy);
         this.removeHierarchyCells(hierarchy);
-		
-		try {
-			this.diagram.getHierarchies().removeHierarchy(hierarchy.getId());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+
+        try {
+            this.diagram.getHierarchies().removeHierarchy(hierarchy.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

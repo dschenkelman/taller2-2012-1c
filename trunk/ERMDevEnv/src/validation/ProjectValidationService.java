@@ -18,37 +18,37 @@ import models.Diagram;
 
 public class ProjectValidationService implements IProjectValidationService {
 
-	private IMetricsCalculator metricsCalculator;
-	private IMetricsValidator[] metricsValidators;
-	private IRulesValidator[] rulesValidators;
+    private IMetricsCalculator metricsCalculator;
+    private IMetricsValidator[] metricsValidators;
+    private IRulesValidator[] rulesValidators;
 
-	public ProjectValidationService(IMetricsCalculator metricsCalculator, IMetricsValidator[] metricsValidators, IRulesValidator[] rulesValidator){
-		this.metricsCalculator = metricsCalculator;
-		this.metricsValidators = metricsValidators;
-		this.rulesValidators = rulesValidator;
-	}
-	
-	@Override
-	public String generateValidationReport(Iterable<Diagram> diagrams, int tolerance) {
-		List<IValidationEntry> entries = new ArrayList<IValidationEntry>();
-		Metrics metrics = this.metricsCalculator.calculateMetrics(diagrams);
-		
-		for (Diagram diagram : diagrams) {
-			for (int i = 0; i < this.metricsValidators.length; i++) {
-				IMetricsValidator validator = this.metricsValidators[i];
-				for (IValidationEntry entry : validator.validate(diagram, metrics, tolerance)) {
-					entries.add(entry);
-				}
-			}
-			
-			for (int i = 0; i < this.rulesValidators.length; i++) {
-				IRulesValidator validator = this.rulesValidators[i];
-				for (IValidationEntry entry : validator.validate(diagram)) {
-					entries.add(entry);
-				}
-			}
-		}
-		
+    public ProjectValidationService(IMetricsCalculator metricsCalculator, IMetricsValidator[] metricsValidators, IRulesValidator[] rulesValidator) {
+        this.metricsCalculator = metricsCalculator;
+        this.metricsValidators = metricsValidators;
+        this.rulesValidators = rulesValidator;
+    }
+
+    @Override
+    public String generateGlobalReport(Iterable<Diagram> diagrams, int tolerance) {
+        List<IValidationEntry> entries = new ArrayList<IValidationEntry>();
+        Metrics metrics = this.metricsCalculator.calculateMetrics(diagrams);
+
+        for (Diagram diagram : diagrams) {
+              for (int i = 0; i < this.metricsValidators.length; i++) {
+                  IMetricsValidator validator = this.metricsValidators[i];
+                  for (IValidationEntry entry : validator.validate(diagram, metrics, tolerance)) {
+                      entries.add(entry);
+                  }
+              }
+
+              for (int i = 0; i < this.rulesValidators.length; i++) {
+                  IRulesValidator validator = this.rulesValidators[i];
+                  for (IValidationEntry entry : validator.validate(diagram)) {
+                      entries.add(entry);
+                  }
+              }
+          }
+
         VelocityEngine engine = new VelocityEngine();
         engine.init();
         Template template = engine.getTemplate("projectValidation.vm");
@@ -58,7 +58,28 @@ public class ProjectValidationService implements IProjectValidationService {
         context.put("numberTool", new NumberTool());
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
-        return writer.toString();   
-	}
+        return writer.toString();
+    }
+
+    @Override
+    public String generateIndividualReport(Diagram diagram) {
+
+        List<IValidationEntry> entries = new ArrayList<IValidationEntry>();
+
+        for (IRulesValidator validator : this.rulesValidators) {
+            for (IValidationEntry entry : validator.validate(diagram)) {
+                entries.add(entry);
+            }
+        }
+
+        VelocityEngine engine = new VelocityEngine();
+        engine.init();
+        Template template = engine.getTemplate("diagramValidation.vm");
+        VelocityContext context = new VelocityContext();
+        context.put("entries", entries);
+        StringWriter writer = new StringWriter();
+        template.merge(context, writer);
+        return writer.toString();
+    }
 
 }
