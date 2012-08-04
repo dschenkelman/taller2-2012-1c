@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.swing.tree.TreeNode;
-
 public class IterableExtensions {
     public static <T> int count(Iterable<T> iterable) {
         int count = 0;

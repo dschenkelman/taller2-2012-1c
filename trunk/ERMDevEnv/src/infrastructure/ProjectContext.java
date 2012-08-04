@@ -5,9 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
 import models.Diagram;
 import models.Entity;
-import models.EntityCollection;
 import models.Hierarchy;
 
 public class ProjectContext implements IProjectContext {
