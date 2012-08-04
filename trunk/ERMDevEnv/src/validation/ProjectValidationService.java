@@ -29,7 +29,7 @@ public class ProjectValidationService implements IProjectValidationService {
     }
 
     @Override
-    public String generateGlobalReport(Iterable<Diagram> diagrams, int tolerance) {
+    public String generateGlobalReport(String diagramName, Iterable<Diagram> diagrams, int tolerance) {
         List<IValidationEntry> entries = new ArrayList<IValidationEntry>();
         Metrics metrics = this.metricsCalculator.calculateMetrics(diagrams);
 
@@ -53,6 +53,7 @@ public class ProjectValidationService implements IProjectValidationService {
         engine.init();
         Template template = engine.getTemplate("projectValidation.vm");
         VelocityContext context = new VelocityContext();
+        context.put("title", "Project Validation - " + diagramName);
         context.put("metrics", metrics.getMetrics());
         context.put("entries", entries);
         context.put("numberTool", new NumberTool());
@@ -76,6 +77,7 @@ public class ProjectValidationService implements IProjectValidationService {
         engine.init();
         Template template = engine.getTemplate("diagramValidation.vm");
         VelocityContext context = new VelocityContext();
+        context.put("title", "Diagram Validation - " + diagram.getName());
         context.put("entries", entries);
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
