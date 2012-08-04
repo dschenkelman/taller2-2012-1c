@@ -4,10 +4,6 @@ import controllers.IKeysController;
 import models.IKey;
 import models.IdGroup;
 
-
-import java.util.HashMap;
-import java.util.List;
-
 public interface IKeysView {
 
     void showView();

@@ -2,29 +2,17 @@ package views;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.text.JTextComponent;
-
-import models.Cardinality;
-import models.Entity;
 import models.RelationshipEntity;
 
 import controllers.IRelationshipEntityController;
-import controllers.RelationshipEntityController;
 import controllers.tests.mocks.MockProjectContext;
-import controllers.tests.mocks.MockRelationshipController;
 import controllers.tests.mocks.MockRelationshipEntityController;
 
 import views.components.EntityRelationshipTableModel;
@@ -54,7 +42,7 @@ public class RelationshipEntityViewImpl extends RelationshipEntityViewAbstract i
 		view.setController(controller);
 		
 		vent.setVisible(true);
-		vent.setDefaultCloseOperation(vent.EXIT_ON_CLOSE);
+		vent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	public RelationshipEntityViewImpl() {
@@ -152,7 +140,7 @@ public class RelationshipEntityViewImpl extends RelationshipEntityViewAbstract i
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			addRow(tableModel.getNewRow());
+			addRow(EntityRelationshipTableModel.getNewRow());
 			//updateController();
 		}
 		

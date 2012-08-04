@@ -1,13 +1,12 @@
 package views;
 
-import controllers.IAttributeController;
-import models.Attribute;
-import models.AttributeType;
-import models.Cardinality;
-
 import java.util.List;
 
 import javax.swing.JPanel;
+
+import models.Attribute;
+import models.AttributeType;
+import controllers.IAttributeController;
 
 public interface IAttributeView {
 

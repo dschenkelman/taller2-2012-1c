@@ -13,13 +13,10 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.tree.MutableTreeNode;
-
 import com.jgoodies.forms.factories.*;
 
 import com.jgoodies.forms.layout.*;
 import controllers.IKeysController;
-import infrastructure.visual.AttributeTreeNode;
 import models.IKey;
 import models.IdGroup;
 import models.IdGroupCollection;
@@ -203,12 +200,6 @@ public class KeyView extends JFrame implements IKeysView {
 
         }
     }
-
-    private Integer getNextNumber() {
-        Random random = new Random();
-        return random.nextInt(Integer.MAX_VALUE);
-    }
-
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
