@@ -18,8 +18,6 @@ import controllers.IProjectController;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 public class ProjectView extends JPanel implements IProjectView {
