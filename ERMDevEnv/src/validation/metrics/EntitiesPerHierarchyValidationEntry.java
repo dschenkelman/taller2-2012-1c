@@ -1,10 +1,9 @@
 package validation.metrics;
 
-import validation.IValidationEntry;
-import validation.ValidationType;
 import models.Diagram;
 import models.Hierarchy;
-import models.Relationship;
+import validation.IValidationEntry;
+import validation.ValidationType;
 
 public class EntitiesPerHierarchyValidationEntry implements IValidationEntry {
 

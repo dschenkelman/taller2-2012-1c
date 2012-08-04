@@ -5,11 +5,9 @@ import infrastructure.IterableExtensions;
 import java.util.ArrayList;
 import java.util.List;
 
-import validation.IValidationEntry;
-
 import models.Diagram;
 import models.Hierarchy;
-import models.Relationship;
+import validation.IValidationEntry;
 
 public class EntitiesPerHierarchyValidator implements IMetricsValidator {
 	@Override

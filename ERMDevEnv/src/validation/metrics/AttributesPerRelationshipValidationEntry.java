@@ -3,7 +3,6 @@ package validation.metrics;
 import validation.IValidationEntry;
 import validation.ValidationType;
 import models.Diagram;
-import models.Entity;
 import models.Relationship;
 
 public class AttributesPerRelationshipValidationEntry implements IValidationEntry {

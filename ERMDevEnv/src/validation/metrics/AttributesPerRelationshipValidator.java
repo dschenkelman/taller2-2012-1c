@@ -6,7 +6,6 @@ import java.util.List;
 import validation.IValidationEntry;
 
 import models.Diagram;
-import models.Entity;
 import models.Relationship;
 
 public class AttributesPerRelationshipValidator implements IMetricsValidator {
