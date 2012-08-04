@@ -5,8 +5,11 @@ import infrastructure.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,6 +173,7 @@ public class DiagramController extends BaseController
         switch (this.currentOperation) {
             case UpdateEntity:
                 this.handleEntityUpdate(entity);
+                this.diagram.isNotValidated();
                 for (IDiagramEventListener listener : this.listeners) {
                     listener.handleEntityUpdated(this.diagram, entity);
                 }
@@ -307,6 +311,7 @@ public class DiagramController extends BaseController
                 this.addWeakEntityConnectors(parent, strongRelationshipEntity.getEntityId(), weakEntity, relationship.getId(), attributesByIdGroup);
             }
         } finally {
+        	this.diagram.isNotValidated();
             if (this.currentOperation == Operations.CreateRelationship) {
                 this.diagram.getRelationships().add(relationship);
                 for (IDiagramEventListener eventListener : this.listeners) {
@@ -335,6 +340,7 @@ public class DiagramController extends BaseController
             this.addAttributesToElement(parent, entityCell, this.pendingEntity.getAttributes(), this.pendingEntity.getId());
         } finally {
             this.diagram.getEntities().add(this.pendingEntity);
+            this.diagram.isNotValidated();
             for (IDiagramEventListener listener : this.listeners) {
                 listener.handleEntityAdded(this.diagram, this.pendingEntity);
             }
@@ -831,6 +837,7 @@ public class DiagramController extends BaseController
                 this.connectChildToHierarchy(parent, hierarchyNode, hierarchy.getId(), childId);
             }
         } finally {
+        	this.diagram.isNotValidated();
             if (this.currentOperation == Operations.CreateHierarchy) {
                 this.diagram.getHierarchies().add(hierarchy);
                 for (IDiagramEventListener listener : this.listeners) {
@@ -1074,6 +1081,7 @@ public class DiagramController extends BaseController
         if (canDeleteEntity(entity)) {
             if (this.diagramView.showDeleteDialog("entity " + entity.getName(), "", true)) {
                 this.removeEntity(entity);
+                this.diagram.isNotValidated();
                 return true;
             }
         } else {
@@ -1107,6 +1115,7 @@ public class DiagramController extends BaseController
         }
         if (this.diagramView.showDeleteDialog("relationship " + relationship.getName(), "", true)) {
             this.removeRelationship(relationship);
+            this.diagram.isNotValidated();
             return true;
         }
         return false;
@@ -1121,6 +1130,7 @@ public class DiagramController extends BaseController
         }
         if (this.diagramView.showDeleteDialog("Hierarchy", "", true)) {
             this.removeHierarchy(hierarchy);
+            this.diagram.isNotValidated();
             return true;
         }
         return false;
@@ -1129,7 +1139,9 @@ public class DiagramController extends BaseController
     @Override
     public void validate() {
         String reportHtml = this.validationService.generateIndividualReport(diagram);
-        String reportName = this.projectContext.getDataDirectory() + "_" + diagram.getName() + "_report.html";
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String reportName = this.projectContext.getDataDirectory() + "/" + diagram.getName() + "_" + sdf.format(date) + "_report.html";
         this.fileSystemService.save(reportName, reportHtml);
         Desktop desktop = Desktop.getDesktop();
         try {

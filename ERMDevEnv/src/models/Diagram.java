@@ -11,16 +11,22 @@ import java.util.UUID;
 
 
 public class Diagram implements Iterable<Diagram>{
-	
+
+	private enum DiagramState {
+		NotValidated,
+		Invalid,
+		Valid
+	}
+
 	private UUID id;
 	private EntityCollection entities;
 	private RelationshipCollection relationships;
 	
-		
 	private HierarchyCollection hierarchies;
 	private List<Diagram> subDiagrams;
 	private String name;
 	private List<String> subDiagramNames;
+	private DiagramState state;
 	
 	public Diagram()
 	{
@@ -49,6 +55,7 @@ public class Diagram implements Iterable<Diagram>{
 	{
 		this.id = id;
 		this.subDiagramNames = new ArrayList<String>();
+		this.isNotValidated();
 		this.setEntities(entities);
 		this.setRelationships(relationships);
 		this.setHierarchies(hierarchies);
@@ -180,5 +187,21 @@ public class Diagram implements Iterable<Diagram>{
 
 	public List<String> getSubDiagramNames() {
 		return this.subDiagramNames;
+	}
+
+	public DiagramState getState() {
+		return state;
+	}
+
+	public void isNotValidated() {
+		this.state = DiagramState.NotValidated;
+	}
+	
+	public void isInvalid() {
+		this.state = DiagramState.Invalid;
+	}
+	
+	public void isValid() {
+		this.state = DiagramState.Valid;
 	}
 }
