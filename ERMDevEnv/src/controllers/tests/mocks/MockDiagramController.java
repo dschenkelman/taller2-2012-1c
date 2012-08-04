@@ -254,4 +254,9 @@ public class MockDiagramController implements IDiagramController {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+    @Override
+    public void validate() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

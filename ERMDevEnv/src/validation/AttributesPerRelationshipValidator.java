@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.Diagram;
-import models.Entity;
 import models.Relationship;
+import validation.metrics.IMetricsValidator;
+import validation.metrics.Metrics;
+import validation.metrics.MetricsCalculator;
 
-public class AttributesPerRelationshipValidator implements IValidator {
+public class AttributesPerRelationshipValidator implements IMetricsValidator {
 	@Override
     public Iterable<IValidationEntry> validate(Diagram diagram, Metrics metrics, int tolerance) {
         List<IValidationEntry> entries = new ArrayList<IValidationEntry>();
