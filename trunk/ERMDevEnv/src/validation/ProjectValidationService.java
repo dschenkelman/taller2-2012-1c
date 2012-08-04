@@ -72,6 +72,13 @@ public class ProjectValidationService implements IProjectValidationService {
                 entries.add(entry);
             }
         }
+        
+        if (entries.size() == 0){
+        	diagram.isValid();
+        }
+        else{
+        	diagram.isInvalid();
+        }
 
         VelocityEngine engine = new VelocityEngine();
         engine.init();
