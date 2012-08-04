@@ -2,7 +2,6 @@ package validation.rules;
 
 import models.Diagram;
 import models.Relationship;
-import models.RelationshipEntity;
 import validation.IValidationEntry;
 import validation.ValidationType;
 
