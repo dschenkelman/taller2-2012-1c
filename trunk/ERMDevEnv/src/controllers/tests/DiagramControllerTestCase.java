@@ -3,9 +3,6 @@ package controllers.tests;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Stack;
-import java.util.UUID;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import controllers.tests.mocks.*;
@@ -25,7 +22,6 @@ import models.RelationshipEntity;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -37,7 +33,6 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEventObject;
 
 import controllers.DiagramController;
-import controllers.listeners.IDiagramEventListener;
 
 public class DiagramControllerTestCase {
 

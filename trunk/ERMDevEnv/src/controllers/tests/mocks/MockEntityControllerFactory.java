@@ -1,6 +1,5 @@
 package controllers.tests.mocks;
 
-import models.Entity;
 import controllers.IEntityController;
 import controllers.factories.IEntityControllerFactory;
 

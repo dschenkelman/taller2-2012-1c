@@ -1,7 +1,5 @@
 package controllers.tests.mocks;
 
-import java.awt.Component;
-
 import application.IShell;
 
 public class MockShell implements IShell {

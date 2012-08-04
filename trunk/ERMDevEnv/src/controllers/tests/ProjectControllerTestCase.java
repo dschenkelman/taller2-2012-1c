@@ -22,8 +22,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import validation.IProjectValidationService;
-
 import controllers.IProjectController;
 import controllers.ProjectController;
 import controllers.factories.tests.mocks.MockDiagramControllerFactory;

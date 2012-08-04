@@ -1,6 +1,5 @@
 package controllers;
 
-import controllers.listeners.IIdGroupEventListener;
 import models.IKey;
 import models.IdGroup;
 import views.IKeysView;

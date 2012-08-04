@@ -16,15 +16,11 @@ public class AttributeControllerTest {
     private MockAttributeView mockAttributeView;
     private MockProjectContext mockProjectContext;
     private AttributeController attributeController;
-    private MockKeyControllerFactory mockKeyControllerFactory;
-    private MockKeyController mockKeyController;
-
+    
     @Before
     public void setUp() throws Exception {
         mockAttributeView = new MockAttributeView();
         mockProjectContext = new MockProjectContext();
-        mockKeyControllerFactory = new MockKeyControllerFactory();
-        mockKeyController = new MockKeyController();
         attributeController = new AttributeController(mockProjectContext, mockAttributeView);
     }
 

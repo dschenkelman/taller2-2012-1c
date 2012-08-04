@@ -2,7 +2,6 @@ package controllers.tests.mocks;
 
 import controllers.IRelationshipController;
 import controllers.factories.IRelationshipControllerFactory;
-import models.Relationship;
 
 public class MockRelationshipControllerFactory 
 	implements IRelationshipControllerFactory{

@@ -3,7 +3,6 @@ package controllers.tests.mocks;
 import controllers.IAttributeController;
 import models.Attribute;
 import models.AttributeType;
-import models.Cardinality;
 import views.IAttributeView;
 
 import java.util.List;

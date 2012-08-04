@@ -3,12 +3,7 @@ package controllers;
 import java.util.List;
 
 import models.Attribute;
-import models.AttributeCollection;
-import models.AttributeType;
-import models.Cardinality;
 import views.IAttributeView;
-
-import javax.swing.*;
 
 public interface IAttributeController {
 

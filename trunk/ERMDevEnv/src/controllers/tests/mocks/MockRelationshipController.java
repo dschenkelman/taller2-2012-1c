@@ -2,16 +2,9 @@ package controllers.tests.mocks;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 import views.IRelationshipView;
 
-import models.Attribute;
-import models.Cardinality;
 import models.Relationship;
-import models.RelationshipEntity;
-
-
 import controllers.IRelationshipController;
 import controllers.listeners.IRelationshipEventListener;
 
