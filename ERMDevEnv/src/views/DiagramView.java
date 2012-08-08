@@ -63,63 +63,57 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
     private final JButton btnValidate;
     private final JButton btnPrint;
     private final JButton btnExport;
+    private JButton btnZoomIn;
+    private JButton btnZoomOut;
 
     /**
      * Create the panel.
      */
     public DiagramView() {
-        setLayout(new FormLayout(new ColumnSpec[]{
-                FormFactory.RELATED_GAP_COLSPEC,
-                FormFactory.DEFAULT_COLSPEC,
-                FormFactory.RELATED_GAP_COLSPEC,
-                ColumnSpec.decode("default:grow"),
-                FormFactory.RELATED_GAP_COLSPEC,
-                ColumnSpec.decode("default:grow"),
-                FormFactory.RELATED_GAP_COLSPEC,
-                FormFactory.DEFAULT_COLSPEC,
-                FormFactory.RELATED_GAP_COLSPEC,
-                FormFactory.DEFAULT_COLSPEC,
-                FormFactory.RELATED_GAP_COLSPEC,
-                FormFactory.DEFAULT_COLSPEC,
-                FormFactory.RELATED_GAP_COLSPEC,
-                FormFactory.DEFAULT_COLSPEC,
-                FormFactory.RELATED_GAP_COLSPEC,
-                FormFactory.DEFAULT_COLSPEC,
-                FormFactory.RELATED_GAP_COLSPEC,
-                FormFactory.DEFAULT_COLSPEC,
-                FormFactory.RELATED_GAP_COLSPEC,
-                FormFactory.DEFAULT_COLSPEC,
-                FormFactory.RELATED_GAP_COLSPEC,
-                FormFactory.DEFAULT_COLSPEC,},
-                new RowSpec[]{
-                        FormFactory.RELATED_GAP_ROWSPEC,
-                        FormFactory.DEFAULT_ROWSPEC,
-                        FormFactory.RELATED_GAP_ROWSPEC,
-                        RowSpec.decode("default:grow"),}));
+        setLayout(new FormLayout(new ColumnSpec[] {
+        		FormFactory.RELATED_GAP_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,
+        		FormFactory.DEFAULT_COLSPEC,},
+        	new RowSpec[] {
+        		FormFactory.RELATED_GAP_ROWSPEC,
+        		FormFactory.DEFAULT_ROWSPEC,
+        		FormFactory.RELATED_GAP_ROWSPEC,
+        		RowSpec.decode("default:grow"),}));
 
         this.btnEntity = new JButton("Entity");
         add(this.btnEntity, "2, 2");
-
-        this.btnRelationship = new JButton("Relationship");
-        add(this.btnRelationship, "4, 2");
-
-        this.btnHierarchy = new JButton("Hierarchy");
-        add(this.btnHierarchy, "6, 2");
-
-        this.btnSave = new JButton("Save");
-        add(this.btnSave, "8, 2");
-
-        this.btnSubdiagram = new JButton("Sub-Diagram");
-        add(this.btnSubdiagram, "10, 2");
-
-        this.btnPrint = new JButton("Print");
-        add(this.btnPrint, "12, 2");
-
-        this.btnExport = new JButton("Export");
-        add(this.btnExport, "14, 2");
-
-        this.btnValidate = new JButton("Validate");
-        add(this.btnValidate, "16, 2");
+        
+                this.btnRelationship = new JButton("Relationship");
+                btnRelationship.addActionListener(new ActionListener() {
+                	public void actionPerformed(ActionEvent e) {
+                	}
+                });
+                add(this.btnRelationship, "3, 2");
+        
+                this.btnHierarchy = new JButton("Hierarchy");
+                add(this.btnHierarchy, "4, 2");
+        
+                this.btnSave = new JButton("Save");
+                add(this.btnSave, "5, 2");
+        
+                this.btnSubdiagram = new JButton("Sub-Diagram");
+                add(this.btnSubdiagram, "6, 2");
+        
+                this.btnPrint = new JButton("Print");
+                add(this.btnPrint, "7, 2");
+        
+                this.btnExport = new JButton("Export");
+                add(this.btnExport, "8, 2");
 
         this.entityMenu = new JPopupMenu();
         this.existingEntitiesMenu = new JPopupMenu();
@@ -145,6 +139,15 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
                         btnEntity.getX(), btnEntity.getY() + btnEntity.getHeight());
             }
         });
+        
+                this.btnValidate = new JButton("Validate");
+                add(this.btnValidate, "9, 2");
+        
+        btnZoomIn = new JButton("+");
+        add(btnZoomIn, "10, 2");
+        
+        btnZoomOut = new JButton("-");
+        add(btnZoomOut, "11, 2");
 
 
         this.entityMenu.add(new JMenuItem(new AbstractAction("New Entity") {
@@ -158,10 +161,12 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
     }
 
     @Override
-    public void setController(IDiagramController controller) {
-        this.diagramController = controller;
+    public void setController(IDiagramController controller) {   	
+    	this.diagramController = controller;
 
         this.graphComponent = new mxGraphComponent(this.diagramController.getGraph());
+        this.graphComponent.setAutoScroll(true);
+        this.graphComponent.setAutoscrolls(true);
         // cannot create new arrows clicking from entity
         this.graphComponent.getConnectionHandler().setCreateTarget(false);
         this.graphComponent.setConnectable(false);
@@ -186,7 +191,7 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
             e1.printStackTrace();
         }
 
-        this.add(this.graphComponent, "2, 4, 15, 1, fill, fill");
+        this.add(this.graphComponent, "2, 4, 12, 1, fill, fill");
 
         this.btnEntity.addMouseListener(new MouseAdapter() {
             @Override
@@ -239,6 +244,20 @@ public class DiagramView extends JPanel implements IDiagramView, DropTargetListe
                 diagramController.validate();
             }
         });
+        
+        this.btnZoomIn.addMouseListener(new MouseAdapter(){
+        	 @Override
+             public void mouseClicked(MouseEvent e) {
+                 graphComponent.zoomIn();
+             }
+        });
+        
+        this.btnZoomOut.addMouseListener(new MouseAdapter(){
+       	 @Override
+            public void mouseClicked(MouseEvent e) {
+                graphComponent.zoomOut();
+            }
+       });
     }
 
     @Override
