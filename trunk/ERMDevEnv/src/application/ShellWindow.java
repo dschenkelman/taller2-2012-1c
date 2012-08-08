@@ -80,6 +80,6 @@ public class ShellWindow implements IShell {
 
 	@Override
 	public void activateFullSize() {
-		frame.setSize(1200, 675);
+		frame.setSize(1140, 675);
 	}
 }
